@@ -23,9 +23,9 @@ module.exports = function ({ output, development = false } = {})
 		output :
 		{
 			path : resolve(output),
-			filename : 'js/segmentation.js',
+			filename : 'js/inshapardaz.js',
 			chunkFilename : 'js/modules/[chunkhash].js',
-			library : 'segmentation'
+			library : 'inshapardaz'
 		},
 
 		module :
@@ -92,7 +92,7 @@ module.exports = function ({ output, development = false } = {})
 		plugins :
 		[
 			new MiniCssExtractPlugin({
-				filename : 'css/segmentation.css'
+				filename : 'css/inshapardaz.css'
 			}),
 
 			new DefinePlugin({

@@ -2,9 +2,9 @@ import axios from 'axios';
 
 export default class LibraryService
 {
-	constructor (authenticationService, { requirements, urlToSegmentationApi })
+	constructor (authenticationService, { requirements, apiUrl })
 	{
-		this.baseUrl = urlToSegmentationApi;
+		this.baseUrl = apiUrl;
 		this.requirements = requirements;
 		this.authenticationService = authenticationService;
 	}

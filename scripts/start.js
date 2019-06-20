@@ -36,14 +36,14 @@ express()
 		);
 	})
 
-	.listen(4444, error =>
+	.listen(4300, error =>
 	{
 		if (error)
 		{
-			console.error(`Could not start development server on port 4444. ${error}`);
+			console.error(`Could not start development server on port 4300. ${error}`);
 
 			return;
 		}
 
-		console.log('Development server has started on port 4444. Wait for the initial build to finish and then generate configuration.');
+		console.log('Development server has started on port 4300. Wait for the initial build to finish and then generate configuration.');
 	});
