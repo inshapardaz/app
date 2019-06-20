@@ -1,0 +1,22 @@
+
+{
+    "extends" : ["protect-me-from-my-stupidity", "plugin:react/recommended"],
+
+    "env" :
+    {
+        "browser" : true,
+        "es6"     : true
+	},
+
+	"settings" :
+	{
+		"react" : { "version" : "16.3.0" }
+	},
+
+	"rules" :
+	{
+		"react/prop-types" : "off"
+	},
+
+	"parser" : "babel-eslint"
+}

@@ -1,0 +1,32 @@
+# NPM
+# -----------------
+
+node_modules
+
+# Configuration
+# -----------------
+
+/environment-config
+
+# Artifact
+# -----------------
+
+/build
+/artifact
+
+# Development
+# -----------------
+
+/development/app
+
+# Infrastructure
+# -----------------
+
+/deploy/infrastructure/cloudformation.template
+
+# Functional Tests
+# -----------------
+
+/tests/functional/**/*.js
+/tests/functional/**/*.map
+/tests/functional/logs

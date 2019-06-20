@@ -1,0 +1,25 @@
+{
+	"common" :
+	{
+		"enabled" : true,
+		"clientId" : "inshapardaz-web",
+		"theme" : "default",
+		"authority" : "http://inshapardaz.eu.auth0.com",
+      	"audience" : "http://api.inshapardaz.org"
+	},
+
+	"production" :
+	{
+		"tenants" :
+		[
+			"uk"
+		],
+		"loggingService" : "logging.je-apps.com",
+		"partnerCentreCdn" : "partnercentrecdn.just-eat.co.uk"
+	},
+
+	"development" :
+	{
+		"apiUrl" : "http://localhost:5000/api"
+	}
+}

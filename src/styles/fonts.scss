@@ -1,0 +1,41 @@
+// Ubuntu (https://fonts.google.com/specimen/Ubuntu)
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@mixin ubuntu-light ()
+{
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: 300;
+}
+
+@mixin ubuntu-regular ()
+{
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: 400;
+}
+
+@mixin ubuntu-medium ()
+{
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: 500;
+}
+
+// Hind Vadodara (https://fonts.google.com/specimen/Hind+Vadodara)
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+@mixin hind-vadodara-light ()
+{
+	font-family: 'Hind Vadodara', sans-serif;
+	font-weight: 300;
+}
+
+@mixin hind-vadodara-regular ()
+{
+	font-family: 'Hind Vadodara', sans-serif;
+	font-weight: 400;
+}
+
+@mixin hind-vadodara-medium ()
+{
+	font-family: 'Hind Vadodara', sans-serif;
+	font-weight: 500;
+}

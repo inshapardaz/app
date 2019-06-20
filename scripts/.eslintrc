@@ -1,0 +1,10 @@
+{
+    "extends" : ["protect-me-from-my-stupidity"],
+
+    "env" :
+    {
+        "commonjs" : true,
+		"es6"      : true,
+		"node"     : true
+	}
+}

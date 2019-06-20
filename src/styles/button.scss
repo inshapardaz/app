@@ -1,0 +1,39 @@
+.button
+{
+	@include hind-vadodara-medium;
+
+	display: inline-block;
+	padding: 9px 15px;
+	line-height: 30px;
+	font-size: 15px;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	background: #266abd;
+	border: 1px solid #266abd;
+	border-radius: 4px;
+	cursor: pointer;
+	box-sizing: border-box;
+
+	&:hover,
+	&:focus
+	{
+		text-decoration: none;
+		outline: 0;
+		background: #14509c;
+		border-color: #14509c;
+	}
+
+	&--secondary
+	{
+		color: #266abd;
+		background: #fff;
+
+		&:hover,
+		&:focus
+		{
+			color: #14509c;
+			background: #dbebff;
+		}
+	}
+}

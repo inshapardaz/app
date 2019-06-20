@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="{{ locale }}">
+
+	<head>
+
+		<title> Partner Status </title>
+
+		<!-- Fonts -->
+
+		<link href="https://fonts.googleapis.com/css?family=Hind+Vadodara:300,400,500|Ubuntu:300,400,500" rel="stylesheet" />
+
+		<!-- Character Set -->
+
+		<meta charset="UTF-8" />
+
+		<!-- Viewport -->
+
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+		<!-- Base -->
+
+		<base href="/" />
+
+	</head>
+
+	<body class="{{ theme }}">
+
+		<div id="root">
+
+			<!-- Application will render here -->
+
+		</div>
+
+		<!-- Bootstrap -->
+
+		<script type="text/javascript">
+
+			window.dataLayer = window.dataLayer || [];
+
+			window.addEventListener('appreadytostart', function ()
+			{
+				app.start({
+					environment                : '{{ environment }}',
+					locale                     : '{{ locale }}',
+					clientId                   : '{{ clientId }}',
+					authority                  : '{{ authority }}',
+					audience                   : '{{ audience }}',
+					apiUrl                     : '{{ apiUrl }}'
+				});
+			});
+
+		</script>
+
+		<!-- Partner Centre Components -->
+
+		<script type="text/javascript" src="https://{{ partnerCentreCdn }}/components/{{ tenant }}/partnercentre-components.js" async></script>
+
+	</body>
+
+</html>
