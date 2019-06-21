@@ -9,7 +9,7 @@ export const history = createBrowserHistory();
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-export async function createStore (configuration, services)
+export async function createStore (services)
 {
 	return redux.createStore(
 		redux.combineReducers({
@@ -17,9 +17,6 @@ export async function createStore (configuration, services)
 			apiReducers,
 			router : connectRouter(history)
 		}),
-		{
-			config : configuration
-		},
 		redux.applyMiddleware(
 			thunk.withExtraArgument(services),
 			routerMiddleware(history)

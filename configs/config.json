@@ -10,12 +10,7 @@
 
 	"production" :
 	{
-		"tenants" :
-		[
-			"uk"
-		],
-		"loggingService" : "logging.je-apps.com",
-		"partnerCentreCdn" : "partnercentrecdn.just-eat.co.uk"
+		"apiUrl" : "http://api-inshapardaz.azurewebsites.net/api"
 	},
 
 	"development" :

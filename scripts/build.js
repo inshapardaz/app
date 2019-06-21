@@ -1,8 +1,7 @@
-const { join }         = require('path');
-const { remove, copy } = require('fs-extra');
-const { exec }         = require('npm-run');
-const config           = require('../deploy/configs/config.json');
-
+const { remove, copy }   = require('fs-extra');
+const { exec }           = require('npm-run');
+const config             = require('../configs/config.json');
+const { generateConfig } = require('./generateConfig');
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 function isEnvironment (environment)
@@ -38,15 +37,13 @@ async function webpack (pathToBuild)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-async function createArtifact (pathToBuild, {
-	tenants,
-	environment,
-	team
-})
+async function createArtifact (pathToBuild, data)
 {
-	const pathToArtifact = join('artifact', environment);
+	const pathToArtifact = 'artifact';
 
 	await copy(pathToBuild, pathToArtifact);
+
+	await generateConfig(`${pathToArtifact}/index.html.hbs`, data);
 
 	await remove(`${pathToArtifact}/index.html.hbs`);
 }
@@ -63,11 +60,8 @@ async function build ()
 	{
 		if (isEnvironment(environment))
 		{
-			const { tenants, team } = config[environment];
-
-			await createArtifact('build', {
-				tenants, environment, team
-			});
+			const data = { ...config.common, ...config[environment] };
+			await createArtifact('build', data);
 		}
 	}
 

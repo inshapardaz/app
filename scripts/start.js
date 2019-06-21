@@ -2,8 +2,9 @@ const { resolve }                  = require('path');
 const express                      = require('express');
 const webpackDevelopmentMiddleware = require('webpack-dev-middleware');
 const webpack                      = require('webpack');
+const config                       = require('../configs/config.json');
 const configure                    = require('../webpack.config');
-
+const { generateConfig }           = require('./generateConfig');
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 express()
@@ -16,17 +17,6 @@ express()
 			{ writeToDisk : true }
 		)
 	)
-
-	// Mock API.
-	.use('/api/:tenant', express.static(
-		resolve('development/api'), {
-			extensions : ['json'], index : 'index.json'
-		}
-	))
-
-	.use('/', express.static(
-		resolve('development/app')
-	))
 
 	// Allow for client routing.
 	.use('*', (request, response) =>
@@ -46,4 +36,6 @@ express()
 		}
 
 		console.log('Development server has started on port 4300. Wait for the initial build to finish and then generate configuration.');
+		const data = { ...config.common, ...config.development };
+		generateConfig('development/app/index.html.hbs', data);
 	});

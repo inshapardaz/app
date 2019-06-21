@@ -20,6 +20,7 @@ class Page extends React.Component
 
 	async componentDidMount ()
 	{
+		console.log('componentDidMount');
 		if (localStorage.getItem('isLoggedIn') === 'true')
 		{
 		  AuthenticationService.renewSession();
@@ -73,8 +74,7 @@ export default (connect(
 	(state) => ({
 	  history : state.history,
 	  entry : state.entry,
-	  isLoading : state.isLoading,
-	  user : state.oidc.user
+	  isLoading : state.isLoading
 	}),
 	dispatch => bindActionCreators({
 	  getEntry,
