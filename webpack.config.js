@@ -3,7 +3,7 @@ const { DefinePlugin }           = require('webpack');
 const cssnano                    = require('cssnano');
 const HtmlPlugin                 = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const UglifyJsPlugin             = require('uglifyjs-webpack-plugin');
+const TerserPlugin 				 = require('terser-webpack-plugin');
 const MiniCssExtractPlugin       = require('mini-css-extract-plugin');
 const CopyWebpackPlugin          = require('copy-webpack-plugin')
 
@@ -89,6 +89,10 @@ module.exports = function ({ output, development = false } = {})
 			hints : false
 		},
 
+		optimization : {
+			minimizer : [new TerserPlugin()],
+		},
+
 		plugins :
 		[
 			new MiniCssExtractPlugin({
@@ -99,15 +103,6 @@ module.exports = function ({ output, development = false } = {})
 				'process.env' : {
 					NODE_ENV : development ? '"development"' : '"production"'
 				}
-			}),
-
-			new UglifyJsPlugin({
-				uglifyOptions : {
-					output : {
-						comments : false
-					}
-				},
-				sourceMap : true
 			}),
 
 			new HtmlPlugin({
