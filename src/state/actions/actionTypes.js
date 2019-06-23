@@ -1,9 +1,10 @@
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
-export const CHANGEPASSWORD = 'CHANGEPASSWORD';
+export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+export const PROFILE = 'PROFILE';
 export const ENTRY = 'ENTRY';
 export const LANGUAGES = 'LANGUAGES';
 export const ATTRIBUTES = 'ATTRIBUTES';
-export const RELATIONSHIPTYPES = 'RELATIONSHIPTYPES';
+export const RELATIONSHIP_TYPES = 'RELATIONSHIP_TYPES';
 export const CATEGORIES = 'CATEGORIES';
 export const SERIES = 'SERIES';

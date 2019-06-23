@@ -1,19 +1,18 @@
-import LibraryService from '../../services/LibraryService';
-import { ENTRY, LANGUAGES, ATTRIBUTES, RELATIONSHIPTYPES, CATEGORIES, SERIES } from './actionTypes';
+import { ENTRY, LANGUAGES, ATTRIBUTES, RELATIONSHIP_TYPES, CATEGORIES, SERIES } from './actionTypes';
 
 export function getEntry ()
 {
-	return async (dispatch) =>
+	return async (dispatch, getState, { libraryService }) =>
 	{
-		const entry = await LibraryService.getEntry();
+		const entry = await libraryService.getEntry();
 
 		const [languages, attributes, relationshipTypes, categories, series]
 		= await Promise.all([
-			LibraryService.get(entry.links.languages),
-			LibraryService.get(entry.links.attributes),
-			LibraryService.get(entry.links.relationshiptypes),
-			LibraryService.get(entry.links.categories),
-			LibraryService.get(entry.links.series)
+			libraryService.get(entry.links.languages),
+			libraryService.get(entry.links.attributes),
+			libraryService.get(entry.links.relationshiptypes),
+			libraryService.get(entry.links.categories),
+			libraryService.get(entry.links.series)
 		]);
 
 		dispatch({
@@ -37,7 +36,7 @@ export function getEntry ()
 		});
 
 		dispatch({
-			type : RELATIONSHIPTYPES,
+			type : RELATIONSHIP_TYPES,
 			payload : relationshipTypes
 		});
 
@@ -50,10 +49,10 @@ export function getEntry ()
 
 export function addCategory (addLink, name)
 {
-	return async (dispatch, getState) =>
+	return async (dispatch, getState, { libraryService }) =>
 	{
-		await LibraryService.post(addLink, { name });
-		const categories = await LibraryService.get(getState().apiReducers.entry.links.categories);
+		await libraryService.post(addLink, { name });
+		const categories = await libraryService.get(getState().apiReducers.entry.links.categories);
 		dispatch({
 			type : CATEGORIES,
 			payload : categories
@@ -63,10 +62,10 @@ export function addCategory (addLink, name)
 
 export function addSeries (addLink, name)
 {
-	return async (dispatch, getState) =>
+	return async (dispatch, getState, { libraryService }) =>
 	{
-		await LibraryService.post(addLink, { name });
-		const series = await LibraryService.get(getState().apiReducers.entry.links.series);
+		await libraryService.post(addLink, { name });
+		const series = await libraryService.get(getState().apiReducers.entry.links.series);
 		dispatch({
 			type : SERIES,
 			payload : series

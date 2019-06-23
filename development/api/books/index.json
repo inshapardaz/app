@@ -1,0 +1,577 @@
+{
+    "pageSize": 10,
+    "pageCount": 316,
+    "currentPageIndex": 1,
+    "totalCount": 3158,
+    "links": [
+        {
+            "href": "http://localhost:4200/api/books?PageNumber=1&PageSize=10",
+            "rel": "self"
+        },
+        {
+            "href": "http://localhost:4200/api/books?PageNumber=2&PageSize=10",
+            "rel": "next"
+        }
+    ],
+    "data": [
+        {
+            "id": 1,
+            "title": "زرگزشت",
+            "description": "ایک نوآموز بینکر کی داستان روز و شب",
+            "categories": [
+                {
+                    "id": 1,
+                    "name": "طنزومزاح",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/1",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/1/books",
+                            "rel": "books"
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "name": "سوانح‌عمری",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/3",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/3/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": false,
+            "authorId": 1,
+            "authorName": "مشتاق احمد یوسفی",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/1",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/1",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/1/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/1/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/40?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "title": "آب گم",
+            "description": "مختصر مضامین",
+            "categories": [
+                {
+                    "id": 1,
+                    "name": "طنزومزاح",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/1",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/1/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": false,
+            "authorId": 1,
+            "authorName": "مشتاق احمد یوسفی",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/2",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/1",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/2/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/2/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/3?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "title": "خاکم بدہن",
+            "description": "مختصر مضامین",
+            "categories": [
+                {
+                    "id": 1,
+                    "name": "طنزومزاح",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/1",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/1/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": false,
+            "authorId": 1,
+            "authorName": "مشتاق احمد یوسفی",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/3",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/1",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/3/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/3/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/44?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "title": "چراغ تلے",
+            "description": "مشتاق احمد یوسفی کے مضامین",
+            "categories": [
+                {
+                    "id": 1,
+                    "name": "طنزومزاح",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/1",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/1/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": false,
+            "authorId": 1,
+            "authorName": "مشتاق احمد یوسفی",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/4",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/1",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/4/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/4/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/34?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "title": "بجنگ آمد",
+            "description": "بجنگ آمد کا موضوع میری لیفٹینی تھی، یعنی یہ کہ کب اور کیسے نازل ہوئی اور بعد از نزول مجھ پر کیا گزری۔ بسلامت روی سفرِ فرنگ کی روداد تھی۔ موجودہ کتاب جیسا کہ آپ نے دیکھا ہے، متفرق مضامیں کا مجموعہ ہے لیکن اس الوداعی باب میں یہ بتانا مقصود ہے کہ جب ایک روز یہ خاکسار یکا یک ایک عام آدمی سے مصنف بن گیا تو اس کے بعد اس پرکیا بیتی",
+            "categories": [],
+            "language": 2,
+            "isPublic": true,
+            "authorId": 2,
+            "authorName": "کرنل محمد خان",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 1966,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/5",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/2",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/5/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/5/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/6648?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "title": "کرنیں",
+            "description": "شفیق الرحمٰن مزاحیہ اردو نثر کے سرخیلوں میں سے ہیں۔ اور یہ بات کم از کم مجھے تو یہ کتاب پڑھنے سے پہلے معلوم ہی نہ تھی کہ وہ ایک اچھے افسانہ نگار بھی تھے۔ کرنیں ان کے رومانوی افسانوں کا مجموعہ ہے۔ یہ افسانے گو کہ کم و بیش ایک ہی رنگ میں لکھے گئے ہیں لیکن قاری کو ایک ایسی خوبصورت تخیلاتی و مثالی دنیا میں لے جاتے ہیں کہ وہاں سے واپس آنے کا دل نہیں چاہتا۔",
+            "categories": [
+                {
+                    "id": 2,
+                    "name": "ناول",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/2",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/2/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": true,
+            "authorId": 3,
+            "authorName": "شفیق الرحمن",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/8",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/3",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/8/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/8/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/6648?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "title": "شگوفے",
+            "description": "شگوفے",
+            "categories": [
+                {
+                    "id": 1,
+                    "name": "طنزومزاح",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/1",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/1/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": false,
+            "authorId": 3,
+            "authorName": "شفیق الرحمن",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/9",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/3",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/9/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/9/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/6648?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "title": "لہریں",
+            "description": "\n\nریویو\nریڈیو\nمان نہ مان\nزیادتی\nہماری فلمیں\nشکائتیں\nبیزاری\nایک نسخہ\nقصہ چہار درویش\nمکان کی تلاش میں",
+            "categories": [
+                {
+                    "id": 2,
+                    "name": "ناول",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/2",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/2/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": false,
+            "authorId": 3,
+            "authorName": "شفیق الرحمن",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/10",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/3",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/10/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/10/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/6648?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "title": "حماقتیں",
+            "description": "حماقتیں، کرنل شفیق الرحمان کے مزاح اور ظرافت سے بھرپور مختلف مضامین کا مجموعہ ہے۔ شفیق الرحمان کا مزاح ہلکا پھلکا، شگفتہ اور شائستہ ہے۔ کتاب میں درج ذیل مضامین شامل ہیں۔\nنیلی جھیل\nبے بی\nتعویذ\nنناوے ناٹ آؤٹ\nبلڈ پریشر\nکلب\nتمنا\nحماقتیں\nقصہ پروفیسر علی بابا کا",
+            "categories": [
+                {
+                    "id": 1,
+                    "name": "طنزومزاح",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/1",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/1/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": false,
+            "authorId": 3,
+            "authorName": "شفیق الرحمن",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/11",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/3",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/11/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/11/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/6648?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "title": "مزید حماقتیں ",
+            "description": "کتاب ’’مزید حماقتیں‘‘ شفیق الرحمٰن کے مزاحیہ اور دل چسپ مضامین کا مجموعہ ہے۔ اس مجموعے میں درج ذیل مضامین شامل ہیں۔\nتزکِ نادری عرف سیاحت نامۂ ہند\nیہ ریڈیو روم تھا\nکلیدِ کام یابی حصہ دوئم\nشیطان، عینک اور موسمِ بہار\nملکی پرندے اور دوسرے جانور\nسفرنامہ جہاز باد سندھی کا\nدو نظمیں\nٹیکسلا سے پہلے، ٹیکسلا کے بعد\nزنانہ اُردو خط و کتابت\nبرساتی",
+            "categories": [
+                {
+                    "id": 1,
+                    "name": "طنزومزاح",
+                    "bookCount": 0,
+                    "links": [
+                        {
+                            "href": "http://localhost:4200/api/categories/1",
+                            "rel": "self"
+                        },
+                        {
+                            "href": "http://localhost:4200/api/categories/1/books",
+                            "rel": "books"
+                        }
+                    ]
+                }
+            ],
+            "language": 2,
+            "isPublic": false,
+            "authorId": 3,
+            "authorName": "شفیق الرحمن",
+            "seriesId": null,
+            "seriesName": null,
+            "seriesIndex": null,
+            "dateAdded": "0001-01-01T00:00:00",
+            "dateUpdated": "0001-01-01T00:00:00",
+            "yearPublished": 0,
+            "copyrights": 0,
+            "status": 0,
+            "links": [
+                {
+                    "href": "http://localhost:4200/api/books/12",
+                    "rel": "self"
+                },
+                {
+                    "href": "http://localhost:4200/api/authors/3",
+                    "rel": "author"
+                },
+                {
+                    "href": "http://localhost:4200/api/books/12/chapters",
+                    "rel": "chapters"
+                },
+                {
+                    "href": "http://localhost:4200/api/boos/12/files",
+                    "rel": "files"
+                },
+                {
+                    "href": "http://localhost:4200/api/file/6648?height=257&width=182",
+                    "rel": "image"
+                }
+            ]
+        }
+    ]
+}

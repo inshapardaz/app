@@ -17,7 +17,6 @@ import LocaleService                                                      from '
 
 export async function start (config)
 {
-
 	window.dataLayer = window.dataLayer || [];
 
 	const authenticationService = new AuthenticationService(config);

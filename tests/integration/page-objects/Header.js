@@ -1,5 +1,6 @@
+import { tryAndWaitForTheElement } from 'wait-for-the-element';
 import isElementDisplayed from '../helpers/isElementDisplayed';
-
+import Anchor from './common/Anchor';
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 export default class Header
@@ -14,8 +15,8 @@ export default class Header
 		return isElementDisplayed(this.element);
 	}
 
-	get isNative ()
+	static async logo ()
 	{
-		return this.element.hasAttribute('native-mobile-app');
+		return new Anchor(await tryAndWaitForTheElement('.header__logo'));
 	}
 }

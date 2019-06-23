@@ -18,7 +18,22 @@ express()
 		)
 	)
 
-	// Allow for client routing.
+	.use('/api/files', express.static(
+		resolve('development/api/files/6648.jpg'), {
+			extensions : ['jpg', 'jpeg']
+		}
+	))
+
+	.use('/api', express.static(
+		resolve('development/api'), {
+			extensions : ['json'], index : 'index.json'
+		}
+	))
+
+	.use('/resources', express.static(
+		resolve('public/resources')
+	))
+
 	.use('*', (request, response) =>
 	{
 		response.sendFile(
@@ -26,16 +41,16 @@ express()
 		);
 	})
 
-	.listen(4300, error =>
+	.listen(4200, error =>
 	{
 		if (error)
 		{
-			console.error(`Could not start development server on port 4300. ${error}`);
+			console.error(`Could not start development server on port 4200. ${error}`);
 
 			return;
 		}
 
-		console.log('Development server has started on port 4300. Wait for the initial build to finish and then generate configuration.');
+		console.log('Development server has started on port 4200. Wait for the initial build to finish and then generate configuration.');
 		const data = { ...config.common, ...config.development };
 		generateConfig('development/app/index.html.hbs', data);
 	});

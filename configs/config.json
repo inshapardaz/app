@@ -15,6 +15,6 @@
 
 	"development" :
 	{
-		"apiUrl" : "http://localhost:5000/api"
+		"apiUrl" : "http://localhost:4200/api"
 	}
 }

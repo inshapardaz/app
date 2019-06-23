@@ -14,7 +14,7 @@ class LocaleService
 
 		if (!locale)
 		{
-			locale = 'en';
+			locale = 'ur';
 			this.setCurrentLanguage(locale);
 		}
 
@@ -47,12 +47,12 @@ class LocaleService
 
 		switch (locale)
 		{
-			case 'ur-PK' :
-				data = await import('react-intl/locale-data/ur');
+			case 'en' :
+				data = await import('react-intl/locale-data/en');
 				break;
 
 			default :
-				data = await import('react-intl/locale-data/en');
+				data = await import('react-intl/locale-data/ur');
 		}
 
 		return addLocaleData(data.default);

@@ -1,0 +1,118 @@
+[
+    {
+        "key": "None",
+        "value": 0
+    },
+    {
+        "key": "Unknown",
+        "value": 1
+    },
+    {
+        "key": "Urdu",
+        "value": 2
+    },
+    {
+        "key": "Sanskrit",
+        "value": 3
+    },
+    {
+        "key": "Hindi",
+        "value": 4
+    },
+    {
+        "key": "Persian",
+        "value": 5
+    },
+    {
+        "key": "Arabic",
+        "value": 6
+    },
+    {
+        "key": "Turkish",
+        "value": 7
+    },
+    {
+        "key": "English",
+        "value": 8
+    },
+    {
+        "key": "French",
+        "value": 9
+    },
+    {
+        "key": "Prakrit",
+        "value": 10
+    },
+    {
+        "key": "Latin",
+        "value": 11
+    },
+    {
+        "key": "Punjabi",
+        "value": 12
+    },
+    {
+        "key": "Greek",
+        "value": 13
+    },
+    {
+        "key": "Hebrew",
+        "value": 14
+    },
+    {
+        "key": "Portuguese",
+        "value": 15
+    },
+    {
+        "key": "Italian",
+        "value": 16
+    },
+    {
+        "key": "Spanish",
+        "value": 17
+    },
+    {
+        "key": "Chinese",
+        "value": 18
+    },
+    {
+        "key": "Japanese",
+        "value": 19
+    },
+    {
+        "key": "Sindhi",
+        "value": 20
+    },
+    {
+        "key": "German",
+        "value": 21
+    },
+    {
+        "key": "Local",
+        "value": 22
+    },
+    {
+        "key": "Syriac",
+        "value": 23
+    },
+    {
+        "key": "Avestan",
+        "value": 24
+    },
+    {
+        "key": "Gujrati",
+        "value": 25
+    },
+    {
+        "key": "Marhati",
+        "value": 26
+    },
+    {
+        "key": "Bangali",
+        "value": 27
+    },
+    {
+        "key": "Pali",
+        "value": 28
+    }
+]

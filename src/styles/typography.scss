@@ -1,7 +1,5 @@
 .heading
 {
-	@include ubuntu-medium;
-
 	font-size: 20px;
 	color: #333;
 	line-height: 25px;
@@ -11,16 +9,9 @@
 
 .paragraph
 {
-	@include hind-vadodara-light;
-
 	font-size: 16px;
 	color: #333;
 	line-height: 25px;
-
-	strong
-	{
-		@include hind-vadodara-medium;
-	}
 
 	br { line-height: 225% }
 }

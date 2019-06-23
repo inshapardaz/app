@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, CHANGEPASSWORD } from '../actions/actionTypes';
+import { LOGIN, LOGOUT, CHANGE_PASSWORD, PROFILE } from '../actions/actionTypes';
 
 export default function authenticationReducer (state = {}, action)
 {
@@ -8,7 +8,9 @@ export default function authenticationReducer (state = {}, action)
 			return state;
 		case LOGOUT :
 			return state;
-		case CHANGEPASSWORD :
+		case CHANGE_PASSWORD :
+			return state;
+		case PROFILE :
 			return state;
 		default :
 			return state;

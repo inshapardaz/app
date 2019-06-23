@@ -1,0 +1,161 @@
+@import '../../styles/colors.scss';
+
+$content-width: 1000px;
+$breakpoint: 799px;
+$nav-height: 70px;
+$nav-background: #0288D1;
+$nav-font-color: #ffffff;
+$link-hover-color: #262626;
+$nav-shadow: #0000001a;
+$search-background: #ffffff25;
+
+.header
+{
+	background-color: $nav-background;
+	position: relative;
+	top: 0;
+	border-bottom: 1px solid #DDD;
+	box-shadow: 0 1px 6px -1px $nav-shadow;
+	min-height: 50px;
+	color: $nav-font-color;
+
+	display: flex;
+    flex-direction: row;
+	line-height: 30px;
+
+	&__logo
+	{
+		order: 0;
+		display: inline-block;
+		text-decoration: none;
+
+		&:visited,
+		&:hover,
+		&:link
+		{
+			text-decoration: none;
+		}
+
+		img {
+			height: 32px;
+			width: 32px;
+			padding: 8px;
+		}
+	}
+
+	&__text
+	{
+		order: 1;
+		padding: 14px 24px;
+		font-size: 30px;
+		color: $nav-font-color;
+	}
+
+	.menu
+	{
+		flex-grow: 1;
+		flex-shrink: 0;
+
+		ul
+		{
+			order: 2;
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+
+			li
+			{
+				display: inline-block;
+				cursor: default;
+				a
+				{
+					display: block;
+					color: $nav-font-color;
+					text-align: center;
+					padding: 14px 16px;
+					text-decoration: none;
+
+					&:hover
+					{
+						background-color: $color-secondary;
+					}
+				}
+			}
+
+			@media screen and (max-width: 600px)
+			{
+				li
+				{
+					float: none;
+				}
+			}
+		}
+	}
+
+	&__search
+	{
+		order: 3;
+
+		input
+		{
+			background: $search-background;
+			margin-top: 12px;
+			padding: 8px;
+			border-radius: 18px;
+			color: $nav-font-color;
+		}
+
+		button
+		{
+			background-color: transparent;
+			border: none;
+			color: $nav-background;
+			padding: 0;
+			cursor: pointer;
+			position: relative;
+		    left: 28px;
+    		top: 22px;
+    		float: left;
+		}
+	}
+
+	&__profile
+	{
+		order: 4;
+		padding: 14px;
+		align-self: flex-end;
+
+		&:hover
+		{
+			background-color: $color-secondary;
+		}
+	}
+}
+
+.profile
+{
+	&__button
+	{
+		padding-right : 12px;
+
+		&:after
+		{
+			content: ' ';
+			border: solid $nav-font-color;
+			border-width: 0 2px 2px 0;
+			display: inline-block;
+			padding: 3px;
+			transform: rotate(45deg);
+			margin-right: 8px;
+		}
+
+		&--pressed
+		{
+			&:after
+			{
+				transform: rotate(-135deg);
+			}
+		}
+	}
+}

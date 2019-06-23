@@ -1,0 +1,406 @@
+[
+    {
+        "key": "None",
+        "value": 0
+    },
+    {
+        "key": "Male",
+        "value": 1
+    },
+    {
+        "key": "Female",
+        "value": 16
+    },
+    {
+        "key": "Singular",
+        "value": 256
+    },
+    {
+        "key": "Plural",
+        "value": 4096
+    },
+    {
+        "key": "Ism",
+        "value": 65536
+    },
+    {
+        "key": "Sift",
+        "value": 131072
+    },
+    {
+        "key": "Feal",
+        "value": 196608
+    },
+    {
+        "key": "Harf",
+        "value": 262144
+    },
+    {
+        "key": "JamaUlJama",
+        "value": 327680
+    },
+    {
+        "key": "Majhool",
+        "value": 393216
+    },
+    {
+        "key": "Maroof",
+        "value": 458752
+    },
+    {
+        "key": "Proverb",
+        "value": 524288
+    },
+    {
+        "key": "Saying",
+        "value": 589824
+    },
+    {
+        "key": "PreFix",
+        "value": 655360
+    },
+    {
+        "key": "PostFix",
+        "value": 720896
+    },
+    {
+        "key": "IsmNakra",
+        "value": 1114112
+    },
+    {
+        "key": "SiftZati",
+        "value": 1179648
+    },
+    {
+        "key": "FealMutaddi",
+        "value": 1245184
+    },
+    {
+        "key": "HarfFijaia",
+        "value": 1310720
+    },
+    {
+        "key": "IsmMuarfa",
+        "value": 2162688
+    },
+    {
+        "key": "SiftNisbati",
+        "value": 2228224
+    },
+    {
+        "key": "FealLazim",
+        "value": 2293760
+    },
+    {
+        "key": "HarfJaar",
+        "value": 2359296
+    },
+    {
+        "key": "IsmMujarrad",
+        "value": 3211264
+    },
+    {
+        "key": "IsmMujarrad",
+        "value": 3211264
+    },
+    {
+        "key": "SiftAdadi",
+        "value": 3276800
+    },
+    {
+        "key": "FealNakis",
+        "value": 3342336
+    },
+    {
+        "key": "HarfNafi",
+        "value": 3407872
+    },
+    {
+        "key": "IsmIshara",
+        "value": 4259840
+    },
+    {
+        "key": "SiftMiqdari",
+        "value": 4325376
+    },
+    {
+        "key": "FealImdadi",
+        "value": 4390912
+    },
+    {
+        "key": "HarfDuaiya",
+        "value": 4456448
+    },
+    {
+        "key": "IsmHasilMasdar",
+        "value": 5308416
+    },
+    {
+        "key": "IsmHasilMasdar",
+        "value": 5308416
+    },
+    {
+        "key": "SiftIshara",
+        "value": 5373952
+    },
+    {
+        "key": "FealTaam",
+        "value": 5439488
+    },
+    {
+        "key": "HarfTashbih",
+        "value": 5505024
+    },
+    {
+        "key": "IsmKaifiat",
+        "value": 6356992
+    },
+    {
+        "key": "SiftMushba",
+        "value": 6422528
+    },
+    {
+        "key": "MutaliqFeal",
+        "value": 6488064
+    },
+    {
+        "key": "HarfTanbeeh",
+        "value": 6553600
+    },
+    {
+        "key": "IsmJamid",
+        "value": 7405568
+    },
+    {
+        "key": "FealMurakkab",
+        "value": 7536640
+    },
+    {
+        "key": "HarfTahseen",
+        "value": 7602176
+    },
+    {
+        "key": "IsmMaada",
+        "value": 8454144
+    },
+    {
+        "key": "HarfIstasna",
+        "value": 8650752
+    },
+    {
+        "key": "IsmAddad",
+        "value": 9502720
+    },
+    {
+        "key": "HarfShart",
+        "value": 9699328
+    },
+    {
+        "key": "IsmMuawqza",
+        "value": 10551296
+    },
+    {
+        "key": "HarfTaajub",
+        "value": 10747904
+    },
+    {
+        "key": "IsmTashgeer",
+        "value": 11599872
+    },
+    {
+        "key": "HarfNidaaiya",
+        "value": 11796480
+    },
+    {
+        "key": "HarfRabt",
+        "value": 12845056
+    },
+    {
+        "key": "HarfQasam",
+        "value": 13893632
+    },
+    {
+        "key": "HarfIstasjab",
+        "value": 14942208
+    },
+    {
+        "key": "HarfIstafham",
+        "value": 15990784
+    },
+    {
+        "key": "HarfTabeh",
+        "value": 17039360
+    },
+    {
+        "key": "IsmAla",
+        "value": 17891328
+    },
+    {
+        "key": "HarfEjab",
+        "value": 18087936
+    },
+    {
+        "key": "IsmAlam",
+        "value": 18939904
+    },
+    {
+        "key": "HarfJaza",
+        "value": 19136512
+    },
+    {
+        "key": "ZameerShakhsi",
+        "value": 19988480
+    },
+    {
+        "key": "HarfTahajji",
+        "value": 20185088
+    },
+    {
+        "key": "IsmIsharaKareeb",
+        "value": 21037056
+    },
+    {
+        "key": "HarfSoot",
+        "value": 21233664
+    },
+    {
+        "key": "HarfIzafat",
+        "value": 22282240
+    },
+    {
+        "key": "HarfNida",
+        "value": 23330816
+    },
+    {
+        "key": "HarfTardeed",
+        "value": 24379392
+    },
+    {
+        "key": "HarfTakeed",
+        "value": 25427968
+    },
+    {
+        "key": "HarfAtaf",
+        "value": 26476544
+    },
+    {
+        "key": "HarfTanaffar",
+        "value": 27525120
+    },
+    {
+        "key": "HarfBiyaniya",
+        "value": 28573696
+    },
+    {
+        "key": "HarfIstadraak",
+        "value": 29622272
+    },
+    {
+        "key": "HarfIllat",
+        "value": 30670848
+    },
+    {
+        "key": "HarfTakhsees",
+        "value": 31719424
+    },
+    {
+        "key": "HarfTamanna",
+        "value": 32768000
+    },
+    {
+        "key": "IsmSoot",
+        "value": 34668544
+    },
+    {
+        "key": "ZameerIshara",
+        "value": 36765696
+    },
+    {
+        "key": "IsmIsharaBaeed",
+        "value": 37814272
+    },
+    {
+        "key": "IsmTashgir",
+        "value": 51445760
+    },
+    {
+        "key": "ZameerIstafham",
+        "value": 53542912
+    },
+    {
+        "key": "IsmMasghar",
+        "value": 68222976
+    },
+    {
+        "key": "ZameerMosula",
+        "value": 70320128
+    },
+    {
+        "key": "IsmMukabbar",
+        "value": 85000192
+    },
+    {
+        "key": "ZameerTankeer",
+        "value": 87097344
+    },
+    {
+        "key": "IsmZarf",
+        "value": 101777408
+    },
+    {
+        "key": "Khitaab",
+        "value": 287375360
+    },
+    {
+        "key": "Ghaib",
+        "value": 288423936
+    },
+    {
+        "key": "ZameerIsharaKareeb",
+        "value": 305201152
+    },
+    {
+        "key": "IsmZarfMakan",
+        "value": 370212864
+    },
+    {
+        "key": "Lakab",
+        "value": 555810816
+    },
+    {
+        "key": "Hazir",
+        "value": 556859392
+    },
+    {
+        "key": "ZameerIsharaBaeed",
+        "value": 573636608
+    },
+    {
+        "key": "IsmZarfZaman",
+        "value": 638648320
+    },
+    {
+        "key": "Takhallus",
+        "value": 824246272
+    },
+    {
+        "key": "Mutakallam",
+        "value": 825294848
+    },
+    {
+        "key": "IsmJama",
+        "value": 907083776
+    },
+    {
+        "key": "Kunniyat",
+        "value": 1092681728
+    },
+    {
+        "key": "Mukhatib",
+        "value": 1093730304
+    },
+    {
+        "key": "Urf",
+        "value": 1361117184
+    }
+]

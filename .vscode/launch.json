@@ -15,6 +15,34 @@
             "request": "launch",
             "name": "Build",
             "program": "${workspaceFolder}\\scripts\\build.js"
-        }
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Mocha All",
+			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+			"args": [
+				"--timeout",
+				"999999",
+				"--colors",
+				"'${workspaceFolder}/{,!(node_modules)/}*/*.spec.js'"
+			],
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Mocha Current File",
+			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+			"args": [
+				"--timeout",
+				"999999",
+				"--colors",
+				"${file}"
+			],
+			"console": "integratedTerminal",
+			"internalConsoleOptions": "neverOpen"
+		}
     ]
 }

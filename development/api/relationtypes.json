@@ -1,0 +1,90 @@
+[
+    {
+        "key": "None",
+        "value": 0
+    },
+    {
+        "key": "Synonym",
+        "value": 1
+    },
+    {
+        "key": "Acronym",
+        "value": 2
+    },
+    {
+        "key": "Compound",
+        "value": 3
+    },
+    {
+        "key": "Variation",
+        "value": 4
+    },
+    {
+        "key": "Singular",
+        "value": 5
+    },
+    {
+        "key": "Plural",
+        "value": 6
+    },
+    {
+        "key": "JamaGhairNadai",
+        "value": 7
+    },
+    {
+        "key": "WahidGhairNadai",
+        "value": 8
+    },
+    {
+        "key": "JamaIstasnai",
+        "value": 9
+    },
+    {
+        "key": "OppositeGender",
+        "value": 10
+    },
+    {
+        "key": "FormOfFeal",
+        "value": 11
+    },
+    {
+        "key": "Halat",
+        "value": 12
+    },
+    {
+        "key": "HalatMafooli",
+        "value": 13
+    },
+    {
+        "key": "HalatIzafi",
+        "value": 14
+    },
+    {
+        "key": "HalatTafseeli",
+        "value": 15
+    },
+    {
+        "key": "JamaNadai",
+        "value": 16
+    },
+    {
+        "key": "HalatFaili",
+        "value": 17
+    },
+    {
+        "key": "HalatTakhsis",
+        "value": 18
+    },
+    {
+        "key": "WahidNadai",
+        "value": 19
+    },
+    {
+        "key": "Takabuli",
+        "value": 20
+    },
+    {
+        "key": "Usage",
+        "value": 21
+    }
+]

@@ -121,7 +121,8 @@ module.exports = function ({ output, development = false } = {})
 			}),
 
 			new CopyWebpackPlugin([
-				{ from : './src/resources', to : 'resources' }
+				{ from : './src/resources', to : 'resources' },
+				{ from : './public', to : '' }
 			])
 		],
 

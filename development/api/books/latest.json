@@ -1,0 +1,402 @@
+[
+    {
+        "id": 3946,
+        "title": "آزادیکادن",
+        "description": " \r\nدعوۃ اکیڈمی اسلام آباد\r\n1991",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 15077,
+        "authorName": "محمد افتخار کھوکھر",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T21:12:53.037",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 1991,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3946",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/15077",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3946/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3946/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3945,
+        "title": "آزادیکاپروانہشہیدہیموکالانی",
+        "description": " \r\nسندھی اکادمی، دہلی\r\n2012",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 3112,
+        "authorName": "جیٹھو لال وانی",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T21:10:41.46",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 2012,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3945",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/3112",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3945/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3945/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3944,
+        "title": "آزادی کا ادب",
+        "description": " جلد - 001\r\nمکتبہ تحریک، دہلی\r\n1954",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 2524,
+        "authorName": "گوپال متل",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T21:03:59.017",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 1954,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3944",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/2524",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3944/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3944/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3943,
+        "title": "آزادی ملی",
+        "description": " بھارت میں منتری منڈل مشن\r\nآرتی پرکاشن، پٹنہ\r\n",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 9162,
+        "authorName": "پورنیندو نارائن",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T20:56:11.683",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 0,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3943",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/9162",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3943/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3943/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3942,
+        "title": "آزادیسےقبلاردوتحقیق",
+        "description": " \r\nایم۔ آر۔ پبلیکیشن، نئی دہلی\r\n2013",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 5229,
+        "authorName": "محمد اکمل",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T20:52:41.227",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 2013,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3942",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/5229",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3942/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3942/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3941,
+        "title": "آزادی",
+        "description": " \r\nساہتیہ اکادمی، نئی دہلی\r\n1984",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 15503,
+        "authorName": "چمن نہل",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T20:39:11.697",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 1984,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3941",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/15503",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3941/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3941/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3940,
+        "title": "آزادی",
+        "description": " \r\nترقی اردو بیورو، نئی دہلی\r\n1978",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 7275,
+        "authorName": "جان اسٹوارٹ مل",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T20:29:39.843",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 1978,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3940",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/7275",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3940/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3940/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3939,
+        "title": "آزادی",
+        "description": " \r\nمکتبہ جامعہ اسلامیہ قرول باغ،دہلی\r\n",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 7275,
+        "authorName": "جان اسٹوارٹ مل",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T20:20:43.91",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 0,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3939",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/7275",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3939/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3939/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3938,
+        "title": "آزادئہند",
+        "description": " \r\nمکتبۂ جمال، لاہور\r\n2003",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 15226,
+        "authorName": "ابو الکلام آزاد",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T20:14:00.297",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 2003,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3938",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/15226",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3938/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3938/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    },
+    {
+        "id": 3937,
+        "title": "آزاد ہندوستان",
+        "description": " ماضی اور مستقبل\r\nخدا بخش لائبریری،پٹنہ\r\n2000",
+        "categories": [],
+        "language": 2,
+        "isPublic": false,
+        "authorId": 8159,
+        "authorName": "",
+        "seriesId": null,
+        "seriesName": null,
+        "seriesIndex": null,
+        "dateAdded": "2019-06-18T20:03:06.72",
+        "dateUpdated": "0001-01-01T00:00:00",
+        "yearPublished": 2000,
+        "copyrights": 0,
+        "status": 0,
+        "links": [
+            {
+                "href": "http://localhost:4200/api/books/3937",
+                "rel": "self"
+            },
+            {
+                "href": "http://localhost:4200/api/authors/8159",
+                "rel": "author"
+            },
+            {
+                "href": "http://localhost:4200/api/books/3937/chapters",
+                "rel": "chapters"
+            },
+            {
+                "href": "http://localhost:4200/api/boos/3937/files",
+                "rel": "files"
+            },
+            {
+                "href": "http://localhost:4200/api/file/6648",
+                "rel": "image"
+            }
+        ]
+    }
+]

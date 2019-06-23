@@ -1,26 +1,24 @@
 import React                            from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IntlProvider } from 'react-intl';
 import { push } from 'connected-react-router';
 import { getEntry } from '../../state/actions/apiActions';
 
 import Routes from '../Routes';
+import Header from '../header/header.jsx';
+import Home from '../home/home.jsx';
 import AuthenticationService from '../../services/AuthenticationService';
-import LocaleService from '../../services/LocaleService';
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 class Page extends React.Component
 {
 	state = {
-		isLoading : false,
-		locale : null
+		isLoading : false
 	  };
 
 	async componentDidMount ()
 	{
-		console.log('componentDidMount');
 		if (localStorage.getItem('isLoggedIn') === 'true')
 		{
 		  AuthenticationService.renewSession();
@@ -28,12 +26,6 @@ class Page extends React.Component
 
 		this.setState({
 		  isLoading : true
-		});
-
-		let locale = await LocaleService.initLocale();
-
-		this.setState({
-		  locale
 		});
 
 		try
@@ -56,16 +48,18 @@ class Page extends React.Component
 
 	render ()
 	{
-		const { isLoading, locale } = this.state;
+		const { isLoading } = this.state;
 		if (isLoading)
 		{
 			return null;
 		}
 
 		return (
-			<IntlProvider locale={locale.locale} messages={locale.messages}>
-				<Routes />
-			</IntlProvider>
+			<>
+				<Routes>
+					<Header />
+				</Routes>
+			</>
 		);
 	}
 }

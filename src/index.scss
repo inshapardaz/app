@@ -2,6 +2,7 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 @import 'styles/reset';
+@import 'styles/colors';
 @import 'styles/fonts';
 @import 'styles/breakpoints';
 @import 'styles/base';
@@ -12,3 +13,4 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 @import 'components/home/Home';
+@import 'components/header/header';
