@@ -3,33 +3,34 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { push } from 'connected-react-router';
+import { handleAuthentication } from '../state/actions/authActions';
 
-import AuthService from '../services/AuthenticationService';
-
-class CallbackPage extends React.Component
+class Callback extends React.Component
 {
-
-	componentDidMount ()
+	componentWillMount ()
 	{
-		AuthService.handleAuthentication();
+		console.log('authentication callback.');
+		this.props.handleAuthentication();
+		console.log('authenticated. redirecting to home page...');
+		this.props.push('/');
 	}
 
 	render ()
 	{
 		return (
-			<div className="loader">
-			</div>
+			<div>Authenticating</div>
 		);
 	}
 }
 
-CallbackPage.propTypes = {
+Callback.propTypes = {
 	history : PropTypes.object.isRequired
 };
 
 export default connect(
 	null,
 	dispatch => bindActionCreators({
-		push
+		push,
+		handleAuthentication
 	}, dispatch)
-)(CallbackPage);
+)(Callback);

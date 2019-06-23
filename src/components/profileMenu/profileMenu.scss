@@ -1,0 +1,52 @@
+.profileMenu
+{
+	.dropdown
+	{
+        padding-right: 15px;
+        position: relative;
+        cursor: pointer;
+
+		&::after
+		{
+			color: #d2d9e5;
+			position: absolute;
+			top: 50%;
+			right: 0;
+			margin-top: -2px;
+			display: inline-block;
+			width: 0;
+			height: 0;
+			margin-left: 0.255em;
+			vertical-align: 0.255em;
+			content: '';
+			border-top: 0.3em solid;
+			border-right: 0.3em solid transparent;
+			border-bottom: 0;
+			border-left: 0.3em solid transparent;
+			transition: all 0.2s ease-in-out;
+		}
+
+		&:hover {
+			color: #08f;
+
+			&::after
+			{
+				color: #b8beca;
+			}
+		}
+	}
+
+    .avatar {
+        background-color: #e4e9f0;
+    }
+
+    .icon {
+        margin-right: rem(6);
+        color: d2d9e5;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .menuIcon {
+        margin-right: rem(5);
+    }
+}

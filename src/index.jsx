@@ -7,10 +7,10 @@ import React, { Fragment }                                                from '
 import { IntlProvider }                                                   from 'react-intl';
 import { Provider }                                                       from 'react-redux';
 import { render }                                                         from 'react-dom';
+import Routes from './components/Routes';
 import AuthenticationService                                              from './services/AuthenticationService';
 import LibraryService                                                     from './services/LibraryService';
 import { createStore }                                                    from './state';
-import Page                                                               from './components/page/Page.jsx';
 import triggerEvent                                                       from './utilities/triggerEvent';
 import LocaleService                                                      from './services/LocaleService';
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -34,7 +34,7 @@ export async function start (config)
 	render(
 		<IntlProvider locale={ locale } messages={ messages } textComponent={ Fragment }>
 			<Provider store={ store }>
-				<Page />
+				<Routes />
 			</Provider>
 		</IntlProvider>,
 		document.querySelector('#root')

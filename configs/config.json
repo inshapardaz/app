@@ -2,9 +2,9 @@
 	"common" :
 	{
 		"enabled" : true,
-		"clientId" : "inshapardaz-web",
+		"clientId" : "WkEHQXUHgcec5GhzLqUZ0PTVYJ4u9ihI",
 		"theme" : "default",
-		"authority" : "http://inshapardaz.eu.auth0.com",
+		"authDomain" : "inshapardaz.eu.auth0.com",
       	"audience" : "http://api.inshapardaz.org"
 	},
 

@@ -11,11 +11,11 @@ export default class AuthenticationService
 	constructor ({
 		clientId,
 		audience,
-		authority
+		authDomain
 	})
 	{
 		this.auth0 = new auth0.WebAuth({
-			domain : authority,
+			domain : authDomain,
 			clientID : clientId,
 			audience,
 			redirectUri : `${window.location.protocol}//${window.location.hostname}${window.location.port ? `:${window.location.port}` : ''}/callback`,
@@ -59,7 +59,6 @@ export default class AuthenticationService
 		  if (authResult && authResult.accessToken && authResult.idToken)
 		  {
 				this.setSession(authResult);
-				history.replace('/');
 		  }
 		  else if (err)
 		  {

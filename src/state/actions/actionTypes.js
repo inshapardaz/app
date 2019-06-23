@@ -2,6 +2,7 @@ export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
 export const PROFILE = 'PROFILE';
+export const AUTHENTICATE = 'AUTHENTICATE';
 export const ENTRY = 'ENTRY';
 export const LANGUAGES = 'LANGUAGES';
 export const ATTRIBUTES = 'ATTRIBUTES';

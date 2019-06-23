@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, CHANGE_PASSWORD, PROFILE } from './actionTypes';
+import { LOGIN, LOGOUT, CHANGE_PASSWORD, PROFILE, AUTHENTICATE } from './actionTypes';
 import AuthenticationService from '../../services/AuthenticationService';
 
 export function login ()
@@ -52,5 +52,25 @@ export function getProfile ()
 				});
 			});
 		}
+	};
+}
+
+export function handleAuthentication ()
+{
+	return (dispatch, getState, { authenticationService }) =>
+	{
+		authenticationService.handleAuthentication();
+
+		dispatch({ type : AUTHENTICATE });
+	};
+}
+
+export function renewSession ()
+{
+	return (dispatch, getState, { authenticationService }) =>
+	{
+		authenticationService.renewSession();
+
+		dispatch({ type : 'renew_session' });
 	};
 }

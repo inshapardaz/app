@@ -1,0 +1,267 @@
+.liveSearch
+{
+	opacity: 0;
+	position: fixed;
+	z-index: -3000;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #ffffff;
+	line-height: 1.5;
+
+	padding-top: 1.07rem;
+	padding-left: 5rem;
+	padding-right: 1.15rem;
+
+	&__topInput
+	{
+		input
+		{
+			background: #eef0f4;
+		}
+	}
+
+	&--show
+	{
+		opacity: 1;
+		z-index: 3000;
+	}
+
+	&__wrapper
+	{
+		padding-top: 1.07rem;
+		padding-left: 5rem;
+		padding-right: 1.15rem;
+	}
+
+	&__search
+	{
+		direction: rtl;
+		margin-bottom: 1.53rem;
+	}
+
+	&__close
+	{
+		font-size: 0.92rem;
+		color: #acb7bf;
+		position: absolute;
+		top: 2.3rem;
+		left: 2.3rem;
+		cursor: pointer;
+		z-index: 1;
+
+		&:hover
+		{
+			color: #0e0b20;
+		}
+	}
+
+	&__logo
+	{
+		margin-bottom: 2.3rem;
+
+		&--img {
+			margin-top: 1.53rem;
+			max-width: 15.38rem;
+			max-height: 3.07rem;
+		}
+	}
+
+	&__input {
+		width: 100%;
+		border: none;
+		font-size: 4.92rem;
+		background-color: transparent;
+		font-weight: bold;
+		padding: 0;
+		color: #6a7a84;
+	}
+
+	&__option {
+		display: inline-block;
+		margin-right: 2rem;
+		font-size: 1rem;
+
+		&--checkbox
+		{
+			direction: rtl;
+		}
+
+		&--checkbox .ant-checkbox-wrapper span
+		{
+			font-size: 1rem;
+			color: #514d6a;
+		}
+
+		&--checkbox .ant-checkbox-wrapper .ant-checkbox
+		{
+			top: -0.19em;
+		}
+
+		&--checkbox .ant-checkbox-wrapper .ant-checkbox-inner
+		{
+			border-color: #b8beca;
+		}
+
+		&--checkbox .ant-checkbox-wrapper .ant-checkbox-checked .ant-checkbox-inner
+		{
+			background-color: #b8beca;
+		}
+
+		&--checkbox .ant-checkbox-wrapper .ant-checkbox-checked:after
+		{
+			border: 1px solid #b8beca;
+		}
+
+		&-icon
+		{
+			font-size: 1rem;
+		}
+
+		&--label
+		{
+			cursor: pointer;
+			position: relative;
+			margin-bottom: 0;
+		}
+	}
+
+	&__suggestion
+	{
+		margin-bottom: 3.07rem;
+
+		&-text
+		{
+			font-weight: 700;
+		}
+		&-input-text
+		{
+			font-weight: normal;
+		}
+
+	}
+
+	&__results
+	{
+		direction: rtl;
+
+		&-title
+		{
+			font-weight: 700;
+			margin-bottom: 1.53rem;
+			color: #615d7c;
+			text-align: right;
+		}
+	}
+
+
+	&__result
+	{
+		&-thumb {
+			display: block;
+			width: 3.84rem;
+			height: 3.84rem;
+			border-radius: 4px;
+			overflow: hidden;
+			vertical-align: top;
+			background-color: #acb7bf;
+			color: #fff;
+			line-height: 4.15rem;
+			text-align: center;
+			font-size: 1.38rem;
+			font-weight: bold;
+			background-size: cover;
+			float: left;
+			display: block;
+			vertical-align: top;
+			margin-left: 5.38rem;
+			padding-top: 0.61rem;
+
+			&-content
+			{
+				margin-bottom: 1.53rem;
+				min-height: 3.84rem;
+			}
+
+			&-text
+			{
+				font-weight: 300;
+				font-size: 1.53rem;
+				line-height: 1;
+				color: #615d7c;
+			}
+
+			&-source
+			{
+				color: #c0bdd0;
+			}
+		}
+	}
+
+	@media (max-width: 575px) {
+		&__result
+		{
+			&-text
+			{
+				font-size: 1.23rem;
+			}
+		}
+	}
+
+	@media (max-width: 710px)
+	{
+		&__topInput
+		{
+			width: 30px !important;
+		}
+
+		&__topInput
+		{
+			input
+			{
+				width: 30px !important;
+				padding-left: 22px !important;
+			}
+		}
+
+		&__options
+		{
+			text-align: right;
+			margin: 0 0 2.3rem;
+			padding: 0;
+			list-style: none;
+			color: #615d7c;
+		}
+
+		&__topInput .ant-input-prefix
+		{
+			left: 11px !important;
+			pointer-events: none;
+		}
+	}
+
+	@media (max-width: 767px)
+	{
+		&__input
+		{
+			font-size: 3.07rem;
+		}
+
+		&__wrapper
+		{
+			padding-left: 4.61rem;
+			padding-right: 2.3rem;
+		}
+
+		&__suggestion
+		{
+			margin-bottom: 1.15rem;
+		}
+	}
+}
+
+
+
+
+

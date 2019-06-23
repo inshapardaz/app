@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route } from 'react-router';
+import { Switch } from 'react-router';
 import { ConnectedRouter } from 'connected-react-router';
 
 import { history } from '../state';
@@ -8,6 +8,7 @@ import RouteWithLayout from './layout/RouteWithLayout';
 import Home from './home/home.jsx';
 import Callback from './callback';
 import Layout from './layout/layout.jsx';
+import Empty from './layout/empty.jsx';
 
 import BooksPage from './books/booksPage.jsx';
 import AuthorsPage from './authors/authorsPage.jsx';
@@ -22,7 +23,7 @@ class Routes extends React.Component
 		return (
 			<ConnectedRouter history={history}>
 				<Switch>
-					<Route path="/callback" component={Callback} exact />
+					<RouteWithLayout layout={Empty} path="/callback" component={Callback} exact />
 					<RouteWithLayout layout={Layout} path="/" component={Home} exact/>
 					<RouteWithLayout layout={Layout} path="/authors" component={AuthorsPage} />
 					<RouteWithLayout layout={Layout} path="/books" component={BooksPage} />

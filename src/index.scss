@@ -10,8 +10,11 @@
 @import 'styles/typography';
 
 @import "../node_modules/antd/dist/antd.css";
+
 // Components
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 @import 'components/home/home';
 @import 'components/header/header';
+@import 'components/searchbox/searchbox';
+@import 'components/languageSelector/languageSelector';
