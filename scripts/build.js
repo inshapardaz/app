@@ -20,6 +20,7 @@ async function webpack (pathToBuild)
 			if (error)
 			{
 				console.error(stderr);
+				console.log(stdout);
 
 				reject(
 					new Error(`Webpack failed with code ${error.code}.`)
