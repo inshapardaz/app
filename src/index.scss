@@ -9,8 +9,9 @@
 @import 'styles/button';
 @import 'styles/typography';
 
+@import "../node_modules/antd/dist/antd.css";
 // Components
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-@import 'components/home/Home';
+@import 'components/home/home';
 @import 'components/header/header';
