@@ -123,7 +123,7 @@ export default class LibraryService
 
 	async getEntry ()
 	{
-		return this.get(this.baseUrl);
+		return this.get(`${this.baseUrl}/entry`);
 	}
 
 	async getCategories ()
