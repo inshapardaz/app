@@ -1,6 +1,8 @@
 import React from 'react';
 import { Switch } from 'react-router';
-import { ConnectedRouter } from 'connected-react-router';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+//import { ConnectedRouter } from 'connected-react-router';
 
 import { history } from '../state';
 import RouteWithLayout from './layout/RouteWithLayout';
@@ -17,11 +19,10 @@ import CategoriesPage from './categories/categoriesPage.jsx';
 
 class Routes extends React.Component
 {
-
 	render ()
 	{
 		return (
-			<ConnectedRouter history={history}>
+			<Router history={history}>
 				<Switch>
 					<RouteWithLayout layout={Empty} path="/callback" component={Callback} exact />
 					<RouteWithLayout layout={Layout} path="/" component={Home} exact/>
@@ -29,9 +30,8 @@ class Routes extends React.Component
 					<RouteWithLayout layout={Layout} path="/books" component={BooksPage} />
 					<RouteWithLayout layout={Layout} exact path="/series" component={SeriesPage} />
 					<RouteWithLayout layout={Layout} exact path="/categories" component={CategoriesPage} />
-
 				</Switch>
-			</ConnectedRouter>
+			</Router>
 		);
 	}
 }
