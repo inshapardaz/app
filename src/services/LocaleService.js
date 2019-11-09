@@ -8,7 +8,7 @@ addLocaleData([...en, ...ur]);
 
 class LocaleService
 {
-	async initLocale ()
+	initLocale ()
 	{
 		let locale = this.getCurrentLanguage();
 
@@ -18,7 +18,7 @@ class LocaleService
 			this.setCurrentLanguage(locale);
 		}
 
-		await this.loadFormatDataForLocale(locale);
+		this.loadFormatDataForLocale(locale);
 
 		let isRtl = false;
 		let messages = enMessages;
@@ -48,11 +48,11 @@ class LocaleService
 		switch (locale)
 		{
 			case 'en' :
-				data = await import('react-intl/locale-data/en');
+				data = import('react-intl/locale-data/en');
 				break;
 
 			default :
-				data = await import('react-intl/locale-data/ur');
+				data = import('react-intl/locale-data/ur');
 		}
 
 		return addLocaleData(data.default);

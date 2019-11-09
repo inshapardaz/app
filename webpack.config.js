@@ -106,7 +106,7 @@ module.exports = function ({ output, development = false } = {})
 			}),
 
 			new HtmlPlugin({
-				filename : 'index.html.hbs',
+				filename : 'index.html',
 				hash : true,
 				template : './src/index.html.hbs'
 			}),

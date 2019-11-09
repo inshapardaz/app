@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
 import { getEntry } from '../../state/actions/apiActions';
-import { renewSession } from '../../state/actions/authActions';
 import Header from '../header/header.jsx';
 
 class Layout extends Component
@@ -14,10 +13,10 @@ class Layout extends Component
 
 	async componentDidMount ()
 	{
-		if (localStorage.getItem('isLoggedIn') === 'true')
-		{
-		  this.props.renewSession();
-		}
+		// if (localStorage.getItem('isLoggedIn') === 'true')
+		// {
+		//   this.props.renewSession();
+		// }
 
 		this.setState({
 		  isLoading : true
@@ -60,8 +59,7 @@ export default (connect(
 	  isLoading : state.isLoading
 	}),
 	dispatch => bindActionCreators({
-		renewSession,
 		getEntry,
-	  	push
+		push
 	}, dispatch)
 )(Layout));

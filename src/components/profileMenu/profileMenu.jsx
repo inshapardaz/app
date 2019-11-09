@@ -1,90 +1,60 @@
 /* eslint-disable no-script-url */
 /* eslint-disable no-mixed-spaces-and-tabs */
 import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { FormattedMessage } from 'react-intl';
 import { Menu, Dropdown, Avatar } from 'antd';
-import { login, logout, getProfile } from '../../state/actions/authActions';
+import { useAuth0 } from '../../react-auth0-spa';
 
-class ProfileMenu extends React.Component
+const ProfileMenu = () =>
 {
-	constructor (props)
+	const { loading, user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+
+	const displayName = user ? user.name : '';
+
+	if (loading)
 	{
-		super(props);
-		this.state = {
-			profile : {
-				nickname : ''
-			}
-		};
+		return (<div>Loading...</div>);
 	}
 
-	async componentWillMount ()
-	{
-		console.log('this.props.user', this.props.user);
-		if (this.props.user)
-		{
-			await this.props.getProfile();
-		}
-	}
+	const loginAction = isAuthenticated ?
+		(<Menu.Item>
+			<a href="javascript: void(0);" onClick={() => logout()}>
+				<i className="fa fa-sign-out-alt menuIcon mr-2" />
+				<FormattedMessage id="logout" />
+			</a>
+		</Menu.Item>)
+		:
+		(<Menu.Item>
+			<a href="javascript:void(0);" onClick={() => loginWithRedirect({})}>
+				<i className="fa fa-sign-in-alt menuIcon mr-2" />
+				<FormattedMessage id="login" />
+			</a>
+		</Menu.Item>);
 
-	render ()
-	{
+	const menu = (
+		<Menu selectable={false}>
+			<Menu.Item>
+				<strong>
+					<FormattedMessage id="welcome.user" values={{ user : displayName }} />
+				</strong>
+			</Menu.Item>
+			<Menu.Divider />
+			{loginAction}
+		</Menu>
+	);
+	const avatar = user && user.picture ?
+		(<Avatar className="avatar" shape="square" size="large" src={user.picture} />) :
+		(<Avatar className="avatar" shape="square" size="large" icon="user" />);
 
-		const { user } = this.props;
-		const { profile } = this.state;
+	return (
+		<>
+			<Dropdown overlay={menu} trigger={['click']} className="profileMenu">
+				<div className="dropdown">
+					{avatar}
+				</div>
+			</Dropdown>
+		</>
+	);
+};
 
-		const displayName = user && profile ? profile.nickname : '';
-
-		const loginAction = user ?
-			(<Menu.Item>
-				<a href="javascript: void(0);" onClick={this.props.logout}>
-					<i className="fa fa-sign-out-alt menuIcon mr-2" />
-					<FormattedMessage id="logout" />
-				</a>
-			</Menu.Item>)
-			:
-			(<Menu.Item>
-				<a href="javascript:void(0);" onClick={this.props.login}>
-					<i className="fa fa-sign-in-alt menuIcon mr-2" />
-					<FormattedMessage id="login" />
-				</a>
-			</Menu.Item>);
-
-		const menu = (
-			<Menu selectable={false}>
-				<Menu.Item>
-					<strong>
-						<FormattedMessage id="welcome.user" values={{ user : displayName }} />
-					</strong>
-				</Menu.Item>
-				<Menu.Divider />
-				{loginAction}
-			</Menu>
-		);
-		const avatar = profile.picture ?
-			(<Avatar className="avatar" shape="square" size="large" src={profile.picture} />) :
-			(<Avatar className="avatar" shape="square" size="large" icon="user" />);
-
-		return (
-            <>
-                <Dropdown overlay={menu} trigger={['click']} onVisibleChange={this.addCount} className="profileMenu">
-                	<div className="dropdown">
-                		{avatar}
-                	</div>
-                </Dropdown>
-            </>
-		);
-	}
-}
-
-export default connect(
-	state => ({
-		user : state.oidc.user
-	}),
-	dispatch => bindActionCreators({
-		login,
-		logout,
-		getProfile
-	}, dispatch)
-)(ProfileMenu);
+export default ProfileMenu;

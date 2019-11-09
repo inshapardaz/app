@@ -2,9 +2,7 @@ const { resolve }                  = require('path');
 const express                      = require('express');
 const webpackDevelopmentMiddleware = require('webpack-dev-middleware');
 const webpack                      = require('webpack');
-const config                       = require('../configs/config.json');
 const configure                    = require('../webpack.config');
-const { generateConfig }           = require('./generateConfig');
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 express()
@@ -51,6 +49,4 @@ express()
 		}
 
 		console.log('Development server has started on port 4200. Wait for the initial build to finish and then generate configuration.');
-		const data = { ...config.common, ...config.development };
-		generateConfig('development/app/index.html.hbs', data);
 	});

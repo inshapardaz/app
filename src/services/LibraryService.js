@@ -1,31 +1,26 @@
 import axios from 'axios';
 
-export default class LibraryService
+function LibraryService (baseUrl, getIdTokenClaims)
 {
-	constructor (authenticationService, { requirements, apiUrl })
-	{
-		this.baseUrl = apiUrl;
-		this.requirements = requirements;
-		this.authenticationService = authenticationService;
-	}
 
-	appendAuthentication (headers)
+	this.appendAuthentication = async (headers) =>
 	{
-		if (this.authenticationService.isAuthenticated)
+		const token = await getIdTokenClaims();
+		if (token)
 		{
-			const authorization = `Bearer ${this.authenticationService.getAccessToken()}`;
-			headers['Authorization'] = authorization;
+			// eslint-disable-next-line no-underscore-dangle
+			headers['Authorization'] = `Bearer ${token.__raw}`;
 		}
-	}
+	};
 
-	async get (url)
+	this.get = async (url) =>
 	{
 		let headers = {
 			'Accept' : 'application/json',
 			'Content-Type' : 'application/json'
 		};
 
-		this.appendAuthentication(headers);
+		await this.appendAuthentication(headers);
 
 		let options = {
 			url,
@@ -36,16 +31,16 @@ export default class LibraryService
 
 		const res = await axios(options);
 		return this.parseObject(res.data);
-	}
+	};
 
-	async post (url, contents, contentType = 'application/json')
+	this.post = async (url, contents, contentType = 'application/json') =>
 	{
 		let headers = {
 			'Accept' : 'application/json',
 			'Content-Type' : contentType
 		};
 
-		this.appendAuthentication(headers);
+		await this.appendAuthentication(headers);
 
 		let options = {
 			withCredentials : true,
@@ -56,16 +51,16 @@ export default class LibraryService
 
 		const res = await axios.post(url, contents, options);
 		return this.parseObject(res.data);
-	}
+	};
 
-	async put (url, contents)
+	this.put = async (url, contents) =>
 	{
 		let headers = {
 			'Accept' : 'application/json',
 			'Content-Type' : 'application/json'
 		};
 
-		this.appendAuthentication(headers);
+		await this.appendAuthentication(headers);
 
 		delete contents.links;
 
@@ -79,16 +74,16 @@ export default class LibraryService
 
 		const res = await axios(options);
 		return this.parseObject(res.data);
-	}
+	};
 
-	async delete (url)
+	this.delete = async (url) =>
 	{
 		let headers = {
 			'Accept' : 'application/json',
 			'Content-Type' : 'application/json'
 		};
 
-		this.appendAuthentication(headers);
+		await this.appendAuthentication(headers);
 
 		let options = {
 			url,
@@ -99,15 +94,15 @@ export default class LibraryService
 
 		const res = await axios(options);
 		return this.parseObject(res.data);
-	}
+	};
 
-	async upload (url, file)
+	this.upload = async (url, file) =>
 	{
 		let headers = {
 			'Accept' : 'application/json'
 		};
 
-		this.appendAuthentication(headers);
+		await this.appendAuthentication(headers);
 
 		let options = {
 			withCredentials : true,
@@ -119,137 +114,137 @@ export default class LibraryService
 
 		const res = await axios.post(url, formData, options);
 		return this.parseObject(res.data);
-	}
+	};
 
-	async getEntry ()
+	this.getEntry = async () =>
 	{
-		return this.get(`${this.baseUrl}/entry`);
-	}
+		return this.get(`${baseUrl}/entry`);
+	};
 
-	async getCategories ()
+	this.getCategories = async () =>
 	{
-		return this.get(`${this.baseUrl}/categories`);
-	}
+		return this.get(`${baseUrl}/categories`);
+	};
 
-	async getCategory (id)
+	this.getCategory = async (id) =>
 	{
-		return this.get(`${this.baseUrl}/categories/${id}`);
-	}
+		return this.get(`${baseUrl}/categories/${id}`);
+	};
 
-	async getSeries ()
+	this.getSeries = async () =>
 	{
-		return this.get(`${this.baseUrl}/series`);
-	}
+		return this.get(`${baseUrl}/series`);
+	};
 
-	async getSeriesById (id)
+	this.getSeriesById = async (id) =>
 	{
-		return this.get(`${this.baseUrl}/series/${id}`);
-	}
+		return this.get(`${baseUrl}/series/${id}`);
+	};
 
-	async searchBooks (query, page = 1, pageSize = 12)
+	this.searchBooks = async (query, page = 1, pageSize = 12) =>
 	{
-		return this.get(`${this.baseUrl}/books?query=${query}&pageNumber=${page}&pageSize=${pageSize}`);
-	}
+		return this.get(`${baseUrl}/books?query=${query}&pageNumber=${page}&pageSize=${pageSize}`);
+	};
 
-	async getBooks (page = 1, pageSize = 12, query = null)
+	this.getBooks = async (page = 1, pageSize = 12, query = null) =>
 	{
-		const url = `${this.baseUrl}/books`;
+		const url = `${baseUrl}/books`;
 		return this.get(`${url}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
-	}
+	};
 
-	async getBooksByCategory (category, page = 1, pageSize = 12, query = null)
+	this.getBooksByCategory = async (category, page = 1, pageSize = 12, query = null) =>
 	{
-		const url = `${this.baseUrl}/categories/${category}/books`;
+		const url = `${baseUrl}/categories/${category}/books`;
 		return this.get(`${url}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
-	}
+	};
 
-	async getBooksBySeries (series, page = 1, pageSize = 12, query = null)
+	this.getBooksBySeries = async (series, page = 1, pageSize = 12, query = null) =>
 	{
-		const url = `${this.baseUrl}/series/${series}/books`;
+		const url = `${baseUrl}/series/${series}/books`;
 		return this.get(`${url}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
-	}
+	};
 
-	async getBook (id)
+	this.getBook = async (id) =>
 	{
-		return this.get(`${this.baseUrl}/books/${id}`);
-	}
+		return this.get(`${baseUrl}/books/${id}`);
+	};
 
-	async getBookChapters (book)
+	this.getBookChapters = async (book) =>
 	{
 		return this.get(book.links.chapters);
-	}
+	};
 
-	async getChapters (bookId)
+	this.getChapters = async (bookId) =>
 	{
-		return this.get(`${this.baseUrl}/books/${bookId}/chapters`);
-	}
+		return this.get(`${baseUrl}/books/${bookId}/chapters`);
+	};
 
-	async getChapter (id, chapterId)
+	this.getChapter = async (id, chapterId) =>
 	{
-		return this.get(`${this.baseUrl}/books/${id}/chapters/${chapterId}`);
-	}
+		return this.get(`${baseUrl}/books/${id}/chapters/${chapterId}`);
+	};
 
-	async getChapterContents (id, chapterId)
+	this.getChapterContents = async (id, chapterId) =>
 	{
-		return this.get(`${this.baseUrl}/books/${id}/chapters/${chapterId}/contents`);
-	}
+		return this.get(`${baseUrl}/books/${id}/chapters/${chapterId}/contents`);
+	};
 
-	async getAuthors (page = 1)
+	this.getAuthors = async (page = 1) =>
 	{
-		return this.get(`${this.baseUrl}/authors?pageNumber=${page}&pageSize=12`);
-	}
+		return this.get(`${baseUrl}/authors?pageNumber=${page}&pageSize=12`);
+	};
 
-	async searchAuthors (query, page = 1, pageSize = 6)
+	this.searchAuthors = async (query, page = 1, pageSize = 6) =>
 	{
-		return this.get(`${this.baseUrl}/authors?&pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
-	}
+		return this.get(`${baseUrl}/authors?&pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
+	};
 
-	async getAuthor (id)
+	this.getAuthor = async (id) =>
 	{
-		return this.get(`${this.baseUrl}/authors/${id}`);
-	}
+		return this.get(`${baseUrl}/authors/${id}`);
+	};
 
-	async getAuthorBooks (link, page = 1, pageSize = 12, query = null)
+	this.getAuthorBooks = async (link, page = 1, pageSize = 12, query = null) =>
 	{
 		return this.get(`${link}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
-	}
+	};
 
-	async getBookFiles (link)
+	this.getBookFiles = async (link) =>
 	{
 		return this.get(link);
-	}
+	};
 
-	async getDictionary (id)
+	this.getDictionary = async (id) =>
 	{
-		return this.get(`${this.baseUrl}/dictionaries/${id}`);
-	}
+		return this.get(`${baseUrl}/dictionaries/${id}`);
+	};
 
-	async getWords (dictionaryId, page = 1)
+	this.getWords = async (dictionaryId, page = 1) =>
 	{
-		return this.get(`${this.baseUrl}/dictionaries/${dictionaryId}/words?pageNumber=${page}&pageSize=12`);
-	}
+		return this.get(`${baseUrl}/dictionaries/${dictionaryId}/words?pageNumber=${page}&pageSize=12`);
+	};
 
-	async getWordMeaning (dictionaryId, wordId)
+	this.getWordMeaning = async (dictionaryId, wordId) =>
 	{
-		return this.get(`${this.baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/meanings`);
-	}
+		return this.get(`${baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/meanings`);
+	};
 
-	async getWordTranslations (dictionaryId, wordId)
+	this.getWordTranslations = async (dictionaryId, wordId) =>
 	{
-		return this.get(`${this.baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/translations`);
-	}
+		return this.get(`${baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/translations`);
+	};
 
-	async getWordRelationships (dictionaryId, wordId)
+	this.getWordRelationships = async (dictionaryId, wordId) =>
 	{
-		return this.get(`${this.baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/relationships`);
-	}
+		return this.get(`${baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/relationships`);
+	};
 
-	getQueryParameter  = query =>
+	this.getQueryParameter  = query =>
 	{
 		return (query ? `&query=${query}` : '');
-	}
+	};
 
-	parseObject (source)
+	this.parseObject = (source) =>
 	{
 		if (source)
 		{
@@ -293,5 +288,7 @@ export default class LibraryService
 		}
 
 		return source;
-	}
+	};
 }
+
+export default LibraryService;
