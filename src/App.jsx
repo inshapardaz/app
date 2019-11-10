@@ -8,7 +8,7 @@ import LibraryService from './services/LibraryService';
 import LocaleService from './services/LocaleService';
 import Routes from './components/Routes';
 
-function App ()
+function App (props)
 {
 	const { loading, getIdTokenClaims } = useAuth0();
 
@@ -19,7 +19,7 @@ function App ()
 		);
 	}
 
-	const libraryService = new LibraryService('http://localhost:5000/api', getIdTokenClaims);
+	const libraryService = new LibraryService(props.apiUrl, getIdTokenClaims);
 	const { messages, locale } = LocaleService.initLocale();
 	const store = createStore({
 		libraryService

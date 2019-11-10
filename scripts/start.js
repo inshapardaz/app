@@ -2,7 +2,9 @@ const { resolve }                  = require('path');
 const express                      = require('express');
 const webpackDevelopmentMiddleware = require('webpack-dev-middleware');
 const webpack                      = require('webpack');
+const config                       = require('../configs/config.json');
 const configure                    = require('../webpack.config');
+const { generateConfig }           = require('./generateConfig');
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 express()
@@ -17,13 +19,13 @@ express()
 	)
 
 	.use('/api/files', express.static(
-		resolve('development/api/files/6648.jpg'), {
+		resolve('serve/api/files/6648.jpg'), {
 			extensions : ['jpg', 'jpeg']
 		}
 	))
 
 	.use('/api', express.static(
-		resolve('development/api'), {
+		resolve('serve/api'), {
 			extensions : ['json'], index : 'index.json'
 		}
 	))
@@ -48,5 +50,7 @@ express()
 			return;
 		}
 
+		const data = { ...config.common, ...config.development };
+		generateConfig('development/app/index.html.hbs', data);
 		console.log('Development server has started on port 4200. Wait for the initial build to finish and then generate configuration.');
 	});

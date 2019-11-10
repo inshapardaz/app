@@ -21,15 +21,18 @@ const onRedirectCallback = appState =>
 	);
 };
 
-ReactDOM.render(
-	<Auth0Provider
-	  domain="inshapardaz.eu.auth0.com"
-	  client_id="WkEHQXUHgcec5GhzLqUZ0PTVYJ4u9ihI"
-	  redirect_uri={window.location.origin}
-	  onRedirectCallback={onRedirectCallback}>
-		<App />
-	</Auth0Provider>,
-	document.getElementById('root')
-);
+export async function start (config)
+{
+	ReactDOM.render(
+		<Auth0Provider
+			domain={config.authDomain}
+			client_id={config.clientId}
+			redirect_uri={window.location.origin}
+			onRedirectCallback={onRedirectCallback}>
+			<App apiUrl={config.apiUrl}/>
+		</Auth0Provider>,
+		document.getElementById('root')
+	);
+}
 
 triggerEvent(window, 'appreadytostart');
