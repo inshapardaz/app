@@ -1,4 +1,4 @@
-import { ENTRY, LANGUAGES, ATTRIBUTES, RELATIONSHIP_TYPES, CATEGORIES, SERIES } from './actionTypes';
+import { ENTRY, LANGUAGES, ATTRIBUTES, RELATIONSHIP_TYPES, CATEGORIES, SERIES, LATEST_BOOKS } from './actionTypes';
 
 export function getEntry ()
 {
@@ -69,6 +69,19 @@ export function addSeries (addLink, name)
 		dispatch({
 			type : SERIES,
 			payload : series
+		});
+	};
+}
+
+export function getLatestBooks ()
+{
+	return async (dispatch, getState, { libraryService }) =>
+	{
+		let link = getState().apiReducers.entry.links.latest;
+		const latestBooks = await libraryService.get(link);
+		dispatch({
+			type : LATEST_BOOKS,
+			payload : latestBooks
 		});
 	};
 }

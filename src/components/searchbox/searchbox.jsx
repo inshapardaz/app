@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { injectIntl } from 'react-intl';
 import { Link, withRouter } from 'react-router-dom';
 
-import { Input, Icon, Checkbox, Avatar  } from 'antd';
+import { Icon, Checkbox, Avatar  } from 'antd';
 import ApiService from '../../services/LibraryService';
 
 const defaultAuthorImage = '/resources/img/avatar1.jpg';
@@ -216,7 +216,7 @@ class SearchBox extends Component
 
     render ()
     {
-    	const searchMessage = this.props.intl.formatMessage({ id : 'header.search.placeholder' });
+    	//const searchMessage = this.props.intl.formatMessage({ id : 'header.search.placeholder' });
     	let { show, searchText, books, authors } = this.state;
 
     	const booksResult = this.renderBooks(books);
@@ -224,13 +224,7 @@ class SearchBox extends Component
 
     	return (
             <>
-                <Input
-                	className="livesearch__topInput"
-                	placeholder={searchMessage}
-                	prefix={<Icon type="search" style={{ color : 'rgba(0,0,0,.25)' }} />}
-                	style={{ width : 200 }}
-                	onFocus={this.showLiveSearch}
-                />
+				<a className="search__active" href="#" onClick={this.showLiveSearch}></a>
                 <div
                 	className={show === true ? 'liveSearch liveSearch--show' : 'liveSearch'}
                 	id="liveSearch"

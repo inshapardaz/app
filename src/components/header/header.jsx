@@ -4,9 +4,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { FormattedMessage } from 'react-intl';
 import { Menu, Icon } from 'antd';
-import BooksMenu from '../booksMenu/booksMenu.jsx';
+import Nav from './nav.jsx';
 import SearchBox from '../searchbox/searchbox.jsx';
-import ProfileMenu from '../profileMenu/profileMenu.jsx';
+// import BooksMenu from '../booksMenu/booksMenu.jsx';
+// import SearchBox from '../searchbox/searchbox.jsx';
+// import ProfileMenu from '../profileMenu/profileMenu.jsx';
 
 const SubMenu = Menu.SubMenu;
 
@@ -102,7 +104,38 @@ class Header extends Component
 
 	render ()
 	{
-		return (
+		return (<header className="header__area header__absolute sticky__header">
+			<div className="container-fluid">
+				<div className="row">
+					<div className="col-md-6 col-sm-6 col-6 col-lg-2">
+						<div className="logo">
+							<Link to="/">
+								<img src="/resources/images/header_logo.png" style={{ margin : '4px' }} />
+							</Link>
+						</div>
+					</div>
+					<div className="col-lg-8 d-none d-lg-block">
+						<Nav />
+					</div>
+					<div className="col-md-6 col-sm-6 col-6 col-lg-2">
+						<ul className="header__sidebar__right d-flex justify-content-end align-items-center">
+							<li>
+								<SearchBox />
+							</li>
+							<li>
+								<Link className="favorites" to="/books/favorites"></Link>
+							</li>
+							<li className="setting__bar__icon">
+								<a className="setting__active" href="#"></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div className="row d-none"></div>
+				<div className="mobile-menu d-block d-lg-none"></div>
+			</div>
+		</header>);
+		/*return (
 			<div className="header">
 				<Link className="header__logo" to="/">
 					<img height="24" width="24" src="/resources/images/logo.png" style={{ margin : '4px' }} />
@@ -134,14 +167,11 @@ class Header extends Component
 				<div className="header__search">
 					<SearchBox />
 				</div>
-				{/* <div className="header__item">
-					<LanguageSelector />
-				</div> */}
 				<div className="header__item header__item--profile">
 					<ProfileMenu />
 				</div>
 			</div>
-		);
+		);*/
 	}
 }
 

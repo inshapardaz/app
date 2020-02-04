@@ -13,6 +13,7 @@
 	padding-top: 1.07rem;
 	padding-left: 5rem;
 	padding-right: 1.15rem;
+	display: none;
 
 	&__topInput
 	{
@@ -26,6 +27,7 @@
 	{
 		opacity: 1;
 		z-index: 3000;
+		display: initial;
 	}
 
 	&__wrapper

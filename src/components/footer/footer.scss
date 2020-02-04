@@ -1,0 +1,15 @@
+.footer
+{
+	display: block;
+
+	&__area
+	{
+		.copyright
+		{
+			&__wrapper
+			{
+				padding: 18px 0;
+			}
+		}
+	}
+}

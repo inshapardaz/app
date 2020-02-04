@@ -1,4 +1,4 @@
-import { ENTRY, LANGUAGES, ATTRIBUTES, RELATIONSHIP_TYPES, CATEGORIES, SERIES } from '../actions/actionTypes';
+import { ENTRY, LANGUAGES, ATTRIBUTES, RELATIONSHIP_TYPES, CATEGORIES, SERIES, LATEST_BOOKS } from '../actions/actionTypes';
 
 export default function apiReducer (state = {}, action)
 {
@@ -33,6 +33,11 @@ export default function apiReducer (state = {}, action)
 			return {
 				...state,
 				series : action.payload
+			};
+		case LATEST_BOOKS :
+			return {
+				...state,
+				latestBooks : action.payload
 			};
 		default :
 			return state;

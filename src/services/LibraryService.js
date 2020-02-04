@@ -2,7 +2,6 @@ import axios from 'axios';
 
 function LibraryService (baseUrl, getIdTokenClaims)
 {
-
 	this.appendAuthentication = async (headers) =>
 	{
 		const token = await getIdTokenClaims();
@@ -144,6 +143,12 @@ function LibraryService (baseUrl, getIdTokenClaims)
 	this.searchBooks = async (query, page = 1, pageSize = 12) =>
 	{
 		return this.get(`${baseUrl}/books?query=${query}&pageNumber=${page}&pageSize=${pageSize}`);
+	};
+
+	this.getLatestBook = async () =>
+	{
+		const url = `${baseUrl}/books/latest`;
+		return this.get(url);
 	};
 
 	this.getBooks = async (page = 1, pageSize = 12, query = null) =>

@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
 import { getEntry } from '../../state/actions/apiActions';
 import Header from '../header/header.jsx';
+import Footer from '../footer/footer.jsx';
 
 class Layout extends Component
 {
@@ -24,10 +25,10 @@ class Layout extends Component
 
 		try
 		{
-		  await this.props.getEntry();
-		  this.setState({
+			await this.props.getEntry();
+			this.setState({
 				isLoading : false
-		  });
+			});
 		}
 		catch (e)
 		{
@@ -42,11 +43,17 @@ class Layout extends Component
 
 	render ()
 	{
+		if (this.state.isLoading)
+		{
+			return null;
+		}
+
 		const { children } = this.props;
 		return (
 			<>
 				<Header />
 				{children}
+				<Footer />
 			</>
 		);
 	}

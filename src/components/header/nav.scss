@@ -1,0 +1,133 @@
+.mainmenu__nav
+{
+	align-items: center;
+	align-self: start;
+	display: flex;
+	height: 90px;
+
+	.meninmenu {
+		align-items: center;
+		-ms-grid-row-align: stretch;
+		align-self: stretch;
+
+		li
+		{
+			align-self: stretch;
+			display: flex;
+
+			list-style: none;
+			list-style-image: none;
+
+			&.drop
+			{
+				position: relative;
+
+				.megamenu
+				{
+					background: #fff none repeat scroll 0 0;
+					box-shadow: 1px 2px 10px 0 rgba(0, 0, 0, 0.1);
+					display: flex;
+					right: 0;
+					opacity: 0;
+					position: absolute;
+					text-align: left;
+					top: 120%;
+					transition: all 0.5s ease 0s;
+					visibility: hidden;
+					width: 720px;
+					z-index: 3000;
+					padding: 25px 0;
+
+					&.mega03
+					{
+						width: 720px;
+					}
+
+					.item
+					{
+						//padding-left: 30px;
+						//padding-right: 20px;
+
+						&.item03
+						{
+							flex-basis: 33.33%;
+						}
+
+						.title
+						{
+							padding-left: 0;
+							border-bottom: 1px solid rgba(112, 112, 112, 0.1);
+							color: #324444;
+							font-weight: 700;
+							line-height: 20px;
+							margin-bottom: 19px;
+							margin-left: 30px;
+							margin-right: 20px;
+							padding-bottom: 10px;
+							padding-left: 0;
+							text-transform: uppercase;
+						}
+
+						li
+						{
+							padding-left: 20px;
+							padding-right: 15px;
+
+							a
+							{
+								color: #333;
+								display: block;
+								font-size: 12px;
+								line-height: 30px;
+								font-weight: bold;
+								padding: 0;
+								text-transform: capitalize;
+								transition: all 0.3s ease 0s;
+
+								&:hover
+								{
+									color: #ce7852;
+									text-decoration: none;
+								}
+							}
+						}
+					}
+				}
+
+				&:hover
+				{
+					.megamenu
+					{
+						opacity: 1;
+						top: 100%;
+						visibility: visible;
+					}
+				}
+			}
+
+			a
+			{
+				align-items: center;
+				align-self: stretch;
+				color: #333;
+				display: flex;
+				font-size: 14px;
+				font-weight: 600;
+				padding: 0 25px;
+				text-transform: uppercase;
+				transition: all 0.4s ease 0s;
+
+				&:visited
+				{
+					color: #333;
+				}
+
+				&:hover
+				{
+					color: #ce7852;
+					text-decoration: none;
+				}
+			}
+		}
+	}
+}
