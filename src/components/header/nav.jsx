@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { FormattedMessage } from 'react-intl';
 
 import { chunkArray } from '../../utilities/arrays';
+
 class Nav extends Component
 {
 	renderCategories ()

@@ -45,5 +45,11 @@ describe('When I visit the home  page', function ()
 			expect(logo.location).to.be('/');
 			expect(logo.image.isDisplayed).to.be.true;
 		});
+
+		it('I should see latest books', async function ()
+		{
+			const latestBooks = await Home.latestBooks();
+			expect(latestBooks.isDisplayed).to.be.true;
+		});
 	});
 });

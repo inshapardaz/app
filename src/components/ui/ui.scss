@@ -1,0 +1,27 @@
+/* Section */
+.section
+{
+	&__title {
+		margin: 0 auto;
+		max-width: 650px;
+		&--white h2 {
+
+			color: #fff;
+		}
+
+		h2 {
+			color: #333;
+			display: block;
+			font-size: 30px;
+			font-weight: 700;
+			line-height: 30px;
+			margin-bottom: 20px;
+			position: relative;
+			text-transform: uppercase;
+
+			@media (max-width: 991px) {
+				font-size: 25px;
+			}
+		}
+	}
+}

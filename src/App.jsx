@@ -7,6 +7,7 @@ import { createStore } from './state';
 import LibraryService from './services/LibraryService';
 import LocaleService from './services/LocaleService';
 import Routes from './components/Routes';
+import Loading from './Loading.jsx';
 
 function App (props)
 {
@@ -28,7 +29,9 @@ function App (props)
 	return (
 		<IntlProvider locale={locale} messages={messages} textComponent={Fragment}>
 			<Provider store={store}>
-				<Routes />
+				<Loading>
+					<Routes />
+				</Loading>
 			</Provider>
 		</IntlProvider>
 	);

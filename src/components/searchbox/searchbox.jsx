@@ -109,7 +109,7 @@ class SearchBox extends Component
     	}
     }
 
-    componentWillMount ()
+    componentDidMount ()
     {
     	document.addEventListener('keydown', this.handleKeyDown, false);
     }
