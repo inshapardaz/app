@@ -10,7 +10,7 @@
 
 	"production" :
 	{
-		"apiUrl" : "https://api-nawishta.azurewebsites.net/api"
+		"apiUrl" : "https://api-inshapardaz.azurewebsites.net/api"
 	},
 
 	"development" :
