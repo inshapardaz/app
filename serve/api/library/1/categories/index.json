@@ -6,11 +6,11 @@
             "bookCount": 16,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/1",
+                    "href": "http://localhost:4200/api/categories/1",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/1/books",
+                    "href": "http://localhost:4200/api/categories/1/books",
                     "rel": "books"
                 }
             ]
@@ -21,11 +21,11 @@
             "bookCount": 24,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/2",
+                    "href": "http://localhost:4200/api/categories/2",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/2/books",
+                    "href": "http://localhost:4200/api/categories/2/books",
                     "rel": "books"
                 }
             ]
@@ -36,11 +36,11 @@
             "bookCount": 2,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/3",
+                    "href": "http://localhost:4200/api/categories/3",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/3/books",
+                    "href": "http://localhost:4200/api/categories/3/books",
                     "rel": "books"
                 }
             ]
@@ -51,11 +51,11 @@
             "bookCount": 721,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/4",
+                    "href": "http://localhost:4200/api/categories/4",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/4/books",
+                    "href": "http://localhost:4200/api/categories/4/books",
                     "rel": "books"
                 }
             ]
@@ -66,11 +66,11 @@
             "bookCount": 5,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/7",
+                    "href": "http://localhost:4200/api/categories/7",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/7/books",
+                    "href": "http://localhost:4200/api/categories/7/books",
                     "rel": "books"
                 }
             ]
@@ -81,11 +81,11 @@
             "bookCount": 0,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/8",
+                    "href": "http://localhost:4200/api/categories/8",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/8/books",
+                    "href": "http://localhost:4200/api/categories/8/books",
                     "rel": "books"
                 }
             ]
@@ -96,11 +96,11 @@
             "bookCount": 0,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/9",
+                    "href": "http://localhost:4200/api/categories/9",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/9/books",
+                    "href": "http://localhost:4200/api/categories/9/books",
                     "rel": "books"
                 }
             ]
@@ -111,11 +111,11 @@
             "bookCount": 0,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/10",
+                    "href": "http://localhost:4200/api/categories/10",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/10/books",
+                    "href": "http://localhost:4200/api/categories/10/books",
                     "rel": "books"
                 }
             ]
@@ -126,11 +126,11 @@
             "bookCount": 0,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/11",
+                    "href": "http://localhost:4200/api/categories/11",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/11/books",
+                    "href": "http://localhost:4200/api/categories/11/books",
                     "rel": "books"
                 }
             ]
@@ -141,11 +141,11 @@
             "bookCount": 0,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/12",
+                    "href": "http://localhost:4200/api/categories/12",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/12/books",
+                    "href": "http://localhost:4200/api/categories/12/books",
                     "rel": "books"
                 }
             ]
@@ -156,11 +156,11 @@
             "bookCount": 0,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/13",
+                    "href": "http://localhost:4200/api/categories/13",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/13/books",
+                    "href": "http://localhost:4200/api/categories/13/books",
                     "rel": "books"
                 }
             ]
@@ -171,11 +171,11 @@
             "bookCount": 934,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/14",
+                    "href": "http://localhost:4200/api/categories/14",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/14/books",
+                    "href": "http://localhost:4200/api/categories/14/books",
                     "rel": "books"
                 }
             ]
@@ -186,11 +186,11 @@
             "bookCount": 0,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/15",
+                    "href": "http://localhost:4200/api/categories/15",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/15/books",
+                    "href": "http://localhost:4200/api/categories/15/books",
                     "rel": "books"
                 }
             ]
@@ -201,11 +201,11 @@
             "bookCount": 7,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/16",
+                    "href": "http://localhost:4200/api/categories/16",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/16/books",
+                    "href": "http://localhost:4200/api/categories/16/books",
                     "rel": "books"
                 }
             ]
@@ -216,11 +216,11 @@
             "bookCount": 3,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/17",
+                    "href": "http://localhost:4200/api/categories/17",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/17/books",
+                    "href": "http://localhost:4200/api/categories/17/books",
                     "rel": "books"
                 }
             ]
@@ -231,11 +231,11 @@
             "bookCount": 6,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/18",
+                    "href": "http://localhost:4200/api/categories/18",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/18/books",
+                    "href": "http://localhost:4200/api/categories/18/books",
                     "rel": "books"
                 }
             ]
@@ -246,11 +246,11 @@
             "bookCount": 1,
             "links": [
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/19",
+                    "href": "http://localhost:4200/api/categories/19",
                     "rel": "self"
                 },
                 {
-                    "href": "http://api-inshapardaz.azurewebsites.net/api/categories/19/books",
+                    "href": "http://localhost:4200/api/categories/19/books",
                     "rel": "books"
                 }
             ]
@@ -258,7 +258,7 @@
     ],
     "links": [
         {
-            "href": "http://api-inshapardaz.azurewebsites.net/api/categories",
+            "href": "http://localhost:4200/api/categories",
             "rel": "self"
         }
     ]

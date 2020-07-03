@@ -117,7 +117,7 @@ function LibraryService (baseUrl, getIdTokenClaims)
 
 	this.getEntry = async () =>
 	{
-		return this.get(`${baseUrl}/entry`);
+		return this.get(`${baseUrl}/library/1`);
 	};
 
 	this.getCategories = async () =>

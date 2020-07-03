@@ -1,0 +1,29 @@
+{
+	"links": [
+		{
+			"href": "http://localhost:4200/api/library/1",
+			"rel": "self",
+			"method": "GET"
+		},
+		{
+			"href": "http://localhost:4200/api/library/1/authors",
+			"rel": "authors",
+			"method": "GET"
+		},
+		{
+			"href": "http://localhost:4200/api/library/1/categories",
+			"rel": "categories",
+			"method": "GET"
+		},
+		{
+			"href": "http://localhost:4200/api/library/1/series",
+			"rel": "series",
+			"method": "GET"
+		},
+		{
+			"href": "http://localhost:4200/api/library/1/books",
+			"rel": "books",
+			"method": "GET"
+		}
+	]
+}
