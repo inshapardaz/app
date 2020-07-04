@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { push } from 'connected-react-router';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { getEntry } from '../../state/actions/apiActions';
 import Header from '../header/header.jsx';
 import Footer from '../footer/footer.jsx';
@@ -51,8 +52,11 @@ class Layout extends Component
 		const { children } = this.props;
 		return (
 			<>
+				<CssBaseline />
 				<Header />
-				{children}
+				<main>
+					{children}
+				</main>
 				<Footer />
 			</>
 		);

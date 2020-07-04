@@ -2,35 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 import { injectIntl, FormattedMessage } from 'react-intl';
 
 import { getLatestBooks } from '../../../state/actions/apiActions';
-
+import BookCell from '../bookCell.jsx';
 import Section from '../../ui/section.jsx';
-
-const defaultBookImage = '/resources/img/book_placeholder.png';
-
-function bookItem (book)
-{
-	return (
-		<div key={book.id} className="book book__style--3">
-			<div className="book__thumb">
-				<Link className="first__img" to={`/books/${book.id}`}>
-					<img src={(book.links ? book.links.image : null) || defaultBookImage} alt={book.title}/>
-				</Link>
-				<Link className="second__img animation1" to={`/books/${book.id}`}>
-					<img src={(book.links ? book.links.image : null) || defaultBookImage} alt={book.title} />
-				</Link>
-			</div>
-			<div className="book__content content--center">
-				<h4><Link to={`/books/${book.id}`}>{book.title}</Link></h4>
-				<ul className="prize d-flex">
-					<li><Link to={`/authors/${book.authorId}`}>{book.authorName}</Link></li>
-				</ul>
-			</div>
-		</div>
-	);
-}
 
 class NewBookWidget extends Component
 {
@@ -59,19 +38,32 @@ class NewBookWidget extends Component
 		}
 	}
 
+	useStyles = () => makeStyles((theme) => ({
+		cardGrid : {
+		  paddingTop : theme.spacing(8),
+		  paddingBottom : theme.spacing(8)
+		}
+	}));
+
 	render ()
 	{
 		if (!this.props.latestBooks)
 		{
-			return <></>;
+			return null;
 		}
 
-		let books = this.props.latestBooks.map(book => bookItem(book));
-		return (
-			<Section title={<FormattedMessage id="home.latestBooks" />}>
-				{books}
-			</Section>
-		);
+		const classes = this.useStyles();
+		return (<>
+			<Container className={classes.cardGrid} maxWidth="md">
+				<Grid container spacing={4}>
+					{this.props.latestBooks.data.map((b) => (
+						<Grid item key={b.id} xs={12} sm={6} md={4}>
+							<BookCell book={b} key={b.id}/>
+						</Grid>
+					))}
+				</Grid>
+			</Container>
+		</>);
 	}
 }
 

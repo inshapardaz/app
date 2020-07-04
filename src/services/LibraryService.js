@@ -2,6 +2,8 @@ import axios from 'axios';
 
 function LibraryService (baseUrl, getIdTokenClaims)
 {
+	const libraryId = 1;
+	const libraryUrl = `${baseUrl}/library/${libraryId}`;
 	this.appendAuthentication = async (headers) =>
 	{
 		const token = await getIdTokenClaims();
@@ -117,61 +119,61 @@ function LibraryService (baseUrl, getIdTokenClaims)
 
 	this.getEntry = async () =>
 	{
-		return this.get(`${baseUrl}/library/1`);
+		return this.get(`${libraryUrl}`);
 	};
 
 	this.getCategories = async () =>
 	{
-		return this.get(`${baseUrl}/categories`);
+		return this.get(`${libraryUrl}/categories`);
 	};
 
 	this.getCategory = async (id) =>
 	{
-		return this.get(`${baseUrl}/categories/${id}`);
+		return this.get(`${libraryUrl}/categories/${id}`);
 	};
 
 	this.getSeries = async () =>
 	{
-		return this.get(`${baseUrl}/series`);
+		return this.get(`${libraryUrl}/series`);
 	};
 
 	this.getSeriesById = async (id) =>
 	{
-		return this.get(`${baseUrl}/series/${id}`);
+		return this.get(`${libraryUrl}/series/${id}`);
 	};
 
 	this.searchBooks = async (query, page = 1, pageSize = 12) =>
 	{
-		return this.get(`${baseUrl}/books?query=${query}&pageNumber=${page}&pageSize=${pageSize}`);
+		return this.get(`${libraryUrl}/books?query=${query}&pageNumber=${page}&pageSize=${pageSize}`);
 	};
 
-	this.getLatestBook = async () =>
+	this.getLatestBooks = async () =>
 	{
-		const url = `${baseUrl}/books/latest`;
+		const url = `${libraryUrl}/books?pageNumber=1&pageSize=12&sortby=DateCreated`;
 		return this.get(url);
 	};
 
 	this.getBooks = async (page = 1, pageSize = 12, query = null) =>
 	{
-		const url = `${baseUrl}/books`;
+		const url = `${libraryUrl}/books`;
 		return this.get(`${url}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
 	};
 
 	this.getBooksByCategory = async (category, page = 1, pageSize = 12, query = null) =>
 	{
-		const url = `${baseUrl}/categories/${category}/books`;
+		const url = `${libraryUrl}/categories/${category}/books`;
 		return this.get(`${url}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
 	};
 
 	this.getBooksBySeries = async (series, page = 1, pageSize = 12, query = null) =>
 	{
-		const url = `${baseUrl}/series/${series}/books`;
+		const url = `${libraryUrl}/series/${series}/books`;
 		return this.get(`${url}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
 	};
 
 	this.getBook = async (id) =>
 	{
-		return this.get(`${baseUrl}/books/${id}`);
+		return this.get(`${libraryUrl}/books/${id}`);
 	};
 
 	this.getBookChapters = async (book) =>
@@ -181,32 +183,32 @@ function LibraryService (baseUrl, getIdTokenClaims)
 
 	this.getChapters = async (bookId) =>
 	{
-		return this.get(`${baseUrl}/books/${bookId}/chapters`);
+		return this.get(`${libraryUrl}/books/${bookId}/chapters`);
 	};
 
 	this.getChapter = async (id, chapterId) =>
 	{
-		return this.get(`${baseUrl}/books/${id}/chapters/${chapterId}`);
+		return this.get(`${libraryUrl}/books/${id}/chapters/${chapterId}`);
 	};
 
 	this.getChapterContents = async (id, chapterId) =>
 	{
-		return this.get(`${baseUrl}/books/${id}/chapters/${chapterId}/contents`);
+		return this.get(`${libraryUrl}/books/${id}/chapters/${chapterId}/contents`);
 	};
 
 	this.getAuthors = async (page = 1) =>
 	{
-		return this.get(`${baseUrl}/authors?pageNumber=${page}&pageSize=12`);
+		return this.get(`${libraryUrl}/authors?pageNumber=${page}&pageSize=12`);
 	};
 
 	this.searchAuthors = async (query, page = 1, pageSize = 6) =>
 	{
-		return this.get(`${baseUrl}/authors?&pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
+		return this.get(`${libraryUrl}/authors?&pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
 	};
 
 	this.getAuthor = async (id) =>
 	{
-		return this.get(`${baseUrl}/authors/${id}`);
+		return this.get(`${libraryUrl}/authors/${id}`);
 	};
 
 	this.getAuthorBooks = async (link, page = 1, pageSize = 12, query = null) =>
@@ -221,27 +223,27 @@ function LibraryService (baseUrl, getIdTokenClaims)
 
 	this.getDictionary = async (id) =>
 	{
-		return this.get(`${baseUrl}/dictionaries/${id}`);
+		return this.get(`${libraryUrl}/dictionaries/${id}`);
 	};
 
 	this.getWords = async (dictionaryId, page = 1) =>
 	{
-		return this.get(`${baseUrl}/dictionaries/${dictionaryId}/words?pageNumber=${page}&pageSize=12`);
+		return this.get(`${libraryUrl}/dictionaries/${dictionaryId}/words?pageNumber=${page}&pageSize=12`);
 	};
 
 	this.getWordMeaning = async (dictionaryId, wordId) =>
 	{
-		return this.get(`${baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/meanings`);
+		return this.get(`${libraryUrl}/dictionaries/${dictionaryId}/words/${wordId}/meanings`);
 	};
 
 	this.getWordTranslations = async (dictionaryId, wordId) =>
 	{
-		return this.get(`${baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/translations`);
+		return this.get(`${libraryUrl}/dictionaries/${dictionaryId}/words/${wordId}/translations`);
 	};
 
 	this.getWordRelationships = async (dictionaryId, wordId) =>
 	{
-		return this.get(`${baseUrl}/dictionaries/${dictionaryId}/words/${wordId}/relationships`);
+		return this.get(`${libraryUrl}/dictionaries/${dictionaryId}/words/${wordId}/relationships`);
 	};
 
 	this.getQueryParameter  = query =>
@@ -261,13 +263,6 @@ function LibraryService (baseUrl, getIdTokenClaims)
 					newLinks[link.rel.replace('-', '_')] = link.href;
 				});
 				source.links = newLinks;
-			}
-
-			if (source.items)
-			{
-				let newItems = [];
-				source.items.forEach(item => newItems.push(this.parseObject(item)));
-				source.item = newItems;
 			}
 
 			if (source.data)

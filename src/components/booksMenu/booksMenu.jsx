@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { FormattedMessage } from 'react-intl';
-import { Menu, Dropdown } from 'antd';
 
 class BooksMenu extends React.Component
 {
@@ -20,44 +19,44 @@ class BooksMenu extends React.Component
 
 	renderCategories (categories)
 	{
-		if (categories && categories.items)
-		{
-			let menuItems = [];
-			menuItems.push(categories.items.map(c => this.renderCategory(c)));
+		// if (categories && categories.items)
+		// {
+		// 	let menuItems = [];
+		// 	menuItems.push(categories.items.map(c => this.renderCategory(c)));
 
-			return (<Menu selectable={false} placement="bottomRight">
-				<Menu.Item key="new">
-					<Link to="/books/new">
-						<i className="fa fa-star menuIcon mr-2" />
-						<FormattedMessage id="home.latestBooks" />
-					</Link>
-				</Menu.Item>
-				<Menu.Item key="recent">
-					<Link to="/books/recent">
-						<i className="far fa-clock menuIcon mr-2" />
-						<FormattedMessage id="home.recent" />
-					</Link>
-				</Menu.Item>
-				{this.props.entry && this.props.entry.links.favorites
-					? (<Menu.Item key="favorites">
-						<Link to="/books/favorites">
-							<i className="far fa-heart menuIcon mr-2" />
-							<FormattedMessage id="home.favoriteBooks" />
-						</Link>
-					</Menu.Item>)
-					: null
-				}
-				<Menu.Item key="allbooks">
-					<Link to="/books">
-						<i className="fa fa-book menuIcon mr-2" />
-						<FormattedMessage id="header.books.list" />
-					</Link>
-				</Menu.Item>
-				<Menu.Divider />
-				{menuItems}
-			</Menu>
-			);
-		}
+		// 	return (<Menu selectable={false} placement="bottomRight">
+		// 		<Menu.Item key="new">
+		// 			<Link to="/books/new">
+		// 				<i className="fa fa-star menuIcon mr-2" />
+		// 				<FormattedMessage id="home.latestBooks" />
+		// 			</Link>
+		// 		</Menu.Item>
+		// 		<Menu.Item key="recent">
+		// 			<Link to="/books/recent">
+		// 				<i className="far fa-clock menuIcon mr-2" />
+		// 				<FormattedMessage id="home.recent" />
+		// 			</Link>
+		// 		</Menu.Item>
+		// 		{this.props.entry && this.props.entry.links.favorites
+		// 			? (<Menu.Item key="favorites">
+		// 				<Link to="/books/favorites">
+		// 					<i className="far fa-heart menuIcon mr-2" />
+		// 					<FormattedMessage id="home.favoriteBooks" />
+		// 				</Link>
+		// 			</Menu.Item>)
+		// 			: null
+		// 		}
+		// 		<Menu.Item key="allbooks">
+		// 			<Link to="/books">
+		// 				<i className="fa fa-book menuIcon mr-2" />
+		// 				<FormattedMessage id="header.books.list" />
+		// 			</Link>
+		// 		</Menu.Item>
+		// 		<Menu.Divider />
+		// 		{menuItems}
+		// 	</Menu>
+		// 	);
+		// }
 
 		return null;
 	}
@@ -66,16 +65,16 @@ class BooksMenu extends React.Component
 	{
 		const { categories } = this.props;
 		return (
-			<Dropdown overlay={this.renderCategories(categories)} trigger={['click']} placement="bottomLeft">
-				<div className="dropdown">
-					<i className="fa fa-book menuIcon mr-2" />
-					<span className="d-none d-xl-inline">
-						<strong>
-							<FormattedMessage id="header.books" />
-						</strong>
-					</span>
-				</div>
-			</Dropdown>
+			// <Dropdown overlay={this.renderCategories(categories)} trigger={['click']} placement="bottomLeft">
+			// 	<div className="dropdown">
+			// 		<i className="fa fa-book menuIcon mr-2" />
+			// 		<span className="d-none d-xl-inline">
+			// 			<strong>
+			// 				<FormattedMessage id="header.books" />
+			// 			</strong>
+			// 		</span>
+			// 	</div>
+			// </Dropdown>
 		);
 	}
 }

@@ -59,8 +59,7 @@ export function getLatestBooks ()
 {
 	return async (dispatch, getState, { libraryService }) =>
 	{
-		let link = getState().apiReducers.entry.links.latest;
-		const latestBooks = await libraryService.get(link);
+		const latestBooks = await libraryService.getLatestBooks();
 		dispatch({
 			type : LATEST_BOOKS,
 			payload : latestBooks
