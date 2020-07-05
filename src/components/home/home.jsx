@@ -45,11 +45,19 @@ const useStyles = makeStyles((theme) => ({
 	},
 	startButton : {
 		marginTop : 16,
-		marginBottom : 16,
-		maxWidth : 400
+		marginBottom : 16
+	},
+	containerMain : {
+		padding : '68px 0 28px 0',
+		textAlign : 'center'
 	},
 	container : {
 		padding : '28px 0'
+	},
+	search : {
+		marginTop : 50,
+		marginBottom : 16,
+		display : 'flex'
 	}
 
 }));
@@ -61,7 +69,7 @@ function Home (props)
 	return (
 			<>
 				<div className={classes.home}>
-					<div className={classes.container}>
+					<div className={classes.containerMain}>
 						<Container maxWidth="sm">
 							<Typography variant="h3" align="center" gutterBottom><FormattedMessage id="app"/></Typography>
 							<Typography variant="h2" align="center" gutterBottom><FormattedMessage id="slogan" /></Typography>
@@ -76,7 +84,7 @@ function Home (props)
 								<FormattedMessage id="home.getStarted" />
 							</Button>
 
-							<Paper component="form" align="center" className={classes.root}>
+							<Paper component="form" align="center" className={classes.search}>
 								<InputBase
 									className={classes.input}
 									placeholder={props.intl.formatMessage({ id : 'header.search.placeholder' })}
@@ -87,7 +95,6 @@ function Home (props)
 									<SearchIcon />
 								</IconButton>
 							</Paper>
-
 						</Container>
 					</div>
 				</div>
