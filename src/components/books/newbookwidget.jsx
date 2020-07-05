@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
-import { getLatestBooks } from '../../../state/actions/apiActions';
-import BookCell from '../bookCell.jsx';
-import Section from '../../ui/section.jsx';
+import { getLatestBooks } from '../../state/actions/apiActions';
+import BookCell from './bookCell.jsx';
 
 class NewBookWidget extends Component
 {

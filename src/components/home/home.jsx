@@ -10,7 +10,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import SearchIcon from '@material-ui/icons/Search';
-import NewBookWidget from '../books/newbookswidget/newbookwidget.jsx';
+import NewBookWidget from '../books/newbookwidget.jsx';
 
 const useStyles = makeStyles((theme) => ({
 	root : {
