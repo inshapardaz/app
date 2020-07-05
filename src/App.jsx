@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { useAuth0 } from './react-auth0-spa';
@@ -26,13 +27,38 @@ function App (props)
 		libraryService
 	});
 
+	const theme = createMuiTheme({
+		typography : {
+			fontFamily : [
+			  'Mehr-Nastaleeq',
+			  'Roboto',
+			  '"Helvetica Neue"',
+			  'Arial',
+			  'sans-serif',
+			  '"Apple Color Emoji"',
+			  '"Segoe UI Emoji"',
+			  '"Segoe UI Symbol"'
+			].join(','),
+			palette : {
+				primary : {
+				  main : '#373837'
+				},
+				secondary : {
+					main : '#848484'
+				}
+			  }
+		  }
+	  });
+
 	return (
 		<IntlProvider locale={locale} messages={messages} textComponent={Fragment}>
-			<Provider store={store}>
-				<Loading>
-					<Routes />
-				</Loading>
-			</Provider>
+			<ThemeProvider theme={theme}>
+				<Provider store={store}>
+					<Loading>
+						<Routes />
+					</Loading>
+				</Provider>
+			</ThemeProvider>
 		</IntlProvider>
 	);
 }

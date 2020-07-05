@@ -19,6 +19,19 @@ const useStyles = makeStyles((theme) => ({
 	  alignItems : 'center',
 	  width : 400
 	},
+	home : {
+		backgroundImage : 'url(/resources/images/home_background.jpg)',
+		backgroundRepeat : 'no-repeat',
+		backgroundSize : 'cover',
+		backgroundPosition : 'center center',
+		//backgroundColor : 'antiquewhite',
+		minHeight : '600px'
+
+	},
+	contentBox : {
+		height : 500,
+		padding : '10px 0'
+	},
 	input : {
 	  marginLeft : theme.spacing(1),
 	  flex : 1
@@ -34,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
 		marginTop : 16,
 		marginBottom : 16,
 		maxWidth : 400
+	},
+	container : {
+		padding : '28px 0'
 	}
 
 }));
@@ -44,39 +60,38 @@ function Home (props)
 
 	return (
 			<>
-				<div className="container">
-					<div className="home">
-						<div className="contentbox">
-							<Container maxWidth="sm">
-								<Typography variant="h3" align="center" gutterBottom><FormattedMessage id="app"/></Typography>
-								<Typography variant="h2" align="center" gutterBottom><FormattedMessage id="slogan" /></Typography>
-								<Typography variant="body1" align="center" gutterBottom><FormattedMessage id="home.message" /></Typography>
+				<div className={classes.home}>
+					<div className={classes.container}>
+						<Container maxWidth="sm">
+							<Typography variant="h3" align="center" gutterBottom><FormattedMessage id="app"/></Typography>
+							<Typography variant="h2" align="center" gutterBottom><FormattedMessage id="slogan" /></Typography>
+							<Typography variant="body1" align="center" gutterBottom><FormattedMessage id="home.message" /></Typography>
+							<Button variant="contained"
+								align="center"
+								color="primary"
+								size="large"
+								fullWidth
+								className={classes.startButton}
+								component={Link} to="/books">
+								<FormattedMessage id="home.getStarted" />
+							</Button>
 
-								<Paper component="form" align="center" className={classes.root}>
-									<InputBase
-										className={classes.input}
-										placeholder={props.intl.formatMessage({ id : 'header.search.placeholder' })}
-										inputProps={{ 'aria-label' : 'search' }}
-									/>
-									<Divider className={classes.divider} orientation="vertical" />
-									<IconButton type="submit" className={classes.iconButton} aria-label="search">
-										<SearchIcon />
-									</IconButton>
-								</Paper>
+							<Paper component="form" align="center" className={classes.root}>
+								<InputBase
+									className={classes.input}
+									placeholder={props.intl.formatMessage({ id : 'header.search.placeholder' })}
+									inputProps={{ 'aria-label' : 'search' }}
+								/>
+								<Divider className={classes.divider} orientation="vertical" />
+								<IconButton type="submit" className={classes.iconButton} aria-label="search">
+									<SearchIcon />
+								</IconButton>
+							</Paper>
 
-								<Button variant="contained"
-									align="center"
-        							color="primary"
-									size="large"
-									className={classes.startButton}
-									component={Link} to="/books"><FormattedMessage
-										id="home.getStarted" /></Button>
-							</Container>
-						</div>
+						</Container>
 					</div>
 				</div>
-				<Divider />
-				<div className="container">
+				<div className={classes.container}>
 					<Typography variant="h3" align="center" gutterBottom>
 						<FormattedMessage id="home.latestBooks" />
 					</Typography>
