@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -60,8 +60,6 @@ function Nav (props)
 
 	const renderCategories = () =>
 	{
-		console.dir(props.categories);
-
 		if (props.categories && props.categories.items)
 		{
 			return props.categories.items.map(c => (
@@ -74,6 +72,14 @@ function Nav (props)
 
 	return (
 		<>
+			<Button aria-label="books"
+				color="inherit"
+				component={Link} to="/books"
+				className={classes.button}
+				startIcon={<PersonIcon />}
+			>
+				<FormattedMessage id="header.books" />
+			</Button>
 			<Button aria-label="authors"
 				color="inherit"
 				component={Link} to="/authors"
