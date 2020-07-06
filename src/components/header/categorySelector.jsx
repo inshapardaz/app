@@ -45,9 +45,9 @@ function CategorySelector (props)
 
 	const renderCategories = () =>
 	{
-		if (props.categories && props.categories.items)
+		if (props.categories && props.categories.data)
 		{
-			return props.categories.items.map(c => (
+			return props.categories.data.map(c => (
 				<MenuItem key={c.id} onClick={handleClose} component={Link} to={`/books?category=${c.id}`}>{c.name}</MenuItem>
 			));
 		}
