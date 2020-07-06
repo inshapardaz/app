@@ -1,5 +1,5 @@
 {
-    "app" : "انشاپرداز",
+    "app" : "نوشتہ",
     "slogan": "آج کچھ نیا پڑھیں",
     "register" : "رکن بنیں",
     "login" : "داخل ہوں",
@@ -41,7 +41,7 @@
     "header.authors": "مصنّف",
     "header.search.placeholder": "تلاش برائے عنوان، مصنّف، زمرہ",
 	"header.search.advanced_search": "بہتر تلاش",
-	"footer.copyrights" : "انشاپرداز۔ تمام حقوق محفوظ ہیں",
+	"footer.copyrights" : "نوشتہ۔ تمام حقوق محفوظ ہیں",
 	"home.getStarted": "ابتدا کریں",
 	"home.message": "اردو کتابوں کا ایک بڑا خزانہ تا کہ آپ کتابوں سے لطف اندوز ہو سکیں۔",
     "home.latestBooks": "نیا اضافہ",

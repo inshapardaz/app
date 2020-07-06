@@ -2,7 +2,7 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
@@ -14,6 +14,8 @@ import Menu from '@material-ui/core/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import { withStyles } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+
 // import { fade, makeStyles } from '@material-ui/core/styles';
 import { useAuth0 } from '../../react-auth0-spa';
 
@@ -106,7 +108,7 @@ const ProfileMenu = () =>
 
 	if (loading)
 	{
-		return (<div>Loading...</div>);
+		return null;
 	}
 
 	const onLogin = (event) =>
@@ -127,35 +129,7 @@ const ProfileMenu = () =>
 		const avatar = user.picture ? user.picture : '';
 		renderMenu = (
 			<>
-				<Avatar alt={displayName}
-					src={avatar}
-					ref={anchorRef}
-					onClick={handleToggle}/>
-					<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-						{({ TransitionProps, placement }) => (
-							<Grow
-								{...TransitionProps}
-								style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
-							>
-								<Paper>
-									<ClickAwayListener onClickAway={handleClose}>
-										<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleClose}>
-											<MenuItem >{displayName}</MenuItem>
-											<MenuItem onClick={onLogout}><FormattedMessage id="logout" /></MenuItem>
-										</MenuList>
-									</ClickAwayListener>
-								</Paper>
-							</Grow>
-						)}
-					</Popper>
-			</>
-		);
-	}
-	else
-	{
-		renderMenu = (
-			<>
-				<IconButton
+				<Button
 					edge="end"
 					aria-label="account of current user"
 					aria-controls="login"
@@ -163,9 +137,46 @@ const ProfileMenu = () =>
 					onClick={handleToggle}
 					ref={anchorRef}
 					color="inherit"
+					startIcon={<Avatar src={avatar}/>}
+					endIcon={<KeyboardArrowDownIcon />}
 				>
-					<AccountCircle />
-				</IconButton>
+				</Button>
+				<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+					{({ TransitionProps, placement }) => (
+						<Grow
+							{...TransitionProps}
+							style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
+						>
+							<Paper>
+								<ClickAwayListener onClickAway={handleClose}>
+									<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleClose}>
+										<MenuItem >{displayName}</MenuItem>
+										<MenuItem onClick={onLogout}><FormattedMessage id="logout" /></MenuItem>
+									</MenuList>
+								</ClickAwayListener>
+							</Paper>
+						</Grow>
+					)}
+				</Popper>
+			</>
+		);
+	}
+	else
+	{
+		renderMenu = (
+			<>
+				<Button
+					edge="end"
+					aria-label="account of current user"
+					aria-controls="login"
+					aria-haspopup="true"
+					onClick={handleToggle}
+					ref={anchorRef}
+					color="inherit"
+					startIcon={<AccountCircle />}
+					endIcon={<KeyboardArrowDownIcon />}
+				>
+				</Button>
 				<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
 					{({ TransitionProps, placement }) => (
 						<Grow

@@ -66,3 +66,15 @@ export function getLatestBooks ()
 		});
 	};
 }
+
+export function getSeries (pageNumber = 1, pageSize = 10)
+{
+	return async (dispatch, getState, { libraryService }) =>
+	{
+		const series = await libraryService.getSeries(pageNumber, pageSize);
+		dispatch({
+			type : SERIES,
+			payload : series
+		});
+	};
+}

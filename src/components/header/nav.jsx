@@ -1,20 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { FormattedMessage } from 'react-intl';
 import Button from '@material-ui/core/Button';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
 import PersonIcon from '@material-ui/icons/Person';
+import MoreIcon from '@material-ui/icons/MoreVert';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
-import CategoryIcon from '@material-ui/icons/Category';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import { makeStyles } from '@material-ui/core/styles';
+import ProfileMenu from './profileMenu.jsx';
+import LanguageSelector from './languageSelector.jsx';
+import CategorySelector from './categorySelector.jsx';
 
 const useStyles = makeStyles((theme) => ({
 	root : {
@@ -25,137 +23,120 @@ const useStyles = makeStyles((theme) => ({
 	},
 	paper : {
 	  marginRight : theme.spacing(2)
+	},
+	sectionDesktop : {
+		display : 'none',
+		[theme.breakpoints.up('md')] : {
+			display : 'flex'
+		}
+	},
+	sectionMobile : {
+		display : 'flex',
+		[theme.breakpoints.up('md')] : {
+		  display : 'none'
+		}
 	}
 }));
 
-function Nav (props)
+function Nav ()
 {
 	const classes = useStyles();
-	const anchorRef = React.useRef(null);
-	const [open, setOpen] = React.useState(false);
+	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-	const handleToggle = () =>
+	const handleMobileMenuClose = () =>
 	{
-		setOpen((prevOpen) => !prevOpen);
+		setMobileMoreAnchorEl(null);
 	};
 
-	const handleClose = (event) =>
+	const handleMobileMenuOpen = (event) =>
 	{
-		if (anchorRef.current && anchorRef.current.contains(event.target))
-		{
-		  return;
-		}
-
-		setOpen(false);
+		setMobileMoreAnchorEl(event.currentTarget);
 	};
 
-	const handleListKeyDown  = (event) =>
-	{
-		if (event.key === 'Tab')
-		{
-		  event.preventDefault();
-		  setOpen(false);
-		}
-	};
-
-	const renderCategories = () =>
-	{
-		if (props.categories && props.categories.items)
-		{
-			return props.categories.items.map(c => (
-				<MenuItem key={c.id} onClick={handleClose} component={Link} to={`/books?category=${c.id}`}>{c.name}</MenuItem>
-			));
-		}
-
-		return null;
-	};
+	const mobileMenuId = 'primary-search-account-menu-mobile';
+	const renderMobileMenu = (
+		<Menu
+		  anchorEl={mobileMoreAnchorEl}
+		  anchorOrigin={{ vertical : 'top', horizontal : 'right' }}
+		  id={mobileMenuId}
+		  keepMounted
+		  transformOrigin={{ vertical : 'top', horizontal : 'right' }}
+		  open={isMobileMenuOpen}
+		  onClose={handleMobileMenuClose}
+		>
+		  <MenuItem>
+				<IconButton aria-label="books" color="inherit"
+					component={Link} to="/books">
+					<LibraryBooksIcon />
+				</IconButton>
+				<FormattedMessage id="header.books" />
+		  </MenuItem>
+		  <MenuItem>
+				<IconButton aria-label="authors" color="inherit"
+					component={Link} to="/authors">
+					<PersonIcon />
+				</IconButton>
+				<FormattedMessage id="header.authors" />
+		  </MenuItem>
+		  <MenuItem>
+				<IconButton aria-label="series" color="inherit"
+					component={Link} to="/series">
+					<CollectionsBookmarkIcon />
+				</IconButton>
+				<FormattedMessage id="header.series" />
+		  </MenuItem>
+		  <CategorySelector />
+		  <LanguageSelector />
+		  <ProfileMenu />
+		</Menu>
+	  );
 
 	return (
 		<>
-			<Button aria-label="books"
-				color="inherit"
-				component={Link} to="/books"
-				className={classes.button}
-				startIcon={<PersonIcon />}
-			>
-				<FormattedMessage id="header.books" />
-			</Button>
-			<Button aria-label="authors"
-				color="inherit"
-				component={Link} to="/authors"
-				className={classes.button}
-				startIcon={<PersonIcon />}
-			>
-				<FormattedMessage id="header.authors" />
-			</Button>
-			<Button aria-label="series"
-				color="inherit"
-				component={Link} to="/series"
-				className={classes.button}
-				startIcon={<CollectionsBookmarkIcon />}
-			>
-				<FormattedMessage id="header.series" />
-			</Button>
-			<Button
-				ref={anchorRef}
-				aria-controls={open ? 'menu-list-grow' : undefined}
-				aria-haspopup="true"
-				color="inherit"
-				onClick={handleToggle}
-				startIcon={<CategoryIcon />}
-				endIcon={<KeyboardArrowDownIcon />}
-			>
-				<FormattedMessage id="header.categories" />
-			</Button>
-			<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-				{({ TransitionProps, placement }) => (
-					<Grow
-						{...TransitionProps}
-						style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
-					>
-						<Paper>
-							<ClickAwayListener onClickAway={handleClose}>
-								<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-									{ renderCategories() }
-								</MenuList>
-							</ClickAwayListener>
-						</Paper>
-					</Grow>
-				)}
-			</Popper>
+			<div className={classes.sectionDesktop}>
+				<Button aria-label="books"
+					color="inherit"
+					component={Link} to="/books"
+					className={classes.button}
+					startIcon={<LibraryBooksIcon />}
+				>
+					<FormattedMessage id="header.books" />
+				</Button>
+				<Button aria-label="authors"
+					color="inherit"
+					component={Link} to="/authors"
+					className={classes.button}
+					startIcon={<PersonIcon />}
+				>
+					<FormattedMessage id="header.authors" />
+				</Button>
+				<Button aria-label="series"
+					color="inherit"
+					component={Link} to="/series"
+					className={classes.button}
+					startIcon={<CollectionsBookmarkIcon />}
+				>
+					<FormattedMessage id="header.series" />
+				</Button>
+				<CategorySelector />
+				<LanguageSelector />
+				<ProfileMenu />
+			</div>
+			<div className={classes.sectionMobile}>
+				<IconButton
+					aria-label="show more"
+					aria-controls={mobileMenuId}
+					aria-haspopup="true"
+					onClick={handleMobileMenuOpen}
+					color="inherit"
+				>
+					<MoreIcon />
+				</IconButton>
+			</div>
+			{renderMobileMenu}
 		</>
 	);
-
-		// return (
-		// 	<nav className="mainmenu__nav">
-		// 		<ul className="meninmenu d-flex justify-content-start">
-		// 			<li>
-		// 				<Link to="/"><FormattedMessage id="header.home" /></Link>
-		// 			</li>
-		// 			<li className="drop">
-		// 				<Link to="/books"><FormattedMessage id="header.books" /></Link>
-		// 				<div className="megamenu mega03">
-		// 					{ this.renderCategories() }
-		// 				</div>
-		// 			</li>
-		// 			<li>
-		// 				<Link to="/authors"><FormattedMessage id="header.authors" /></Link>
-		// 			</li>
-		// 			<li>
-		// 				<Link to="/series"><FormattedMessage id="header.series" /></Link>
-		// 			</li>
-		// 			<li>
-		// 				<Link to="/categories"><FormattedMessage id="header.categories" /></Link>
-		// 			</li>
-		// 		</ul>
-		// 	</nav>
-		//);
 }
 
-export default (connect(
-	(state) => ({
-		categories : state.apiReducers.categories
-	}),
-	dispatch => bindActionCreators({
-	}, dispatch)
-)(Nav));
+export default Nav;

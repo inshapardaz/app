@@ -9,8 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Nav from './nav.jsx';
 import SearchBox from '../searchbox/searchbox.jsx';
 // import BooksMenu from '../booksMenu/booksMenu.jsx';
-import ProfileMenu from '../profileMenu/profileMenu.jsx';
-import LanguageSelector from '../languageSelector/languageSelector.jsx';
 
 const useStyles =  makeStyles((theme) => ({
 	icon : {
@@ -35,16 +33,14 @@ export default function Header ()
 			<Link to="/">
 				<img  className={classes.icon} height="24" width="24" src="/resources/images/logo.png" style={{ margin : '4px' }} />
 			</Link>
-			<Typography variant="h6" color="inherit" noWrap>
-				<FormattedMessage id="app" />
-			</Typography>
-			<div className={classes.sectionDesktop}>
-				<Nav />
+			<div className={classes.sectionDesktop} >
+				<Typography variant="h6" color="inherit" noWrap>
+					<FormattedMessage id="app" />
+				</Typography>
 			</div>
-			<div className={classes.grow} />
 			<SearchBox />
-			<LanguageSelector />
-			<ProfileMenu />
+			<div className={classes.grow} />
+			<Nav />
 		</Toolbar>
 	</AppBar>);
 }

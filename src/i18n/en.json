@@ -1,5 +1,5 @@
 {
-    "app" : "inshapardaz",
+    "app" : "Nawishta",
     "slogan": "Read something new today",
     "register" : "Register",
     "login" : "Login",
@@ -41,7 +41,7 @@
     "header.authors": "Authors",
     "header.search.placeholder": "Search by title, author, keyword",
 	"header.search.advanced_search": "Advanced Search",
-	"footer.copyrights" : "Copyrights Inshapardaz. All rights reserved.",
+	"footer.copyrights" : "Copyrights Nawishta. All rights reserved.",
 	"home.getStarted": "Get Started",
 	"home.message": "One of the largest collection of unicode books with state of art reader view. Happy reading",
     "home.latestBooks": "Latest Additions",
