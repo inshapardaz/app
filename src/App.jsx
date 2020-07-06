@@ -11,7 +11,6 @@ import { createStore } from './state';
 import LibraryService from './services/LibraryService';
 import LocaleService from './services/LocaleService';
 import Routes from './components/Routes';
-import Loading from './Loading.jsx';
 
 const useStyles = makeStyles((theme) => ({
 	backdrop : {
@@ -44,6 +43,7 @@ function App (props)
 	const isRtl = LocaleService.isRtl();
 
 	const direction = isRtl ? 'rtl' : 'ltr';
+
 	const theme = createMuiTheme({
 		direction,
 		typography : {
@@ -59,10 +59,8 @@ function App (props)
 			].join(','),
 			palette : {
 				primary : {
-				  main : '#373837'
-				},
-				secondary : {
-					main : '#848484'
+				  main : '#373837',
+				  light : '#848484'
 				}
 			  }
 		  }
@@ -77,9 +75,7 @@ function App (props)
 			<StylesProvider jss={jss}>
 				<ThemeProvider theme={theme}>
 					<Provider store={store}>
-						<Loading>
-							<Routes />
-						</Loading>
+						<Routes />
 					</Provider>
 				</ThemeProvider>
 			</StylesProvider>
