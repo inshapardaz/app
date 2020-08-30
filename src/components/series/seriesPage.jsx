@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import Pagination from '@material-ui/lab/Pagination';
 import { getSeries } from '../../state/actions/apiActions';
+import SeriesCard from './SeriesCard.jsx';
 
 class SeriesPage extends Component
 {
@@ -35,17 +36,6 @@ class SeriesPage extends Component
 			padding : 20,
 			paddingBottom : 200
 		},
-		bullet : {
-			display : 'inline-block',
-			margin : '0 2px',
-			transform : 'scale(0.8)'
-		},
-		title : {
-			fontSize : 14
-		},
-		pos : {
-			marginBottom : 12
-		},
 		cardGrid : {
 			paddingTop : theme.spacing(8),
 			paddingBottom : theme.spacing(8)
@@ -62,20 +52,17 @@ class SeriesPage extends Component
 
 		return (
 			<div className={classes.root}>
-				<Container className={classes.cardGrid} maxWidth="md">
+				<Container className={classes.cardGrid} maxWidth="sm">
+					<Typography variant="h3" className={classes.title}>
+						<FormattedMessage id="header.series" />
+					</Typography>
 					<Grid container spacing={4}>
 						{this.props.series.data.map(s =>
-							<Card key={s.id} className={classes.root}>
-								<CardContent>
-									<Typography variant="h5" component="h2">
-										{s.name}
-									</Typography>
-									<Typography variant="body2" component="p">
-										{s.description}
-									</Typography>
-								</CardContent>
-							</Card>)}
+							<Grid item key={s.id} xs={12} sm={6} md={4}>
+								<SeriesCard key={s.id}  series={s} />
+							</Grid>)}
 					</Grid>
+					<Pagination count={this.props.pageCount} page={this.props.currentPageIndex} />
 				</Container>
 			</div>
 		);

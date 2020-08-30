@@ -1,16 +1,20 @@
 import axios from 'axios';
+import { useAuth0 } from '@auth0/auth0-react';
 
-function LibraryService (baseUrl, getIdTokenClaims)
+function LibraryService (baseUrl, config)
 {
-	const libraryId = 1;
+	const { getAccessTokenSilently } = useAuth0();
+	const libraryId = 6;
 	const libraryUrl = `${baseUrl}/library/${libraryId}`;
 	this.appendAuthentication = async (headers) =>
 	{
-		const token = await getIdTokenClaims();
+		const token = await getAccessTokenSilently({
+			'audience' : config.audience
+		  });
 		if (token)
 		{
 			// eslint-disable-next-line no-underscore-dangle
-			headers['Authorization'] = `Bearer ${token.__raw}`;
+			headers['Authorization'] = `Bearer ${token}`;
 		}
 	};
 

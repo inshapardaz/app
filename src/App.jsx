@@ -6,7 +6,7 @@ import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { create } from 'jss';
 import rtl from 'jss-rtl';
-import { useAuth0 } from './react-auth0-spa';
+import { useAuth0 } from '@auth0/auth0-react';
 import { createStore } from './state';
 import LibraryService from './services/LibraryService';
 import LocaleService from './services/LocaleService';
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 function App (props)
 {
-	const { loading, getIdTokenClaims } = useAuth0();
+	const { loading } = useAuth0();
 
 	if (loading)
 	{
@@ -34,7 +34,7 @@ function App (props)
 		);
 	}
 
-	const libraryService = new LibraryService(props.apiUrl, getIdTokenClaims);
+	const libraryService = new LibraryService(props.apiUrl, props.config);
 	const { messages, locale } = LocaleService.initLocale();
 	const store = createStore({
 		libraryService

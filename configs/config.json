@@ -1,20 +1,16 @@
 {
-	"common" :
-	{
-		"enabled" : true,
-		"clientId" : "WkEHQXUHgcec5GhzLqUZ0PTVYJ4u9ihI",
-		"theme" : "default",
-		"authDomain" : "inshapardaz.eu.auth0.com",
-      	"audience" : "http://api.inshapardaz.org"
+	"common": {
+		"enabled": true,
+		"clientId": "lxvRFsTrdFvsPPOj3Adf905qrDn3Qd6J",
+		"theme": "default",
+		"authDomain": "nawishta.eu.auth0.com"
 	},
-
-	"production" :
-	{
-		"apiUrl" : "https://api-library.azurewebsites.net/api"
+	"production": {
+		"apiUrl": "https://api-library.azurewebsites.net/api",
+		"audience": "https://localhost:5000"
 	},
-
-	"development" :
-	{
-		"apiUrl" : "http://localhost:4200/api"
+	"development": {
+		"apiUrl": "http://localhost:5000",
+		"audience": "https://localhost:5000"
 	}
 }
