@@ -1,13 +1,13 @@
 const { remove, copy }   = require('fs-extra');
 const { exec }           = require('npm-run');
-const config             = require('../configs/config.json');
-const { generateConfig } = require('./generateConfig');
+//const config             = require('../configs/config.json');
+//const { generateConfig } = require('./generateConfig');
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-function isEnvironment (environment)
-{
-	return environment !== 'common' && environment !== 'development';
-}
+// function isEnvironment (environment)
+// {
+// 	return environment !== 'common' && environment !== 'development';
+// }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -38,13 +38,13 @@ async function webpack (pathToBuild)
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-async function createArtifact (pathToBuild, data)
+async function createArtifact (pathToBuild)
 {
 	const pathToArtifact = 'artifact';
 
 	await copy(pathToBuild, pathToArtifact);
 
-	await generateConfig(`${pathToArtifact}/index.html.hbs`, data);
+	//await generateConfig(`${pathToArtifact}/index.html.hbs`, data);
 
 	await remove(`${pathToArtifact}/index.html.hbs`);
 }
@@ -55,16 +55,16 @@ async function build ()
 {
 	await webpack('build');
 
-	const environments = Object.keys(config);
+	//const environments = Object.keys(config);
 
-	for (let environment of environments)
-	{
-		if (isEnvironment(environment))
-		{
-			const data = { ...config.common, ...config[environment] };
-			await createArtifact('build', data);
-		}
-	}
+	//for (let environment of environments)
+	//{
+	//	if (isEnvironment(environment))
+	//	{
+	//		const data = { ...config.common, ...config[environment] };
+	await createArtifact('build');
+	//	}
+	//}
 
 	await remove('build');
 }
