@@ -1,44 +1,53 @@
-import React, { Fragment } from 'react';
-import { createMuiTheme, StylesProvider, ThemeProvider, jssPreset, makeStyles } from '@material-ui/core/styles';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React, { Fragment, useEffect, useState } from 'react';
+import { createMuiTheme, StylesProvider, ThemeProvider, jssPreset } from '@material-ui/core/styles';
 import { IntlProvider } from 'react-intl';
-import { Provider } from 'react-redux';
 import { create } from 'jss';
 import rtl from 'jss-rtl';
-import { useAuth0 } from '@auth0/auth0-react';
-import { createStore } from './state';
-import LibraryService from './services/LibraryService';
+
 import LocaleService from './services/LocaleService';
 import Routes from './components/Routes';
+import LibraryService from './services/LibraryService';
+import AuthService from './services/AuthService';
+import Loading from './components/Loading.jsx';
 
-const useStyles = makeStyles((theme) => ({
-	backdrop : {
-	  zIndex : theme.zIndex.drawer + 1,
-	  color : '#fff'
-	}
-}));
-
-function App (props)
+function App ()
 {
-	const { loading } = useAuth0();
+	const [isLoading, setIsLoading] = useState(true);
 
-	if (loading)
+	useEffect(() =>
 	{
-		const classes = useStyles();
+		const fetchEntry = async () =>
+		{
+			setIsLoading(true);
 
-		return (
-			<Backdrop className={classes.backdrop} open>
-				<CircularProgress color="inherit" />
-			</Backdrop>
-		);
-	}
+			try
+			{
+				await LibraryService.getEntry();
+			}
+			catch (e)
+			{
+				console.error('error', e);
+				//this.props.push('/error');
+			}
+			finally
+			{
+			  setIsLoading(false);
+			}
+		};
 
-	const libraryService = new LibraryService(props.apiUrl, props.config);
+		const fetchData = async () =>
+		{
+			if (localStorage.getItem('isLoggedIn') === 'true')
+			{
+				AuthService.renewSession(() => fetchEntry());
+			}
+			fetchEntry();
+		};
+
+		fetchData();
+	}, []);
+
 	const { messages, locale } = LocaleService.initLocale();
-	const store = createStore({
-		libraryService
-	});
 
 	const isRtl = LocaleService.isRtl();
 
@@ -70,13 +79,16 @@ function App (props)
 
 	const jss = create({ plugins : [...jssPreset().plugins, rtl()] });
 
+	if (isLoading)
+	{
+		return (<Loading />);
+	}
+
 	return (
 		<IntlProvider locale={locale} messages={messages} textComponent={Fragment}>
 			<StylesProvider jss={jss}>
 				<ThemeProvider theme={theme}>
-					<Provider store={store}>
-						<Routes />
-					</Provider>
+					<Routes />
 				</ThemeProvider>
 			</StylesProvider>
 		</IntlProvider>

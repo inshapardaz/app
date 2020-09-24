@@ -6,25 +6,16 @@ export function getEntry ()
 	{
 		const entry = await libraryService.getEntry();
 
-		const [categories, series]
-		= await Promise.all([
-			libraryService.get(entry.links.categories),
-			libraryService.get(entry.links.series)
-		]);
-
 		dispatch({
 			type : ENTRY,
 			payload : entry
 		});
 
+		const categories = libraryService.get(entry.links.categories);
+
 		dispatch({
 			type : CATEGORIES,
 			payload : categories
-		});
-
-		dispatch({
-			type : SERIES,
-			payload : series
 		});
 	};
 }

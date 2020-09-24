@@ -1,76 +1,83 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React, { useState, useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import { injectIntl } from 'react-intl';
+import { Typography } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { FormattedMessage } from 'react-intl';
 
-import { getLatestBooks } from '../../state/actions/apiActions';
+import LibraryService from '../../services/LibraryService';
 import BookCell from './bookCell.jsx';
 
-class NewBookWidget extends Component
+const useStyles = () => makeStyles((theme) => ({
+	cardGrid : {
+	  paddingTop : theme.spacing(8),
+	  paddingBottom : theme.spacing(8)
+	}
+}));
+const classes = useStyles();
+
+const NewBookWidget = () =>
 {
-	state = {
-		isLoading : true,
-		isError : false
+	const [books, setBooks] = useState(null);
+	const [isLoading, setLoading] = useState(true);
+	const [isError, setError] = useState(false);
+
+	useEffect(() =>
+	{
+		const fetchData = async () =>
+		{
+			try
+			{
+				const data = await LibraryService.getLatestBooks();
+				setBooks(data);
+			}
+			catch (e)
+			{
+				console.dir(e);
+				setError(true);
+			}
+			finally
+			{
+				setLoading(false);
+			}
+		};
+		fetchData();
+	}, []);
+
+	const renderBooks = () =>
+	{
+		if (isLoading)
+		{
+			return (<CircularProgress />);
+		}
+
+		if (isError)
+		{
+			return (<Typography variant="h6" component="h6" align="center">
+				<FormattedMessage id="books.messages.error.loading" />
+			</Typography>);
+		}
+
+		if (books === null || books.data === null || books.data.length < 1)
+		{
+			return (<Typography variant="h6" component="h6" align="center">
+				<FormattedMessage id="books.messages.empty" />
+			</Typography>);
+		}
+
+		return (<Grid container spacing={4}>{books.data.map((b) => (
+			<Grid item key={b.id} xs={12} sm={6} md={4}>
+				<BookCell book={b} key={b.id}/>
+			</Grid>)) }
+		</Grid>);
 	};
 
-	async componentDidMount ()
-	{
-		try
-		{
-			await this.props.getLatestBooks();
-			this.setState({
-				isLoading : false,
-				isError : false
-			});
-		}
-		catch (e)
-		{
-			console.error(e);
-			this.setState({
-				isLoading : false,
-				isError : true
-			});
-		}
-	}
+	return (<>
+		<Container className={classes.cardGrid} maxWidth="md">
+			{renderBooks()}
+		</Container>
+	</>);
+};
 
-	useStyles = () => makeStyles((theme) => ({
-		cardGrid : {
-		  paddingTop : theme.spacing(8),
-		  paddingBottom : theme.spacing(8)
-		}
-	}));
-
-	render ()
-	{
-		if (!this.props.latestBooks)
-		{
-			return null;
-		}
-
-		const classes = this.useStyles();
-		return (<>
-			<Container className={classes.cardGrid} maxWidth="md">
-				<Grid container spacing={4}>
-					{this.props.latestBooks.data.map((b) => (
-						<Grid item key={b.id} xs={12} sm={6} md={4}>
-							<BookCell book={b} key={b.id}/>
-						</Grid>
-					))}
-				</Grid>
-			</Container>
-		</>);
-	}
-}
-
-export default (connect(
-	(state) => ({
-		entry : state.apiReducers.entry,
-		latestBooks : state.apiReducers.latestBooks
-	}),
-	dispatch => bindActionCreators({
-		getLatestBooks
-	}, dispatch)
-)(injectIntl(NewBookWidget)));
+export default NewBookWidget;

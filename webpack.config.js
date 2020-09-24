@@ -121,6 +121,10 @@ module.exports = function ({ output, development = false } = {})
 			])
 		],
 
+		externals: {
+			'Config': JSON.stringify(process.env.NODE_ENV === 'production' ? require('./config/config.prod.json') : require('./config/config.dev.json'))
+		},
+
 		devtool : development ? 'source-map' : false
 	};
 };

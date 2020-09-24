@@ -1,10 +1,6 @@
-import { addLocaleData, IntlProvider } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import ur from 'react-intl/locale-data/ur';
+import { createIntlCache, createIntl } from 'react-intl';
 import enMessages from '../i18n/en.json';
 import urMessages from '../i18n/ur.json';
-
-addLocaleData([...en, ...ur]);
 
 class LocaleService
 {
@@ -18,8 +14,6 @@ class LocaleService
 			this.setCurrentLanguage(locale);
 		}
 
-		this.loadFormatDataForLocale(locale);
-
 		let isRtl = false;
 		let messages = enMessages;
 		switch (locale.toLowerCase())
@@ -29,7 +23,20 @@ class LocaleService
 				isRtl = true;
 		}
 
-		const { intl } = new IntlProvider({ locale, messages }, {}).getChildContext();
+		const cache = createIntlCache();
+
+		// Create the `intl` object
+		const intl = createIntl(
+			{
+			// Locale of the application
+				locale,
+				// Locale of the fallback defaultMessage
+				defaultLocale : 'en',
+				messages
+			},
+			cache
+		);
+		//const { intl } = createIntl new IntlProvider({ locale, messages }, {}).getChildContext();
 		this.intl = intl;
 
 		document.dir = isRtl ? 'rtl' : 'ltr';
@@ -39,23 +46,6 @@ class LocaleService
 			messages,
 			isRtl
 		};
-	}
-
-	async loadFormatDataForLocale (locale)
-	{
-		let data;
-
-		switch (locale)
-		{
-			case 'en' :
-				data = import('react-intl/locale-data/en');
-				break;
-
-			default :
-				data = import('react-intl/locale-data/ur');
-		}
-
-		return addLocaleData(data.default);
 	}
 
 	getCurrentLanguage ()

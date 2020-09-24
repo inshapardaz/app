@@ -1,20 +1,18 @@
 import axios from 'axios';
-import { useAuth0 } from '@auth0/auth0-react';
+import AuthService from './AuthService';
 
-function LibraryService (baseUrl, config)
+const Config = require('Config');
+
+function LibraryService ()
 {
-	const { getAccessTokenSilently } = useAuth0();
-	const libraryId = 6;
-	const libraryUrl = `${baseUrl}/library/${libraryId}`;
+	const libraryId = Config.libraryId;
+	const libraryUrl = `${Config.apiUrl}/library/${libraryId}`;
 	this.appendAuthentication = async (headers) =>
 	{
-		const token = await getAccessTokenSilently({
-			'audience' : config.audience
-		  });
-		if (token)
+		if (AuthService.isAuthenticated())
 		{
-			// eslint-disable-next-line no-underscore-dangle
-			headers['Authorization'] = `Bearer ${token}`;
+			let authorization = `Bearer ${AuthService.getAccessToken()}`;
+			headers['Authorization'] = authorization;
 		}
 	};
 
@@ -25,7 +23,7 @@ function LibraryService (baseUrl, config)
 			'Content-Type' : 'application/json'
 		};
 
-		await this.appendAuthentication(headers);
+		this.appendAuthentication(headers);
 
 		let options = {
 			url,
@@ -45,7 +43,7 @@ function LibraryService (baseUrl, config)
 			'Content-Type' : contentType
 		};
 
-		await this.appendAuthentication(headers);
+		this.appendAuthentication(headers);
 
 		let options = {
 			withCredentials : true,
@@ -65,7 +63,7 @@ function LibraryService (baseUrl, config)
 			'Content-Type' : 'application/json'
 		};
 
-		await this.appendAuthentication(headers);
+		this.appendAuthentication(headers);
 
 		delete contents.links;
 
@@ -88,7 +86,7 @@ function LibraryService (baseUrl, config)
 			'Content-Type' : 'application/json'
 		};
 
-		await this.appendAuthentication(headers);
+		this.appendAuthentication(headers);
 
 		let options = {
 			url,
@@ -295,4 +293,4 @@ function LibraryService (baseUrl, config)
 	};
 }
 
-export default LibraryService;
+export default new LibraryService();

@@ -5,33 +5,20 @@ import 'webcomponents.js/webcomponents-lite';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Auth0Provider } from '@auth0/auth0-react';
+import { Provider } from 'react-redux';
 import triggerEvent from './utilities/triggerEvent';
 import App from './App.jsx';
+import { createStore } from './state';
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-const onRedirectCallback = appState =>
+export async function start ()
 {
-	window.history.replaceState(
-		{},
-		document.title,
-		appState && appState.targetUrl
-			? appState.targetUrl
-			: window.location.pathname
-	);
-};
+	const store = await createStore();
 
-export async function start (config)
-{
 	ReactDOM.render(
-		<Auth0Provider
-			domain={config.authDomain}
-			clientId={config.clientId}
-			audience={config.audience}
-			redirectUri={window.location.origin}
-			onRedirectCallback={onRedirectCallback}>
-			<App apiUrl={config.apiUrl} config={config}/>
-		</Auth0Provider>,
+		<Provider store={store}>
+			<App />
+		</Provider>,
 		document.getElementById('root')
 	);
 }

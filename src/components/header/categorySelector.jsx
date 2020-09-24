@@ -1,11 +1,10 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { FormattedMessage } from 'react-intl';
 import Button from '@material-ui/core/Button';
 import Grow from '@material-ui/core/Grow';
+import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,11 +12,23 @@ import CategoryIcon from '@material-ui/icons/Category';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import LibraryService from '../../services/LibraryService';
 
-function CategorySelector (props)
+function CategorySelector ()
 {
+	const [categories, setCategories] = useState(null);
 	const anchorRef = React.useRef(null);
 	const [open, setOpen] = React.useState(false);
+
+	useEffect(() =>
+	{
+		const fetchData = async () =>
+		{
+			const data = await LibraryService.getCategories();
+			setCategories(data);
+		};
+		fetchData();
+	}, []);
 
 	const handleToggle = () =>
 	{
@@ -45,11 +56,19 @@ function CategorySelector (props)
 
 	const renderCategories = () =>
 	{
-		if (props.categories && props.categories.data)
+		if (categories && categories.data)
 		{
-			return props.categories.data.map(c => (
+			let cats = categories.data.map(c => (
 				<MenuItem key={c.id} onClick={handleClose} component={Link} to={`/books?category=${c.id}`}>{c.name}</MenuItem>
 			));
+
+			if (categories.links.create)
+			{
+				cats.push(<Divider key="categories-divider" />);
+				cats.push(<MenuItem key="categories-page" onClick={handleClose} component={Link} to={'/categories'}><FormattedMessage id="header.categories" /></MenuItem>);
+				cats.push(<MenuItem key="create-category" onClick={handleClose} component={Link} to={'/category/new'}><FormattedMessage id="categories.action.create" /></MenuItem>);
+			}
+			return cats;
 		}
 
 		return null;
@@ -91,10 +110,4 @@ function CategorySelector (props)
 	);
 }
 
-export default (connect(
-	(state) => ({
-		categories : state.apiReducers.categories
-	}),
-	dispatch => bindActionCreators({
-	}, dispatch)
-)(CategorySelector));
+export default CategorySelector;

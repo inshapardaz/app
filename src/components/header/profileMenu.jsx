@@ -1,6 +1,6 @@
 /* eslint-disable no-script-url */
 /* eslint-disable no-mixed-spaces-and-tabs */
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Button from '@material-ui/core/Button';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -12,14 +12,29 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
 import Avatar from '@material-ui/core/Avatar';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import { useAuth0 } from '@auth0/auth0-react';
+import AuthService from '../../services/AuthService';
 
 const ProfileMenu = () =>
 {
-	// const classes = useStyles();
+	const anchorRef = useRef(null);
+	const [open, setOpen] = useState(false);
+	const [profile, setProfile] = useState(null);
 
-	const anchorRef = React.useRef(null);
-	const [open, setOpen] = React.useState(false);
+	useEffect(() =>
+	{
+		if (AuthService.isLoggedIn())
+		{
+			AuthService.getProfile((err, profileResponse) =>
+			{
+				if (err)
+				{
+					console.log(err);
+				}
+
+				setProfile(profileResponse);
+			});
+		}
+	}, []);
 
 	const handleToggle = () =>
 	{
@@ -36,31 +51,25 @@ const ProfileMenu = () =>
 		setOpen(false);
 	};
 
-	const { loading, user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
-
-	const displayName = user ? user.nickname : '';
-
-	if (loading)
-	{
-		return null;
-	}
+	const displayName = profile ? profile.nickname : '';
 
 	const onLogin = (event) =>
 	{
-		loginWithRedirect({});
+		AuthService.login();
 		handleClose(event);
 	};
 
 	const onLogout = (event) =>
 	{
-		logout();
+		AuthService.logout();
+		setProfile(null);
 		handleClose(event);
 	};
 
 	let renderMenu = null;
-	if (isAuthenticated)
+	if (profile)
 	{
-		const avatar = user.picture ? user.picture : '';
+		const avatar = profile && profile.picture ? profile.picture : '';
 		renderMenu = (
 			<>
 				<Button
