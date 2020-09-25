@@ -1,7 +1,7 @@
 const { resolve }                = require('path');
 const { DefinePlugin }           = require('webpack');
 const cssnano                    = require('cssnano');
-const HtmlPlugin                 = require('html-webpack-plugin');
+const HtmlWebpackPlugin          = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const TerserPlugin 				 = require('terser-webpack-plugin');
 const MiniCssExtractPlugin       = require('mini-css-extract-plugin');
@@ -105,10 +105,8 @@ module.exports = function ({ output, development = false } = {})
 				}
 			}),
 
-			new HtmlPlugin({
-				filename : 'index.html.hbs',
-				hash : true,
-				template : './src/index.html.hbs'
+			new HtmlWebpackPlugin({
+				template: './public/index.html'
 			}),
 
 			new ScriptExtHtmlWebpackPlugin({
