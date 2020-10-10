@@ -2,19 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Divider from '@material-ui/core/Divider';
 import { bindActionCreators } from 'redux';
-import { makeStyles } from '@material-ui/core/styles';
+import { push } from 'connected-react-router';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+import { getEntry } from '../../state/actions/apiActions';
 import Header from '../header/header.jsx';
 import Footer from '../footer/footer.jsx';
 
-const useStyles = () => makeStyles((theme) => ({
-	root : {
-		padding : theme.spaces(48)
-	}
-}));
-const classes = useStyles();
 
-class Layout extends Component
+class LayoutBoxed extends Component
 {
 	state = {
 		isLoading : false
@@ -32,9 +28,9 @@ class Layout extends Component
 			<>
 				<CssBaseline />
 				<Header />
-					<main className={classes.root}>
-						{children}
-					</main>
+				<Container maxWidth="lg">
+					{children}
+				</Container>
 				<Divider />
 				<Footer />
 			</>
@@ -44,6 +40,12 @@ class Layout extends Component
 
 export default (connect(
 	(state) => ({
+	  history : state.history,
+	  entry : state.entry,
 	  isLoading : state.isLoading
-	}), null)
-(Layout));
+	}),
+	dispatch => bindActionCreators({
+		getEntry,
+		push
+	}, dispatch)
+)(LayoutBoxed));

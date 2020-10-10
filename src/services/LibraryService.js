@@ -155,10 +155,29 @@ function LibraryService ()
 		return this.get(url);
 	};
 
-	this.getBooks = async (page = 1, pageSize = 12, query = null) =>
+	// eslint-disable-next-line max-params
+	this.getBooks = async (authorId = null, categoryId = null, seriesId = null,
+		query = null, page = 1, pageSize = 12) =>
 	{
-		const url = `${libraryUrl}/books`;
-		return this.get(`${url}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
+		let queryVal = this.getQueryParameter(query);
+		if (authorId)
+		{
+			queryVal += `&authorId=${authorId}`;
+		}
+		if (categoryId)
+		{
+			queryVal += `&categoryId=${categoryId}`;
+		}
+		if (seriesId)
+		{
+			queryVal += `&seriesId=${seriesId}`;
+		}
+		if (queryVal)
+		{
+			return this.get(`${libraryUrl}/books?pageNumber=${page}&pageSize=${pageSize}${queryVal}`);
+		}
+
+		return this.get(`${libraryUrl}/books?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
 	};
 
 	this.getBooksByCategory = async (category, page = 1, pageSize = 12, query = null) =>
@@ -213,9 +232,9 @@ function LibraryService ()
 		return this.get(`${libraryUrl}/authors/${id}`);
 	};
 
-	this.getAuthorBooks = async (link, page = 1, pageSize = 12, query = null) =>
+	this.getAuthorBooks = async (authorId, query = null, page = 1, pageSize = 12) =>
 	{
-		return this.get(`${link}?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
+    	return this.get(`${libraryUrl}/books?pageNumber=${page}&pageSize=${pageSize}&authorid=${authorId}`);
 	};
 
 	this.getBookFiles = async (link) =>

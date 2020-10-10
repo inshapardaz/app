@@ -41,7 +41,7 @@ const CategoryEditor = ({ category, createLink }) =>
 	const [name, setName] = useState(false);
 
 	const handleClose = () => setOpen(false);
-	console.dir(category);
+
 	const handleSave = async () =>
 	{
 		setBusy(true);
@@ -53,7 +53,9 @@ const CategoryEditor = ({ category, createLink }) =>
 			}
 			else
 			{
-				const cat = { ...category, name };
+				let cat = { ...category };
+				cat.name = name;
+				console.dir(cat);
 				await LibraryService.put(category.links.update, cat);
 			}
 
@@ -110,15 +112,11 @@ const CategoryEditor = ({ category, createLink }) =>
 		</Dialog>
 		<Snackbar open={success} autoHideDuration={6000} onClose={() => setSuccess(false)}
 			anchorOrigin={{ vertical : 'bottom', horizontal : 'left' }}>
-			<Alert onClose={handleClose} severity="success">
-				This is a success message!
-			</Alert>
+			<Alert severity="success"><FormattedMessage id="categories.messages.saved" /></Alert>
 		</Snackbar>
 		<Snackbar open={failure} autoHideDuration={6000} onClose={() => setFailure(false)}
 			anchorOrigin={{ vertical : 'bottom', horizontal : 'left' }}>
-			<Alert onClose={handleClose} severity="error">
-				This is a success message!
-			</Alert>
+			<Alert severity="error"><FormattedMessage id="categories.error.saving" /></Alert>
 		</Snackbar>
 	</>);
 };

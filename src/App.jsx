@@ -57,22 +57,22 @@ function App ()
 		direction,
 		typography : {
 			fontFamily : [
-			  'Mehr-Nastaleeq',
-			  'Roboto',
-			  '"Helvetica Neue"',
-			  'Arial',
-			  'sans-serif',
-			  '"Apple Color Emoji"',
-			  '"Segoe UI Emoji"',
-			  '"Segoe UI Symbol"'
-			].join(','),
-			palette : {
-				primary : {
-				  main : '#373837',
-				  light : '#848484'
-				}
-			  }
-		  }
+				'Mehr-Nastaleeq',
+				'Roboto',
+				'"Helvetica Neue"',
+				'Arial',
+				'sans-serif',
+				'"Apple Color Emoji"',
+				'"Segoe UI Emoji"',
+				'"Segoe UI Symbol"'
+			].join(',')
+		},
+		palette : {
+			primary : {
+				main : '#373837',
+				light : '#848484'
+			}
+		}
 	  });
 
 	document.body.dir = direction;

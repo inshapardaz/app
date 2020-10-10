@@ -9,6 +9,7 @@ import RouteWithLayout from './layout/RouteWithLayout';
 
 import Home from './home/home.jsx';
 import Layout from './layout/layout.jsx';
+import LayoutBoxed from './layout/layoutBoxed.jsx';
 import EmptyLayout from './layout/empty.jsx';
 
 import BooksPage from './books/booksPage.jsx';
@@ -26,10 +27,10 @@ class Routes extends React.Component
 				<Switch>
 					<RouteWithLayout layout={EmptyLayout} path="/callback" component={Callback} exact />
 					<RouteWithLayout layout={Layout} path="/" component={Home} exact/>
-					<RouteWithLayout layout={Layout} path="/authors" component={AuthorsPage} />
-					<RouteWithLayout layout={Layout} path="/books" component={BooksPage} />
-					<RouteWithLayout layout={Layout} exact path="/series" component={SeriesPage} />
-					<RouteWithLayout layout={Layout} exact path="/categories" component={CategoriesPage} />
+					<RouteWithLayout layout={LayoutBoxed} path="/authors" component={AuthorsPage} />
+					<RouteWithLayout layout={LayoutBoxed} path="/books" component={BooksPage} />
+					<RouteWithLayout layout={LayoutBoxed} exact path="/series" component={SeriesPage} />
+					<RouteWithLayout layout={LayoutBoxed} exact path="/categories" component={CategoriesPage} />
 				</Switch>
 			</Router>
 		);

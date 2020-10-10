@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -10,9 +9,28 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { makeStyles } from '@material-ui/core/styles';
 
 const defaultBookImage = '/resources/img/book_placeholder.png';
+
+function FavoriteButton ({ book })
+{
+	console.dir(book.links.create_favorite);
+	if (book.links.create_favorite)
+	{
+		return (
+			<IconButton aria-label="add to favorites">
+				<FavoriteBorderIcon />
+			</IconButton>
+		);
+	}
+	return (
+		<IconButton aria-label="add to favorites">
+			<FavoriteIcon />
+		</IconButton>
+	);
+}
 
 function BookCell ({ book })
 {
@@ -20,7 +38,7 @@ function BookCell ({ book })
 		root : {
 			maxWidth : 345
 		}
-	  }));
+	}));
 
 	return (
 		<Card className={classes.root}>
@@ -45,9 +63,7 @@ function BookCell ({ book })
 				<IconButton component={Link} to={`/books/${book.id}`}>
 					<MenuBookIcon />
 				</IconButton>
-				<IconButton aria-label="add to favorites">
-					<FavoriteIcon />
-				</IconButton>
+				<FavoriteButton book={book} />
 			</CardActions>
 		</Card>
 	);

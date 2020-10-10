@@ -10,7 +10,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Tooltip from '@material-ui/core/Tooltip';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import { FormattedMessage, useIntl } from 'react-intl';
+import LibraryService from '../../services/LibraryService';
 
 const useStyles = makeStyles(() => ({
 	buttonProgress : {
@@ -22,21 +25,38 @@ const useStyles = makeStyles(() => ({
 	}
 }));
 
+function Alert (props)
+{
+	return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const categoryDelete = ({ category }) =>
 {
 	const classes = useStyles();
 	const intl = useIntl();
 	const [open, setOpen] = useState(false);
 	const [busy, setBusy] = useState(false);
+	const [success, setSuccess] = useState(false);
+	const [failure, setFailure] = useState(false);
 	const handleClose = () => setOpen(false);
-	const handleDelete = () =>
+	const handleDelete = async () =>
 	{
 		setBusy(true);
-		setTimeout(() =>
+		try
 		{
+			await  LibraryService.delete(category.links.delete);
+			setSuccess(true);
 			setOpen(false);
+		}
+		catch (e)
+		{
+			console.error(e);
+			setFailure(true);
+		}
+		finally
+		{
 			setBusy(false);
-		}, 3000);
+		}
 	};
 
 	return (<>
@@ -70,6 +90,18 @@ const categoryDelete = ({ category }) =>
 				</Button>
 			</DialogActions>
 		</Dialog>
+		<Snackbar open={success} autoHideDuration={6000} onClose={() => setSuccess(false)}
+			anchorOrigin={{ vertical : 'bottom', horizontal : 'left' }}>
+			<Alert onClose={handleClose} severity="success">
+				This is a success message!
+			</Alert>
+		</Snackbar>
+		<Snackbar open={failure} autoHideDuration={6000} onClose={() => setFailure(false)}
+			anchorOrigin={{ vertical : 'bottom', horizontal : 'left' }}>
+			<Alert onClose={handleClose} severity="error">
+				This is a success message!
+			</Alert>
+		</Snackbar>
 	</>);
 };
 

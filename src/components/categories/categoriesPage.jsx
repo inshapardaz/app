@@ -4,7 +4,7 @@ import Container from '@material-ui/core/Container';
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import List  from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import Card  from '@material-ui/core/Card';
 import CategoryIcon from '@material-ui/icons/Category';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -31,7 +31,7 @@ const classes = useStyles();
 const CategoryCard = ({ category }) =>
 {
 	const intl = useIntl();
-	return (<ListItem key={category.id}>
+	return (<Card  key={category.id}>
 		<ListItemAvatar>
 			<Avatar>
 				<CategoryIcon />
@@ -42,7 +42,7 @@ const CategoryCard = ({ category }) =>
 			{category.links.update && <CategoryEditor category={category} />}
 			{category.links.delete && <CategoryDelete category={category} />}
 		</ListItemSecondaryAction>
-	  </ListItem>);
+	  </Card >);
 };
 
 const CategoriesPage = () =>
@@ -105,7 +105,7 @@ const CategoriesPage = () =>
 	return (<>
 		<Container className={classes.cardGrid} >
 			<Typography variant="h2"><FormattedMessage id="header.categories"/></Typography>
-			<List >
+			<List component="nav">
 				{renderCategories()}
 			</List >
 		</Container>

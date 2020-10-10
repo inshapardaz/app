@@ -1,136 +1,111 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { injectIntl } from 'react-intl';
 import Typography from '@material-ui/core/Typography';
-
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import { FormattedMessage, useIntl } from 'react-intl';
+import CategoriesList from '../categories/categoriesList.jsx';
 import LibraryService from '../../services/LibraryService';
+import BookList from './bookList.jsx';
+import Loading from '../Loading.jsx';
+import ErrorMessage from '../ErrorMessage.jsx';
 
-class BooksPage extends Component
+const BooksPage = () =>
 {
-	constructor (props)
+	const intl = useIntl();
+	const location = useLocation();
+	const [authorId, setAuthorId] = useState(null);
+	const [categoryId, setCategoryId] = useState(null);
+	const [seriesId, setSeriesId] = useState(null);
+	const [author, setAuthor] = useState(null);
+	const [category, setCategory] = useState(null);
+	const [series, setSeries] = useState(null);
+	const [isLoading, setLoading] = useState(true);
+	const [isError, setError] = useState(false);
+
+	useEffect(() =>
 	{
-		super(props);
-		this.state = {
-		  categoryId : 0,
-		  authorId : 0,
-		  seriesId : 0,
-		  author : null,
-		  category : null,
-		  series : null,
-		  query : ''
+		const loadData = async () =>
+		{
+			const values = queryString.parse(location.search);
+			setCategoryId(values.category);
+			setAuthorId(values.author);
+			setSeriesId(values.series);
+
+			try {
+				setLoading(true);
+
+				if (authorId > 0)
+				{
+					let authorData = await LibraryService.getAuthor(authorId);
+					setAuthor({ authorData });
+				}
+
+				if (categoryId > 0)
+				{
+					let categoryData = await LibraryService.getCategory(categoryId);
+					setCategory({ categoryData });
+				}
+
+				if (seriesId > 0)
+				{
+					let seriesData = await LibraryService.getSeriesById(seriesId);
+					setSeries({ seriesData });
+				}
+			}
+			catch (e)
+			{
+				console.dir(e);
+				setError(true);
+			}
+			finally
+			{
+				setLoading(false);
+			}
 		};
-	  }
 
-	async componentDidMount ()
+		loadData();
+	}, [location]);
+
+	let headerContent = intl.formatMessage({ id : 'header.books' });
+	if (author)
 	{
-		const values = queryString.parse(this.props.location.search);
-
-		this.setState({ query : values.q ? values.q : '' });
-
-		if (values.category && values.category > 0)
-		{
-		  await this.loadData(0, values.category, 0);
-		}
-		else if (values.author && values.author > 0)
-		{
-		  await this.loadData(values.author, 0, 0);
-		}
-		else if (values.series && values.series > 0)
-		{
-		  await this.loadData(0, 0, values.series);
-		}
-		else
-		{
-		  await this.loadData();
-		}
+		headerContent = author.name;
+	}
+	else if (category)
+	{
+		headerContent = category.name;
+	}
+	else if (series)
+	{
+		headerContent = series.name;
 	}
 
-	async componentWillReceiveProps (nextProps)
+	if (isLoading)
 	{
-		const values = queryString.parse(nextProps.location.search);
-		this.setState({ query : values.q ? values.q : '' });
-
-		if (values.category && this.state.categoryId != values.category)
-		{
-		  await this.loadData(0, values.category);
-		}
-		else if (values.author && this.state.authorId != values.author)
-		{
-		  await this.loadData(0, 0, values.author);
-		}
-		else if (values.series && this.state.seriesId != values.series)
-		{
-		  await this.loadData(0, 0, values.series);
-		}
-		else
-		{
-		  await this.loadData();
-		}
+		return <Loading />;
+	}
+	if (isError)
+	{
+		return <ErrorMessage message={<FormattedMessage id="books.messages.error.loading" />}/>;
 	}
 
-	async loadData (authorId = 0, categoryId = 0, seriesId = 0)
-	{
-		try
-		{
-			this.setState({ authorId });
-			this.setState({ categoryId });
-			this.setState({ seriesId });
+	return (
+		<>
+			<Box>
+				<Typography variant="h3">{headerContent}</Typography>
+			</Box>
+			<Grid container spacing={3}>
+				<Grid item xs={2}>
+					<CategoriesList />
+				</Grid>
+				<Grid item xs={10}>
+					<BookList />
+				</Grid>
+			</Grid>
+		</>
+	);
+};
 
-			if (authorId > 0)
-			{
-				let author = await LibraryService.getAuthor(authorId);
-				this.setState({ author });
-			}
-
-			if (categoryId > 0)
-			{
-				let category = await LibraryService.getCategory(categoryId);
-				this.setState({ category });
-			}
-
-			if (seriesId > 0)
-			{
-				let series = await LibraryService.getSeriesById(seriesId);
-				this.setState({ series });
-			}
-		}
-		catch (e)
-		{
-			console.error(e);
-		}
-	}
-
-	onSubmit = (value) =>
-	{
-		let values = queryString.parse(this.props.location.search);
-		values.q = value;
-		this.props.history.push(`${this.props.location.pathname}?${queryString.stringify(values)}`);
-	}
-
-	render ()
-	{
-		const { author, category, series } = this.state;
-
-		let headerContent = this.props.intl.formatMessage({ id : 'header.books' });
-		if (author)
-		{
-			headerContent = author.name;
-		}
-		else if (category)
-		{
-			headerContent = category.name;
-		}
-		else if (series)
-		{
-			headerContent = series.name;
-		}
-
-		return (
-			<>
-				<Typography component="h3">{headerContent}</Typography>
-			</>
-		);
-	}
-}
-
-export default injectIntl(BooksPage);
+export default BooksPage;
