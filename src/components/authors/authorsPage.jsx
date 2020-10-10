@@ -12,7 +12,7 @@ import PaginationItem from '@material-ui/lab/PaginationItem';
 import Loading from '../Loading.jsx';
 import ErrorMessage from '../ErrorMessage.jsx';
 import LibraryService from '../../services/LibraryService';
-import AuthorCell from './authorCell.jsx';
+import AuthorCard from './authorCard.jsx';
 
 const buildLinkToPage = (page, query) =>
 {
@@ -46,11 +46,11 @@ const AuthorsPage = () =>
 			{
 				let authorsData = await LibraryService.getAuthors(values.query, values.page);
 				setAuthors(authorsData);
+				setQuery(values.query);
 			}
 			catch (e)
 			{
 				console.dir(e);
-				setQuery(values.query);
 				setError(true);
 			}
 			finally
@@ -85,7 +85,7 @@ const AuthorsPage = () =>
 
 		return (<Grid container spacing={4}>{authors.data.map(a => (
 			<Grid item key={a.id} xs={12} sm={6} md={4}>
-				<AuthorCell author={a} key={a.id}/>
+				<AuthorCard author={a} key={a.id}/>
 			</Grid>)) }
 		</Grid>);
 	};
@@ -116,7 +116,7 @@ const AuthorsPage = () =>
 	}
 	if (isError)
 	{
-		return <ErrorMessage message={<FormattedMessage id="books.messages.error.loading" />}/>;
+		return <ErrorMessage message={<FormattedMessage id="authors.messages.error.loading" />}/>;
 	}
 
 	return (

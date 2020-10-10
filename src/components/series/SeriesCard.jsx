@@ -1,40 +1,55 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Typography from '@material-ui/core/Typography';
+import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import MenuBookIcon from '@material-ui/icons';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 
-const useStyles = makeStyles({
-	root : {
-	  minWidth : 275
-	},
-	title : {
-	  fontSize : 14
-	},
-	pos : {
-	  marginBottom : 12
-	}
-});
+const defaultSeriesImage = '/resources/img/series_placeholder.png';
 
-export default function SeriesCard ({ series })
+const SeriesCard = ({ series }) =>
 {
-	const classes = useStyles();
+	const classes = makeStyles(() => ({
+		root : {
+			maxWidth : 345
+		}
+	}));
+
 	return (
 		<Card className={classes.root}>
-			<CardContent>
-				<Typography variant="h5" component="h2">
-					{series.name}
-				</Typography>
-				<Typography className={classes.pos} color="textSecondary">
-					<FormattedMessage id="series.item.book.count" values={{ count : series.bookCount }} />
-				</Typography>
-				<Typography variant="body2" component="p">
-					{series.description}
-				</Typography>
-			</CardContent>
-		</Card>);
-}
+			<CardActionArea component={Link} to={`/series/${series.id}`}>
+				<CardMedia
+					component="img"
+					alt={series.name}
+					height="240"
+					image={(series.links ? series.links.image : null) || defaultSeriesImage}
+					title={series.name}
+				/>
+				<CardContent>
+					<Typography gutterBottom variant="h5" component="h2">
+						{series.name}
+					</Typography>
+					<Typography variant="body2" color="textSecondary" component="p">
+						<FormattedMessage id="series.item.book.count" values={{ count : series.bookCount }} />
+					</Typography>
+					<Typography variant="body2" color="textSecondary" component="p">
+						{series.description}
+					</Typography>
+				</CardContent>
+			</CardActionArea>
+			<CardActions>
+				<IconButton component={Link} to={`/books?series=${series.id}`}>
+					<MenuBookIcon />
+				</IconButton>
+			</CardActions>
+		</Card>
+	);
+};
+
+export default SeriesCard;

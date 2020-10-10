@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const defaultAuthorImage = '/resources/img/auhtor_placeholder.png';
 
-function AuthorCell ({ author })
+function AuthorCard ({ author })
 {
 	const classes = makeStyles(() => ({
 		root : {
@@ -49,4 +49,4 @@ function AuthorCell ({ author })
 	);
 }
 
-export default AuthorCell;
+export default AuthorCard;

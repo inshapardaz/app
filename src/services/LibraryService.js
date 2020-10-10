@@ -134,9 +134,9 @@ function LibraryService ()
 		return this.get(`${libraryUrl}/categories/${id}`);
 	};
 
-	this.getSeries = async (pageNumber = 1, pageSize = 10) =>
+	this.getSeries = async (query = null, pageNumber = 1, pageSize = 12) =>
 	{
-		return this.get(`${libraryUrl}/series?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+		return this.get(`${libraryUrl}/series?pageNumber=${pageNumber}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
 	};
 
 	this.getSeriesById = async (id) =>

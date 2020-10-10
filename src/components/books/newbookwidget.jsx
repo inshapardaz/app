@@ -7,7 +7,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { FormattedMessage } from 'react-intl';
 
 import LibraryService from '../../services/LibraryService';
-import BookCell from './bookCell.jsx';
+import BookCard from './bookCard.jsx';
 
 const useStyles = () => makeStyles((theme) => ({
 	cardGrid : {
@@ -68,7 +68,7 @@ const NewBookWidget = () =>
 
 		return (<Grid container spacing={4}>{books.data.map((b) => (
 			<Grid item key={b.id} xs={12} sm={6} md={4}>
-				<BookCell book={b} key={b.id}/>
+				<BookCard book={b} key={b.id}/>
 			</Grid>)) }
 		</Grid>);
 	};
