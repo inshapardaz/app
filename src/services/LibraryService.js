@@ -115,7 +115,7 @@ function LibraryService ()
 		const formData = new FormData();
 		formData.append('file', file, file.fileName);
 
-		const res = await axios.post(url, formData, options);
+		const res = await axios.put(url, formData, options);
 		return this.parseObject(res.data);
 	};
 

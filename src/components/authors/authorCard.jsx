@@ -8,18 +8,45 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { makeStyles } from '@material-ui/core/styles';
 
 const defaultAuthorImage = '/resources/img/auhtor_placeholder.png';
 
-function AuthorCard ({ author })
+function AuthorCard ({ author, onEdit, onDelete })
 {
 	const classes = makeStyles(() => ({
 		root : {
 			maxWidth : 345
 		}
 	}));
+
+	const renderEditLink = () =>
+	{
+		if (author.links.update)
+		{
+			return (
+				<IconButton onClick={() => onEdit(author)}>
+					<EditOutlinedIcon />
+				</IconButton>);
+		}
+		return null;
+	};
+
+	const renderDeleteLink = () =>
+	{
+		if (author.links.delete)
+		{
+			return (
+				<IconButton onClick={() => onDelete(author)}>
+					<DeleteForeverOutlinedIcon />
+				</IconButton>
+			);
+		}
+		return null;
+	};
 
 	return (
 		<Card className={classes.root}>
@@ -41,6 +68,8 @@ function AuthorCard ({ author })
 				</CardContent>
 			</CardActionArea>
 			<CardActions>
+				{renderEditLink()}
+				{renderDeleteLink()}
 				<IconButton component={Link} to={`/books?author=${author.id}`}>
 					<MenuBookIcon />
 				</IconButton>

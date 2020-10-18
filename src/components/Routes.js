@@ -27,7 +27,7 @@ class Routes extends React.Component
 				<Switch>
 					<RouteWithLayout layout={EmptyLayout} path="/callback" component={Callback} exact />
 					<RouteWithLayout layout={Layout} path="/" component={Home} exact/>
-					<RouteWithLayout layout={LayoutBoxed} path="/authors" component={AuthorsPage} />
+					<RouteWithLayout layout={Layout} path="/authors" component={AuthorsPage} />
 					<RouteWithLayout layout={LayoutBoxed} path="/books" component={BooksPage} />
 					<RouteWithLayout layout={LayoutBoxed} exact path="/series" component={SeriesPage} />
 					<RouteWithLayout layout={LayoutBoxed} exact path="/categories" component={CategoriesPage} />

@@ -1,23 +1,26 @@
-// Styles
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-//@import 'styles/reset';
-//@import 'styles/colors';
 @import 'styles/fonts';
-//@import 'styles/breakpoints';
-//@import 'styles/base';
-//@import 'styles/button';
-//@import 'styles/typography';
 
-//@import "../node_modules/antd/dist/antd.css";
+// Banner
+.Banner {
+	background-repeat : no-repeat;
+	background-position: contain;
+	min-height : 75px;
+	padding : 20px;
 
-// Components
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//@import 'components/ui/ui';
-//@import 'components/home/home';
-// @import 'components/header/header';
-// @import 'components/header/nav';
-// @import 'components/footer/footer';
-// @import 'components/languageSelector/languageSelector';
-// @import 'components/books/newbookswidget/newbookswidget';
+	&--author {
+		background-image : 'url("/images/author_background.jpg")';
+	}
+
+	&__title {
+		font-size: 20px;
+	}
+
+	&__subtitle {
+		font-size: 14px;
+	}
+
+	&__action {
+		text-align: center;
+	}
+}
 

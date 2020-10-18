@@ -1,44 +1,42 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
+import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Slide from '@material-ui/core/Slide';
+import Typography from '@material-ui/core/Typography';
+import Alert from '@material-ui/lab/Alert';
+
 import { FormattedMessage, useIntl } from 'react-intl';
 import LibraryService from '../../services/LibraryService';
 
-const useStyles = makeStyles(() => ({
-	buttonProgress : {
-	  position : 'absolute',
-	  top : '50%',
-	  left : '50%',
-	  marginTop : -12,
-	  marginLeft : -12
+const useStyles = makeStyles((theme) => ({
+	appBar : {
+		position : 'relative'
+	},
+	title : {
+		marginLeft : theme.spacing(2),
+		flex : 1
 	}
 }));
 
-function Alert (props)
+const Transition = React.forwardRef(function Transition (props, ref)
 {
-	return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+	return <Slide direction="up" ref={ref} {...props} />;
+});
 
-const CategoryEditor = ({ category, createLink }) =>
+const CategoryEditor = ({ show, category, createLink, onSaved, onCancelled  }) =>
 {
 	const classes = useStyles();
 	const intl = useIntl();
-	const [open, setOpen] = useState(false);
 	const [busy, setBusy] = useState(false);
-	const [success, setSuccess] = useState(false);
-	const [failure, setFailure] = useState(false);
-	const [name, setName] = useState(false);
+	const [error, setError] = useState(false);
+	const [name, setName] = useState('');
 
 	const handleClose = () => setOpen(false);
 
@@ -49,23 +47,23 @@ const CategoryEditor = ({ category, createLink }) =>
 		{
 			if (category === null && createLink !== null)
 			{
-				await LibraryService.post(createLink, category);
+				let cat = { name };
+				await LibraryService.post(createLink, cat);
 			}
-			else
+			else if (category !== null)
 			{
 				let cat = { ...category };
 				cat.name = name;
-				console.dir(cat);
 				await LibraryService.put(category.links.update, cat);
 			}
 
-			setSuccess(true);
-			setOpen(false);
+			onSaved();
+
 		}
 		catch (e)
 		{
 			console.error(e);
-			setFailure(true);
+			setError(true);
 		}
 		finally
 		{
@@ -73,23 +71,28 @@ const CategoryEditor = ({ category, createLink }) =>
 		}
 	};
 
-	const header = category === null ?
+	const title = category === null ?
 		intl.formatMessage({ id : 'categories.action.create' }) :
 		intl.formatMessage({ id : 'category.editor.header.edit' }, { name : category.name });
 
-	return (<>
-		<IconButton edge="end" aria-label="edit" onClick={() => setOpen(true)}>
-			<EditIcon />
-		</IconButton>
-		<Dialog
-			open={open}
-			onClose={handleClose}
-			disableBackdropClick = {busy}
-			disableEscapeKeyDown = {busy}
-		>
-			{busy && <CircularProgress size={24} className={classes.buttonProgress} />}
-			<DialogTitle>{header}</DialogTitle>
-			<DialogContent>
+	return (
+		<Dialog fullScreen open={show}
+			onClose={() => onCancelled()}
+			TransitionComponent={Transition}
+			disableEscapeKeyDown={busy}
+			disableBackdropClick={busy}>
+			<AppBar className={classes.appBar}>
+				<Toolbar>
+					<IconButton edge="start" color="inherit" onClick={() => onCancelled()} aria-label="close">
+						<CloseIcon />
+					</IconButton>
+					<Typography variant="h6" className={classes.title}>{title}</Typography>
+					<Button autoFocus color="inherit" onClick={handleSave}>
+						<FormattedMessage id="action.save" />
+					</Button>
+				</Toolbar>
+			</AppBar>
+			 <DialogContent>
 				<TextField
 					autoFocus
 					margin="dense"
@@ -99,26 +102,11 @@ const CategoryEditor = ({ category, createLink }) =>
 					fullWidth
 					onChange={event => setName(event.target.value) }
 				/>
-			</DialogContent>
-			<DialogActions>
-				<Button onClick={handleSave} color="secondary" startIcon={<SaveIcon />} disabled={busy} >
-					<FormattedMessage id="action.save" />
-				</Button>
 
-				<Button onClick={handleClose} color="primary" autoFocus disabled={busy}>
-					<FormattedMessage id="action.cancel" />
-				</Button>
-			</DialogActions>
+				{ error && <Alert severity="error" ><FormattedMessage id="categories.messages.error.saving" /></Alert> }
+			</DialogContent>
 		</Dialog>
-		<Snackbar open={success} autoHideDuration={6000} onClose={() => setSuccess(false)}
-			anchorOrigin={{ vertical : 'bottom', horizontal : 'left' }}>
-			<Alert severity="success"><FormattedMessage id="categories.messages.saved" /></Alert>
-		</Snackbar>
-		<Snackbar open={failure} autoHideDuration={6000} onClose={() => setFailure(false)}
-			anchorOrigin={{ vertical : 'bottom', horizontal : 'left' }}>
-			<Alert severity="error"><FormattedMessage id="categories.error.saving" /></Alert>
-		</Snackbar>
-	</>);
+	);
 };
 
 export default CategoryEditor;

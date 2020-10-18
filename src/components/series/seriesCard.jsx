@@ -10,16 +10,43 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 
 const defaultSeriesImage = '/resources/img/series_placeholder.png';
 
-const SeriesCard = ({ series }) =>
+const SeriesCard = ({ series, onEdit, onDelete }) =>
 {
 	const classes = makeStyles(() => ({
 		root : {
 			maxWidth : 345
 		}
 	}));
+
+	const renderEditLink = () =>
+	{
+		if (series.links.update)
+		{
+			return (
+				<IconButton onClick={() => onEdit(series)}>
+					<EditOutlinedIcon />
+				</IconButton>);
+		}
+		return null;
+	};
+
+	const renderDeleteLink = () =>
+	{
+		if (series.links.delete)
+		{
+			return (
+				<IconButton onClick={() => onDelete(series)}>
+					<DeleteForeverOutlinedIcon />
+				</IconButton>
+			);
+		}
+		return null;
+	};
 
 	return (
 		<Card className={classes.root}>
@@ -44,6 +71,8 @@ const SeriesCard = ({ series }) =>
 				</CardContent>
 			</CardActionArea>
 			<CardActions>
+				{renderEditLink()}
+				{renderDeleteLink()}
 				<IconButton component={Link} to={`/books?series=${series.id}`}>
 					<MenuBookIcon />
 				</IconButton>

@@ -10,13 +10,14 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 
 const defaultBookImage = '/resources/img/book_placeholder.png';
 
 function FavoriteButton ({ book })
 {
-	console.dir(book.links.create_favorite);
 	if (book.links.create_favorite)
 	{
 		return (
@@ -32,13 +33,38 @@ function FavoriteButton ({ book })
 	);
 }
 
-function BookCell ({ book })
+function BookCell ({ book, onEdit, onDelete })
 {
 	const classes = makeStyles(() => ({
 		root : {
 			maxWidth : 345
 		}
 	}));
+
+	const renderEditLink = () =>
+	{
+		if (book.links.update)
+		{
+			return (
+				<IconButton onClick={() => onEdit(book)}>
+					<EditOutlinedIcon />
+				</IconButton>);
+		}
+		return null;
+	};
+
+	const renderDeleteLink = () =>
+	{
+		if (book.links.delete)
+		{
+			return (
+				<IconButton onClick={() => onDelete(book)}>
+					<DeleteForeverOutlinedIcon />
+				</IconButton>
+			);
+		}
+		return null;
+	};
 
 	return (
 		<Card className={classes.root}>
@@ -60,6 +86,8 @@ function BookCell ({ book })
 				</CardContent>
 			</CardActionArea>
 			<CardActions>
+				{renderEditLink()}
+				{renderDeleteLink()}
 				<IconButton component={Link} to={`/books/${book.id}`}>
 					<MenuBookIcon />
 				</IconButton>

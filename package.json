@@ -27,6 +27,7 @@
         "history": "^5.0.0",
         "jss": "^10.4.0",
         "jss-rtl": "^0.3.0",
+        "material-ui-dropzone": "^3.5.0",
         "prop-types": "^15.7.2",
         "qs": "6.9.4",
         "query-string": "^6.13.1",

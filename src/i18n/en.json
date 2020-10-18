@@ -80,7 +80,7 @@
     "authors.messages.saved" : "Author saved",
     "authors.messages.deleted" : "Author Deleted",
     "authors.messages.error.saving" : "Error saving author",
-    "authors.messages.error.delete" : "Author Deleted",
+    "authors.messages.error.delete" : "Error deleting author",
     "authors.messages.error.loading" : "Unable to load author",
     "authors.messages.empty" : "No author found",
     "authors.action.confirmDelete" : "Do you want to remove '{name}'?",
