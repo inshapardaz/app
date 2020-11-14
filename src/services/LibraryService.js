@@ -217,9 +217,9 @@ function LibraryService ()
 		return this.get(`${libraryUrl}/books/${id}/chapters/${chapterId}/contents`);
 	};
 
-	this.getAuthors = async (query = null, page = 1) =>
+	this.getAuthors = async (query = null, page = 1, pageSize = 12) =>
 	{
-		return this.get(`${libraryUrl}/authors?pageNumber=${page}&pageSize=12${this.getQueryParameter(query)}`);
+		return this.get(`${libraryUrl}/authors?pageNumber=${page}&pageSize=${pageSize}${this.getQueryParameter(query)}`);
 	};
 
 	this.searchAuthors = async (query, page = 1, pageSize = 6) =>

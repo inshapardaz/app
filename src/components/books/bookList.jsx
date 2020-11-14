@@ -5,7 +5,7 @@ import Container from '@material-ui/core/Container';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
@@ -21,6 +21,11 @@ const useStyles = () => makeStyles((theme) => ({
 	cardGrid : {
 	  paddingTop : theme.spacing(8),
 	  paddingBottom : theme.spacing(8)
+	},
+	pagination : {
+		'& > *': {
+			marginTop : theme.spacing(2)
+		}
 	}
 }));
 const classes = useStyles();
@@ -145,7 +150,10 @@ const BookList = () =>
 
 		return (<Grid container spacing={4}>{books.data.map((b) => (
 			<Grid item key={b.id} xs={12} sm={6} md={4}>
-				<BookCard book={b} key={b.id} onEdit={onEditClicked} onDelete={onDeleteClicked}/>
+				<BookCard book={b} key={b.id}
+					onEdit={onEditClicked}
+					onDelete={onDeleteClicked}
+					onUpdated={handleDataChanged}/>
 			</Grid>)) }
 		</Grid>);
 	};
@@ -154,17 +162,19 @@ const BookList = () =>
 	{
 		if (!isLoading && books)
 		{
-			return <Pagination
-				page={books.currentPageIndex}
-				count={books.pageCount}
-				renderItem={(item) => (
-					<PaginationItem
-						component={Link}
-						to={buildLinkToPage(item.page, authorId, categoryId, seriesId, query)}
-						{...item}
-					/>
-				)}
-			/>;
+			return <Box className={classes.pagination}>
+				<Pagination
+					page={books.currentPageIndex}
+					count={books.pageCount}
+					variant="outlined" shape="rounded"
+					renderItem={(item) => (
+						<PaginationItem
+							component={Link}
+							to={buildLinkToPage(item.page, authorId, categoryId, seriesId, query)}
+							{...item}
+						/>
+					)} />
+			</Box>;
 		}
 
 		return null;

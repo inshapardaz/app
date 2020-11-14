@@ -44,14 +44,14 @@ export default function LanguageSelector ()
 	const chooseEnglish = (event) =>
 	{
     	LocaleService.setCurrentLanguage('en');
-		location.reload();
+		window.location.reload();
 		handleClose(event);
 	};
 
 	const chooseUrdu = (event) =>
 	{
     	LocaleService.setCurrentLanguage('ur');
-		location.reload();
+		window.location.reload();
 		handleClose(event);
 	};
 

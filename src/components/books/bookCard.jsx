@@ -13,27 +13,51 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { makeStyles } from '@material-ui/core/styles';
+import { Tooltip } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
+import LibraryService from '../../services/LibraryService';
 
-const defaultBookImage = '/resources/img/book_placeholder.png';
+const defaultBookImage = '/images/book_placeholder.jpg';
 
-function FavoriteButton ({ book })
+function FavoriteButton ({ book, onUpdated })
 {
+	const changeFavorite = async () =>
+	{
+		try
+		{
+			if (book.links.create_favorite) {
+				await LibraryService.post(book.links.create_favorite, {});
+			}
+			else
+			{
+				await LibraryService.delete(book.links.remove_favorite, {});
+			}
+
+			onUpdated();
+		}
+		catch (e)
+		{
+			console.dir(e);
+		}
+	};
+
 	if (book.links.create_favorite)
 	{
-		return (
-			<IconButton aria-label="add to favorites">
+		return (<Tooltip title={<FormattedMessage id="books.action.favorite.add"/>} >
+			<IconButton aria-label="add to favorites" onClick={() => changeFavorite()}>
 				<FavoriteBorderIcon />
 			</IconButton>
-		);
+		</Tooltip>);
 	}
-	return (
-		<IconButton aria-label="add to favorites">
+
+	return (<Tooltip title={<FormattedMessage id="books.action.favorite.remove"/>} >
+		<IconButton aria-label="remove from favorites" onClick={() => changeFavorite()}>
 			<FavoriteIcon />
 		</IconButton>
-	);
+	</Tooltip>);
 }
 
-function BookCell ({ book, onEdit, onDelete })
+function BookCell ({ book, onEdit, onDelete, onUpdated })
 {
 	const classes = makeStyles(() => ({
 		root : {
@@ -45,10 +69,11 @@ function BookCell ({ book, onEdit, onDelete })
 	{
 		if (book.links.update)
 		{
-			return (
+			return (<Tooltip title={<FormattedMessage id="action.edit"/>} >
 				<IconButton onClick={() => onEdit(book)}>
 					<EditOutlinedIcon />
-				</IconButton>);
+				</IconButton>
+			</Tooltip>);
 		}
 		return null;
 	};
@@ -57,13 +82,18 @@ function BookCell ({ book, onEdit, onDelete })
 	{
 		if (book.links.delete)
 		{
-			return (
+			return (<Tooltip title={<FormattedMessage id="action.delete"/>} >
 				<IconButton onClick={() => onDelete(book)}>
 					<DeleteForeverOutlinedIcon />
 				</IconButton>
-			);
+			</Tooltip>);
 		}
 		return null;
+	};
+
+	const setDefaultBookImage = (ev) =>
+	{
+		ev.target.src = defaultBookImage;
 	};
 
 	return (
@@ -72,14 +102,17 @@ function BookCell ({ book, onEdit, onDelete })
 				<CardMedia
 					component="img"
 					alt={book.title}
-					height="240"
+					height="360"
 					image={(book.links ? book.links.image : null) || defaultBookImage}
 					title={book.title}
+					onError={setDefaultBookImage}
 				/>
 				<CardContent>
-					<Typography gutterBottom variant="h5" component="h2">
-						{book.title}
-					</Typography>
+					<Tooltip title={book.title} aria-label={book.title}>
+						<Typography gutterBottom variant="h5" component="h2" noWrap>
+							{book.title}
+						</Typography>
+					</Tooltip>
 					<Typography variant="body2" color="textSecondary" component="p">
 						{book.authorName}
 					</Typography>
@@ -88,10 +121,12 @@ function BookCell ({ book, onEdit, onDelete })
 			<CardActions>
 				{renderEditLink()}
 				{renderDeleteLink()}
-				<IconButton component={Link} to={`/books/${book.id}`}>
-					<MenuBookIcon />
-				</IconButton>
-				<FavoriteButton book={book} />
+				<Tooltip title={<FormattedMessage id="action.read"/>} >
+					<IconButton component={Link} to={`/books/${book.id}`}>
+						<MenuBookIcon />
+					</IconButton>
+				</Tooltip>
+				<FavoriteButton book={book} onUpdated={() => onUpdated()} />
 			</CardActions>
 		</Card>
 	);

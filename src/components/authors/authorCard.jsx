@@ -12,8 +12,9 @@ import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { makeStyles } from '@material-ui/core/styles';
+import { Tooltip } from '@material-ui/core';
 
-const defaultAuthorImage = '/resources/img/auhtor_placeholder.png';
+const defaultAuthorImage = '/images/author_placeholder.jpg';
 
 function AuthorCard ({ author, onEdit, onDelete })
 {
@@ -48,6 +49,11 @@ function AuthorCard ({ author, onEdit, onDelete })
 		return null;
 	};
 
+	const setDefaultAuthorImage = (ev) =>
+	{
+		ev.target.src = defaultAuthorImage;
+	};
+
 	return (
 		<Card className={classes.root}>
 			<CardActionArea component={Link} to={`/authors/${author.id}`}>
@@ -56,12 +62,14 @@ function AuthorCard ({ author, onEdit, onDelete })
 					alt={author.name}
 					height="240"
 					image={(author.links ? author.links.image : null) || defaultAuthorImage}
-					title={author.name}
+					onError={setDefaultAuthorImage}
 				/>
 				<CardContent>
-					<Typography gutterBottom variant="h5" component="h2">
-						{author.name}
-					</Typography>
+					<Tooltip title={author.name} aria-label="add">
+						<Typography gutterBottom variant="h5" component="h2" noWrap>
+							{author.name}
+						</Typography>
+					</Tooltip>
 					<Typography variant="body2" color="textSecondary" component="p">
 						<FormattedMessage id="authors.item.book.count" values={{ count : author.bookCount }} />
 					</Typography>

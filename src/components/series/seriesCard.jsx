@@ -13,7 +13,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 
-const defaultSeriesImage = '/resources/img/series_placeholder.png';
+const defaultSeriesImage = '/images/series_placeholder.jpg';
 
 const SeriesCard = ({ series, onEdit, onDelete }) =>
 {
@@ -48,6 +48,11 @@ const SeriesCard = ({ series, onEdit, onDelete }) =>
 		return null;
 	};
 
+	const setDefaultSeriesImage = (ev) =>
+	{
+		ev.target.src = defaultSeriesImage;
+	};
+
 	return (
 		<Card className={classes.root}>
 			<CardActionArea component={Link} to={`/series/${series.id}`}>
@@ -56,10 +61,10 @@ const SeriesCard = ({ series, onEdit, onDelete }) =>
 					alt={series.name}
 					height="240"
 					image={(series.links ? series.links.image : null) || defaultSeriesImage}
-					title={series.name}
+					onError={setDefaultSeriesImage}
 				/>
 				<CardContent>
-					<Typography gutterBottom variant="h5" component="h2">
+					<Typography gutterBottom variant="h5" component="h2" noWrap>
 						{series.name}
 					</Typography>
 					<Typography variant="body2" color="textSecondary" component="p">
