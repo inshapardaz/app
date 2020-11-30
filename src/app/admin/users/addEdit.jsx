@@ -1,11 +1,75 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-import { accountService, alertService } from '../../../services';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+
+import { Container, Typography, Link, FormControl } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { Select } from 'formik-material-ui';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import { useSnackbar } from 'notistack';
+import { accountService } from '../../../services';
+import { TextField } from 'formik-material-ui';
+import { useIntl, FormattedMessage } from 'react-intl';
+import InputBase from '@material-ui/core/InputBase';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+
+const BootstrapInput = withStyles((theme) => ({
+	root: {
+		'label + &': {
+			marginTop: theme.spacing(3),
+		},
+	},
+	input: {
+		borderRadius: 4,
+		position: 'relative',
+		backgroundColor: theme.palette.background.paper,
+		border: '1px solid #ced4da',
+		fontSize: 16,
+		padding: '19px 26px 19px 14px',
+		transition: theme.transitions.create(['border-color', 'box-shadow']),
+		'&:focus': {
+			borderRadius: 4,
+			borderColor: '#80bdff',
+			boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+		},
+	},
+}))(InputBase);
+
+const useStyles = makeStyles((theme) => ({
+	paper: {
+		marginTop: theme.spacing(8),
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+	},
+	avatar: {
+		margin: theme.spacing(1),
+		backgroundColor: theme.palette.secondary.main,
+	},
+	form: {
+		width: '100%', // Fix IE 11 issue.
+		marginTop: theme.spacing(1),
+	},
+	submit: {
+		margin: theme.spacing(3, 0, 2),
+	},
+	buttonProgress: {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12,
+	},
+}));
 
 function AddEdit({ history, match }) {
+	const intl = useIntl();
+	const { enqueueSnackbar } = useSnackbar();
+	const classes = useStyles();
 	const { id } = match.params;
 	const isAddMode = !id;
 
@@ -21,24 +85,24 @@ function AddEdit({ history, match }) {
 
 	const validationSchema = Yup.object().shape({
 		title: Yup.string()
-			.required('Title is required'),
+			.required(intl.formatMessage({ id: 'register.message.title.required' })),
 		firstName: Yup.string()
-			.required('First Name is required'),
+			.required(intl.formatMessage({ id: 'register.message.firstName.required' })),
 		lastName: Yup.string()
-			.required('Last Name is required'),
+			.required(intl.formatMessage({ id: 'register.message.lastName.required' })),
 		email: Yup.string()
-			.email('Email is invalid')
-			.required('Email is required'),
+			.email(intl.formatMessage({ id: 'register.message.email.error' }))
+			.required(intl.formatMessage({ id: 'register.message.email.required' })),
 		role: Yup.string()
-			.required('Role is required'),
+			.required(intl.formatMessage({ id: 'user.role.required' })),
 		password: Yup.string()
 			.concat(isAddMode ? Yup.string().required('Password is required') : null)
-			.min(6, 'Password must be at least 6 characters'),
+			.min(6, intl.formatMessage({ id: 'register.message.password.error.length' })),
 		confirmPassword: Yup.string()
 			.when('password', (password, schema) => {
-				if (password) return schema.required('Confirm Password is required');
+				if (password) return schema.required(intl.formatMessage({ id: 'register.message.confirmPassword.required' }));
 			})
-			.oneOf([Yup.ref('password')], 'Passwords must match')
+			.oneOf([Yup.ref('password')], intl.formatMessage({ id: 'register.message.confirmPassword.error.match' }))
 	});
 
 	function onSubmit(fields, { setStatus, setSubmitting }) {
@@ -53,111 +117,118 @@ function AddEdit({ history, match }) {
 	function createUser(fields, setSubmitting) {
 		accountService.create(fields)
 			.then(() => {
-				alertService.success('User added successfully', { keepAfterRouteChange: true });
+				enqueueSnackbar(intl.formatMessage({ id: 'user.messages.added.success' }), { variant: 'success' })
 				history.push('.');
 			})
 			.catch(error => {
 				setSubmitting(false);
-				alertService.error(error);
+				enqueueSnackbar(intl.formatMessage({ id: 'user.messages.added.error' }), { variant: 'error' })
 			});
 	}
 
 	function updateUser(id, fields, setSubmitting) {
 		accountService.update(id, fields)
 			.then(() => {
-				alertService.success('Update successful', { keepAfterRouteChange: true });
+				enqueueSnackbar(intl.formatMessage({ id: 'user.messages.updated.success' }), { variant: 'success' })
 				history.push('..');
 			})
 			.catch(error => {
 				setSubmitting(false);
-				alertService.error(error);
+				enqueueSnackbar(intl.formatMessage({ id: 'user.messages.updated.error' }), { variant: 'error' })
 			});
 	}
 
 	return (
-		<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-			{({ errors, touched, isSubmitting, setFieldValue }) => {
-				useEffect(() => {
-					if (!isAddMode) {
-						// get user and set form fields
-						accountService.getById(id).then(user => {
-							const fields = ['title', 'firstName', 'lastName', 'email', 'role'];
-							fields.forEach(field => setFieldValue(field, user[field], false));
-						});
-					}
-				}, []);
+		<Container component="main" maxWidth="xs">
+			<div className={classes.paper}>
+				<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+					{({ errors, touched, isSubmitting, setFieldValue }) => {
+						useEffect(() => {
+							if (!isAddMode) {
+								// get user and set form fields
+								accountService.getById(id).then(user => {
+									const fields = ['title', 'firstName', 'lastName', 'email', 'role'];
+									fields.forEach(field => setFieldValue(field, user[field], false));
+								});
+							}
+						}, []);
 
-				return (
-					<Form>
-						<h1>{isAddMode ? 'Add User' : 'Edit User'}</h1>
-						<div className="form-row">
-							<div className="form-group col">
-								<label>Title</label>
-								<Field name="title" as="select" className={'form-control' + (errors.title && touched.title ? ' is-invalid' : '')}>
-									<option value=""></option>
-									<option value="Mr">Mr</option>
-									<option value="Mrs">Mrs</option>
-									<option value="Miss">Miss</option>
-									<option value="Ms">Ms</option>
-								</Field>
-								<ErrorMessage name="title" component="div" className="invalid-feedback" />
-							</div>
-							<div className="form-group col-5">
-								<label>First Name</label>
-								<Field name="firstName" type="text" className={'form-control' + (errors.firstName && touched.firstName ? ' is-invalid' : '')} />
-								<ErrorMessage name="firstName" component="div" className="invalid-feedback" />
-							</div>
-							<div className="form-group col-5">
-								<label>Last Name</label>
-								<Field name="lastName" type="text" className={'form-control' + (errors.lastName && touched.lastName ? ' is-invalid' : '')} />
-								<ErrorMessage name="lastName" component="div" className="invalid-feedback" />
-							</div>
-						</div>
-						<div className="form-row">
-							<div className="form-group col-7">
-								<label>Email</label>
-								<Field name="email" type="text" className={'form-control' + (errors.email && touched.email ? ' is-invalid' : '')} />
-								<ErrorMessage name="email" component="div" className="invalid-feedback" />
-							</div>
-							<div className="form-group col">
-								<label>Role</label>
-								<Field name="role" as="select" className={'form-control' + (errors.role && touched.role ? ' is-invalid' : '')}>
-									<option value=""></option>
-									<option value="User">User</option>
-									<option value="Admin">Admin</option>
-								</Field>
-								<ErrorMessage name="role" component="div" className="invalid-feedback" />
-							</div>
-						</div>
-						{!isAddMode &&
-							<div>
-								<h3 className="pt-3">Change Password</h3>
-								<p>Leave blank to keep the same password</p>
-							</div>
-						}
-						<div className="form-row">
-							<div className="form-group col">
-								<label>Password</label>
-								<Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
-								<ErrorMessage name="password" component="div" className="invalid-feedback" />
-							</div>
-							<div className="form-group col">
-								<label>Confirm Password</label>
-								<Field name="confirmPassword" type="password" className={'form-control' + (errors.confirmPassword && touched.confirmPassword ? ' is-invalid' : '')} />
-								<ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" />
-							</div>
-						</div>
-						<div className="form-group">
-							<button type="submit" disabled={isSubmitting} className="btn btn-primary">
-								{isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                                Save
-                            </button>
-							<Link to={isAddMode ? '.' : '..'} className="btn btn-link">Cancel</Link>
-						</div>
-					</Form>
-				);
-			}}
-		</Formik>
+						return (
+							<Form>
+								<Typography variant="h3">{intl.formatMessage({ id: isAddMode ? 'user.add' : 'user.edit' })}</Typography>
+								<FormControl variant="outlined" margin="normal" fullWidth error={errors.title && touched.title}>
+									<InputLabel ><FormattedMessage id="register.title.label" /></InputLabel>
+									<Field component={Select} name="title" as="select" ariant="outlined" margin="normal" fullWidth
+										error={errors.title && touched.title}
+										input={<BootstrapInput />}>
+										<MenuItem value="">{intl.formatMessage({ id: "register.title.none" })}</MenuItem>
+										<MenuItem value="Mr">{intl.formatMessage({ id: "register.title.mr" })}</MenuItem>
+										<MenuItem value="Mrs">{intl.formatMessage({ id: "register.title.mrs" })}</MenuItem>
+										<MenuItem value="Miss">{intl.formatMessage({ id: "register.title.miss" })}</MenuItem>
+									</Field>
+								</FormControl>
+								<Field component={TextField} name="firstName" type="text" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.firstName.label" />} error={errors.firstName && touched.firstName} />
+
+								<Field component={TextField} name="lastName" type="text" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.lastName.label" />} error={errors.lastName && touched.lastName} />
+
+								<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />
+
+								<FormControl variant="outlined" margin="normal" fullWidth error={errors.role && touched.role}>
+									<InputLabel ><FormattedMessage id="user.role.label" /></InputLabel>
+									<Field component={Select} name="role" as="select" ariant="outlined" margin="normal" fullWidth
+										error={errors.role && touched.role}
+										input={<BootstrapInput />}>
+										<MenuItem value="">{intl.formatMessage({ id: "register.title.none" })}</MenuItem>
+										<MenuItem value="Reader">{intl.formatMessage({ id: "role.reader" })}</MenuItem>
+										<MenuItem value="Writer">{intl.formatMessage({ id: "role.writer" })}</MenuItem>
+										<MenuItem value="LibraryAdmin">{intl.formatMessage({ id: "role.libraryAdmin" })}</MenuItem>
+									</Field>
+								</FormControl>
+
+								{!isAddMode &&
+									<Typography variant="h3">{intl.formatMessage({ id: 'changePassword' })}</Typography>
+								}
+								<Field component={TextField} name="password" type="password" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.password.label" />} error={errors.password && touched.password} />
+
+								<Field component={TextField} name="confirmPassword" type="password" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.confirmPassword.label" />} error={errors.confirmPassword && touched.confirmPassword} />
+
+
+								{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
+								<Grid container spacing={2}>
+									<Grid item xs={6}>
+										<Button
+											type="submit"
+											fullWidth
+											variant="contained"
+											color="primary"
+											className={classes.submit}
+											disabled={isSubmitting}
+										>
+											<FormattedMessage id="action.save" />
+										</Button>
+									</Grid>
+									<Grid item xs={6} >
+										<Button component={Link}
+											href='/admin/users'
+											fullWidth
+											variant="contained"
+											className={classes.submit}
+											disabled={isSubmitting}>
+											<FormattedMessage id="action.cancel" />
+										</Button>
+									</Grid>
+								</Grid>
+							</Form>
+						);
+					}}
+				</Formik>
+			</div>
+		</Container >
 	);
 }
 

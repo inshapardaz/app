@@ -15,82 +15,79 @@ import LanguageSelector from './languageSelector.jsx';
 import CategorySelector from './categorySelector.jsx';
 
 const useStyles = makeStyles((theme) => ({
-	root : {
-	  display : 'flex'
+	root: {
+		display: 'flex'
 	},
-	button : {
-		margin : theme.spacing(1)
+	button: {
+		margin: theme.spacing(1)
 	},
-	paper : {
-	  marginRight : theme.spacing(2)
+	paper: {
+		marginRight: theme.spacing(2)
 	},
-	sectionDesktop : {
-		display : 'none',
-		[theme.breakpoints.up('md')] : {
-			display : 'flex'
+	sectionDesktop: {
+		display: 'none',
+		[theme.breakpoints.up('md')]: {
+			display: 'flex'
 		}
 	},
-	sectionMobile : {
-		display : 'flex',
-		[theme.breakpoints.up('md')] : {
-		  display : 'none'
+	sectionMobile: {
+		display: 'flex',
+		[theme.breakpoints.up('md')]: {
+			display: 'none'
 		}
 	}
 }));
 
-function Nav ()
-{
+function Nav() {
 	const classes = useStyles();
 	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-	const handleMobileMenuClose = () =>
-	{
+	const handleMobileMenuClose = () => {
 		setMobileMoreAnchorEl(null);
 	};
 
-	const handleMobileMenuOpen = (event) =>
-	{
+	const handleMobileMenuOpen = (event) => {
 		setMobileMoreAnchorEl(event.currentTarget);
 	};
 
 	const mobileMenuId = 'primary-search-account-menu-mobile';
 	const renderMobileMenu = (
 		<Menu
-		  anchorEl={mobileMoreAnchorEl}
-		  anchorOrigin={{ vertical : 'top', horizontal : 'right' }}
-		  id={mobileMenuId}
-		  keepMounted
-		  transformOrigin={{ vertical : 'top', horizontal : 'right' }}
-		  open={isMobileMenuOpen}
-		  onClose={handleMobileMenuClose}
+			anchorEl={mobileMoreAnchorEl}
+			anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+			id={mobileMenuId}
+			keepMounted
+			transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+			open={isMobileMenuOpen}
+			onClose={handleMobileMenuClose}
 		>
-		  <MenuItem>
+			<MenuItem>
 				<IconButton aria-label="books" color="inherit"
 					component={Link} to="/books">
 					<LibraryBooksIcon />
 				</IconButton>
 				<FormattedMessage id="header.books" />
-		  </MenuItem>
-		  <MenuItem>
+			</MenuItem>
+			<MenuItem>
 				<IconButton aria-label="authors" color="inherit"
 					component={Link} to="/authors">
 					<PersonIcon />
 				</IconButton>
 				<FormattedMessage id="header.authors" />
-		  </MenuItem>
-		  <MenuItem>
+			</MenuItem>
+			<MenuItem>
 				<IconButton aria-label="series" color="inherit"
 					component={Link} to="/series">
 					<CollectionsBookmarkIcon />
 				</IconButton>
 				<FormattedMessage id="header.series" />
-		  </MenuItem>
-		  <CategorySelector />
-		  <LanguageSelector />
-		  <ProfileMenu />
+			</MenuItem>
+			<CategorySelector />
+			<LanguageSelector />
+			<ProfileMenu />
 		</Menu>
-	  );
+	);
 
 	return (
 		<>

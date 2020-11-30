@@ -11,8 +11,7 @@ import BookList from '../../components/books/bookList.jsx';
 import Loading from '../../components/Loading.jsx';
 import ErrorMessage from '../../components/ErrorMessage.jsx';
 
-const BooksPage = () =>
-{
+const BooksPage = () => {
 	const intl = useIntl();
 	const location = useLocation();
 	const [authorId, setAuthorId] = useState(null);
@@ -24,10 +23,8 @@ const BooksPage = () =>
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
 
-	useEffect(() =>
-	{
-		const loadData = () =>
-		{
+	useEffect(() => {
+		const loadData = () => {
 			const values = queryString.parse(location.search);
 			setCategoryId(values.category);
 			setAuthorId(values.author);
@@ -35,22 +32,19 @@ const BooksPage = () =>
 
 			setLoading(true);
 
-			if (authorId > 0)
-			{
+			if (authorId > 0) {
 				libraryService.getAuthor(authorId)
 					.then(data => setAuthor({ data }))
 					.catch(() => setError(true));
 			}
 
-			if (categoryId > 0)
-			{
+			if (categoryId > 0) {
 				libraryService.getCategory(categoryId)
 					.then(data => setCategory({ data }))
 					.catch(() => setError(true));
 			}
 
-			if (seriesId > 0)
-			{
+			if (seriesId > 0) {
 				libraryService.getSeriesById(seriesId)
 					.then(data => setSeries({ data }))
 					.catch(() => setError(true));
@@ -61,27 +55,22 @@ const BooksPage = () =>
 		loadData();
 	}, [location]);
 
-	let headerContent = intl.formatMessage({ id : 'header.books' });
-	if (author)
-	{
+	let headerContent = intl.formatMessage({ id: 'header.books' });
+	if (author) {
 		headerContent = author.name;
 	}
-	else if (category)
-	{
+	else if (category) {
 		headerContent = category.name;
 	}
-	else if (series)
-	{
+	else if (series) {
 		headerContent = series.name;
 	}
 
-	if (isLoading)
-	{
+	if (isLoading) {
 		return <Loading />;
 	}
-	if (isError)
-	{
-		return <ErrorMessage message={<FormattedMessage id="books.messages.error.loading" />}/>;
+	if (isError) {
+		return <ErrorMessage message={<FormattedMessage id="books.messages.error.loading" />} />;
 	}
 
 	return (

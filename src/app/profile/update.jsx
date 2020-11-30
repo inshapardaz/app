@@ -1,25 +1,21 @@
 import React, { useState } from 'react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 
-import { Container, Typography, Link, Avatar, FormControl } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { Container, Typography, Link, FormControl } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Select } from 'formik-material-ui';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import { useSnackbar } from 'notistack';
 import { accountService } from '../../services';
-import { TextField, CheckboxWithLabel } from 'formik-material-ui';
+import { TextField } from 'formik-material-ui';
 import { useIntl, FormattedMessage } from 'react-intl';
-import LanguageSelector from '../../components/header/languageSelector.jsx';
 import InputBase from '@material-ui/core/InputBase';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import Footer from '../../components/footer';
 
 const BootstrapInput = withStyles((theme) => ({
 	root: {
@@ -100,7 +96,7 @@ function Update({ history }) {
 			.when('password', (password, schema) => {
 				if (password) return schema.required(intl.formatMessage({ id: 'register.message.confirmPassword.required' }));
 			})
-			.oneOf([Yup.ref('password')], intl.formatMessage({ id: 'egister.message.confirmPassword.error.match' }))
+			.oneOf([Yup.ref('password')], intl.formatMessage({ id: 'register.message.confirmPassword.error.match' }))
 	});
 
 	function onSubmit(fields, { setStatus, setSubmitting }) {
@@ -110,19 +106,10 @@ function Update({ history }) {
 				enqueueSnackbar(intl.formatMessage({ id: 'profile.message.success' }), { variant: 'success' })
 				history.push('.');
 			})
-			.catch(error => {
+			.catch(() => {
 				setSubmitting(false);
 				enqueueSnackbar(intl.formatMessage({ id: 'profile.message.error' }), { variant: 'error' })
 			});
-	}
-
-	const [isDeleting, setIsDeleting] = useState(false);
-	function onDelete() {
-		if (confirm(intl.formatMessage({ id: 'profile.message.delete.success' }))) {
-			setIsDeleting(true);
-			accountService.delete(user.id)
-				.then(() => enqueueSnackbar(intl.formatMessage({ id: 'profile.message.delete.success' }), { variant: 'success' }));
-		}
 	}
 
 	return (

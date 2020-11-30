@@ -39,7 +39,7 @@ function App() {
 		direction,
 		typography: {
 			fontFamily: [
-				'Mehr-Nastaleeq',
+				'Dubai',
 				'Roboto',
 				'"Helvetica Neue"',
 				'Arial',

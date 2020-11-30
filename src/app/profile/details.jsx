@@ -23,7 +23,7 @@ function Details({ match }) {
 
 	return (
 		<div className={classes.paper}>
-			<Container component="main" maxWidth="xs">
+			<Container component="main" maxWidth="md">
 				<Grid container spacing={3}>
 					<Grid item xs={12}>
 						<Typography variant="h6"><FormattedMessage id="profile.name.title" /></Typography>
