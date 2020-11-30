@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
 
 import { FormattedMessage, useIntl } from 'react-intl';
-import LibraryService from '../../services/LibraryService';
+import { libraryService} from '../../services';
 
 const useStyles = makeStyles((theme) => ({
 	appBar : {
@@ -40,34 +40,26 @@ const CategoryEditor = ({ show, category, createLink, onSaved, onCancelled  }) =
 
 	const handleClose = () => setOpen(false);
 
-	const handleSave = async () =>
+	const handleSave = () =>
 	{
 		setBusy(true);
-		try
+		
+		if (category === null && createLink !== null)
 		{
-			if (category === null && createLink !== null)
-			{
-				let cat = { name };
-				await LibraryService.post(createLink, cat);
-			}
-			else if (category !== null)
-			{
-				let cat = { ...category };
+			let cat = { name };
+			libraryService.post(createLink, cat)
+				.then(() => onSaved())
+				.catch(() => setError(true))
+				.finally(() => setBusy(false));
+		}
+		else if (category !== null)
+		{
+			let cat = { ...category };
 				cat.name = name;
-				await LibraryService.put(category.links.update, cat);
-			}
-
-			onSaved();
-
-		}
-		catch (e)
-		{
-			console.error(e);
-			setError(true);
-		}
-		finally
-		{
-			setBusy(false);
+			libraryService.put(category.links.update, cat)
+				.then(() => onSaved())
+				.catch(() => setError(true))
+				.finally(() => setBusy(false));
 		}
 	};
 

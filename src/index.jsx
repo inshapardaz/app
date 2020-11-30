@@ -1,26 +1,19 @@
-import '@babel/polyfill';
-import 'webcomponents.js/webcomponents-lite';
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import triggerEvent from './utilities/triggerEvent';
-import App from './App.jsx';
-import { createStore } from './state';
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+import { Router } from 'react-router-dom';
+import { render } from 'react-dom';
 
-export async function start ()
-{
-	const store = await createStore();
+import { history } from './helpers';
+import { accountService } from './services';
+import { App } from './app';
 
-	ReactDOM.render(
-		<Provider store={store}>
+
+accountService.refreshToken().finally(startApp);
+
+function startApp() {
+	render(
+		<Router history={history}>
 			<App />
-		</Provider>,
-		document.getElementById('root')
+		</Router>,
+		document.getElementById('app')
 	);
 }
-
-triggerEvent(window, 'appreadytostart');

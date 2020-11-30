@@ -2,16 +2,21 @@ import { createIntlCache, createIntl } from 'react-intl';
 import enMessages from '../i18n/en.json';
 import urMessages from '../i18n/ur.json';
 
-class LocaleService
+let intl = {};
+
+const getCurrentLanguage = () => window.localStorage.getItem('language');
+const setCurrentLanguage = (language) => window.localStorage.setItem('language', language);
+
+export const localeService =
 {
-	initLocale ()
+	initLocale : () =>
 	{
-		let locale = this.getCurrentLanguage();
+		let locale = getCurrentLanguage();
 
 		if (!locale)
 		{
 			locale = 'ur';
-			this.setCurrentLanguage(locale);
+			setCurrentLanguage(locale);
 		}
 
 		let isRtl = false;
@@ -26,7 +31,7 @@ class LocaleService
 		const cache = createIntlCache();
 
 		// Create the `intl` object
-		const intl = createIntl(
+		intl = createIntl(
 			{
 			// Locale of the application
 				locale,
@@ -36,8 +41,6 @@ class LocaleService
 			},
 			cache
 		);
-		//const { intl } = createIntl new IntlProvider({ locale, messages }, {}).getChildContext();
-		this.intl = intl;
 
 		document.dir = isRtl ? 'rtl' : 'ltr';
 
@@ -46,26 +49,12 @@ class LocaleService
 			messages,
 			isRtl
 		};
-	}
+	},
 
-	getCurrentLanguage ()
-	{
-		return window.localStorage.getItem('language');
-	}
-
-	setCurrentLanguage (language)
-	{
-		window.localStorage.setItem('language', language);
-	}
-
-	formatMessage (id)
-	{
-		return this.intl.formatMessage({ id });
-	}
-
-	isRtl ()
-	{
-		let locale = this.getCurrentLanguage();
+	getCurrentLanguage,
+	setCurrentLanguage,
+	isRtl : () => {
+		let locale = getCurrentLanguage();
 
 		if (locale)
 		{
@@ -80,5 +69,3 @@ class LocaleService
 		return false;
 	}
 }
-
-export default new LocaleService();

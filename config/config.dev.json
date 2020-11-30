@@ -1,7 +1,4 @@
 {
-	"clientId": "lxvRFsTrdFvsPPOj3Adf905qrDn3Qd6J",
-	"authDomain": "nawishta.eu.auth0.com",
-	"audience": "https://localhost:5000",
-	"apiUrl": "http://localhost:5000",
+	"apiUrl": "http://localhost:4000",
 	"libraryId": 6
 }

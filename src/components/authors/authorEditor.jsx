@@ -13,7 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Alert from '@material-ui/lab/Alert';
 import { DropzoneArea } from 'material-ui-dropzone';
-import LibraryService from '../../services/LibraryService';
+import { libraryService} from '../../services';
 
 const useStyles = makeStyles((theme) => ({
 	appBar : {
@@ -37,63 +37,42 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) =>
 	const [error, setError] = useState(false);
 	const [name, setName] = useState('');
 
-	const handleSave = async () =>
+	const handleSave = () =>
 	{
 		setBusy(true);
-		try
+		
+		if (author === null && createLink !== null)
 		{
-			if (author === null && createLink !== null)
-			{
-				let cat = { name };
-				await LibraryService.post(createLink, cat);
-			}
-			else if (author !== null)
-			{
-				let cat = { ...author };
-				cat.name = name;
-				await LibraryService.put(author.links.update, cat);
-			}
-
-			onSaved();
-
+			let cat = { name };
+			libraryService.post(createLink, cat)
+				.then(() => onSaved())
+				.catch(() => setError(true))
+				.finally(() => setBusy(false));
 		}
-		catch (e)
+		else if (author !== null)
 		{
-			console.error(e);
-			setError(true);
-		}
-		finally
-		{
-			setBusy(false);
+			let cat = { ...author };
+			cat.name = name;
+			libraryService.put(author.links.update, cat)
+				.then(() => onSaved())
+				.catch(() => setError(true))
+				.finally(() => setBusy(false));
 		}
 	};
 
-	const handleImageUpload = async (files) =>
+	const handleImageUpload = (files) =>
 	{
 		if (files.length < 1)
 		{
 			return;
 		}
-
-		setBusy(true);
-		try
+		
+		if (author && author.links.image_upload !== null)
 		{
-			if (author && author.links.image_upload !== null)
-			{
-				await LibraryService.upload(author.links.image_upload, files[0]);
-			}
-
-			onSaved();
-
-		}
-		catch (e)
-		{
-			console.error(e);
-			setError(true);
-		}
-		finally
-		{
-			setBusy(false);
+			libraryService.upload(author.links.image_upload, files[0])
+				.then(() => onSaved())
+				.catch(() => setError(true))
+				.finally(() => setBusy(false));
 		}
 	};
 

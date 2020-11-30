@@ -2,6 +2,7 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import React, { useEffect, useState, useRef } from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Grow from '@material-ui/core/Grow';
@@ -10,30 +11,24 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
-import Avatar from '@material-ui/core/Avatar';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import AuthService from '../../services/AuthService';
+import { Role } from '../../helpers';
+import { accountService } from '../../services';
 
 const ProfileMenu = () =>
 {
+	let subscription = null;
 	const anchorRef = useRef(null);
 	const [open, setOpen] = useState(false);
-	const [profile, setProfile] = useState(null);
+    const [user, setUser] = useState({});
 
-	useEffect(() =>
-	{
-		if (AuthService.isLoggedIn())
+    useEffect(() => {
+        subscription = accountService.user.subscribe(x => setUser(x));
+		
+		return () =>
 		{
-			AuthService.getProfile((err, profileResponse) =>
-			{
-				if (err)
-				{
-					console.log(err);
-				}
-
-				setProfile(profileResponse);
-			});
-		}
+			subscription.unsubscribe();
+		};
 	}, []);
 
 	const handleToggle = () =>
@@ -51,62 +46,9 @@ const ProfileMenu = () =>
 		setOpen(false);
 	};
 
-	const displayName = profile ? profile.nickname : '';
-
-	const onLogin = (event) =>
+    if (!user)
 	{
-		AuthService.login();
-		handleClose(event);
-	};
-
-	const onLogout = (event) =>
-	{
-		AuthService.logout();
-		setProfile(null);
-		handleClose(event);
-	};
-
-	let renderMenu = null;
-	if (profile)
-	{
-		const avatar = profile && profile.picture ? profile.picture : '';
-		renderMenu = (
-			<>
-				<Button
-					edge="end"
-					aria-label="account of current user"
-					aria-controls="login"
-					aria-haspopup="true"
-					onClick={handleToggle}
-					ref={anchorRef}
-					color="inherit"
-					startIcon={<Avatar src={avatar}/>}
-					endIcon={<KeyboardArrowDownIcon />}
-				>
-				</Button>
-				<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-					{({ TransitionProps, placement }) => (
-						<Grow
-							{...TransitionProps}
-							style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
-						>
-							<Paper>
-								<ClickAwayListener onClickAway={handleClose}>
-									<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleClose}>
-										<MenuItem >{displayName}</MenuItem>
-										<MenuItem onClick={onLogout}><FormattedMessage id="logout" /></MenuItem>
-									</MenuList>
-								</ClickAwayListener>
-							</Paper>
-						</Grow>
-					)}
-				</Popper>
-			</>
-		);
-	}
-	else
-	{
-		renderMenu = (
+		return (
 			<>
 				<Button
 					edge="end"
@@ -120,7 +62,7 @@ const ProfileMenu = () =>
 					endIcon={<KeyboardArrowDownIcon />}
 				>
 				</Button>
-				<Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
+				<Popper open={open} anchorEl={anchorRef.current} transition disablePortal>
 					{({ TransitionProps, placement }) => (
 						<Grow
 							{...TransitionProps}
@@ -129,8 +71,8 @@ const ProfileMenu = () =>
 							<Paper>
 								<ClickAwayListener onClickAway={handleClose}>
 									<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleClose}>
-										<MenuItem onClick={handleClose}><FormattedMessage id="register" /></MenuItem>
-										<MenuItem onClick={onLogin}><FormattedMessage id="login" /></MenuItem>
+										<MenuItem component={Link} onClick={handleClose} to='/account/register'><FormattedMessage id="register" /></MenuItem>
+										<MenuItem component={Link} onClick={handleClose} to='/account/login'><FormattedMessage id="login" /></MenuItem>
 									</MenuList>
 								</ClickAwayListener>
 							</Paper>
@@ -139,9 +81,45 @@ const ProfileMenu = () =>
 				</Popper>
 			</>
 		);
-	}
-
-	return renderMenu;
+    }
+    else
+    {
+        return (
+			<>
+				<Button
+					edge="end"
+					aria-label="account of current user"
+					aria-controls="login"
+					aria-haspopup="true"
+					onClick={handleToggle}
+					ref={anchorRef}
+					color="inherit"
+					endIcon={<KeyboardArrowDownIcon />}
+				>
+				</Button>
+				<Popper open={open} anchorEl={anchorRef.current} transition disablePortal>
+					{({ TransitionProps, placement }) => (
+						<Grow
+							{...TransitionProps}
+							style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
+						>
+							<Paper>
+								<ClickAwayListener onClickAway={handleClose}>
+									<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleClose}>
+                                        <MenuItem component={Link} onClick={handleClose} to='/profile'>{user.firstName}</MenuItem>
+                                        {user.role === Role.Admin &&
+											<MenuItem component={Link} onClick={handleClose} to="/admin" >Admin</MenuItem>
+                                        }
+										<MenuItem onClick={accountService.logout}><FormattedMessage id="logout" /></MenuItem>
+									</MenuList>
+								</ClickAwayListener>
+							</Paper>
+						</Grow>
+					)}
+				</Popper>
+			</>
+		);
+    }
 };
 
 export default injectIntl(ProfileMenu);

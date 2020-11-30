@@ -2,7 +2,7 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import LibraryService from '../../services/LibraryService';
+import { libraryService } from '../../services';
 
 const SeriesDropDown = (props) =>
 {
@@ -10,6 +10,7 @@ const SeriesDropDown = (props) =>
 	const [options, setOptions] = React.useState([]);
 	const [text, setText] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
+	const [error, setError] = React.useState(false);
 
 	React.useEffect(() =>
 	{
@@ -18,19 +19,13 @@ const SeriesDropDown = (props) =>
 			return;
 		}
 
-		(async () =>
+		(() =>
 		{
 			setLoading(true);
-			try
-			{
-				const response = await LibraryService.getSeries(text, 1, 10);
-				const series = response.data;
-				setOptions(series);
-			}
-			finally
-			{
-				setLoading(false);
-			}
+			libraryService.getSeries(text, 1, 10)
+				.then(response => setOptions(response.data))
+				.catch(() => setError(true))
+				.finally(() => setLoading(false));
 		})();
 	}, [text]);
 

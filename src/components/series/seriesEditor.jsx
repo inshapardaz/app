@@ -13,7 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Alert from '@material-ui/lab/Alert';
 import { DropzoneArea } from 'material-ui-dropzone';
-import LibraryService from '../../services/LibraryService';
+import { libraryService} from '../../services';
 
 const useStyles = makeStyles((theme) => ({
 	appBar : {
@@ -38,64 +38,43 @@ const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) =>
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
 
-	const handleSave = async () =>
+	const handleSave = () =>
 	{
 		setBusy(true);
-		try
+		
+		if (series === null && createLink !== null)
 		{
-			if (series === null && createLink !== null)
-			{
-				let obj = { name, description };
-				await LibraryService.post(createLink, obj);
-			}
-			else if (series !== null)
-			{
-				let obj = { ...series };
+			let obj = { name, description };
+			libraryService.post(createLink, obj)
+				.then(() => onSaved())
+				.catch(() => setError(true))
+				.finally(() => setBusy(false));
+		}
+		else if (series !== null)
+		{
+			let obj = { ...series };
 				obj.name = name;
 				obj.description = description;
-				await LibraryService.put(series.links.update, obj);
-			}
-
-			onSaved();
-
-		}
-		catch (e)
-		{
-			console.error(e);
-			setError(true);
-		}
-		finally
-		{
-			setBusy(false);
+			libraryService.put(series.links.update, obj)
+				.then(() => onSaved())
+				.catch(() => setError(true))
+				.finally(() => setBusy(false));
 		}
 	};
 
-	const handleImageUpload = async (files) =>
+	const handleImageUpload = (files) =>
 	{
 		if (files.length < 1)
 		{
 			return;
 		}
-
-		setBusy(true);
-		try
+		
+		if (series && series.links.image_upload !== null)
 		{
-			if (series && series.links.image_upload !== null)
-			{
-				await LibraryService.upload(series.links.image_upload, files[0]);
-			}
-
-			onSaved();
-
-		}
-		catch (e)
-		{
-			console.error(e);
-			setError(true);
-		}
-		finally
-		{
-			setBusy(false);
+			libraryService.upload(series.links.image_upload, files[0])
+				.then(() => onSaved())
+				.catch(() => setError(true))
+				.finally(() => setBusy(false));
 		}
 	};
 

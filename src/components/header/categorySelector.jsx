@@ -12,7 +12,7 @@ import CategoryIcon from '@material-ui/icons/Category';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import LibraryService from '../../services/LibraryService';
+import { libraryService } from '../../services';
 
 function CategorySelector ()
 {
@@ -22,11 +22,9 @@ function CategorySelector ()
 
 	useEffect(() =>
 	{
-		const fetchData = async () =>
-		{
-			const data = await LibraryService.getCategories();
-			setCategories(data);
-		};
+		const fetchData = () =>
+			libraryService.getCategories()
+				.then(data => setCategories(data));
 		fetchData();
 	}, []);
 

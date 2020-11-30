@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Alert from '@material-ui/lab/Alert';
-import LibraryService from '../../services/LibraryService';
+import { libraryService } from '../../services';
 
 const Transition = React.forwardRef(function Transition (props, ref)
 {
@@ -25,23 +25,13 @@ function DeleteSeries ({ show, series, onDeleted, onCancelled })
 		return null;
 	}
 
-	const handleDelete = async () =>
+	const handleDelete = () =>
 	{
-		try
-		{
-			setBusy(true);
-			await LibraryService.delete(series.links.delete);
-			onDeleted();
-		}
-		catch (e)
-		{
-			console.dir(e);
-			setError(true);
-		}
-		finally
-		{
-			setBusy(false);
-		}
+		setBusy(true);
+		libraryService.delete(series.links.delete)
+			.then(() => onDeleted())
+			.catch(() => setError(true))
+			.finally(() => setBusy(false));
 	};
 
 	if (series === null)

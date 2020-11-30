@@ -7,7 +7,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import LibraryService from '../../services/LibraryService';
+import { libraryService } from '../../services';
 
 const CategoryListItem = ({ category, selectedCategory }) =>
 {
@@ -28,21 +28,13 @@ const CategoriesList = () =>
 	{
 		const values = queryString.parse(location.search);
 		setSelectedCategory(values.category);
-		const fetchData = async () =>
+		const fetchData = () =>
 		{
-			try
-			{
-				const data = await LibraryService.getCategories();
-				setCategories(data);
-			}
-			catch (e)
-			{
-				setError(true);
-			}
-			finally
-			{
-				setLoading(false);
-			}
+			setLoading(true);
+			libraryService.getCategories()
+				.then(data => setCategories(data))
+				.catch(() => setError(true))
+				.finally(() => setLoading(false));
 		};
 		fetchData();
 	}, []);

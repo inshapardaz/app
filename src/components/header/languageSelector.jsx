@@ -8,11 +8,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import LocaleService from '../../services/LocaleService';
+import { localeService } from '../../services';
+import { FormattedMessage } from 'react-intl';
 
-export default function LanguageSelector ()
+export default function LanguageSelector()
 {
-	const locale = LocaleService.getCurrentLanguage();
+	
+	const locale = localeService.getCurrentLanguage();
 
 	const anchorRef = React.useRef(null);
 	const [open, setOpen] = React.useState(false);
@@ -43,14 +45,14 @@ export default function LanguageSelector ()
 
 	const chooseEnglish = (event) =>
 	{
-    	LocaleService.setCurrentLanguage('en');
+    	localeService.setCurrentLanguage('en');
 		window.location.reload();
 		handleClose(event);
 	};
 
 	const chooseUrdu = (event) =>
 	{
-    	LocaleService.setCurrentLanguage('ur');
+    	localeService.setCurrentLanguage('ur');
 		window.location.reload();
 		handleClose(event);
 	};
@@ -84,7 +86,7 @@ export default function LanguageSelector ()
 				onClick={handleToggle}
 				endIcon={<KeyboardArrowDownIcon />}
 			>
-				{locale}
+				<FormattedMessage id='language' />
 			</Button>
 			{langMenu}
 		</>

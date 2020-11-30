@@ -15,22 +15,22 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import { Tooltip } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
-import LibraryService from '../../services/LibraryService';
+import { libraryService } from '../../services';
 
 const defaultBookImage = '/images/book_placeholder.jpg';
 
 function FavoriteButton ({ book, onUpdated })
 {
-	const changeFavorite = async () =>
+	const changeFavorite = () =>
 	{
 		try
 		{
 			if (book.links.create_favorite) {
-				await LibraryService.post(book.links.create_favorite, {});
+				libraryService.post(book.links.create_favorite, {});
 			}
 			else
 			{
-				await LibraryService.delete(book.links.remove_favorite, {});
+				libraryService.delete(book.links.remove_favorite, {});
 			}
 
 			onUpdated();

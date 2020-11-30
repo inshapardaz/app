@@ -41,7 +41,10 @@ module.exports = function ({ output, development = false } = {})
 					],
 					exclude : /(node_modules)/,
 				},
-
+				{
+                    test: /\.jsx?$/,
+                    loader: 'babel-loader'
+                },
 				{ // Stylesheets.
 					test : /\.scss$/,
 					use : [
@@ -84,6 +87,11 @@ module.exports = function ({ output, development = false } = {})
 			]
 		},
 
+		resolve: {
+            mainFiles: ['index', 'Index'],
+            extensions: ['.js', '.jsx']
+		},
+
 		performance :
 		{
 			hints : false
@@ -114,13 +122,12 @@ module.exports = function ({ output, development = false } = {})
 			}),
 
 			new CopyWebpackPlugin([
-				{ from : './src/resources', to : 'resources' },
 				{ from : './public', to : '' }
 			])
 		],
 
 		externals: {
-			'Config': JSON.stringify(process.env.NODE_ENV === 'production' ? require('./config/config.prod.json') : require('./config/config.dev.json'))
+			config : JSON.stringify(process.env.NODE_ENV === 'production' ? require('./config/config.prod.json') : require('./config/config.dev.json'))
 		},
 
 		devtool : development ? 'source-map' : false

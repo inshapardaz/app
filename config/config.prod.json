@@ -1,7 +1,4 @@
 {
-	"clientId": "lxvRFsTrdFvsPPOj3Adf905qrDn3Qd6J",
-	"authDomain": "nawishta.eu.auth0.com",
 	"apiUrl": "https://api-nawishta.azurewebsites.net",
-	"audience": "https://api-nawishta.azurewebsites.net/",
 	"libraryId": 1
 }
