@@ -15,39 +15,33 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { Role } from '../../helpers';
 import { accountService } from '../../services';
 
-const ProfileMenu = () =>
-{
+const ProfileMenu = () => {
 	let subscription = null;
 	const anchorRef = useRef(null);
 	const [open, setOpen] = useState(false);
-    const [user, setUser] = useState({});
+	const [user, setUser] = useState({});
 
-    useEffect(() => {
-        subscription = accountService.user.subscribe(x => setUser(x));
-		
-		return () =>
-		{
+	useEffect(() => {
+		subscription = accountService.user.subscribe(x => setUser(x));
+
+		return () => {
 			subscription.unsubscribe();
 		};
 	}, []);
 
-	const handleToggle = () =>
-	{
+	const handleToggle = () => {
 		setOpen((prevOpen) => !prevOpen);
 	};
 
-	const handleClose = (event) =>
-	{
-		if (anchorRef.current && anchorRef.current.contains(event.target))
-		{
-		  return;
+	const handleClose = (event) => {
+		if (anchorRef.current && anchorRef.current.contains(event.target)) {
+			return;
 		}
 
 		setOpen(false);
 	};
 
-    if (!user)
-	{
+	if (!user) {
 		return (
 			<>
 				<Button
@@ -66,7 +60,7 @@ const ProfileMenu = () =>
 					{({ TransitionProps, placement }) => (
 						<Grow
 							{...TransitionProps}
-							style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
+							style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
 						>
 							<Paper>
 								<ClickAwayListener onClickAway={handleClose}>
@@ -81,10 +75,9 @@ const ProfileMenu = () =>
 				</Popper>
 			</>
 		);
-    }
-    else
-    {
-        return (
+	}
+	else {
+		return (
 			<>
 				<Button
 					edge="end"
@@ -94,6 +87,7 @@ const ProfileMenu = () =>
 					onClick={handleToggle}
 					ref={anchorRef}
 					color="inherit"
+					startIcon={<AccountCircle />}
 					endIcon={<KeyboardArrowDownIcon />}
 				>
 				</Button>
@@ -101,15 +95,15 @@ const ProfileMenu = () =>
 					{({ TransitionProps, placement }) => (
 						<Grow
 							{...TransitionProps}
-							style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
+							style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
 						>
 							<Paper>
 								<ClickAwayListener onClickAway={handleClose}>
 									<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleClose}>
-                                        <MenuItem component={Link} onClick={handleClose} to='/profile'>{user.firstName}</MenuItem>
-                                        {user.role === Role.Admin &&
-											<MenuItem component={Link} onClick={handleClose} to="/admin" >Admin</MenuItem>
-                                        }
+										<MenuItem component={Link} onClick={handleClose} to='/profile'><FormattedMessage id="header.profile" /></MenuItem>
+										{user.role === Role.Admin &&
+											<MenuItem component={Link} onClick={handleClose} to="/admin" ><FormattedMessage id="header.administration" /></MenuItem>
+										}
 										<MenuItem onClick={accountService.logout}><FormattedMessage id="logout" /></MenuItem>
 									</MenuList>
 								</ClickAwayListener>
@@ -119,7 +113,7 @@ const ProfileMenu = () =>
 				</Popper>
 			</>
 		);
-    }
+	}
 };
 
 export default injectIntl(ProfileMenu);

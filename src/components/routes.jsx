@@ -6,7 +6,7 @@ import RouteWithLayout from './layout/routeWithLayout';
 import { PrivateRoute } from './layout/privateRoute';
 import { Role } from '../helpers';
 import Home from './home';
-import { emptyLayout, fullWidthLayout, boxedLayout }  from './layout';
+import { emptyLayout, fullWidthLayout, boxedLayout } from './layout';
 import { Profile } from '../app/profile';
 import { Admin } from '../app/admin';
 import Register from '../app/account/register';
@@ -29,15 +29,15 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/books" component={BooksPage} />
 			<RouteWithLayout layout={fullWidthLayout} exact path="/series" component={SeriesPage} />
 			<RouteWithLayout layout={fullWidthLayout} exact path="/categories" component={CategoriesPage} />
-			<Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
-			<Route exact path="/" component={Home} />
-			<PrivateRoute path="/profile" component={Profile} />
-			<PrivateRoute path="/admin" roles={[Role.Admin]} component={Admin} />
+			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
+			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
 			<Route path="/account/login" component={Login} layout={emptyLayout} />
 			<Route path="/account/register" component={Register} />
 			<Route path="/account/verify-email" component={VerifyEmail} />
 			<Route path="/account/forgot-password" component={ForgotPassword} />
 			<Route path="/account/reset-password" component={ResetPassword} />
+			<Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
+			<Route exact path="/" component={Home} />
 			{/* <Redirect from="*" to="/" /> */}
 		</Switch>
 	);
