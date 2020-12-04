@@ -2,7 +2,8 @@ import { fetchWrapper} from '../helpers';
 import config from 'config';
 
 const libraryId = config.libraryId;
-const libraryUrl = `${config.apiUrl}/library/${libraryId}`;
+const librariesUrl = `${config.apiUrl}/libraries`;
+const libraryUrl = `${librariesUrl}/${libraryId}`;
 
 const _get = (url) => {
 	return fetchWrapper.get(url, { 'Accept': 'application/json', 'Content-Type': 'application/json' })
@@ -74,7 +75,7 @@ const _parseObject = (source) =>
 
 	return source;
 };
-	
+
 const getQueryParameter = (query) => (query ? `&query=${query}` : '');
 
 export const libraryService =
@@ -119,26 +120,25 @@ export const libraryService =
 		return _get(`${libraryUrl}/books?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`);
 	},
 
+	getLibraries: () => _get(librariesUrl),
 	getBooksByCategory : (category, page = 1, pageSize = 12, query = null) =>
 		_get(`${libraryUrl}/categories/${category}/books?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
-
 	getBooksBySeries : (series, page = 1, pageSize = 12, query = null) =>
 		_get(`${libraryUrl}/series/${series}/books?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
-
 	getBook : (id) => _get(`${libraryUrl}/books/${id}`),
 	getBookChapters : (book) => _get(book.links.chapters),
 	getChapters : (bookId) => _get(`${libraryUrl}/books/${bookId}/chapters`),
 	getChapter : (id, chapterId) => _get(`${libraryUrl}/books/${id}/chapters/${chapterId}`),
 	getChapterContents : (id, chapterId) => _get(`${libraryUrl}/books/${id}/chapters/${chapterId}/contents`),
-	getAuthors : (query = null, page = 1, pageSize = 12) => 
+	getAuthors : (query = null, page = 1, pageSize = 12) =>
 		_get(`${libraryUrl}/authors?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
 	searchAuthors : (query, page = 1, pageSize = 6) =>
 		_get(`${libraryUrl}/authors?&pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
 	getAuthor : (id) => _get(`${libraryUrl}/authors/${id}`),
 	getAuthorBooks : (authorId, query = null, page = 1, pageSize = 12) =>
 		_get(`${libraryUrl}/books?pageNumber=${page}&pageSize=${pageSize}&authorid=${authorId}`),
-	getBookFiles : (link) => _get(link), 
-	getDictionary : (id) => _get(`${libraryUrl}/dictionaries/${id}`), 
+	getBookFiles : (link) => _get(link),
+	getDictionary : (id) => _get(`${libraryUrl}/dictionaries/${id}`),
 	getWords : (dictionaryId, page = 1) => _get(`${libraryUrl}/dictionaries/${dictionaryId}/words?pageNumber=${page}&pageSize=12`),
 	getWordMeaning : (dictionaryId, wordId) => _get(`${libraryUrl}/dictionaries/${dictionaryId}/words/${wordId}/meanings`),
 	getWordTranslations : (dictionaryId, wordId) => _get(`${libraryUrl}/dictionaries/${dictionaryId}/words/${wordId}/translations`),

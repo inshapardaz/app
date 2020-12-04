@@ -14,57 +14,46 @@ import MenuList from '@material-ui/core/MenuList';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { libraryService } from '../../services';
 
-function CategorySelector ()
-{
+function CategorySelector() {
 	const [categories, setCategories] = useState(null);
 	const anchorRef = React.useRef(null);
 	const [open, setOpen] = React.useState(false);
 
-	useEffect(() =>
-	{
+	useEffect(() => {
 		const fetchData = () =>
 			libraryService.getCategories()
 				.then(data => setCategories(data));
 		fetchData();
 	}, []);
 
-	const handleToggle = () =>
-	{
+	const handleToggle = () => {
 		setOpen((prevOpen) => !prevOpen);
 	};
 
-	const handleClose = (event) =>
-	{
-		if (anchorRef.current && anchorRef.current.contains(event.target))
-		{
-		  return;
+	const handleClose = (event) => {
+		if (anchorRef.current && anchorRef.current.contains(event.target)) {
+			return;
 		}
 
 		setOpen(false);
 	};
 
-	const handleListKeyDown  = (event) =>
-	{
-		if (event.key === 'Tab')
-		{
-		  event.preventDefault();
-		  setOpen(false);
+	const handleListKeyDown = (event) => {
+		if (event.key === 'Tab') {
+			event.preventDefault();
+			setOpen(false);
 		}
 	};
 
-	const renderCategories = () =>
-	{
-		if (categories && categories.data)
-		{
+	const renderCategories = () => {
+		if (categories && categories.data) {
 			let cats = categories.data.map(c => (
 				<MenuItem key={c.id} onClick={handleClose} component={Link} to={`/books?category=${c.id}`}>{c.name}</MenuItem>
 			));
 
-			if (categories.links.create)
-			{
+			if (categories.links.create) {
 				cats.push(<Divider key="categories-divider" />);
 				cats.push(<MenuItem key="categories-page" onClick={handleClose} component={Link} to={'/categories'}><FormattedMessage id="header.categories" /></MenuItem>);
-				cats.push(<MenuItem key="create-category" onClick={handleClose} component={Link} to={'/category/new'}><FormattedMessage id="categories.action.create" /></MenuItem>);
 			}
 			return cats;
 		}
@@ -77,12 +66,12 @@ function CategorySelector ()
 			{({ TransitionProps, placement }) => (
 				<Grow
 					{...TransitionProps}
-					style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
+					style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
 				>
 					<Paper>
 						<ClickAwayListener onClickAway={handleClose}>
 							<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-								{ renderCategories() }
+								{renderCategories()}
 							</MenuList>
 						</ClickAwayListener>
 					</Paper>
