@@ -69,7 +69,7 @@ function App() {
 		<IntlProvider locale={locale} messages={messages} textComponent={Fragment} onError={() => null}>
 			<StylesProvider jss={jss}>
 				<ThemeProvider theme={theme}>
-					<SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center', preventDuplicate: true }}>
+					<SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center', preventDuplicate: true, autoHideDuration: 3000 }}>
 						<Routes />
 					</SnackbarProvider>
 				</ThemeProvider>

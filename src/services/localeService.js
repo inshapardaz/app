@@ -36,8 +36,10 @@ export const localeService =
 			// Locale of the application
 				locale,
 				// Locale of the fallback defaultMessage
-				defaultLocale : 'en',
-				messages
+				defaultLocale: 'en',
+				defaultFormats: 'en',
+				messages,
+				onError: (e) => { }
 			},
 			cache
 		);

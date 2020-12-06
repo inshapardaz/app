@@ -63,9 +63,9 @@ function List({ match }) {
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
-								<TableCell style={{ width: '30%' }}>Name</TableCell>
-								<TableCell style={{ width: '30%' }}>Email</TableCell>
-								<TableCell style={{ width: '30%' }}>Role</TableCell>
+								<TableCell style={{ width: '30%' }}><FormattedMessage id="user.name.label" /></TableCell>
+								<TableCell style={{ width: '30%' }}><FormattedMessage id="user.email.label" /></TableCell>
+								<TableCell style={{ width: '30%' }}><FormattedMessage id="user.role.label" /></TableCell>
 								<TableCell style={{ width: '10%' }}></TableCell>
 							</TableRow>
 						</TableHead>

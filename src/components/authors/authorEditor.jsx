@@ -13,44 +13,39 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Alert from '@material-ui/lab/Alert';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { libraryService} from '../../services';
+import { libraryService } from '../../services';
 
 const useStyles = makeStyles((theme) => ({
-	appBar : {
-		position : 'relative'
+	appBar: {
+		position: 'relative'
 	},
-	title : {
-		marginLeft : theme.spacing(2),
-		flex : 1
+	title: {
+		marginLeft: theme.spacing(2),
+		flex: 1
 	}
 }));
 
-const Transition = React.forwardRef(function Transition (props, ref)
-{
+const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) =>
-{
+const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) => {
 	const intl = useIntl();
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState(false);
 	const [name, setName] = useState('');
 
-	const handleSave = () =>
-	{
+	const handleSave = () => {
 		setBusy(true);
-		
-		if (author === null && createLink !== null)
-		{
+
+		if (author === null && createLink !== null) {
 			let cat = { name };
 			libraryService.post(createLink, cat)
 				.then(() => onSaved())
 				.catch(() => setError(true))
 				.finally(() => setBusy(false));
 		}
-		else if (author !== null)
-		{
+		else if (author !== null) {
 			let cat = { ...author };
 			cat.name = name;
 			libraryService.put(author.links.update, cat)
@@ -60,15 +55,12 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) =>
 		}
 	};
 
-	const handleImageUpload = (files) =>
-	{
-		if (files.length < 1)
-		{
+	const handleImageUpload = (files) => {
+		if (files.length < 1) {
 			return;
 		}
-		
-		if (author && author.links.image_upload !== null)
-		{
+
+		if (author && author.links.image_upload !== null) {
 			libraryService.upload(author.links.image_upload, files[0])
 				.then(() => onSaved())
 				.catch(() => setError(true))
@@ -78,8 +70,8 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) =>
 
 	const classes = useStyles();
 	const title = author === null
-		? intl.formatMessage({ id : 'author.editor.header.add' })
-		: intl.formatMessage({ id : 'author.editor.header.edit', values : { name : author.name } });
+		? intl.formatMessage({ id: 'author.editor.header.add' })
+		: intl.formatMessage({ id: 'author.editor.header.edit' }, { name: author.name });
 
 	return (
 		<Dialog fullScreen open={show}
@@ -98,15 +90,15 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) =>
 					</Button>
 				</Toolbar>
 			</AppBar>
-			 <DialogContent>
+			<DialogContent>
 				<TextField
 					autoFocus
 					margin="dense"
 					id="name"
-					defaultValue={author === null ? '' : author.name }
-					label={intl.formatMessage({ id : 'author.editor.fields.name.title' })}
+					defaultValue={author === null ? '' : author.name}
+					label={intl.formatMessage({ id: 'author.editor.fields.name.title' })}
 					fullWidth
-					onChange={event => setName(event.target.value) }
+					onChange={event => setName(event.target.value)}
 				/>
 
 				{
@@ -114,7 +106,7 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) =>
 					<DropzoneArea onChange={files => handleImageUpload(files)} filesLimit={1} acceptedFiles={['image/*']} />
 				}
 
-				{ error && <Alert severity="error" ><FormattedMessage id="categories.messages.error.saving" /></Alert> }
+				{error && <Alert severity="error" ><FormattedMessage id="categories.messages.error.saving" /></Alert>}
 			</DialogContent>
 		</Dialog>
 	);

@@ -1,18 +1,23 @@
-import { Button, Container, IconButton, Paper, Typography } from '@material-ui/core';
+import { Button, Container, IconButton, Paper, TableFooter, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import queryString from "query-string";
+import Box from "@material-ui/core/Box";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Checkbox from '@material-ui/core/Checkbox';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import Pagination from "@material-ui/lab/Pagination";
+import PaginationItem from "@material-ui/lab/PaginationItem";
+import DeleteLibrary from "../../../components/library/deleteLibrary.jsx";
 import { libraryService } from '../../../services';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,58 +40,127 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const buildLinkToPage = (location, page, query) => {
+	let querystring = "";
+	querystring += page ? `page=${page}` : "";
+	querystring += query ? `query=${query}` : "";
+	if (querystring !== "") {
+		querystring = `?${querystring}`;
+	}
+	return `${location.pathname}${querystring}`;
+};
+
+
 function List({ match }) {
+	const location = useLocation();
 	const classes = useStyles();
 	const { path } = match;
 	const [libraries, setLibraries] = useState(null);
+	const [query, setQuery] = useState(null);
+	const [loading, setLoading] = useState(false);
+	const [showEdit, setShowEditor] = useState(false);
+	const [showDelete, setShowDelete] = useState(false);
+	const [selectedLibrary, setSelectedLibrary] = useState(null);
 
+	const loadData = () => {
+		const values = queryString.parse(location.search);
+		const page = values.page;
+		const q = values.q;
+
+		setLoading(true);
+		libraryService
+			.getLibraries(
+				q ? q : null,
+				page
+			)
+			.then((data) => {
+				setQuery(q);
+				setLibraries(data);
+			})
+			.catch((e) => setError(true))
+			.finally(() => setLoading(false));
+	};
 	useEffect(() => {
-		libraryService.getLibraries().then(x => setLibraries(x.data));
-	}, []);
+		loadData();
+	}, [location]);
 
-	function deleteUser(id) {
-		setLibraries(libraries.map(x => {
-			if (x.id === id) { x.isDeleting = true; }
-			return x;
-		}));
-		libraryService.delete(id).then(() => {
-			setLibraries(library => library.filter(x => x.id !== id));
-		});
+	function deleteLibrary(library) {
+		setSelectedLibrary(library);
+		setShowDelete(true);
 	}
+
+	const handleClose = () => {
+		setSelectedLibrary(null);
+		setShowEditor(false);
+		setShowDelete(false);
+	};
+
+	const handleDataChanged = () => {
+		handleClose();
+		loadData();
+	};
+
+	const renderPagination = () => {
+		if (!loading && libraries) {
+			return (
+				<Pagination
+					page={libraries.currentPageIndex}
+					count={libraries.pageCount}
+					variant="outlined"
+					shape="rounded"
+					renderItem={(item) => (
+						<PaginationItem
+							component={Link}
+							to={buildLinkToPage(
+								location,
+								item.page,
+								query
+							)}
+							{...item}
+						/>
+					)}
+				/>
+			);
+		}
+
+		return null;
+	};
 
 	return (
 		<div className={classes.paper}>
 			<Container component="main" maxWidth="md">
 				<Typography variant="h2"><FormattedMessage id="admin.users.title" /></Typography>
-				<Button component={Link} variant="contained" color="primary" to={`${path}/add`}><FormattedMessage id="admin.users.add" /></Button>
+				<Button component={Link} variant="contained" color="primary" to={`${path}/add`}><FormattedMessage id="admin.library.add" /></Button>
 				<TableContainer component={Paper}>
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
-								<TableCell style={{ width: '30%' }}>Name</TableCell>
-								<TableCell style={{ width: '30%' }}>Email</TableCell>
-								<TableCell style={{ width: '30%' }}>Role</TableCell>
+								<TableCell style={{ width: '30%' }}><FormattedMessage id="library.name.label" /></TableCell>
+								<TableCell style={{ width: '30%' }}><FormattedMessage id="library.language.label" /></TableCell>
+								<TableCell style={{ width: '30%' }}><FormattedMessage id="library.supportsPeriodical.label" /></TableCell>
 								<TableCell style={{ width: '10%' }}></TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{libraries && libraries.map(library =>
+							{libraries && libraries.data && libraries.data.map(library =>
 								<TableRow key={library.id}>
 									<TableCell>{library.name}</TableCell>
 									<TableCell>{library.language}</TableCell>
-									<TableCell>{library.supportsPeriodicals}</TableCell>
+									<TableCell><Checkbox checked={library.supportsPeriodicals} disabled /></TableCell>
 									<TableCell style={{ whiteSpace: 'nowrap' }}>
 										<IconButton component={Link} to={`${path}/edit/${library.id}`} >
 											<EditIcon />
 										</IconButton>
-										<IconButton onClick={() => deleteUser(library.id)} disabled={library.isDeleting}>
-											<DeleteIcon />
-										</IconButton>
+										{library.links.delete &&
+											<IconButton onClick={() => deleteLibrary(library)} disabled={library.isDeleting}>
+												<DeleteIcon />
+											</IconButton>
+										}
 										{library.isDeleting && <CircularProgress size={24} className={classes.buttonProgress} />}
 									</TableCell>
 								</TableRow>
 							)}
-							{!libraries &&
+							{loading &&
 								<TableRow>
 									<TableCell colSpan="4" className="text-center">
 										<span className="spinner-border spinner-border-lg align-center"></span>
@@ -94,8 +168,21 @@ function List({ match }) {
 								</TableRow>
 							}
 						</TableBody>
+						<TableFooter>
+							<TableRow>
+								<TableCell colSpan={4}>
+									{renderPagination()}
+								</TableCell>
+							</TableRow>
+						</TableFooter>
 					</Table>
 				</TableContainer>
+				<DeleteLibrary
+					show={showDelete}
+					library={selectedLibrary}
+					onDeleted={handleDataChanged}
+					onCancelled={handleClose}
+				/>
 			</Container>
 		</div>
 	);

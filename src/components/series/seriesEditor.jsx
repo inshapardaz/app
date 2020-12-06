@@ -13,48 +13,43 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Alert from '@material-ui/lab/Alert';
 import { DropzoneArea } from 'material-ui-dropzone';
-import { libraryService} from '../../services';
+import { libraryService } from '../../services';
 
 const useStyles = makeStyles((theme) => ({
-	appBar : {
-		position : 'relative'
+	appBar: {
+		position: 'relative'
 	},
-	title : {
-		marginLeft : theme.spacing(2),
-		flex : 1
+	title: {
+		marginLeft: theme.spacing(2),
+		flex: 1
 	}
 }));
 
-const Transition = React.forwardRef(function Transition (props, ref)
-{
+const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) =>
-{
+const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) => {
 	const intl = useIntl();
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState(false);
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
 
-	const handleSave = () =>
-	{
+	const handleSave = () => {
 		setBusy(true);
-		
-		if (series === null && createLink !== null)
-		{
+
+		if (series === null && createLink !== null) {
 			let obj = { name, description };
 			libraryService.post(createLink, obj)
 				.then(() => onSaved())
 				.catch(() => setError(true))
 				.finally(() => setBusy(false));
 		}
-		else if (series !== null)
-		{
+		else if (series !== null) {
 			let obj = { ...series };
-				obj.name = name;
-				obj.description = description;
+			obj.name = name;
+			obj.description = description;
 			libraryService.put(series.links.update, obj)
 				.then(() => onSaved())
 				.catch(() => setError(true))
@@ -62,15 +57,12 @@ const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) =>
 		}
 	};
 
-	const handleImageUpload = (files) =>
-	{
-		if (files.length < 1)
-		{
+	const handleImageUpload = (files) => {
+		if (files.length < 1) {
 			return;
 		}
-		
-		if (series && series.links.image_upload !== null)
-		{
+
+		if (series && series.links.image_upload !== null) {
 			libraryService.upload(series.links.image_upload, files[0])
 				.then(() => onSaved())
 				.catch(() => setError(true))
@@ -80,8 +72,8 @@ const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) =>
 
 	const classes = useStyles();
 	const title = series === null
-		? intl.formatMessage({ id : 'series.editor.header.add' })
-		: intl.formatMessage({ id : 'series.editor.header.edit', values : { name : series.title } });
+		? intl.formatMessage({ id: 'series.editor.header.add' })
+		: intl.formatMessage({ id: 'series.editor.header.edit' }, { name: series.title });
 
 	return (
 		<Dialog fullScreen open={show}
@@ -100,31 +92,31 @@ const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) =>
 					</Button>
 				</Toolbar>
 			</AppBar>
-			 <DialogContent>
+			<DialogContent>
 				<TextField
 					autoFocus
 					margin="dense"
 					id="name"
-					defaultValue={series === null ? '' : series.name }
-					label={intl.formatMessage({ id : 'category.editor.fields.name.title' })}
+					defaultValue={series === null ? '' : series.name}
+					label={intl.formatMessage({ id: 'category.editor.fields.name.title' })}
 					fullWidth
-					onChange={event => setName(event.target.value) }
+					onChange={event => setName(event.target.value)}
 				/>
 				<TextField
 					autoFocus
 					margin="dense"
 					id="description"
-					defaultValue={series === null ? '' : series.description }
-					label={intl.formatMessage({ id : 'category.editor.fields.description.title' })}
+					defaultValue={series === null ? '' : series.description}
+					label={intl.formatMessage({ id: 'category.editor.fields.description.title' })}
 					fullWidth
-					onChange={event => setDescription(event.target.value) }
+					onChange={event => setDescription(event.target.value)}
 				/>
 
 				{
 					series && series.links.image_upload &&
 					<DropzoneArea onChange={files => handleImageUpload(files)} filesLimit={1} acceptedFiles={['image/*']} />
 				}
-				{ error && <Alert severity="error" ><FormattedMessage id="categories.messages.error.saving" /></Alert> }
+				{error && <Alert severity="error" ><FormattedMessage id="categories.messages.error.saving" /></Alert>}
 			</DialogContent>
 		</Dialog>
 	);
