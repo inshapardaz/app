@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { Link, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import queryString from "query-string";
-import Box from "@material-ui/core/Box";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,6 +16,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Pagination from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem";
+import LibraryEditor from "../../../components/library/libraryEditor.jsx";
 import DeleteLibrary from "../../../components/library/deleteLibrary.jsx";
 import { libraryService } from '../../../services';
 
@@ -58,7 +58,7 @@ function List({ match }) {
 	const [libraries, setLibraries] = useState(null);
 	const [query, setQuery] = useState(null);
 	const [loading, setLoading] = useState(false);
-	const [showEdit, setShowEditor] = useState(false);
+	const [showEditor, setShowEditor] = useState(false);
 	const [showDelete, setShowDelete] = useState(false);
 	const [selectedLibrary, setSelectedLibrary] = useState(null);
 
@@ -84,6 +84,14 @@ function List({ match }) {
 		loadData();
 	}, [location]);
 
+	function createLibrary() {
+		setSelectedLibrary(null);
+		setShowEditor(true);
+	}
+	function editLibrary(library) {
+		setSelectedLibrary(library);
+		setShowEditor(true);
+	}
 	function deleteLibrary(library) {
 		setSelectedLibrary(library);
 		setShowDelete(true);
@@ -129,8 +137,8 @@ function List({ match }) {
 	return (
 		<div className={classes.paper}>
 			<Container component="main" maxWidth="md">
-				<Typography variant="h2"><FormattedMessage id="admin.users.title" /></Typography>
-				<Button component={Link} variant="contained" color="primary" to={`${path}/add`}><FormattedMessage id="admin.library.add" /></Button>
+				<Typography variant="h2"><FormattedMessage id="admin.libraries.title" /></Typography>
+				<Button variant="contained" color="primary" onClick={() => createLibrary()}><FormattedMessage id="admin.library.add" /></Button>
 				<TableContainer component={Paper}>
 					<Table className={classes.table}>
 						<TableHead>
@@ -148,15 +156,16 @@ function List({ match }) {
 									<TableCell>{library.language}</TableCell>
 									<TableCell><Checkbox checked={library.supportsPeriodicals} disabled /></TableCell>
 									<TableCell style={{ whiteSpace: 'nowrap' }}>
-										<IconButton component={Link} to={`${path}/edit/${library.id}`} >
-											<EditIcon />
-										</IconButton>
-										{library.links.delete &&
+										{library && library.links && library.links.update &&
+											<IconButton onClick={() => editLibrary(library)}  >
+												<EditIcon />
+											</IconButton>
+										}
+										{library && library.links && library.links.delete &&
 											<IconButton onClick={() => deleteLibrary(library)} disabled={library.isDeleting}>
 												<DeleteIcon />
 											</IconButton>
 										}
-										{library.isDeleting && <CircularProgress size={24} className={classes.buttonProgress} />}
 									</TableCell>
 								</TableRow>
 							)}
@@ -177,6 +186,13 @@ function List({ match }) {
 						</TableFooter>
 					</Table>
 				</TableContainer>
+				<LibraryEditor
+					show={showEditor}
+					library={selectedLibrary}
+					createLink={libraries && libraries.links.create}
+					onSaved={handleDataChanged}
+					onCancelled={handleClose}
+				/>
 				<DeleteLibrary
 					show={showDelete}
 					library={selectedLibrary}
@@ -184,7 +200,7 @@ function List({ match }) {
 					onCancelled={handleClose}
 				/>
 			</Container>
-		</div>
+		</div >
 	);
 }
 
