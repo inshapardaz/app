@@ -33,7 +33,7 @@ const _upload = (url, file) => {
 		const formData = new FormData();
 		formData.append('file', file, file.fileName);
 
-		return fetchWrapper.put(url, formData, { 'Accept': 'application/json' })
+		return fetchWrapper.putFile(url, formData, { 'Accept': 'application/json' })
 			.then(data => _parseObject(data));
 };
 

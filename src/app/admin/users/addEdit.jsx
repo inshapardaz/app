@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { Container, Typography, Link, FormControl } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -13,31 +13,9 @@ import { useSnackbar } from 'notistack';
 import { accountService } from '../../../services';
 import { TextField } from 'formik-material-ui';
 import { useIntl, FormattedMessage } from 'react-intl';
-import InputBase from '@material-ui/core/InputBase';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-
-const BootstrapInput = withStyles((theme) => ({
-	root: {
-		'label + &': {
-			marginTop: theme.spacing(3),
-		},
-	},
-	input: {
-		borderRadius: 4,
-		position: 'relative',
-		backgroundColor: theme.palette.background.paper,
-		border: '1px solid #ced4da',
-		fontSize: 16,
-		padding: '19px 26px 19px 14px',
-		transition: theme.transitions.create(['border-color', 'box-shadow']),
-		'&:focus': {
-			borderRadius: 4,
-			borderColor: '#80bdff',
-			boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-		},
-	},
-}))(InputBase);
+import BootstrapInput from '../../../components/bootstrapInput';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {

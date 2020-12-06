@@ -1,114 +1,102 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Slide from '@material-ui/core/Slide';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Alert from '@material-ui/lab/Alert';
+import { Formik, Field, Form } from 'formik';
+import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
+import { TextField } from 'formik-material-ui';
 import { DropzoneArea } from 'material-ui-dropzone';
 import { libraryService } from '../../services';
-
-const useStyles = makeStyles((theme) => ({
-	appBar: {
-		position: 'relative'
-	},
-	title: {
-		marginLeft: theme.spacing(2),
-		flex: 1
-	}
-}));
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />;
-});
+import EditorDialog from '../editorDialog';
+import SubmitButton from '../submitButton';
 
 const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) => {
 	const intl = useIntl();
+	const { enqueueSnackbar } = useSnackbar();
+
 	const [busy, setBusy] = useState(false);
-	const [error, setError] = useState(false);
-	const [name, setName] = useState('');
+	const [savedAuthor, setSavedAuthor] = useState(null);
 
-	const handleSave = () => {
+	const initialValues = {
+		name: ''
+	};
+
+	useEffect(() => {
+		setSavedAuthor(author);
+	}, [author]);
+
+	const validationSchema = Yup.object().shape({
+		name: Yup.string()
+			.required(intl.formatMessage({ id: 'author.editor.fields.name.error' }))
+	});
+
+	const onSubmit = (fields) => {
+		console.log('saving');
 		setBusy(true);
-
 		if (author === null && createLink !== null) {
-			let cat = { name };
-			libraryService.post(createLink, cat)
-				.then(() => onSaved())
-				.catch(() => setError(true))
+			libraryService.post(createLink, fields)
+				.then(() => {
+					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.saved' }), { variant: 'success' })
+					onSaved();
+				})
+				.catch(() => {
+					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.error.saving' }), { variant: 'error' })
+				})
 				.finally(() => setBusy(false));
 		}
 		else if (author !== null) {
-			let cat = { ...author };
-			cat.name = name;
-			libraryService.put(author.links.update, cat)
-				.then(() => onSaved())
-				.catch(() => setError(true))
+			libraryService.put(author.links.update, fields)
+				.then(() => {
+					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.saved' }), { variant: 'success' })
+					onSaved();
+				})
+				.catch(() => {
+					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.error.saving' }), { variant: 'error' })
+				})
 				.finally(() => setBusy(false));
 		}
+
+		setBusy(false)
 	};
 
-	const handleImageUpload = (files) => {
+	const onImageUpload = (files) => {
 		if (files.length < 1) {
 			return;
 		}
 
 		if (author && author.links.image_upload !== null) {
 			libraryService.upload(author.links.image_upload, files[0])
-				.then(() => onSaved())
-				.catch(() => setError(true))
+				.then(() => {
+					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.saved' }), { variant: 'success' })
+					onSaved();
+				})
+				.catch(() => {
+					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.error.saving' }), { variant: 'error' })
+				})
 				.finally(() => setBusy(false));
 		}
 	};
 
-	const classes = useStyles();
 	const title = author === null
 		? intl.formatMessage({ id: 'author.editor.header.add' })
 		: intl.formatMessage({ id: 'author.editor.header.edit' }, { name: author.name });
 
 	return (
-		<Dialog fullScreen open={show}
-			onClose={() => onCancelled()}
-			TransitionComponent={Transition}
-			disableEscapeKeyDown={busy}
-			disableBackdropClick={busy}>
-			<AppBar className={classes.appBar}>
-				<Toolbar>
-					<IconButton edge="start" color="inherit" onClick={() => onCancelled()} aria-label="close">
-						<CloseIcon />
-					</IconButton>
-					<Typography variant="h6" className={classes.title}>{title}</Typography>
-					<Button autoFocus color="inherit" onClick={handleSave}>
-						<FormattedMessage id="action.save" />
-					</Button>
-				</Toolbar>
-			</AppBar>
-			<DialogContent>
-				<TextField
-					autoFocus
-					margin="dense"
-					id="name"
-					defaultValue={author === null ? '' : author.name}
-					label={intl.formatMessage({ id: 'author.editor.fields.name.title' })}
-					fullWidth
-					onChange={event => setName(event.target.value)}
-				/>
-
-				{
-					author && author.links.image_upload &&
-					<DropzoneArea onChange={files => handleImageUpload(files)} filesLimit={1} acceptedFiles={['image/*']} />
-				}
-
-				{error && <Alert severity="error" ><FormattedMessage id="categories.messages.error.saving" /></Alert>}
-			</DialogContent>
-		</Dialog>
+		<EditorDialog show={show} busy={busy} title={title} onCancelled={() => onCancelled()}  >
+			<Formik initialValues={savedAuthor || initialValues} validationSchema={validationSchema} onSubmit={onSubmit} enableReinitialize>
+				{({ errors, touched, isSubmitting }) => (
+					<Form>
+						<Field component={TextField} autoFocus name="name" type="text" variant="outlined" margin="normal" fullWidth
+							label={<FormattedMessage id="library.name.label" />} error={errors.name && touched.name}
+						/>
+						{
+							author && author.links.image_upload &&
+							<DropzoneArea onChange={files => onImageUpload(files)} filesLimit={1} acceptedFiles={['image/*']} />
+						}
+						<SubmitButton busy={isSubmitting} label={<FormattedMessage id="action.save" />} />
+					</Form>
+				)}
+			</Formik>
+		</EditorDialog>
 	);
 };
 
