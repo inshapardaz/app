@@ -13,13 +13,13 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import { Tooltip } from '@material-ui/core';
+import { Button, Tooltip } from '@material-ui/core';
 import { FormattedMessage } from 'react-intl';
 import { libraryService } from '../../services';
 
 const defaultBookImage = '/images/book_placeholder.jpg';
 
-function FavoriteButton({ book, onUpdated }) {
+function FavoriteButton({ book, onUpdated, onOpen }) {
 	const changeFavorite = () => {
 		try {
 			if (book && book.links && book.links.create_favorite) {
@@ -55,7 +55,7 @@ function FavoriteButton({ book, onUpdated }) {
 	return null;
 }
 
-function BookCell({ book, onEdit, onDelete, onUpdated }) {
+function BookCell({ book, onOpen, onEdit, onDelete, onUpdated }) {
 	const classes = makeStyles(() => ({
 		root: {
 			maxWidth: 345
@@ -90,7 +90,7 @@ function BookCell({ book, onEdit, onDelete, onUpdated }) {
 
 	return (
 		<Card className={classes.root}>
-			<CardActionArea component={Link} to={`/books/${book.id}`}>
+			<CardActionArea>
 				<CardMedia
 					component="img"
 					alt={book.title}
@@ -98,10 +98,11 @@ function BookCell({ book, onEdit, onDelete, onUpdated }) {
 					image={(book.links ? book.links.image : null) || defaultBookImage}
 					title={book.title}
 					onError={setDefaultBookImage}
+					onClick={() => onOpen(book)}
 				/>
 				<CardContent>
 					<Tooltip title={book.title} aria-label={book.title}>
-						<Typography gutterBottom variant="h5" component="h2" noWrap>
+						<Typography gutterBottom variant="h5" component="h2" noWrap onClick={() => onOpen(book)}>
 							{book.title}
 						</Typography>
 					</Tooltip>

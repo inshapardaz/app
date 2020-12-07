@@ -23,7 +23,7 @@ const AuthorDropDown = ({ onAuthorSelected, error, defaultValue }, props) => {
 		let active = true;
 		(() => {
 			setLoading(true);
-			libraryService.getAuthors(inputValue, 1, 10)
+			libraryService.getAuthors(text, 1, 10)
 				.then(response => active && setOptions(response.data))
 				.catch(() => setLoadingError(true))
 				.finally(() => setLoading(false));
