@@ -1,68 +1,66 @@
 import React from 'react';
+import { useIntl } from "react-intl";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { libraryService } from '../../services';
+import { Field } from 'formik';
+import BootstrapInput from '../bootstrapInput';
 
-const SeriesDropDown = (props) =>
-{
+const SeriesDropDown = ({ onSeriesSelected, error, defaultValue }, props) => {
+	const intl = useIntl();
 	const [open, setOpen] = React.useState(false);
 	const [options, setOptions] = React.useState([]);
 	const [text, setText] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
-	const [error, setError] = React.useState(false);
+	const [loadingError, setLoadingError] = React.useState(false);
 
-	React.useEffect(() =>
-	{
-		if (!open)
-		{
+	React.useEffect(() => {
+		if (!open) {
 			return;
 		}
 
-		(() =>
-		{
+		(() => {
 			setLoading(true);
 			libraryService.getSeries(text, 1, 10)
 				.then(response => setOptions(response.data))
-				.catch(() => setError(true))
+				.catch(() => setLoadingError(true))
 				.finally(() => setLoading(false));
 		})();
 	}, [text]);
 
-	React.useEffect(() =>
-	{
-		if (!open)
-		{
+	React.useEffect(() => {
+		if (!open) {
 			setOptions([]);
 		}
 	}, [open]);
 
-	return (<Autocomplete
+	return (<Field component={Autocomplete} as="select" variant="outlined" input={<BootstrapInput />}
 		{...props}
 		open={open}
-		onOpen={() =>
-		{
+		onOpen={() => {
 			setOpen(true);
 		}}
-		onClose={() =>
-		{
+		onClose={() => {
 			setOpen(false);
 		}}
+		defaultValue={defaultValue}
 		options={options}
 		loading={loading}
-		onChange={(event, newValue) => props.onChange(newValue)}
-		getOptionSelected={(option, value) => option.name === value }
+		onChange={(event, newValue) => onSeriesSelected(newValue.id)}
+		getOptionSelected={(option, value) => option.id === value.id}
 		getOptionLabel={(option) => option.name}
 		noOptionsText="No series selected"
 		renderInput={(params) => (
-			<TextField
+			<TextField variant="outlined"
 				{...params}
 				label={props.label}
 				onChange={event => setText(event.target.value)}
-				value={text}
+				error={error}
+				value={text || ''}
 				InputProps={{
 					...params.InputProps,
-					endAdornment : (
+					endAdornment: (
 						<React.Fragment>
 							{loading ? <CircularProgress color="inherit" size={20} /> : null}
 							{params.InputProps.endAdornment}

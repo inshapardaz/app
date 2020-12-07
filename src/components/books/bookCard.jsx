@@ -19,57 +19,52 @@ import { libraryService } from '../../services';
 
 const defaultBookImage = '/images/book_placeholder.jpg';
 
-function FavoriteButton ({ book, onUpdated })
-{
-	const changeFavorite = () =>
-	{
-		try
-		{
-			if (book.links.create_favorite) {
+function FavoriteButton({ book, onUpdated }) {
+	const changeFavorite = () => {
+		try {
+			if (book && book.links && book.links.create_favorite) {
 				libraryService.post(book.links.create_favorite, {});
 			}
-			else
-			{
+			else if (book && book.links && book.links.remove_favorite) {
 				libraryService.delete(book.links.remove_favorite, {});
 			}
 
 			onUpdated();
 		}
-		catch (e)
-		{
+		catch (e) {
 			console.dir(e);
 		}
 	};
 
-	if (book.links.create_favorite)
-	{
-		return (<Tooltip title={<FormattedMessage id="books.action.favorite.add"/>} >
+	if (book && book.links && book.links.create_favorite) {
+		return (<Tooltip title={<FormattedMessage id="books.action.favorite.add" />} >
 			<IconButton aria-label="add to favorites" onClick={() => changeFavorite()}>
 				<FavoriteBorderIcon />
 			</IconButton>
 		</Tooltip>);
 	}
+	else if (book && book.links && book.links.remove_favorite) {
 
-	return (<Tooltip title={<FormattedMessage id="books.action.favorite.remove"/>} >
-		<IconButton aria-label="remove from favorites" onClick={() => changeFavorite()}>
-			<FavoriteIcon />
-		</IconButton>
-	</Tooltip>);
+		return (<Tooltip title={<FormattedMessage id="books.action.favorite.remove" />} >
+			<IconButton aria-label="remove from favorites" onClick={() => changeFavorite()}>
+				<FavoriteIcon />
+			</IconButton>
+		</Tooltip>);
+	}
+
+	return null;
 }
 
-function BookCell ({ book, onEdit, onDelete, onUpdated })
-{
+function BookCell({ book, onEdit, onDelete, onUpdated }) {
 	const classes = makeStyles(() => ({
-		root : {
-			maxWidth : 345
+		root: {
+			maxWidth: 345
 		}
 	}));
 
-	const renderEditLink = () =>
-	{
-		if (book.links.update)
-		{
-			return (<Tooltip title={<FormattedMessage id="action.edit"/>} >
+	const renderEditLink = () => {
+		if (book && book.links && book.links.update) {
+			return (<Tooltip title={<FormattedMessage id="action.edit" />} >
 				<IconButton onClick={() => onEdit(book)}>
 					<EditOutlinedIcon />
 				</IconButton>
@@ -78,11 +73,9 @@ function BookCell ({ book, onEdit, onDelete, onUpdated })
 		return null;
 	};
 
-	const renderDeleteLink = () =>
-	{
-		if (book.links.delete)
-		{
-			return (<Tooltip title={<FormattedMessage id="action.delete"/>} >
+	const renderDeleteLink = () => {
+		if (book && book.links && book.links.delete) {
+			return (<Tooltip title={<FormattedMessage id="action.delete" />} >
 				<IconButton onClick={() => onDelete(book)}>
 					<DeleteForeverOutlinedIcon />
 				</IconButton>
@@ -91,8 +84,7 @@ function BookCell ({ book, onEdit, onDelete, onUpdated })
 		return null;
 	};
 
-	const setDefaultBookImage = (ev) =>
-	{
+	const setDefaultBookImage = (ev) => {
 		ev.target.src = defaultBookImage;
 	};
 
@@ -121,7 +113,7 @@ function BookCell ({ book, onEdit, onDelete, onUpdated })
 			<CardActions>
 				{renderEditLink()}
 				{renderDeleteLink()}
-				<Tooltip title={<FormattedMessage id="action.read"/>} >
+				<Tooltip title={<FormattedMessage id="action.read" />} >
 					<IconButton component={Link} to={`/books/${book.id}`}>
 						<MenuBookIcon />
 					</IconButton>

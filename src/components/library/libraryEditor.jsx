@@ -88,7 +88,7 @@ const LibraryEditor = ({ show, library, createLink, onSaved, onCancelled }) => {
 							component={CheckboxWithLabel}
 							type="checkbox"
 							id="supportsPeriodicals" name="supportsPeriodicals" margin="normal"
-							label={{ label: intl.formatMessage({ id: "library.supportsPeriodical.label" }) }}
+							Label={{ label: intl.formatMessage({ id: "library.supportsPeriodical.label" }) }}
 							error={errors.supportsPeriodicals && touched.supportsPeriodicals}
 						/>
 						<SubmitButton busy={isSubmitting} label={<FormattedMessage id="action.save" />} />

@@ -76,6 +76,7 @@ const _parseObject = (source) =>
 	return source;
 };
 
+
 const getQueryParameter = (query) => (query ? `&query=${query}` : '');
 
 export const libraryService =

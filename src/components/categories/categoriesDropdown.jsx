@@ -1,54 +1,74 @@
-import React from "react";
-import { Input, MenuItem, Select } from "@material-ui/core";
-import { libraryService } from "../../services";
+import React, { useState, useEffect } from 'react';
+import { useIntl } from "react-intl";
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { libraryService } from '../../services';
+import { Field } from 'formik';
+import BootstrapInput from '../bootstrapInput';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-	PaperProps: {
-		style: {
-			maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-			width: 250,
-		},
-	},
-};
+const CategoriesDropDown = ({ error, onCategoriesSelected, defaultValue }, props) => {
+	const intl = useIntl();
+	const [open, setOpen] = React.useState(false);
+	const [options, setOptions] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [loadingError, setLoadingError] = useState(false);
 
-const CategoriesDropDown = (props) => {
-	const [loading, setLoading] = React.useState();
-	const [options, setOptions] = React.useState([]);
-	const [error, setError] = React.useState(false);
-
-	React.useEffect(() => {
+	useEffect(() => {
 		if (!open) {
 			return;
 		}
 
 		(() => {
-			setLoading(true);
-			libraryService
-				.getCategories()
-				.then((response) => setOptions(response.data))
-				.catch(() => setError(true))
+			libraryService.getCategories()
+				.then(response => {
+					setOptions(response.data);
+				})
+				.catch(() => setLoadingError(true))
 				.finally(() => setLoading(false));
 		})();
 	}, []);
 
-	return (
-		<Select
-			{...props}
-			multiple
-			value={props.value}
-			onChange={props.onChange}
-			input={<Input />}
-			MenuProps={MenuProps}
-		>
-			{options.map((cat) => (
-				<MenuItem key={cat.id} value={cat.id}>
-					{cat.name}
-				</MenuItem>
-			))}
-		</Select>
-	);
+	React.useEffect(() => {
+		if (!open) {
+			setOptions([]);
+		}
+	}, [open]);
+
+	return (<Field component={Autocomplete} variant="outlined" input={<BootstrapInput />}
+		{...props}
+		multiple
+		filterSelectedOptions
+		defaultValue={defaultValue}
+		open={open}
+		onOpen={() => {
+			setOpen(true);
+		}}
+		onClose={() => {
+			setOpen(false);
+		}}
+		options={options}
+		loading={loading}
+		onChange={(event, newValue) => onCategoriesSelected(newValue)}
+		getOptionSelected={(option, value) => option.id === value.id}
+		getOptionLabel={(option) => option.name}
+		noOptionsText={intl.formatMessage({ id: "book.editor.fields.categories.error" })}
+		renderInput={(params) => (
+			<TextField variant="outlined"
+				{...params}
+				error={error}
+				InputProps={{
+					...params.InputProps,
+					endAdornment: (
+						<React.Fragment>
+							{loading ? <CircularProgress color="inherit" size={20} /> : null}
+							{params.InputProps.endAdornment}
+						</React.Fragment>
+					)
+				}}
+			/>
+		)}
+	/>);
 };
 
 export default CategoriesDropDown;

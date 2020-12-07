@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Dialog, DialogContent, AppBar, Slide, Toolbar, IconButton, Typography } from "@material-ui/core";
+import { Dialog, DialogContent, AppBar, Slide, Toolbar, IconButton, Typography, Container } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -46,7 +46,9 @@ const EditorDialog = ({ show, busy, title, onCancelled, children }) => {
 				</Toolbar>
 			</AppBar>
 			<DialogContent>
-				{children}
+				<Container maxWidth="lg">
+					{children}
+				</Container>
 			</DialogContent>
 		</Dialog >
 	);

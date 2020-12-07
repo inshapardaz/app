@@ -168,7 +168,7 @@
     "authors.messages.error.saving" : "Error saving author",
     "authors.messages.error.delete" : "Error deleting author",
     "authors.messages.error.loading" : "Unable to load author",
-    "authors.messages.empty" : "No author found",
+    "authors.messages.empty" : "No author selected",
     "authors.action.confirmDelete" : "Do you want to remove {name}?",
     "author.editor.header.add": "Adding author",
     "author.editor.header.edit" : "Editing author {name}",
