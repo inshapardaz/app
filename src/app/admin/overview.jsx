@@ -7,7 +7,7 @@ function Overview({ match }) {
 	const { path } = match;
 
 	return (
-		<Container component="main" maxWidth="s">
+		<Container component="main" maxWidth="sm">
 			<h1><FormattedMessage id="header.administration" /></h1>
 			<p><Button component={Link} to={`${path}/users`} fullWidth ><FormattedMessage id="admin.users.title" /></Button></p>
 			<p><Button component={Link} to={`${path}/libraries`} fullWidth ><FormattedMessage id="admin.libraries.title" /></Button></p>

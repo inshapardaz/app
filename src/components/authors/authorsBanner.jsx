@@ -4,41 +4,36 @@ import { FormattedMessage } from 'react-intl';
 import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
-	banner : {
-		backgroundImage : 'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("/images/author_background.jpg")',
-		backgroundRepeat : 'no-repeat',
-		backgroundSize : 'cover',
-		minHeight : 75,
-		padding : 200,
-		margin : '0 auto'
+	banner: {
+		backgroundImage: props => props.background ? `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${props.background})` : 'none',
+		backgroundRepeat: 'no-repeat',
+		backgroundSize: 'cover',
+		minHeight: 75,
+		padding: 200,
+		margin: '0 auto'
 	},
-	bannerTitle : {
-		textAlign : 'center',
-		fontSize : 40,
-		color : '#fff'
+	bannerTitle: {
+		textAlign: 'center',
+		fontSize: 40,
+		color: '#fff'
 	},
-	bannerAction : {
-		textAlign : 'center',
-		paddingTop : 20
+	bannerAction: {
+		textAlign: 'center',
+		paddingTop: 20
 	}
 });
 
-const AuthorsBanner = ({ title, subTitle, createLink, onCreate }) =>
-{
-	const classes = useStyles();
-	const renderSubTitle = () =>
-	{
-		if (subTitle)
-		{
+const AuthorsBanner = ({ title, subTitle, createLink, onCreate, background }) => {
+	const classes = useStyles({ background });
+	const renderSubTitle = () => {
+		if (subTitle) {
 			return <div className={classes.banner_subtitle}>{subTitle}</div>;
 		}
 
 		return null;
 	};
-	const renderAction = () =>
-	{
-		if (createLink)
-		{
+	const renderAction = () => {
+		if (createLink) {
 			return (<div className={classes.bannerAction}>
 				<Button variant="contained" color="primary" onClick={onCreate}>
 					<FormattedMessage id="authors.action.create" />

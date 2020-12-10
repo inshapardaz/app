@@ -24,6 +24,47 @@ export const accountService = {
     get userValue () { return userSubject.value }
 };
 
+const getQueryParameter = (query) => (query ? `&query=${query}` : '');
+
+const _parseObject = (source) =>
+{
+	if (source)
+	{
+		if (source.links)
+		{
+			let newLinks = {};
+			source.links.forEach(link =>
+			{
+				newLinks[link.rel.replace('-', '_')] = link.href;
+			});
+			source.links = newLinks;
+		}
+
+		if (source.data)
+		{
+			let newItems = [];
+			source.data.forEach(item => newItems.push(_parseObject(item)));
+			source.data = newItems;
+		}
+
+		if (source.files)
+		{
+			let newItems = [];
+			source.files.forEach(item => newItems.push(_parseObject(item)));
+			source.files = newItems;
+		}
+
+		if (Array.isArray(source))
+		{
+			let newItems = [];
+			source.forEach(item => newItems.push(_parseObject(item)));
+			return newItems;
+		}
+	}
+
+	return source;
+};
+
 function login(email, password) {
     return fetchWrapper.post(`${baseUrl}/authenticate`, { email, password })
         .then(user => {
@@ -72,8 +113,9 @@ function resetPassword({ token, password, confirmPassword }) {
     return fetchWrapper.post(`${baseUrl}/reset-password`, { token, password, confirmPassword });
 }
 
-function getAll() {
-    return fetchWrapper.get(baseUrl);
+function getAll(query = null, pageNumber = 1, pageSize = 12) {
+	return fetchWrapper.get(`${baseUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}${getQueryParameter(query)}`)
+		.then(data => _parseObject(data));
 }
 
 function getById(id) {

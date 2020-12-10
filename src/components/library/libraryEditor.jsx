@@ -84,6 +84,11 @@ const LibraryEditor = ({ show, library, createLink, onSaved, onCancelled }) => {
 							<InputLabel ><FormattedMessage id="library.language.label" /></InputLabel>
 							<LanguageDropDown name="language" as="select" error={errors.language && touched.language} />
 						</FormControl>
+
+						<FormControl variant="outlined" margin="normal" fullWidth error={errors.language && touched.language}>
+							<InputLabel ><FormattedMessage id="library.language.label" /></InputLabel>
+							<LanguageDropDown name="language" as="select" error={errors.language && touched.language} />
+						</FormControl>
 						<Field
 							component={CheckboxWithLabel}
 							type="checkbox"

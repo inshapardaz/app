@@ -5,7 +5,6 @@ import { Route, useLocation } from 'react-router-dom';
 import RouteWithLayout from './layout/routeWithLayout';
 import { PrivateRoute } from './layout/privateRoute';
 import { Role } from '../helpers';
-import Home from './home';
 import { emptyLayout, fullWidthLayout, boxedLayout } from './layout';
 import { Profile } from '../app/profile';
 import { Admin } from '../app/admin';
@@ -15,8 +14,10 @@ import ForgotPassword from '../app/account/forgotPassword';
 import VerifyEmail from '../app/account/verifyEmail';
 import ResetPassword from '../app/account/resetPassword';
 
+import Home from '../app/home';
 import BooksPage from '../app/books/booksPage.jsx';
 import AuthorsPage from '../app/authors/authorsPage.jsx';
+import AuthorPage from '../app/authors/authorPage.jsx';
 import SeriesPage from '../app/series/seriesPage.jsx';
 import CategoriesPage from '../app/categories/categoriesPage.jsx';
 
@@ -25,6 +26,7 @@ const Routes = () => {
 	return (
 		<Switch>
 			<RouteWithLayout layout={fullWidthLayout} path="/" component={Home} exact />
+			<RouteWithLayout layout={fullWidthLayout} path="/authors/:id" component={AuthorPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/authors" component={AuthorsPage} />
 			<RouteWithLayout layout={fullWidthLayout} path="/books" component={BooksPage} />
 			<RouteWithLayout layout={fullWidthLayout} exact path="/series" component={SeriesPage} />

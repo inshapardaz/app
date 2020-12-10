@@ -1,8 +1,9 @@
-import { Button, Container, IconButton, Paper, Typography } from '@material-ui/core';
+import { Button, Container, IconButton, Paper, TableFooter, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import queryString from "query-string";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,6 +15,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { accountService } from '../../../services';
+import PaginationItem from '@material-ui/lab/PaginationItem';
+import Pagination from '@material-ui/lab/Pagination';
+import DeleteAccount from '../../../components/account/deleteAccount';
+import AccountEditor from '../../../components/account/accountEditor';
+import { LocalLibrary, LocalLibraryOutlined } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -35,24 +41,115 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const buildLinkToPage = (location, page, query) => {
+	let querystring = "";
+	querystring += page ? `page=${page}` : "";
+	querystring += query ? `query=${query}` : "";
+	if (querystring !== "") {
+		querystring = `?${querystring}`;
+	}
+	return `${location.pathname}${querystring}`;
+};
+
+const roleMapper = (role) => {
+	switch (role) {
+		case "0":
+			return (<FormattedMessage id="role.administrator" />);
+		case "1":
+			return <FormattedMessage id="role.libraryAdmin" />;
+		case "2":
+			return <FormattedMessage id="role.writer" />;
+		case "3":
+			return <FormattedMessage id="role.reader" />;
+		default:
+			return "";
+	}
+};
+
 function List({ match }) {
+	const location = useLocation();
 	const classes = useStyles();
 	const { path } = match;
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(false);
+	const [query, setQuery] = useState(null);
 	const [users, setUsers] = useState(null);
+	const [showEditor, setShowEditor] = useState(false);
+	const [showDelete, setShowDelete] = useState(false);
+	const [selectedAccount, setSelectedAccount] = useState(null);
+
+
+	const loadData = () => {
+		const values = queryString.parse(location.search);
+		const page = values.page;
+		const q = values.q;
+
+		setLoading(true);
+
+		accountService.getAll(q ? q : null, page)
+			.then((data) => {
+				setQuery(q);
+				setUsers(data);
+			})
+			.catch((e) => setError(true))
+			.finally(() => setLoading(false));
+	};
 
 	useEffect(() => {
-		accountService.getAll().then(x => setUsers(x));
-	}, []);
+		loadData();
+	}, [location]);
 
-	function deleteUser(id) {
-		setUsers(users.map(x => {
-			if (x.id === id) { x.isDeleting = true; }
-			return x;
-		}));
-		accountService.delete(id).then(() => {
-			setUsers(users => users.filter(x => x.id !== id));
-		});
+	function createLibrary() {
+		setSelectedAccount(null);
+		setShowEditor(true);
 	}
+
+	function editAccount(account) {
+		setSelectedAccount(account);
+		setShowEditor(true);
+	}
+
+	function deleteAccount(account) {
+		setSelectedAccount(account);
+		setShowDelete(true);
+	}
+
+	const handleClose = () => {
+		setSelectedAccount(null);
+		setShowEditor(false);
+		setShowDelete(false);
+	};
+
+	const handleDataChanged = () => {
+		handleClose();
+		loadData();
+	};
+
+	const renderPagination = () => {
+		if (!loading && users) {
+			return (
+				<Pagination
+					page={users.currentPageIndex}
+					count={users.pageCount}
+					variant="outlined"
+					shape="rounded"
+					renderItem={(item) => (
+						<PaginationItem
+							component={Link}
+							to={buildLinkToPage(
+								location,
+								item.page,
+								query
+							)}
+							{...item}
+						/>
+					)}
+				/>
+			);
+		}
+
+		return null;
+	};
 
 	return (
 		<div className={classes.paper}>
@@ -70,16 +167,19 @@ function List({ match }) {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{users && users.map(user =>
+							{users && users.data && users.data.map(user =>
 								<TableRow key={user.id}>
 									<TableCell>{user.title} {user.firstName} {user.lastName}</TableCell>
 									<TableCell>{user.email}</TableCell>
-									<TableCell>{user.role}</TableCell>
+									<TableCell>{roleMapper(user.role)}</TableCell>
 									<TableCell style={{ whiteSpace: 'nowrap' }}>
-										<IconButton component={Link} to={`${path}/edit/${user.id}`} >
+										<IconButton onClick={() => editAccount(user)}>
+											<LocalLibrary />
+										</IconButton>
+										<IconButton onClick={() => editAccount(user)}>
 											<EditIcon />
 										</IconButton>
-										<IconButton onClick={() => deleteUser(user.id)} disabled={user.isDeleting}>
+										<IconButton onClick={() => deleteAccount(user)}>
 											<DeleteIcon />
 										</IconButton>
 										{user.isDeleting && <CircularProgress size={24} className={classes.buttonProgress} />}
@@ -94,8 +194,28 @@ function List({ match }) {
 								</TableRow>
 							}
 						</TableBody>
+						<TableFooter>
+							<TableRow>
+								<TableCell colSpan={4}>
+									{renderPagination()}
+								</TableCell>
+							</TableRow>
+						</TableFooter>
 					</Table>
 				</TableContainer>
+				<AccountEditor
+					show={showEditor}
+					account={selectedAccount}
+					createLink={users && users.links.create}
+					onSaved={handleDataChanged}
+					onCancelled={handleClose}
+				/>
+				<DeleteAccount
+					show={showDelete}
+					account={selectedAccount}
+					onDeleted={handleDataChanged}
+					onCancelled={handleClose}
+				/>
 			</Container>
 		</div>
 	);

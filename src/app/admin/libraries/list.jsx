@@ -14,6 +14,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import Pagination from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem";
 import LibraryEditor from "../../../components/library/libraryEditor.jsx";
@@ -58,9 +60,11 @@ function List({ match }) {
 	const [libraries, setLibraries] = useState(null);
 	const [query, setQuery] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(false);
 	const [showEditor, setShowEditor] = useState(false);
 	const [showDelete, setShowDelete] = useState(false);
 	const [selectedLibrary, setSelectedLibrary] = useState(null);
+	const defaultLibrary = libraryService.getSelectedLibrary();
 
 	const loadData = () => {
 		const values = queryString.parse(location.search);
@@ -164,6 +168,16 @@ function List({ match }) {
 										{library && library.links && library.links.delete &&
 											<IconButton onClick={() => deleteLibrary(library)} disabled={library.isDeleting}>
 												<DeleteIcon />
+											</IconButton>
+										}
+										{defaultLibrary && defaultLibrary.id == library.id &&
+											<IconButton disabled>
+												<CheckBoxIcon />
+											</IconButton>
+										}
+										{defaultLibrary && defaultLibrary.id != library.id &&
+											<IconButton onClick={() => libraryService.setSelectedLibrary(library)}>
+												<CheckBoxOutlineBlankIcon />
 											</IconButton>
 										}
 									</TableCell>

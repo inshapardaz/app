@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ProfileMenu from './profileMenu.jsx';
 import LanguageSelector from './languageSelector.jsx';
 import CategorySelector from './categorySelector.jsx';
+import LibrarySelector from './librarySelector.jsx';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -85,6 +86,7 @@ function Nav() {
 			</MenuItem>
 			<CategorySelector />
 			<LanguageSelector />
+			<LibrarySelector />
 			<ProfileMenu />
 		</Menu>
 	);
@@ -118,6 +120,7 @@ function Nav() {
 				</Button>
 				<CategorySelector />
 				<LanguageSelector />
+				<LibrarySelector />
 				<ProfileMenu />
 			</div>
 			<div className={classes.sectionMobile}>

@@ -69,5 +69,9 @@ export const localeService =
 			}
 		}
 		return false;
+	},
+	getPreferredFont: () => {
+		// always return array
+		return ["Dubai"];
 	}
 }

@@ -18,27 +18,24 @@ import AuthorEditor from '../../components/authors/authorEditor.jsx';
 import DeleteAuthor from '../../components/authors/deleteAuthor.jsx';
 
 const useStyles = makeStyles({
-	cellGrid : {
-		padding : 60
+	cellGrid: {
+		padding: 60
 	}
 });
 
-const buildLinkToPage = (page, query) =>
-{
+const buildLinkToPage = (page, query) => {
 	const location = useLocation();
 
 	let querystring = '';
 	querystring += page ? `page=${page}` : '';
 	querystring += query ? `query=${query}` : '';
-	if (querystring !== '')
-	{
+	if (querystring !== '') {
 		querystring = `?${querystring}`;
 	}
 	return `${location.pathname}${querystring}`;
 };
 
-const AuthorsPage = () =>
-{
+const AuthorsPage = () => {
 	const classes = useStyles();
 	const location = useLocation();
 	const [showEditor, setShowEditor] = useState(false);
@@ -49,8 +46,7 @@ const AuthorsPage = () =>
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
 
-	const loadData = () =>
-	{
+	const loadData = () => {
 		const values = queryString.parse(location.search);
 
 		libraryService.getAuthors(values.query, values.page)
@@ -62,52 +58,43 @@ const AuthorsPage = () =>
 			.finally(() => setLoading(false));
 	};
 
-	useEffect(() =>
-	{
-	    loadData();
+	useEffect(() => {
+		loadData();
 	}, [location]);
 
-	const handleClose = () =>
-	{
+	const handleClose = () => {
 		setSelectedAuthor(null);
 		setShowEditor(false);
 		setShowDelete(false);
 	};
 
-	const onDeleteClicked = useCallback(author =>
-	{
+	const onDeleteClicked = useCallback(author => {
 		setSelectedAuthor(author);
 		setShowDelete(true);
 	}, [location]);
 
-	const onEditClicked = useCallback(author =>
-	{
+	const onEditClicked = useCallback(author => {
 		setSelectedAuthor(author);
 		setShowEditor(true);
 	}, [location]);
 
-	const handleDataChanged = () =>
-	{
+	const handleDataChanged = () => {
 		handleClose();
 		loadData();
 	};
 
-	const renderAuthors = () =>
-	{
-		if (isLoading)
-		{
+	const renderAuthors = () => {
+		if (isLoading) {
 			return (<CircularProgress />);
 		}
 
-		if (isError)
-		{
+		if (isError) {
 			return (<Typography variant="h6" component="h6" align="center">
 				<FormattedMessage id="authors.messages.error.loading" />
 			</Typography>);
 		}
 
-		if (authors === null || authors.data === null || authors.data.length < 1)
-		{
+		if (authors === null || authors.data === null || authors.data.length < 1) {
 			return (<Typography variant="h6" component="h6" align="center">
 				<FormattedMessage id="authors.messages.empty" />
 			</Typography>);
@@ -115,15 +102,13 @@ const AuthorsPage = () =>
 
 		return (<Grid className={classes.cellGrid} container spacing={3}>{authors.data.map(a => (
 			<Grid item key={a.id} xs={12} sm={6} md={3} lg={2}>
-				<AuthorCard author={a} key={a.id} onEdit={onEditClicked} onDelete={onDeleteClicked}/>
-			</Grid>)) }
+				<AuthorCard author={a} key={a.id} onEdit={onEditClicked} onDelete={onDeleteClicked} />
+			</Grid>))}
 		</Grid>);
 	};
 
-	const renderPagination = () =>
-	{
-		if (!isLoading && authors)
-		{
+	const renderPagination = () => {
+		if (!isLoading && authors) {
 			return (<Box m={8}>
 				<Pagination
 					page={authors.currentPageIndex}
@@ -143,19 +128,18 @@ const AuthorsPage = () =>
 		return null;
 	};
 
-	if (isLoading)
-	{
+	if (isLoading) {
 		return <Loading />;
 	}
-	if (isError)
-	{
-		return <ErrorMessage message={<FormattedMessage id="authors.messages.error.loading" />}/>;
+	if (isError) {
+		return <ErrorMessage message={<FormattedMessage id="authors.messages.error.loading" />} />;
 	}
 
 	return (
 		<>
 			<AuthorsBanner title={<FormattedMessage id="header.authors" />}
-				createLink={authors && authors.links.create} onCreate={() => onEditClicked(null)} />
+				createLink={authors && authors.links.create} onCreate={() => onEditClicked(null)}
+				background="/images/author_background.jpg" />
 			<Box>
 				{renderAuthors()}
 			</Box>
