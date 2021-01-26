@@ -13,13 +13,13 @@ import TableRow from '@material-ui/core/TableRow';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import { accountService } from '../../../services';
 import PaginationItem from '@material-ui/lab/PaginationItem';
 import Pagination from '@material-ui/lab/Pagination';
 import DeleteAccount from '../../../components/account/deleteAccount';
+import AccountLibraryEditor from '../../../components/account/accountLibraryEditor';
 import AccountEditor from '../../../components/account/accountEditor';
-import { LocalLibrary, LocalLibraryOutlined } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -30,15 +30,15 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center'
 	},
 	table: {
-		minWidth: 650,
+		minWidth: 650
 	},
 	buttonProgress: {
 		position: 'absolute',
 		top: '50%',
 		left: '50%',
 		marginTop: -12,
-		marginLeft: -12,
-	},
+		marginLeft: -12
+	}
 }));
 
 const buildLinkToPage = (location, page, query) => {
@@ -76,6 +76,7 @@ function List({ match }) {
 	const [users, setUsers] = useState(null);
 	const [showEditor, setShowEditor] = useState(false);
 	const [showDelete, setShowDelete] = useState(false);
+	const [showLibraryEditor, setShowLibraryEditor] = useState(false);
 	const [selectedAccount, setSelectedAccount] = useState(null);
 
 
@@ -99,9 +100,14 @@ function List({ match }) {
 		loadData();
 	}, [location]);
 
-	function createLibrary() {
+	function createAccount() {
 		setSelectedAccount(null);
 		setShowEditor(true);
+	}
+
+	function editAccountLibraries(account) {
+		setSelectedAccount(account);
+		setShowLibraryEditor(true);
 	}
 
 	function editAccount(account) {
@@ -116,6 +122,7 @@ function List({ match }) {
 
 	const handleClose = () => {
 		setSelectedAccount(null);
+		setShowLibraryEditor(false);
 		setShowEditor(false);
 		setShowDelete(false);
 	};
@@ -155,7 +162,7 @@ function List({ match }) {
 		<div className={classes.paper}>
 			<Container component="main" maxWidth="md">
 				<Typography variant="h2"><FormattedMessage id="admin.users.title" /></Typography>
-				<Button component={Link} variant="contained" color="primary" to={`${path}/add`}><FormattedMessage id="admin.users.add" /></Button>
+				<Button variant="contained" color="primary" onClick={() => createAccount()}><FormattedMessage id="admin.users.add" /></Button>
 				<TableContainer component={Paper}>
 					<Table className={classes.table}>
 						<TableHead>
@@ -173,14 +180,14 @@ function List({ match }) {
 									<TableCell>{user.email}</TableCell>
 									<TableCell>{roleMapper(user.role)}</TableCell>
 									<TableCell style={{ whiteSpace: 'nowrap' }}>
-										<IconButton onClick={() => editAccount(user)}>
-											<LocalLibrary />
+										<IconButton onClick={() => editAccountLibraries(user)}>
+											<LocalLibraryIcon />
 										</IconButton>
 										<IconButton onClick={() => editAccount(user)}>
 											<EditIcon />
 										</IconButton>
 										<IconButton onClick={() => deleteAccount(user)}>
-											<DeleteIcon />
+											<Delete />
 										</IconButton>
 										{user.isDeleting && <CircularProgress size={24} className={classes.buttonProgress} />}
 									</TableCell>
@@ -203,6 +210,11 @@ function List({ match }) {
 						</TableFooter>
 					</Table>
 				</TableContainer>
+				<AccountLibraryEditor
+					show={showLibraryEditor}
+					account={selectedAccount}
+					onCancelled={handleClose}
+				/>
 				<AccountEditor
 					show={showEditor}
 					account={selectedAccount}

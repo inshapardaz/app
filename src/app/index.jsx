@@ -26,21 +26,24 @@ function App() {
 
 					libraryService.setUserLibrariesCache(response.data);
 					let selectedLibrary = libraryService.getSelectedLibrary();
-					if (!selectedLibrary) {
+					if (selectedLibrary === null) {
 						var firstLibrary = response.data[0];
 						libraryService.setSelectedLibrary(firstLibrary);
 						setLibrary(firstLibrary);
 					}
 					else {
-						var lib = response.data.find(l => l.id == selectedLibrary.id);
-						if (lib == null) {
-							var firstLibrary = response.data[0];
-							libraryService.setSelectedLibrary(firstLibrary);
-							setLibrary(firstLibrary);
-						}
-						else {
-							setLibrary(selectedLibrary);
-						}
+						libraryService.get(selectedLibrary.links.self)
+							.then(lib => {
+
+								if (lib == null) {
+									var firstLibrary = response.data[0];
+									libraryService.setSelectedLibrary(firstLibrary);
+									setLibrary(firstLibrary);
+								}
+								else {
+									setLibrary(selectedLibrary);
+								}
+							});
 					}
 
 					setIsLoading(false);

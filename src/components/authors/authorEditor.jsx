@@ -30,7 +30,6 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) => {
 	});
 
 	const onSubmit = (fields) => {
-		console.log('saving');
 		setBusy(true);
 		if (author === null && createLink !== null) {
 			libraryService.post(createLink, fields)

@@ -5,13 +5,13 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { Role } from '../../helpers';
 import { accountService } from '../../services';
 

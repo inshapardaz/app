@@ -6,6 +6,7 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const TerserPlugin 				 = require('terser-webpack-plugin');
 const MiniCssExtractPlugin       = require('mini-css-extract-plugin');
 const CopyWebpackPlugin          = require('copy-webpack-plugin')
+const BundleAnalyzerPlugin 		 = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -103,6 +104,7 @@ module.exports = function ({ output, development = false } = {})
 
 		plugins :
 		[
+			new BundleAnalyzerPlugin(),
 			new MiniCssExtractPlugin({
 				filename : 'css/inshapardaz.css'
 			}),

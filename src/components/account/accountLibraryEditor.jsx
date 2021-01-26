@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { makeStyles } from '@material-ui/core/styles';
-import { Formik, Field, Form } from 'formik';
-import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { FormControl, InputLabel, Typography, Grid, Button, MenuItem, Link, CircularProgress } from "@material-ui/core";
-import { TextField, Select } from 'formik-material-ui';
-import BootstrapInput from '../bootstrapInput';
+import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, IconButton } from "@material-ui/core";
+import DeleteIcon from '@material-ui/icons/Delete';
 import EditorDialog from '../editorDialog';
 import { accountService } from "../../services";
-import SubmitButton from "../submitButton";
+import DeleteAccountLibrary from "./deleteAccountLibrary";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,142 +36,91 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const AccountLibraryEditor = ({ show, account, createLink, onSaved, onCancelled }) => {
+const AccountLibraryEditor = ({ show, account, onCancelled }) => {
 	const classes = useStyles();
-	const { enqueueSnackbar } = useSnackbar();
 	const intl = useIntl();
-	const [busy, setBusy] = useState(false);
-	const [savedAccount, setSavedAccount] = useState();
-	const isAddMode = savedAccount === null;
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(false);
+	const [libraries, setLibraries] = useState(null);
+	const [showDelete, setShowDelete] = useState(false);
+	const [selectedLibrary, setSelectedLibrary] = useState(null);
 
-	const initialValues = {
-		title: '',
-		firstName: '',
-		lastName: '',
-		email: '',
-		role: '',
-		password: '',
-		confirmPassword: ''
+	const loadData = () => {
+		setLoading(true);
+		accountService.getAccountLibraries(account.id)
+			.then((data) => {
+				setLibraries(data);
+			})
+			.catch(() => setError(true))
+			.finally(() => setLoading(false));
 	};
-
 	useEffect(() => {
-		console.dir(account);
-		setSavedAccount(account);
+		if (account !== null) {
+			loadData();
+		}
 	}, [account]);
 
-	const validationSchema = Yup.object().shape({
-		title: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.title.required' })),
-		firstName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.firstName.required' })),
-		lastName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.lastName.required' })),
-		email: Yup.string()
-			.email(intl.formatMessage({ id: 'register.message.email.error' }))
-			.required(intl.formatMessage({ id: 'register.message.email.required' })),
-		role: Yup.string()
-			.required(intl.formatMessage({ id: 'user.role.required' })),
-		password: Yup.string()
-			.concat(isAddMode ? Yup.string().required('Password is required') : null)
-			.min(6, intl.formatMessage({ id: 'register.message.password.error.length' })),
-		confirmPassword: Yup.string()
-			.when('password', (password, schema) => {
-				if (password) return schema.required(intl.formatMessage({ id: 'register.message.confirmPassword.required' }));
-			})
-			.oneOf([Yup.ref('password')], intl.formatMessage({ id: 'register.message.confirmPassword.error.match' }))
-	});
+	const deleteLibrary = (library) => {
+		setSelectedLibrary(library);
+		setShowDelete(true);
+	};
 
-	function onSubmit(fields, { setStatus, setSubmitting }) {
-		setStatus();
-		if (account === null && createLink !== null) {
-			createUser(fields, setSubmitting);
-		} else {
-			updateUser(account.id, fields, setSubmitting);
-		}
-	}
+	const addLibrary = (library) => {
 
-	function createUser(fields, setSubmitting) {
-		accountService.create(fields)
-			.then(() => {
-				enqueueSnackbar(intl.formatMessage({ id: 'user.messages.added.success' }), { variant: 'success' })
-				onSaved();
-			})
-			.catch(error => {
-				setSubmitting(false);
-				enqueueSnackbar(intl.formatMessage({ id: 'user.messages.added.error' }), { variant: 'error' })
-			});
-	}
+	};
 
-	function updateUser(id, fields, setSubmitting) {
-		accountService.update(id, fields)
-			.then(() => {
-				enqueueSnackbar(intl.formatMessage({ id: 'user.messages.updated.success' }), { variant: 'success' })
-				onSaved();
-			})
-			.catch(error => {
-				setSubmitting(false);
-				enqueueSnackbar(intl.formatMessage({ id: 'user.messages.updated.error' }), { variant: 'error' })
-			});
-	}
+	const handleDataChanged = () => {
+		loadData();
+		handleClose();
+	};
 
-	const dialogTitle =
-		account === null
-			? intl.formatMessage({ id: "user.add" })
-			: intl.formatMessage({ id: "user.edit" });
+	const handleClose = () => {
+		setSelectedLibrary(null);
+		setShowDelete(false);
+	};
+
+	if (account === null) return (<></>);
+
+	const dialogTitle = intl.formatMessage({ id: "account.library.editor" }, { name: account !== null ? `${account.firstName} ${account.lastName}` : '' });
 
 	return (
-		<EditorDialog show={show} busy={busy} title={dialogTitle} onCancelled={() => onCancelled()}  >
-			<Formik initialValues={savedAccount || initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-				{({ errors, touched, isSubmitting }) => (
-					<Form>
-						<Typography variant="h3">{intl.formatMessage({ id: isAddMode ? 'user.add' : 'user.edit' })}</Typography>
-						<FormControl variant="outlined" margin="normal" fullWidth error={errors.title && touched.title}>
-							<InputLabel ><FormattedMessage id="register.title.label" /></InputLabel>
-							<Field component={Select} name="title" as="select" ariant="outlined" fullWidth
-								error={errors.title && touched.title}
-								input={<BootstrapInput />}>
-								<MenuItem value="">{intl.formatMessage({ id: "register.title.none" })}</MenuItem>
-								<MenuItem value="Mr">{intl.formatMessage({ id: "register.title.mr" })}</MenuItem>
-								<MenuItem value="Mrs">{intl.formatMessage({ id: "register.title.mrs" })}</MenuItem>
-								<MenuItem value="Miss">{intl.formatMessage({ id: "register.title.miss" })}</MenuItem>
-							</Field>
-						</FormControl>
-						<Field component={TextField} name="firstName" margin="normal" type="text" variant="outlined" fullWidth
-							label={<FormattedMessage id="register.firstName.label" />} error={errors.firstName && touched.firstName} />
-
-						<Field component={TextField} name="lastName" margin="normal" type="text" variant="outlined" fullWidth
-							label={<FormattedMessage id="register.lastName.label" />} error={errors.lastName && touched.lastName} />
-
-						<Field component={TextField} name="email" margin="normal" type="email" variant="outlined" fullWidth
-							label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />
-
-						<FormControl variant="outlined" fullWidth margin="normal" error={errors.role && touched.role}>
-							<InputLabel ><FormattedMessage id="user.role.label" /></InputLabel>
-							<Field component={Select} name="role" as="select" variant="outlined" fullWidth
-								error={errors.role && touched.role}
-								input={<BootstrapInput />}>
-								<MenuItem value="">{intl.formatMessage({ id: "register.title.none" })}</MenuItem>
-								<MenuItem value="Reader">{intl.formatMessage({ id: "role.reader" })}</MenuItem>
-								<MenuItem value="Writer">{intl.formatMessage({ id: "role.writer" })}</MenuItem>
-								<MenuItem value="LibraryAdmin">{intl.formatMessage({ id: "role.libraryAdmin" })}</MenuItem>
-							</Field>
-						</FormControl>
-
-						{!isAddMode &&
-							<Typography variant="h3">{intl.formatMessage({ id: 'changePassword' })}</Typography>
+		<EditorDialog show={show} busy={loading} title={dialogTitle} onCancelled={() => onCancelled()} >
+			<TableContainer component={Paper}>
+				<Table className={classes.table}>
+					<TableHead>
+						<TableRow>
+							<TableCell style={{ width: '90%' }}><FormattedMessage id="library.name.label" /></TableCell>
+							<TableCell style={{ width: '10%' }}></TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{libraries && libraries.data && libraries.data.map(library =>
+							<TableRow key={library.id}>
+								<TableCell>{library.name}</TableCell>
+								<TableCell>
+									<IconButton onClick={() => deleteLibrary(library)} >
+										<DeleteIcon />
+									</IconButton>
+								</TableCell>
+							</TableRow>
+						)}
+						{loading &&
+							<TableRow>
+								<TableCell colSpan="4" className="text-center">
+									<span className="spinner-border spinner-border-lg align-center"></span>
+								</TableCell>
+							</TableRow>
 						}
-						<Field component={TextField} name="password" margin="normal" type="password" variant="outlined" fullWidth
-							label={<FormattedMessage id="register.password.label" />} error={errors.password && touched.password} />
-
-						<Field component={TextField} name="confirmPassword" margin="normal" type="password" variant="outlined" fullWidth
-							label={<FormattedMessage id="register.confirmPassword.label" />} error={errors.confirmPassword && touched.confirmPassword} />
-
-
-						{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-						<SubmitButton busy={isSubmitting} label={<FormattedMessage id="action.save" />} />
-					</Form>
-				)}
-			</Formik>
+					</TableBody>
+				</Table>
+			</TableContainer>
+			<DeleteAccountLibrary
+				show={showDelete}
+				library={selectedLibrary}
+				account={account}
+				onDeleted={handleDataChanged}
+				onCancelled={handleClose}
+			/>
 		</EditorDialog>
 	);
 };

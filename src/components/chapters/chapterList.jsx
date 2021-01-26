@@ -1,0 +1,172 @@
+import React, { useState, useEffect, useCallback } from "react";
+import Container from "@material-ui/core/Container";
+import Toolbar from "@material-ui/core/Toolbar";
+import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import Typography from "@material-ui/core/Typography";
+import Tooltip from '@material-ui/core/Tooltip';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { FormattedMessage } from "react-intl";
+import { libraryService } from "../../services";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteChapter from "./deleteChapter";
+import ChapterEditor from "./chapterEditor";
+
+const useStyles = () =>
+	makeStyles((theme) => ({
+		cardGrid: {
+			paddingTop: theme.spacing(8),
+			paddingBottom: theme.spacing(8),
+		},
+	}));
+const classes = useStyles();
+
+const ChapterList = ({ book, createLink }) => {
+	if (book == null) return null;
+	const [showEditor, setShowEditor] = useState(false);
+	const [showDelete, setShowDelete] = useState(false);
+	const [selectedChapter, setSelectedChapter] = useState(null);
+
+	const [chapters, setChapters] = useState(null);
+	const [isLoading, setLoading] = useState(true);
+	const [isError, setError] = useState(false);
+	const loadData = () => {
+		setLoading(true);
+		libraryService
+			.getBookChapters(book)
+			.then((data) => {
+				setChapters(data);
+			})
+			.catch((e) => setError(true))
+			.finally(() => setLoading(false));
+	};
+
+	useEffect(() => {
+		loadData();
+	}, []);
+
+	const handleDataChanged = () => {
+		handleClose();
+		loadData();
+	};
+
+	const handleClose = () => {
+		setSelectedChapter(null);
+		setShowEditor(false);
+		setShowDelete(false);
+	};
+
+	const onEditClicked = useCallback(
+		(chapter) => {
+			setSelectedChapter(chapter);
+			setShowEditor(true);
+		},
+		[chapters]
+	);
+
+	const onDeleteClicked = useCallback(
+		(chapter) => {
+			setSelectedChapter(chapter);
+			setShowDelete(true);
+		},
+		[chapters]
+	);
+
+	if (chapters == null) return null;
+
+	const renderToolBar = () => {
+		if (chapters && chapters.links.create) {
+			return (
+				<Toolbar>
+					<IconButton
+						edge="start"
+						className={classes.menuButton}
+						color="inherit"
+						aria-label="menu"
+						onClick={() => onEditClicked(null)}
+					>
+						<AddCircleIcon />
+					</IconButton>
+				</Toolbar>
+			);
+		}
+
+		return null;
+	};
+
+	const renderChapters = () => {
+		if (isLoading) {
+			return <CircularProgress />;
+		}
+
+		if (isError) {
+			return (
+				<Typography variant="h6" component="h6" align="center">
+					<FormattedMessage id="chapters.messages.error.loading" />
+				</Typography>
+			);
+		}
+
+		if (chapters === null || chapters.data === null || chapters.data.length < 1) {
+			return (
+				<Typography variant="h6" component="h6" align="center">
+					<FormattedMessage id="chapters.messages.empty" />
+				</Typography>
+			);
+		}
+		return (<List >
+			{chapters.data.map(c => (
+				<ListItem key={c.id}>
+					<ListItemAvatar>
+						<Typography variant="body1" align="center">{c.chapterNumber}</Typography>
+					</ListItemAvatar>
+					<ListItemText
+						primary={c.title}
+					/>
+					<ListItemSecondaryAction>
+						<Tooltip title={<FormattedMessage id="action.edit" />} >
+							<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(c)}>
+								<EditIcon />
+							</IconButton>
+						</Tooltip>
+						<Tooltip title={<FormattedMessage id="action.delete" onClick={() => onDeleteClicked(c)} />} >
+							<IconButton edge="end" aria-label="delete">
+								<DeleteIcon />
+							</IconButton>
+						</Tooltip>
+					</ListItemSecondaryAction>
+				</ListItem>
+			))
+			}
+		</List >);
+	}
+
+	return (
+		<Container className={classes.cardGrid} maxWidth="md">
+			{renderToolBar()}
+			{renderChapters()}
+			<ChapterEditor
+				show={showEditor}
+				chapter={selectedChapter}
+				createLink={chapters && chapters.links.create}
+				onSaved={handleDataChanged}
+				onCancelled={handleClose}
+			/>
+			<DeleteChapter
+				show={showDelete}
+				chapter={selectedChapter}
+				onDeleted={handleDataChanged}
+				onCancelled={handleClose}
+			/>
+		</Container>
+	);
+};
+
+export default ChapterList

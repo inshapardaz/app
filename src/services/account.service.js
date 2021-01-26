@@ -16,7 +16,10 @@ export const accountService = {
     validateResetToken,
     resetPassword,
     getAll,
-    getById,
+	getById,
+	getAccountLibraries,
+	addAccountLibrary,
+	deleteAccountLibrary,
     create,
     update,
     delete: _delete,
@@ -124,6 +127,19 @@ function getById(id) {
 
 function create(params) {
     return fetchWrapper.post(baseUrl, params);
+}
+
+function getAccountLibraries(id) {
+	return fetchWrapper.get(`${baseUrl}/${id}/libraries`)
+		.then(data => _parseObject(data));
+}
+
+function addAccountLibrary(id, libraryId) {
+	return fetchWrapper.post(`${baseUrl}/${id}/libraries/${libraryId}`);
+}
+
+function deleteAccountLibrary(id, libraryId) {
+	return fetchWrapper.delete(`${baseUrl}/${id}/libraries/${libraryId}`);
 }
 
 function update(id, params) {

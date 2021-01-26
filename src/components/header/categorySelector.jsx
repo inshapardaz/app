@@ -9,9 +9,9 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import CategoryIcon from '@material-ui/icons/Category';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { libraryService } from '../../services';
 
 function CategorySelector() {

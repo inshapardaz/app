@@ -14,18 +14,15 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const defaultCategoryImage = '/resources/img/auhtor_placeholder.png';
 
-const CategoryCard = ({ category, onEdit, onDelete }) =>
-{
+const CategoryCard = ({ category, onEdit, onDelete }) => {
 	const classes = makeStyles(() => ({
-		root : {
-			maxWidth : 345
+		root: {
+			maxWidth: 345
 		}
 	}));
 
-	const renderEditLink = () =>
-	{
-		if (category.links.update)
-		{
+	const renderEditLink = () => {
+		if (category.links.update) {
 			return (
 				<IconButton onClick={() => onEdit(category)}>
 					<EditOutlinedIcon />
@@ -34,10 +31,8 @@ const CategoryCard = ({ category, onEdit, onDelete }) =>
 		return null;
 	};
 
-	const renderDeleteLink = () =>
-	{
-		if (category.links.delete)
-		{
+	const renderDeleteLink = () => {
+		if (category.links.delete) {
 			return (
 				<IconButton onClick={() => onDelete(category)}>
 					<DeleteForeverOutlinedIcon />
@@ -55,7 +50,7 @@ const CategoryCard = ({ category, onEdit, onDelete }) =>
 						{category.name}
 					</Typography>
 					<Typography variant="body2" color="textSecondary" component="p">
-						<FormattedMessage id="categories.item.book.count" values={{ count : category.bookCount }} />
+						<FormattedMessage id="categories.item.book.count" values={{ count: category.bookCount }} />
 					</Typography>
 				</CardContent>
 			</CardActionArea>

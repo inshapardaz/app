@@ -16,18 +16,15 @@ import { Tooltip } from '@material-ui/core';
 
 const defaultAuthorImage = '/images/author_placeholder.jpg';
 
-function AuthorCard ({ author, onEdit, onDelete })
-{
+function AuthorCard({ author, onEdit, onDelete }) {
 	const classes = makeStyles(() => ({
-		root : {
-			maxWidth : 345
+		root: {
+			maxWidth: 345
 		}
 	}));
 
-	const renderEditLink = () =>
-	{
-		if (author.links.update)
-		{
+	const renderEditLink = () => {
+		if (author.links.update) {
 			return (
 				<IconButton onClick={() => onEdit(author)}>
 					<EditOutlinedIcon />
@@ -36,10 +33,8 @@ function AuthorCard ({ author, onEdit, onDelete })
 		return null;
 	};
 
-	const renderDeleteLink = () =>
-	{
-		if (author.links.delete)
-		{
+	const renderDeleteLink = () => {
+		if (author.links.delete) {
 			return (
 				<IconButton onClick={() => onDelete(author)}>
 					<DeleteForeverOutlinedIcon />
@@ -49,8 +44,7 @@ function AuthorCard ({ author, onEdit, onDelete })
 		return null;
 	};
 
-	const setDefaultAuthorImage = (ev) =>
-	{
+	const setDefaultAuthorImage = (ev) => {
 		ev.target.src = defaultAuthorImage;
 	};
 
@@ -71,7 +65,7 @@ function AuthorCard ({ author, onEdit, onDelete })
 						</Typography>
 					</Tooltip>
 					<Typography variant="body2" color="textSecondary" component="p">
-						<FormattedMessage id="authors.item.book.count" values={{ count : author.bookCount }} />
+						<FormattedMessage id="authors.item.book.count" values={{ count: author.bookCount }} />
 					</Typography>
 				</CardContent>
 			</CardActionArea>

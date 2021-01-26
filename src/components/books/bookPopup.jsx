@@ -1,9 +1,10 @@
-import React, { } from "react";
+import React from "react";
 import { ButtonBase, Grid, Typography, Chip } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import EditorDialog from '../editorDialog';
 import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
+import ChapterList from '../chapters/chapterList';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -53,23 +54,24 @@ const BookPopup = ({ show, book, onClosed }) => {
 							</Typography>
 						</Grid>
 						{book.seriesId && <Grid item>
-							<Typography variant="body2" style={{ cursor: 'pointer' }}>
-								<FormattedMessage id="book.series" values={{ name: book.seriesName, index: book.seriesIndex }} />
+							<Typography variant="body2">
+								<FormattedMessage id="book.series" values={{ name: (<Link to={`/series/${book.seriesId}`} > { book.seriesName}</Link>), index: book.seriesIndex }} />
 							</Typography>
 						</Grid>}
 						<Grid item>
-							<Typography variant="body2" style={{ cursor: 'pointer' }}>
+							<Typography variant="body2" >
 								<FormattedMessage id="book.publish" values={{ year: book.yearPublished }} />
 							</Typography>
 						</Grid>
 						<Grid item>
-							<Typography variant="body2" style={{ cursor: 'pointer' }}>
+							<Typography variant="body2" >
 								<FormattedMessage id={`copyrights.${book.copyrights}`} />
 							</Typography>
 						</Grid>
 						{book.categories && book.categories.length > 0 && <Grid item>
-							{book.categories.map(c => (<Chip key={c.id} label={c.name} />))}
+							{book.categories.map(c => (<Chip key={c.id} component="a" href={`/books?category=${c.id}`} clickable variant="outlined" label={c.name} />))}
 						</Grid>}
+						<ChapterList book={book} />
 					</Grid>
 				</Grid>
 			</Grid>

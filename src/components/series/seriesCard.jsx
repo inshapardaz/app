@@ -15,18 +15,15 @@ import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 
 const defaultSeriesImage = '/images/series_placeholder.jpg';
 
-const SeriesCard = ({ series, onEdit, onDelete }) =>
-{
+const SeriesCard = ({ series, onEdit, onDelete }) => {
 	const classes = makeStyles(() => ({
-		root : {
-			maxWidth : 345
+		root: {
+			maxWidth: 345
 		}
 	}));
 
-	const renderEditLink = () =>
-	{
-		if (series.links.update)
-		{
+	const renderEditLink = () => {
+		if (series.links.update) {
 			return (
 				<IconButton onClick={() => onEdit(series)}>
 					<EditOutlinedIcon />
@@ -35,10 +32,8 @@ const SeriesCard = ({ series, onEdit, onDelete }) =>
 		return null;
 	};
 
-	const renderDeleteLink = () =>
-	{
-		if (series.links.delete)
-		{
+	const renderDeleteLink = () => {
+		if (series.links.delete) {
 			return (
 				<IconButton onClick={() => onDelete(series)}>
 					<DeleteForeverOutlinedIcon />
@@ -48,8 +43,7 @@ const SeriesCard = ({ series, onEdit, onDelete }) =>
 		return null;
 	};
 
-	const setDefaultSeriesImage = (ev) =>
-	{
+	const setDefaultSeriesImage = (ev) => {
 		ev.target.src = defaultSeriesImage;
 	};
 
@@ -68,7 +62,7 @@ const SeriesCard = ({ series, onEdit, onDelete }) =>
 						{series.name}
 					</Typography>
 					<Typography variant="body2" color="textSecondary" component="p">
-						<FormattedMessage id="series.item.book.count" values={{ count : series.bookCount }} />
+						<FormattedMessage id="series.item.book.count" values={{ count: series.bookCount }} />
 					</Typography>
 					<Typography variant="body2" color="textSecondary" component="p">
 						{series.description}

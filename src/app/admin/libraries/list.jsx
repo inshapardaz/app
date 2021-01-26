@@ -56,11 +56,10 @@ const buildLinkToPage = (location, page, query) => {
 function List({ match }) {
 	const location = useLocation();
 	const classes = useStyles();
-	const { path } = match;
 	const [libraries, setLibraries] = useState(null);
 	const [query, setQuery] = useState(null);
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
+	const [, setError] = useState(false);
 	const [showEditor, setShowEditor] = useState(false);
 	const [showDelete, setShowDelete] = useState(false);
 	const [selectedLibrary, setSelectedLibrary] = useState(null);
@@ -81,7 +80,7 @@ function List({ match }) {
 				setQuery(q);
 				setLibraries(data);
 			})
-			.catch((e) => setError(true))
+			.catch(() => setError(true))
 			.finally(() => setLoading(false));
 	};
 	useEffect(() => {

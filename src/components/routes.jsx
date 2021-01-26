@@ -15,6 +15,7 @@ import VerifyEmail from '../app/account/verifyEmail';
 import ResetPassword from '../app/account/resetPassword';
 
 import Home from '../app/home';
+import BookPageEditor from '../app/books/bookEditorPage';
 import BooksPage from '../app/books/booksPage.jsx';
 import AuthorsPage from '../app/authors/authorsPage.jsx';
 import AuthorPage from '../app/authors/authorPage.jsx';
@@ -28,6 +29,7 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/" component={Home} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/authors/:id" component={AuthorPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/authors" component={AuthorsPage} />
+			<RouteWithLayout layout={fullWidthLayout} path="/books/:id/editor" component={BookPageEditor} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books" component={BooksPage} />
 			<RouteWithLayout layout={fullWidthLayout} exact path="/series" component={SeriesPage} />
 			<RouteWithLayout layout={fullWidthLayout} exact path="/categories" component={CategoriesPage} />

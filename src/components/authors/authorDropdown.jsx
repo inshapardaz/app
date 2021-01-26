@@ -7,7 +7,7 @@ import { libraryService } from '../../services';
 import { Field } from 'formik';
 import BootstrapInput from '../bootstrapInput';
 
-const AuthorDropDown = ({ onAuthorSelected, error, defaultValue }, props) => {
+const AuthorDropDown = ({ onAuthorSelected, error, value }, props) => {
 	const intl = useIntl();
 	const [open, setOpen] = React.useState(false);
 	const [options, setOptions] = React.useState([]);
@@ -47,7 +47,7 @@ const AuthorDropDown = ({ onAuthorSelected, error, defaultValue }, props) => {
 		onClose={() => {
 			setOpen(false);
 		}}
-		defaultValue={defaultValue}
+		value={value}
 		getOptionSelected={(option, value) => option.id === value.id}
 		getOptionLabel={(option) => option.name}
 		noOptionsText={intl.formatMessage({ id: "authors.messages.empty" })}

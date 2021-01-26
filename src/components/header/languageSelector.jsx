@@ -11,48 +11,40 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { localeService } from '../../services';
 import { FormattedMessage } from 'react-intl';
 
-export default function LanguageSelector()
-{
-	
+export default function LanguageSelector() {
+
 	const locale = localeService.getCurrentLanguage();
 
 	const anchorRef = React.useRef(null);
 	const [open, setOpen] = React.useState(false);
 
-	const handleToggle = () =>
-	{
+	const handleToggle = () => {
 		setOpen((prevOpen) => !prevOpen);
 	};
 
-	const handleClose = (event) =>
-	{
-		if (anchorRef.current && anchorRef.current.contains(event.target))
-		{
-		  return;
+	const handleClose = (event) => {
+		if (anchorRef.current && anchorRef.current.contains(event.target)) {
+			return;
 		}
 
 		setOpen(false);
 	};
 
-	const handleListKeyDown  = (event) =>
-	{
-		if (event.key === 'Tab')
-		{
-		  event.preventDefault();
-		  setOpen(false);
+	const handleListKeyDown = (event) => {
+		if (event.key === 'Tab') {
+			event.preventDefault();
+			setOpen(false);
 		}
 	};
 
-	const chooseEnglish = (event) =>
-	{
-    	localeService.setCurrentLanguage('en');
+	const chooseEnglish = (event) => {
+		localeService.setCurrentLanguage('en');
 		window.location.reload();
 		handleClose(event);
 	};
 
-	const chooseUrdu = (event) =>
-	{
-    	localeService.setCurrentLanguage('ur');
+	const chooseUrdu = (event) => {
+		localeService.setCurrentLanguage('ur');
 		window.location.reload();
 		handleClose(event);
 	};
@@ -62,7 +54,7 @@ export default function LanguageSelector()
 			{({ TransitionProps, placement }) => (
 				<Grow
 					{...TransitionProps}
-					style={{ transformOrigin : placement === 'bottom' ? 'center top' : 'center bottom' }}
+					style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
 				>
 					<Paper>
 						<ClickAwayListener onClickAway={handleClose}>

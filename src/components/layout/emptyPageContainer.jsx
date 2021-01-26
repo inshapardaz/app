@@ -18,16 +18,14 @@ const useStyles = makeStyles((theme) => ({
 
 export const emptyPageContainer = ({ title, children }) => {
 	const classes = useStyles();
-	console.log(title);
-	console.log(children);
 	return (<Container component="main" maxWidth="xs">
 		<div className={classes.paper}>
 			{/* <Avatar className={classes.avatar}>
 				{ icon }
 			</Avatar>*/
-			<Typography component="h1" variant="h5">
-				{ title }
-			</Typography> }
+				<Typography component="h1" variant="h5">
+					{title}
+				</Typography>}
 			{children}
 		</div>
 		<Box mt={8}>

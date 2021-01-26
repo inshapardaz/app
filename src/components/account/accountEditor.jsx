@@ -58,7 +58,6 @@ const AccountEditor = ({ show, account, createLink, onSaved, onCancelled }) => {
 	};
 
 	useEffect(() => {
-		console.dir(account);
 		setSavedAccount(account);
 	}, [account]);
 

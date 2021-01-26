@@ -12,8 +12,10 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import EditAttributesIcon from '@material-ui/icons/EditAttributes';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Tooltip } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 import { FormattedMessage } from 'react-intl';
 import { libraryService } from '../../services';
 
@@ -66,12 +68,23 @@ function BookCell({ book, onOpen, onEdit, onDelete, onUpdated }) {
 		if (book && book.links && book.links.update) {
 			return (<Tooltip title={<FormattedMessage id="action.edit" />} >
 				<IconButton onClick={() => onEdit(book)}>
-					<EditOutlinedIcon />
+					<EditAttributesIcon />
 				</IconButton>
 			</Tooltip>);
 		}
 		return null;
 	};
+
+	const renderBookEditorLink = () => {
+		if (book && book.links && book.links.update) {
+			return (<Tooltip title={<FormattedMessage id="action.edit" />} >
+				<IconButton component={Link} to={`/books/${book.id}/editor`}>
+					<EditOutlinedIcon />
+				</IconButton>
+			</Tooltip>);
+		}
+		return null;
+	}
 
 	const renderDeleteLink = () => {
 		if (book && book.links && book.links.delete) {
@@ -114,6 +127,7 @@ function BookCell({ book, onOpen, onEdit, onDelete, onUpdated }) {
 			<CardActions>
 				{renderEditLink()}
 				{renderDeleteLink()}
+				{renderBookEditorLink()}
 				<Tooltip title={<FormattedMessage id="action.read" />} >
 					<IconButton component={Link} to={`/books/${book.id}`}>
 						<MenuBookIcon />
