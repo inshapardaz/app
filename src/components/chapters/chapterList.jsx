@@ -4,6 +4,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import DescriptionIcon from '@material-ui/icons/Description';
 import Typography from "@material-ui/core/Typography";
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
@@ -18,6 +19,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteChapter from "./deleteChapter";
 import ChapterEditor from "./chapterEditor";
+import { Link } from "react-router-dom";
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -128,9 +130,14 @@ const ChapterList = ({ book, createLink }) => {
 						<Typography variant="body1" align="center">{c.chapterNumber}</Typography>
 					</ListItemAvatar>
 					<ListItemText
-						primary={c.title}
+						primary={<Link to={`/books/${c.bookId}/chapter/${c.chapterNumber}`} >{c.title}</Link>}
 					/>
 					<ListItemSecondaryAction>
+						<Tooltip title={<FormattedMessage id="chapter.action.editContent" />} >
+							<IconButton edge="end" aria-label="edit contents" href={`/books/${c.bookId}/chapter/${c.chapterNumber}/editor`}>
+								<DescriptionIcon />
+							</IconButton>
+						</Tooltip>
 						<Tooltip title={<FormattedMessage id="action.edit" />} >
 							<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(c)}>
 								<EditIcon />

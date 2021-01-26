@@ -239,6 +239,7 @@
     "chapters.messages.empty" : "No chapter found",
     "chapters.messages.error.loading" : "Unable to load chapters",
     "chapters.action.confirmDelete" : "Do you want to remove {title}?",
+    "chapter.action.editContent" : "Edit contents",
     "chapter.editor.header.add": "Adding chapter",
     "chapter.editor.header.edit" : "Editing chapter {title}",
     "chapter.editor.fields.name.title" : "Name",

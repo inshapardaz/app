@@ -63,7 +63,7 @@ const BookEditorPage = () => {
 
 	if (error) return <ErrorMessage message="Error loading book." />
 
-	if (book == null) <ErrorMessage message="Book not found" />
+	if (book == null) return <ErrorMessage message="Book not found" />
 
 	return (<>
 		<Tabs

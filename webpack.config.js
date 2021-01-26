@@ -103,8 +103,9 @@ module.exports = function ({ output, development = false } = {})
 		},
 
 		plugins :
-		[
-			new BundleAnalyzerPlugin(),
+			[
+			// Uncomment for the analyzer
+			//new BundleAnalyzerPlugin(),
 			new MiniCssExtractPlugin({
 				filename : 'css/inshapardaz.css'
 			}),
