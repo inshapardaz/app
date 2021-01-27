@@ -143,8 +143,8 @@ const ChapterList = ({ book, createLink }) => {
 								<EditIcon />
 							</IconButton>
 						</Tooltip>
-						<Tooltip title={<FormattedMessage id="action.delete" onClick={() => onDeleteClicked(c)} />} >
-							<IconButton edge="end" aria-label="delete">
+						<Tooltip title={<FormattedMessage id="action.delete" />} >
+							<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(c)}>
 								<DeleteIcon />
 							</IconButton>
 						</Tooltip>
