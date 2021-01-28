@@ -9,7 +9,7 @@ import { libraryService } from '../../services';
 import EditorDialog from '../editorDialog';
 import SubmitButton from '../submitButton';
 
-const ChapterEditor = ({ show, chapter, createLink, onSaved, onCancelled }) => {
+const ChapterEditor = ({ show, chapter, chapterCount, createLink, onSaved, onCancelled }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
 	const [busy, setBusy] = useState(false);
@@ -17,7 +17,7 @@ const ChapterEditor = ({ show, chapter, createLink, onSaved, onCancelled }) => {
 
 	const initialValues = {
 		title: '',
-		chapterNumber: 0
+		chapterNumber: chapterCount + 1
 	};
 
 	useEffect(() => {
@@ -59,7 +59,7 @@ const ChapterEditor = ({ show, chapter, createLink, onSaved, onCancelled }) => {
 
 	const title = chapter === null
 		? intl.formatMessage({ id: 'chapter.editor.header.add' })
-		: intl.formatMessage({ id: 'chapter.editor.header.edit' }, { name: chapter.title });
+		: intl.formatMessage({ id: 'chapter.editor.header.edit' }, { title: chapter.title });
 
 	return (
 		<EditorDialog show={show} busy={busy} title={title} onCancelled={() => onCancelled()}  >

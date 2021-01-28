@@ -19,7 +19,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteChapter from "./deleteChapter";
 import ChapterEditor from "./chapterEditor";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
+import Link from '@material-ui/core/Link';
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -30,7 +31,7 @@ const useStyles = () =>
 	}));
 const classes = useStyles();
 
-const ChapterList = ({ book, createLink }) => {
+const ChapterList = ({ book, allowEdit = true }) => {
 	if (book == null) return null;
 	const [showEditor, setShowEditor] = useState(false);
 	const [showDelete, setShowDelete] = useState(false);
@@ -84,7 +85,7 @@ const ChapterList = ({ book, createLink }) => {
 	if (chapters == null) return null;
 
 	const renderToolBar = () => {
-		if (chapters && chapters.links.create) {
+		if (allowEdit && chapters && chapters.links.create) {
 			return (
 				<Toolbar>
 					<IconButton
@@ -130,25 +131,27 @@ const ChapterList = ({ book, createLink }) => {
 						<Typography variant="body1" align="center">{c.chapterNumber}</Typography>
 					</ListItemAvatar>
 					<ListItemText
-						primary={<Link to={`/books/${c.bookId}/chapter/${c.chapterNumber}`} >{c.title}</Link>}
+						primary={<Link href={`/books/${c.bookId}/chapter/${c.chapterNumber}`} color="inherit" variant="body1" >{c.title}</Link>}
 					/>
-					<ListItemSecondaryAction>
-						<Tooltip title={<FormattedMessage id="chapter.action.editContent" />} >
-							<IconButton edge="end" aria-label="edit contents" href={`/books/${c.bookId}/chapter/${c.chapterNumber}/editor`}>
-								<DescriptionIcon />
-							</IconButton>
-						</Tooltip>
-						<Tooltip title={<FormattedMessage id="action.edit" />} >
-							<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(c)}>
-								<EditIcon />
-							</IconButton>
-						</Tooltip>
-						<Tooltip title={<FormattedMessage id="action.delete" />} >
-							<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(c)}>
-								<DeleteIcon />
-							</IconButton>
-						</Tooltip>
-					</ListItemSecondaryAction>
+					{ allowEdit &&
+						<ListItemSecondaryAction>
+							<Tooltip title={<FormattedMessage id="chapter.action.editContent" />} >
+								<IconButton edge="end" aria-label="edit contents" href={`/books/${c.bookId}/chapter/${c.chapterNumber}/editor`}>
+									<DescriptionIcon />
+								</IconButton>
+							</Tooltip>
+							<Tooltip title={<FormattedMessage id="action.edit" />} >
+								<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(c)}>
+									<EditIcon />
+								</IconButton>
+							</Tooltip>
+							<Tooltip title={<FormattedMessage id="action.delete" />} >
+								<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(c)}>
+									<DeleteIcon />
+								</IconButton>
+							</Tooltip>
+						</ListItemSecondaryAction>
+					}
 				</ListItem>
 			))
 			}
@@ -163,6 +166,7 @@ const ChapterList = ({ book, createLink }) => {
 				show={showEditor}
 				chapter={selectedChapter}
 				createLink={chapters && chapters.links.create}
+				chapterCount={chapters.data.length}
 				onSaved={handleDataChanged}
 				onCancelled={handleClose}
 			/>

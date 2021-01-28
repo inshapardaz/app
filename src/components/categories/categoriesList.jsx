@@ -7,29 +7,31 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {
+	CategoryProvider,
+	CategoryTitle,
+	CategoryItem,
+} from '@mui-treasury/components/menu/category';
+import { useNikiCategoryMenuStyles } from '@mui-treasury/styles/categoryMenu/niki';
 import { libraryService } from '../../services';
 
-const CategoryListItem = ({ category, selectedCategory }) =>
-{
-	return (<ListItem key={category.id} button  selected={selectedCategory && Number(selectedCategory) === category.id}>
-		<ListItemText primary={<Link to={`/books?category=${category.id}`}>{ category.name }</Link>} />
+const CategoryListItem = ({ category, selectedCategory }) => {
+	return (<ListItem key={category.id} button selected={selectedCategory && Number(selectedCategory) === category.id}>
+		<ListItemText primary={<Link to={`/books?category=${category.id}`}>{category.name}</Link>} />
 	</ListItem>);
 };
 
-const CategoriesList = () =>
-{
+const CategoriesList = () => {
 	const location = useLocation();
 	const [selectedCategory, setSelectedCategory] = useState(true);
 	const [categories, setCategories] = useState(null);
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
 
-	useEffect(() =>
-	{
+	useEffect(() => {
 		const values = queryString.parse(location.search);
 		setSelectedCategory(values.category);
-		const fetchData = () =>
-		{
+		const fetchData = () => {
 			setLoading(true);
 			libraryService.getCategories()
 				.then(data => setCategories(data))
@@ -39,25 +41,31 @@ const CategoriesList = () =>
 		fetchData();
 	}, []);
 
-	const renderCategories = () =>
-	{
-		if (isLoading)
-		{
+	const renderCategories = () => {
+		if (isLoading) {
 			return (<CircularProgress />);
 		}
 
-		if (isError)
-		{
+		if (isError) {
 			return (
 				<Typography variant="h6" component="h6" align="center">
 					<FormattedMessage id="categories.messages.error.loading" />
 				</Typography>);
 		}
 
+		return (<CategoryProvider useStyles={useNikiCategoryMenuStyles}>
+			<CategoryTitle><FormattedMessage id="header.categories" /></CategoryTitle>
+			{categories.data.map(c => (
+				<CategoryItem key={c.id} as={Link} to={`/books?category=${c.id}`}
+					active={selectedCategory && Number(selectedCategory) === c.id}>
+					{c.name}
+				</CategoryItem>
+			))}
+		</CategoryProvider >);
 		return (
 			<List component="nav" aria-label="main categories">
 				{categories.data.map((c) => (
-					<CategoryListItem key={c.id} category={c} selectedCategory={selectedCategory}/>
+					<CategoryListItem key={c.id} category={c} selectedCategory={selectedCategory} />
 				))}
 			</List>
 		);

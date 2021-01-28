@@ -71,7 +71,8 @@ const BookPopup = ({ show, book, onClosed }) => {
 						{book.categories && book.categories.length > 0 && <Grid item>
 							{book.categories.map(c => (<Chip key={c.id} component="a" href={`/books?category=${c.id}`} clickable variant="outlined" label={c.name} />))}
 						</Grid>}
-						<ChapterList book={book} />
+						<Typography variant="h4"><FormattedMessage id="chapter.toolbar.chapters" /></Typography>
+						<ChapterList book={book} allowEdit={false} />
 					</Grid>
 				</Grid>
 			</Grid>

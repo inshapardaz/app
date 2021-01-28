@@ -64,7 +64,7 @@ const BookEditorPage = () => {
 	if (error) return <ErrorMessage message="Error loading book." />
 
 	if (book == null) return <ErrorMessage message="Book not found" />
-
+	console.log(selectedTab);
 	return (<>
 		<Tabs
 			value={selectedTab}
