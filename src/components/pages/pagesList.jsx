@@ -124,9 +124,7 @@ const PagesList = ({ book }) => {
 				checked.map(id => {
 					var page = pages.data.find(p => p.sequenceNumber === id);
 					if (page && page.links && page.links.delete) {
-						console.log(`Found page ${page.pageNumber} to delete`)
-						return promises.push(libraryService.delete(page.links.delete)
-							.then(console.log(`Removed page ${page.sequenceNumber} for book ${page.bookId} `)));
+						return promises.push(libraryService.delete(page.links.delete));
 					}
 					else {
 						return Promise.resolve();
@@ -153,13 +151,6 @@ const PagesList = ({ book }) => {
 		setChecked(newChecked);
 	};
 
-	const onUploadClicked = useCallback(
-		(page) => {
-			console.log("upload clicked")
-		},
-		[pages]
-	);
-
 	const handleFileUpload = useCallback(
 		(files) => {
 			if (files.length < 1) {
@@ -167,15 +158,15 @@ const PagesList = ({ book }) => {
 			}
 
 			setLoading(true);
-			if (pages && pages.links.create !== null) {
-				libraryService.postFile(pages.links.create, files[0])
+			if (pages && pages.links.create_multiple !== null) {
+				libraryService.postMultipleFile(pages.links.create_multiple, files)
 					.then(() => {
-						enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
-						onSaved();
+						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.saved' }), { variant: 'success' })
+						setShowFilesUpload(false);
+						loadData();
 					})
 					.catch((e) => {
-						console.dir(e);
-						enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
+						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.saving' }), { variant: 'error' })
 					})
 					.finally(() => setLoading(false));
 			}
@@ -192,11 +183,12 @@ const PagesList = ({ book }) => {
 			if (pages && pages.links.bulk_upload !== null) {
 				libraryService.postFile(pages.links.bulk_upload, files[0])
 					.then(() => {
-						enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
-						onSaved();
+						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.saved' }), { variant: 'success' })
+						setShowZipUpload(false);
+						loadData();
 					})
 					.catch(() => {
-						enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
+						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.saving' }), { variant: 'error' })
 					})
 					.finally(() => setLoading(false));
 			}
@@ -330,7 +322,7 @@ const PagesList = ({ book }) => {
 			/>
 			<DropzoneDialog
 				open={showFilesUpload}
-				//onSave={handleFileUpload}
+				onSave={handleFileUpload}
 				acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
 				showPreviews={true}
 				maxFileSize={5000000}

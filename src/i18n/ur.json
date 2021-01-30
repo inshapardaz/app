@@ -268,6 +268,8 @@
 	"page.editor.fields.accountId.title": "محفوظ بنام",
 	"page.messages.saved": "صفحے میں تبدیلیاں محفوظ ہو گئی ہیں۔",
 	"page.messages.error.saving": "صفحے میں تبدیلیاں محفوظ نہیں ہو سکیں۔ دوبارہ کوشش کریں",
+	"pages.messages.saved": "صفحات میں تبدیلیاں محفوظ ہو گئی ہیں۔",
+	"pages.messages.error.saving": "صفحات میں تبدیلیاں محفوظ نہیں ہو سکیں۔ دوبارہ کوشش کریں",
 	"page.action.confirmDelete" : "کیا آپ صفحہ {sequenceNumber} کو حذف کرنا چاہیں گے؟",
 	"page.action.confirmDeleteMultiple" : "کیا آپ  {count} صفحات حذف کرنا چاہتے ہیں؟?",
 	"page.messages.error.delete" : "صفحے کو حذف نہیں کیا جا سکا!",

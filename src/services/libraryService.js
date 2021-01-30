@@ -49,6 +49,14 @@ const _postFile = (url, file) => {
 			.then(data => _parseObject(data));
 };
 
+const _postMultipleFile = (url, files) => {
+	const formData = new FormData();
+
+	files.map(file => formData.append('file', file, file.fileName));
+
+	return fetchWrapper.postFile(url, formData, { 'Accept': 'application/json' })
+		.then(data => _parseObject(data));
+};
 const _parseObject = (source) =>
 {
 	if (source)
@@ -103,6 +111,7 @@ export const libraryService =
 	delete: _delete,
 	upload: _upload,
 	postFile: _postFile,
+	postMultipleFile: _postMultipleFile,
 	getEntry: () => _get(`${libraryUrl()}`),
 	getWriters: () => _get(`${libraryUrl()}/writers`),
 	getCategories : () => _get(`${libraryUrl()}/categories`),

@@ -271,6 +271,8 @@
 	"page.editor.fields.accountId.title": "Assigned To",
 	"page.messages.saved": "Page saved successfully",
 	"page.messages.error.saving": "Error saving page",
+	"pages.messages.saved": "Pages saved successfully",
+	"pages.messages.error.saving": "Error saving pages",
 	"page.action.confirmDelete" : "Do you want to remove page {sequenceNumber}?",
 	"page.messages.error.delete" : "Unable to delete page!",
 	"page.action.confirmDeleteMultiple" : "Do you want to remove {count} page(s)?",
