@@ -12,6 +12,7 @@ import Loading from '../../components/Loading';
 import ErrorMessage from '../../components/ErrorMessage';
 import { libraryService } from '../../services';
 import BookEditorForm from '../../components/books/bookEditorForm';
+import PagesList from '../../components/pages/pagesList';
 
 const TabPanel = (props) => {
 	const { children, value, index, ...other } = props;
@@ -64,7 +65,7 @@ const BookEditorPage = () => {
 	if (error) return <ErrorMessage message="Error loading book." />
 
 	if (book == null) return <ErrorMessage message="Book not found" />
-	console.log(selectedTab);
+
 	return (<>
 		<Tabs
 			value={selectedTab}
@@ -73,18 +74,18 @@ const BookEditorPage = () => {
 			textColor="primary"
 			centered
 		>
-			<Tab label="Description" icon={<InfoIcon />} {...a11yProps(0)} />
+			{/* <Tab label="Description" icon={<InfoIcon />} {...a11yProps(0)} /> */}
 			<Tab label="Chapters" icon={<TocIcon />} {...a11yProps(0)} />
 			<Tab label="Pages" icon={<PagesIcon />} {...a11yProps(0)} />
 		</Tabs>
-		<TabPanel value={selectedTab} index={0}>
+		{/* <TabPanel value={selectedTab} index={0}>
 			<BookEditorForm book={book} />
-		</TabPanel>
-		<TabPanel value={selectedTab} index={1}>
+		</TabPanel> */}
+		<TabPanel value={selectedTab} index={0}>
 			<ChapterList book={book} />
 		</TabPanel>
-		<TabPanel value={selectedTab} index={2}>
-			Item Three
+		<TabPanel value={selectedTab} index={1}>
+			<PagesList book={book} />
 		</TabPanel>
 	</>);
 };

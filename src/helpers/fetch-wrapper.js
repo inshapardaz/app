@@ -6,7 +6,8 @@ export const fetchWrapper = {
     post,
     put,
 	delete: _delete,
-	putFile
+	putFile,
+	postFile
 }
 
 function get(url, headers = {}) {
@@ -40,6 +41,15 @@ function put(url, body, headers = {}) {
 function putFile(url, body, headers = {}) {
     const requestOptions = {
         method: 'PUT',
+        headers: { ...authHeader(url),...headers },
+        body: body
+    };
+    return fetch(url, requestOptions).then(handleResponse);
+}
+
+function postFile(url, body, headers = {}) {
+    const requestOptions = {
+        method: 'POST',
         headers: { ...authHeader(url),...headers },
         body: body
     };

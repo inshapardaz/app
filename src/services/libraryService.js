@@ -41,6 +41,14 @@ const _upload = (url, file) => {
 			.then(data => _parseObject(data));
 };
 
+const _postFile = (url, file) => {
+		const formData = new FormData();
+		formData.append('file', file, file.fileName);
+
+		return fetchWrapper.postFile(url, formData, { 'Accept': 'application/json' })
+			.then(data => _parseObject(data));
+};
+
 const _parseObject = (source) =>
 {
 	if (source)
@@ -94,7 +102,9 @@ export const libraryService =
 	put: _put,
 	delete: _delete,
 	upload: _upload,
-	getEntry : () => _get(`${libraryUrl()}`),
+	postFile: _postFile,
+	getEntry: () => _get(`${libraryUrl()}`),
+	getWriters: () => _get(`${libraryUrl()}/writers`),
 	getCategories : () => _get(`${libraryUrl()}/categories`),
 	getCategory : (id) => _get(`${libraryUrl()}/categories/${id}`),
 	getSeries : (query = null, pageNumber = 1, pageSize = 12) =>
@@ -138,6 +148,7 @@ export const libraryService =
 		_get(`${libraryUrl()}/series/${series}/books?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
 	getBook : (id) => _get(`${libraryUrl()}/books/${id}`),
 	getBookChapters : (book) => _get(book.links.chapters),
+	getBookPages : (book) => _get(book.links.pages),
 	getChapters : (bookId) => _get(`${libraryUrl()}/books/${bookId}/chapters`),
 	getChapter : (id, chapterId) => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}`),
 	getChapterContents : (id, chapterId) => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}/contents`),

@@ -257,5 +257,22 @@
     "copyrights.0": "جملہ حقوق محفوظ",
 	"copyrights.1": "مفت عوامی کتاب",
 	"copyrights.2": "آزاد",
-	"copyrights.3":	"کریئیٹو کامن"
+	"copyrights.3":	"کریئیٹو کامن",
+	"page.assignedTo.label": "سونپا گیا ہے {name} کو",
+	"page.editor.header.add": "نئے صفحے کا اضافہ",
+	"page.editor.header.edit": "صفحہ {sequenceNumber} کی تدوین",
+	"page.editor.fields.sequenceNumber.title" : "صفحہ نمبر",
+	"page.editor.fields.sequenceNumber.error" : "صفحہ نمبر ضروری ہے",
+	"page.editor.fields.status.title": "کیفیت",
+	"page.editor.fields.accountId.title": "محفوظ بنام",
+	"page.messages.saved": "صفحے میں تبدیلیاں محفوظ ہو گئی ہیں۔",
+	"page.messages.error.saving": "صفحے میں تبدیلیاں محفوظ نہیں ہو سکیں۔ دوبارہ کوشش کریں",
+	"page.action.confirmDelete" : "کیا آپ صفحہ {sequenceNumber} کو حذف کرنا چاہیں گے؟",
+	"page.messages.error.delete" : "صفحے کو حذف نہیں کیا جا سکا!",
+	"person.messages.empty": "کوئی ایک انتخاب کریں۔۔۔",
+	"status.0" : "دستیاب",
+	"status.1": "ٹائپنگ",
+	"status.2": "ٹائپ مکمل",
+	"status.3" : "پروف ریڈ",
+	"status.4" : "مکمل"
 }
