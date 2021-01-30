@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import { FormattedMessage } from 'react-intl';
+import { useSnackbar } from 'notistack';
+import { FormattedMessage, useIntl } from "react-intl";
+import { useConfirm } from 'material-ui-confirm';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
+import Box from '@material-ui/core/Box';
+
 import Loading from '../../components/Loading.jsx';
 import ErrorMessage from '../../components/ErrorMessage.jsx';
 import { libraryService } from '../../services';
 import SeriesBanner from '../../components/series/seriesBanner.jsx';
 import SeriesCard from '../../components/series/seriesCard.jsx';
-import { Box } from '@material-ui/core';
 import SeriesEditor from '../../components/series/seriesEditor.jsx';
-import DeleteSeries from '../../components/series/deleteSeries.jsx';
 
 const useStyles = makeStyles({
 	cellGrid: {
@@ -38,8 +41,11 @@ const buildLinkToPage = (page, query) => {
 const SeriesPage = () => {
 	const classes = useStyles();
 	const location = useLocation();
+	const confirm = useConfirm();
+	const intl = useIntl();
+	const { enqueueSnackbar } = useSnackbar();
+
 	const [showEditor, setShowEditor] = useState(false);
-	const [showDelete, setShowDelete] = useState(false);
 	const [series, setSeries] = useState(null);
 	const [selectedSeries, setSelectedSeries] = useState(null);
 	const [query, setQuery] = useState(null);
@@ -65,13 +71,29 @@ const SeriesPage = () => {
 	const handleClose = () => {
 		setSelectedSeries(null);
 		setShowEditor(false);
-		setShowDelete(false);
 	};
 
-	const onDeleteClicked = useCallback(serie => {
-		setSelectedSeries(serie);
-		setShowDelete(true);
-	}, [location]);
+	const onDeleteClicked = useCallback(
+		(serie) => {
+			confirm({
+				title: intl.formatMessage({ id: "action.delete" }),
+				description: intl.formatMessage({ id: "series.action.confirmDelete" }, { name: serie.title }),
+				confirmationText: intl.formatMessage({ id: "action.yes" }),
+				cancellationText: intl.formatMessage({ id: "action.no" }),
+				confirmationButtonProps: { variant: "contained", color: "secondary" },
+				cancellationButtonProps: { color: "secondary" }
+			})
+				.then(() => {
+					return libraryService.delete(serie.links.delete)
+						.then(() => enqueueSnackbar(intl.formatMessage({ id: 'series.messages.deleted' }), { variant: 'success' }))
+						.then(() => loadData())
+						.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'series.messages.error.delete' }), { variant: 'error' }));
+				}).catch(() => { })
+
+		},
+		[location]
+	);
+
 
 	const onEditClicked = useCallback(serie => {
 		setSelectedSeries(serie);
@@ -147,10 +169,6 @@ const SeriesPage = () => {
 				series={selectedSeries}
 				createLink={series && series.links.create}
 				onSaved={handleDataChanged}
-				onCancelled={handleClose} />
-			<DeleteSeries show={showDelete}
-				series={selectedSeries}
-				onDeleted={handleDataChanged}
 				onCancelled={handleClose} />
 		</>
 	);

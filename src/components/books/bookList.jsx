@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import queryString from "query-string";
+import { useSnackbar } from 'notistack';
+import { FormattedMessage, useIntl } from "react-intl";
+import { useConfirm } from 'material-ui-confirm';
+
 import Container from "@material-ui/core/Container";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
@@ -12,12 +16,11 @@ import Pagination from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { FormattedMessage } from "react-intl";
+
 import { libraryService } from "../../services";
 import BookCard from "./bookCard.jsx";
 import BookEditor from "./bookEditor.jsx";
 import BookPopup from "./bookPopup";
-import DeleteBook from "./deleteBook.jsx";
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -46,9 +49,11 @@ const buildLinkToPage = (page, authorId, categoryId, seriesId, query) => {
 
 const BookList = () => {
 	const location = useLocation();
+	const confirm = useConfirm();
+	const intl = useIntl();
+	const { enqueueSnackbar } = useSnackbar();
 	const [showPopup, setShowPopup] = useState(false);
 	const [showEditor, setShowEditor] = useState(false);
-	const [showDelete, setShowDelete] = useState(false);
 	const [selectedBook, setSelectedBook] = useState(null);
 	const [books, setBooks] = useState(null);
 	const [authorId, setAuthorId] = useState(null);
@@ -93,16 +98,29 @@ const BookList = () => {
 		setSelectedBook(null);
 		setShowPopup(false);
 		setShowEditor(false);
-		setShowDelete(false);
 	};
 
 	const onDeleteClicked = useCallback(
 		(book) => {
-			setSelectedBook(book);
-			setShowDelete(true);
+			confirm({
+				title: intl.formatMessage({ id: "action.delete" }),
+				description: intl.formatMessage({ id: "books.action.confirmDelete" }, { title: book.title }),
+				confirmationText: intl.formatMessage({ id: "action.yes" }),
+				cancellationText: intl.formatMessage({ id: "action.no" }),
+				confirmationButtonProps: { variant: "contained", color: "secondary" },
+				cancellationButtonProps: { color: "secondary" }
+			})
+				.then(() => {
+					return libraryService.delete(book.links.delete)
+						.then(() => enqueueSnackbar(intl.formatMessage({ id: 'books.messages.deleted' }), { variant: 'success' }))
+						.then(() => loadData())
+						.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.delete' }), { variant: 'error' }));
+				}).catch(() => { })
+
 		},
 		[books]
 	);
+
 
 	const onOpenBook = useCallback(
 		(book) => {
@@ -230,12 +248,6 @@ const BookList = () => {
 				book={selectedBook}
 				createLink={books && books.links.create}
 				onSaved={handleDataChanged}
-				onCancelled={handleClose}
-			/>
-			<DeleteBook
-				show={showDelete}
-				book={selectedBook}
-				onDeleted={handleDataChanged}
 				onCancelled={handleClose}
 			/>
 		</Container>

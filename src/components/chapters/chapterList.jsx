@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useSnackbar } from 'notistack';
+import { FormattedMessage, useIntl } from "react-intl";
+import { useConfirm } from 'material-ui-confirm';
+
 import Container from "@material-ui/core/Container";
 import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,13 +17,11 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { FormattedMessage } from "react-intl";
 import { libraryService } from "../../services";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteChapter from "./deleteChapter";
+
 import ChapterEditor from "./chapterEditor";
-//import { Link } from "react-router-dom";
 import Link from '@material-ui/core/Link';
 
 const useStyles = () =>
@@ -33,8 +35,10 @@ const classes = useStyles();
 
 const ChapterList = ({ book, allowEdit = true }) => {
 	if (book == null) return null;
+	const confirm = useConfirm();
+	const intl = useIntl();
+	const { enqueueSnackbar } = useSnackbar();
 	const [showEditor, setShowEditor] = useState(false);
-	const [showDelete, setShowDelete] = useState(false);
 	const [selectedChapter, setSelectedChapter] = useState(null);
 
 	const [chapters, setChapters] = useState(null);
@@ -63,7 +67,6 @@ const ChapterList = ({ book, allowEdit = true }) => {
 	const handleClose = () => {
 		setSelectedChapter(null);
 		setShowEditor(false);
-		setShowDelete(false);
 	};
 
 	const onEditClicked = useCallback(
@@ -76,8 +79,21 @@ const ChapterList = ({ book, allowEdit = true }) => {
 
 	const onDeleteClicked = useCallback(
 		(chapter) => {
-			setSelectedChapter(chapter);
-			setShowDelete(true);
+			confirm({
+				title: intl.formatMessage({ id: "action.delete" }),
+				description: intl.formatMessage({ id: "chapters.action.confirmDelete" }, { title: chapter.title }),
+				confirmationText: intl.formatMessage({ id: "action.yes" }),
+				cancellationText: intl.formatMessage({ id: "action.no" }),
+				confirmationButtonProps: { variant: "contained", color: "secondary" },
+				cancellationButtonProps: { color: "secondary" }
+			})
+				.then(() => {
+					return libraryService.delete(chapter.links.delete)
+						.then(() => enqueueSnackbar(intl.formatMessage({ id: 'chapters.messages.deleted' }), { variant: 'success' }))
+						.then(() => loadData())
+						.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'chapters.messages.error.delete' }), { variant: 'error' }));
+				}).catch(() => { })
+
 		},
 		[chapters]
 	);
@@ -168,12 +184,6 @@ const ChapterList = ({ book, allowEdit = true }) => {
 				createLink={chapters && chapters.links.create}
 				chapterCount={chapters.data.length}
 				onSaved={handleDataChanged}
-				onCancelled={handleClose}
-			/>
-			<DeleteChapter
-				show={showDelete}
-				chapter={selectedChapter}
-				onDeleted={handleDataChanged}
 				onCancelled={handleClose}
 			/>
 		</Container>

@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
 import queryString from 'query-string';
-import { FormattedMessage } from 'react-intl';
+import { useSnackbar } from 'notistack';
+import { FormattedMessage, useIntl } from "react-intl";
+import { useConfirm } from 'material-ui-confirm';
+
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
+
+import { libraryService } from '../../services';
 import Loading from '../../components/Loading.jsx';
 import ErrorMessage from '../../components/ErrorMessage.jsx';
-import { libraryService } from '../../services';
 import AuthorsBanner from '../../components/authors/authorsBanner.jsx';
 import AuthorCard from '../../components/authors/authorCard.jsx';
-import { Box } from '@material-ui/core';
 import AuthorEditor from '../../components/authors/authorEditor.jsx';
-import DeleteAuthor from '../../components/authors/deleteAuthor.jsx';
 
 const useStyles = makeStyles({
 	cellGrid: {
@@ -36,10 +39,12 @@ const buildLinkToPage = (page, query) => {
 };
 
 const AuthorsPage = () => {
+	const confirm = useConfirm();
 	const classes = useStyles();
 	const location = useLocation();
+	const intl = useIntl();
+	const { enqueueSnackbar } = useSnackbar();
 	const [showEditor, setShowEditor] = useState(false);
-	const [showDelete, setShowDelete] = useState(false);
 	const [authors, setAuthors] = useState(null);
 	const [selectedAuthor, setSelectedAuthor] = useState(null);
 	const [query, setQuery] = useState(null);
@@ -65,13 +70,29 @@ const AuthorsPage = () => {
 	const handleClose = () => {
 		setSelectedAuthor(null);
 		setShowEditor(false);
-		setShowDelete(false);
 	};
 
-	const onDeleteClicked = useCallback(author => {
-		setSelectedAuthor(author);
-		setShowDelete(true);
-	}, [location]);
+	const onDeleteClicked = useCallback(
+		(author) => {
+			confirm({
+				title: intl.formatMessage({ id: "action.delete" }),
+				description: intl.formatMessage({ id: "authors.action.confirmDelete" }, { name: author.name }),
+				confirmationText: intl.formatMessage({ id: "action.yes" }),
+				cancellationText: intl.formatMessage({ id: "action.no" }),
+				confirmationButtonProps: { variant: "contained", color: "secondary" },
+				cancellationButtonProps: { color: "secondary" }
+			})
+				.then(() => {
+					return libraryService.delete(author.links.delete)
+						.then(() => enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.deleted' }), { variant: 'success' }))
+						.then(() => loadData())
+						.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.error.delete' }), { variant: 'error' }));
+				})
+				.catch(() => { })
+
+		},
+		[location]
+	);
 
 	const onEditClicked = useCallback(author => {
 		setSelectedAuthor(author);
@@ -150,10 +171,6 @@ const AuthorsPage = () => {
 				author={selectedAuthor}
 				createLink={authors && authors.links.create}
 				onSaved={handleDataChanged}
-				onCancelled={handleClose} />
-			<DeleteAuthor show={showDelete}
-				author={selectedAuthor}
-				onDeleted={handleDataChanged}
 				onCancelled={handleClose} />
 		</>
 	);

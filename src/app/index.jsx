@@ -8,6 +8,7 @@ import { accountService, localeService, libraryService } from '../services';
 import Loading from '../components/Loading.jsx';
 import Routes from '../components/routes';
 import { SnackbarProvider } from 'notistack';
+import { ConfirmProvider } from 'material-ui-confirm';
 
 function App() {
 	const [, setUser] = useState({});
@@ -100,12 +101,12 @@ function App() {
 		<IntlProvider locale={locale} messages={messages} textComponent={Fragment} onError={() => null}>
 			<StylesProvider jss={jss}>
 				<ThemeProvider theme={theme}>
-					<>
+					<ConfirmProvider>
 						<Helmet titleTemplate={`${library != null ? library.name : 'Nawishta'} - %s`} />
 						<SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center', preventDuplicate: true, autoHideDuration: 3000 }}>
 							<Routes />
 						</SnackbarProvider>
-					</>
+					</ConfirmProvider>
 				</ThemeProvider>
 			</StylesProvider>
 		</IntlProvider>
