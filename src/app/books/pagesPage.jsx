@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PagesList from '../../components/pages/pagesList';
+import BookBanner from '../../components/books/bookBanner';
 import Loading from '../../components/Loading';
 import ErrorMessage from '../../components/ErrorMessage';
 import { libraryService } from '../../services';
@@ -29,7 +30,10 @@ const PagesPage = () => {
 	if (book == null) return <ErrorMessage message="Book not found" />
 
 
-	return (<PagesList book={book} />);
+	return (<>
+		<BookBanner book={book} />
+		<PagesList book={book} />
+	</>);
 };
 
 export default PagesPage;
