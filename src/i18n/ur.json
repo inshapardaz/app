@@ -259,6 +259,7 @@
 	"copyrights.1": "مفت عوامی کتاب",
 	"copyrights.2": "آزاد",
 	"copyrights.3":	"کریئیٹو کامن",
+	"pages.label" : "صفحات",
 	"page.assignedTo.label": "سونپا گیا ہے {name} کو",
 	"page.editor.header.add": "نئے صفحے کا اضافہ",
 	"page.editor.header.edit": "صفحہ {sequenceNumber} کی تدوین",

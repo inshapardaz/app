@@ -13,8 +13,10 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import EditAttributesIcon from '@material-ui/icons/EditAttributes';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import LayersIcon from '@material-ui/icons/Layers';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+
 import Tooltip from '@material-ui/core/Tooltip';
 import { FormattedMessage } from 'react-intl';
 import { libraryService } from '../../services';
@@ -68,18 +70,29 @@ function BookCell({ book, onOpen, onEdit, onDelete, onUpdated }) {
 		if (book && book.links && book.links.update) {
 			return (<Tooltip title={<FormattedMessage id="action.edit" />} >
 				<IconButton onClick={() => onEdit(book)}>
-					<EditAttributesIcon />
+					<EditOutlinedIcon />
 				</IconButton>
 			</Tooltip>);
 		}
 		return null;
 	};
 
-	const renderBookEditorLink = () => {
+	const renderChaptersLink = () => {
 		if (book && book.links && book.links.update) {
-			return (<Tooltip title={<FormattedMessage id="action.edit" />} >
-				<IconButton component={Link} to={`/books/${book.id}/editor`}>
-					<EditOutlinedIcon />
+			return (<Tooltip title={<FormattedMessage id="chapter.toolbar.chapters" />} >
+				<IconButton component={Link} to={`/books/${book.id}/chapters`}>
+					<LayersIcon />
+				</IconButton>
+			</Tooltip>);
+		}
+		return null;
+	}
+
+	const renderPagesLink = () => {
+		if (book && book.links && book.links.update) {
+			return (<Tooltip title={<FormattedMessage id="pages.label" />} >
+				<IconButton component={Link} to={`/books/${book.id}/pages`}>
+					<FileCopyIcon />
 				</IconButton>
 			</Tooltip>);
 		}
@@ -127,7 +140,8 @@ function BookCell({ book, onOpen, onEdit, onDelete, onUpdated }) {
 			<CardActions>
 				{renderEditLink()}
 				{renderDeleteLink()}
-				{renderBookEditorLink()}
+				{renderChaptersLink()}
+				{renderPagesLink()}
 				<Tooltip title={<FormattedMessage id="action.read" />} >
 					<IconButton component={Link} to={`/books/${book.id}`}>
 						<MenuBookIcon />

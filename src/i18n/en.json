@@ -262,6 +262,7 @@
     "copyrights.1": "Public Domain",
     "copyrights.2": "Open",
 	"copyrights.3": "Creative Commons",
+	"pages.label" : "Pages",
 	"page.assignedTo.label": "Assigned to {name}",
 	"page.editor.header.add": "Adding new page",
 	"page.editor.header.edit": "Editing page {sequenceNumber}",
