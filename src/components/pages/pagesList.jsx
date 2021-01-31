@@ -32,7 +32,9 @@ import { DropzoneDialog } from 'material-ui-dropzone'
 
 import { libraryService } from "../../services";
 import PageEditor from "./pageEditor";
-
+import GridList from "@material-ui/core/GridList";
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -40,23 +42,49 @@ const useStyles = () =>
 			paddingTop: theme.spacing(8),
 			paddingBottom: theme.spacing(8),
 		},
+		gridList: {
+			width: 500,
+			height: 450,
+		},
+		icon: {
+			color: 'rgba(255, 255, 255, 0.54)',
+		},
 	}));
 const classes = useStyles();
 
-// eslint-disable-next-line max-params
-const buildLinkToPage = (page, bookId,) => {
-	const location = useLocation();
-
-	let querystring = "";
-	querystring += page ? `page=${page}` : "";
-	querystring += authorId ? `author=${authorId}` : "";
-	querystring += categoryId ? `category=${categoryId}` : "";
-	querystring += seriesId ? `series=${seriesId}` : "";
-	querystring += query ? `query=${query}` : "";
-	if (querystring !== "") {
-		querystring = `?${querystring}`;
-	}
-	return `${location.pathname}${querystring}`;
+const PageListItem = ({ page, onCheckChanged, checked, onEdit, onDelete }) => {
+	return (
+		<ListItem key={page.sequenceNumber}>
+			<ListItemIcon>
+				<Checkbox
+					edge="start"
+					checked={checked}
+					onClick={onCheckChanged}
+					tabIndex={-1}
+					disableRipple
+				/>
+			</ListItemIcon>
+			<ListItemAvatar>
+				<Typography variant="body1" align="center">{page.sequenceNumber}
+				</Typography>
+			</ListItemAvatar>
+			<ListItemText
+				primary={page.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
+			/>
+			<ListItemSecondaryAction>
+				<Tooltip title={<FormattedMessage id="action.edit" />} >
+					<IconButton edge="end" aria-label="edit" onClick={onEdit}>
+						<EditIcon />
+					</IconButton>
+				</Tooltip>
+				<Tooltip title={<FormattedMessage id="action.delete" />} >
+					<IconButton edge="end" aria-label="delete" onClick={onDelete}>
+						<DeleteIcon />
+					</IconButton>
+				</Tooltip>
+			</ListItemSecondaryAction>
+		</ListItem>
+	);
 };
 
 const PagesList = ({ book }) => {
@@ -319,41 +347,47 @@ const PagesList = ({ book }) => {
 		}
 
 		return (<List >
-			{pages.data.map(p => (
-				<ListItem key={p.sequenceNumber}>
-					<ListItemIcon>
-						<Checkbox
-							edge="start"
-							checked={checked.indexOf(p.sequenceNumber) !== -1}
-							onClick={handleToggle(p.sequenceNumber)}
-							tabIndex={-1}
-							disableRipple
-						// inputProps={{ 'aria-labelledby': labelId }}
-						/>
-					</ListItemIcon>
-					<ListItemAvatar>
-						<Typography variant="body1" align="center">{p.sequenceNumber}
-						</Typography>
-					</ListItemAvatar>
-					<ListItemText
-						primary={p.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: p.accountName }} />)}
-					/>
-					<ListItemSecondaryAction>
-						<Tooltip title={<FormattedMessage id="action.edit" />} >
-							<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(p)}>
-								<EditIcon />
-							</IconButton>
-						</Tooltip>
-						<Tooltip title={<FormattedMessage id="action.delete" />} >
-							<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(p)}>
-								<DeleteIcon />
-							</IconButton>
-						</Tooltip>
-					</ListItemSecondaryAction>
-				</ListItem>
-			))
+			{pages.data.map(p => (<PageListItem page={p} key={p.sequenceNumber}
+				checked={checked.indexOf(p.sequenceNumber) !== -1}
+				onCheckChanged={handleToggle(p.sequenceNumber)}
+				onEdit={() => onEditClicked(p)}
+				onDelete={() => onDeleteClicked(p)}
+			/>))
 			}
 		</List >);
+
+		return (
+			<GridList cellHeight={280} className={classes.gridList} cols={3}>
+				{pages.data.map((page) => (
+					<GridListTile key={page.sequenceNumber}>
+						<img src={page.links.image != null ? page.links.image : "/images/no_image.png"} alt={page.sequenceNumber} />
+						<GridListTileBar
+							title={page.sequenceNumber}
+							subtitle={page.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
+							actionIcon={
+								<>
+									<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(page)}>
+										<EditIcon style={{ color: "white" }} />
+									</IconButton>
+									<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(page)}>
+										<DeleteIcon style={{ color: "white" }} />
+									</IconButton>
+									<Checkbox
+										edge="start"
+										checked={checked.indexOf(page.sequenceNumber) !== -1}
+										onClick={handleToggle(page.sequenceNumber)}
+										tabIndex={-1}
+										disableRipple
+									/>
+								</>
+							}
+						/>
+					</GridListTile>
+				))}
+			</GridList>
+		);
+
+
 	}
 
 	return (

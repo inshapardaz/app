@@ -187,7 +187,7 @@ function List({ match }) {
 											<EditIcon />
 										</IconButton>
 										<IconButton onClick={() => deleteAccount(user)}>
-											<Delete />
+											<DeleteIcon />
 										</IconButton>
 										{user.isDeleting && <CircularProgress size={24} className={classes.buttonProgress} />}
 									</TableCell>
