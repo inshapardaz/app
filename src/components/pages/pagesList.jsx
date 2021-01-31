@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Link, useLocation } from "react-router-dom";
+import queryString from "query-string";
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useConfirm } from 'material-ui-confirm';
@@ -6,6 +8,9 @@ import { useConfirm } from 'material-ui-confirm';
 import Container from "@material-ui/core/Container";
 import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
+import Box from "@material-ui/core/Box";
+import Pagination from "@material-ui/lab/Pagination";
+import PaginationItem from "@material-ui/lab/PaginationItem";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
@@ -38,8 +43,25 @@ const useStyles = () =>
 	}));
 const classes = useStyles();
 
+// eslint-disable-next-line max-params
+const buildLinkToPage = (page, bookId,) => {
+	const location = useLocation();
+
+	let querystring = "";
+	querystring += page ? `page=${page}` : "";
+	querystring += authorId ? `author=${authorId}` : "";
+	querystring += categoryId ? `category=${categoryId}` : "";
+	querystring += seriesId ? `series=${seriesId}` : "";
+	querystring += query ? `query=${query}` : "";
+	if (querystring !== "") {
+		querystring = `?${querystring}`;
+	}
+	return `${location.pathname}${querystring}`;
+};
+
 const PagesList = ({ book }) => {
 	if (book == null || book.links.pages == null) return null;
+	const location = useLocation();
 	const confirm = useConfirm();
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
@@ -55,9 +77,11 @@ const PagesList = ({ book }) => {
 	const [pages, setPages] = useState({});
 
 	const loadData = () => {
+		const values = queryString.parse(location.search);
+		const page = values.page;
 		setLoading(true);
 		libraryService
-			.getBookPages(book)
+			.getBookPages(book, page)
 			.then((data) => {
 				setPages(data);
 				setChecked([]);
@@ -68,7 +92,7 @@ const PagesList = ({ book }) => {
 
 	useEffect(() => {
 		loadData();
-	}, []);
+	}, [location]);
 
 	const handleDataChanged = () => {
 		handleClose();
@@ -249,6 +273,30 @@ const PagesList = ({ book }) => {
 		return null;
 	};
 
+	const renderPagination = () => {
+		if (!isLoading && pages) {
+			return (
+				<Box mt={8} mb={8}>
+					<Pagination
+						page={pages.currentPageIndex}
+						count={pages.pageCount}
+						variant="outlined"
+						shape="rounded"
+						renderItem={(item) => (
+							<PaginationItem
+								component={Link}
+								to={`${location.pathname}?page=${item.page}`}
+								{...item}
+							/>
+						)}
+					/>
+				</Box>
+			);
+		}
+
+		return null;
+	};
+
 	const renderPages = () => {
 		if (isLoading) {
 			return <CircularProgress />;
@@ -312,6 +360,7 @@ const PagesList = ({ book }) => {
 		<Container className={classes.cardGrid} maxWidth="md">
 			{renderToolBar()}
 			{renderPages()}
+			{renderPagination()}
 			<PageEditor
 				show={showEditor}
 				page={selectedPage}

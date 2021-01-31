@@ -157,7 +157,7 @@ export const libraryService =
 		_get(`${libraryUrl()}/series/${series}/books?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
 	getBook : (id) => _get(`${libraryUrl()}/books/${id}`),
 	getBookChapters : (book) => _get(book.links.chapters),
-	getBookPages : (book) => _get(book.links.pages),
+	getBookPages : (book, page = 1, pageSize = 12) => _get(`${book.links.pages}?pageNumber=${page}&pageSize=${pageSize}`),
 	getChapters : (bookId) => _get(`${libraryUrl()}/books/${bookId}/chapters`),
 	getChapter : (id, chapterId) => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}`),
 	getChapterContents : (id, chapterId) => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}/contents`),

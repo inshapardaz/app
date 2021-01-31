@@ -62,7 +62,13 @@ const BookBanner = ({ book }) => {
 			return null;
 		}
 
-		return (<ButtonGroup variant="contained" color="primary" >{renderEditLink()}{renderChaptersLink()}{renderPagesLink()}</ButtonGroup>)
+		return (<div className={classes.bannerAction}>
+			<ButtonGroup variant="contained" color="primary" >
+				{renderEditLink()}
+				{renderChaptersLink()}
+				{renderPagesLink()}
+			</ButtonGroup>
+		</div >);
 	}
 
 	return (<div className={classes.banner}>
