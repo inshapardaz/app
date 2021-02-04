@@ -22,7 +22,7 @@
         "@material-ui/lab": "^4.0.0-alpha.56",
         "@mui-treasury/components": "^1.9.2",
         "@mui-treasury/styles": "^1.13.1",
-        "axios": "^0.20.0",
+        "axios": "^0.21.1",
         "classnames": "2.2.6",
         "for-editor": "^0.3.5",
         "formik": "^2.1.4",
