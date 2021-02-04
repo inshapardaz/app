@@ -1,10 +1,9 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 
-const ErrorMessage = (props) =>
-{
+const ErrorMessage = ({ message }) => {
 	return (
-		<Typography>{props.message}</Typography>
+		<Typography>{message}</Typography>
 	);
 }
 

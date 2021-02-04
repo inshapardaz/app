@@ -1,6 +1,8 @@
 import { Button, Container, Toolbar } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { useIntl } from "react-intl";
 
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -15,36 +17,9 @@ import FormatItalicIcon from '@material-ui/icons/FormatItalic';
 import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
 import FontDownloadIcon from '@material-ui/icons/FontDownload';
 
-import MarkdownIt from 'markdown-it'
-import ContentEditable from 'react-contenteditable'
+import Editor from 'for-editor'
 
 import { libraryService } from '../../services';
-
-const Editable = ({ onChange, editorStyle, content }) => {
-	const md = new MarkdownIt('default', {
-		html: true,
-		linkify: true,
-		typographer: true
-	})
-	const emitChange = event => {
-		const { innerHTML } = event.target
-
-		if (innerHTML !== '') {
-			console.log(md.render(innerHTML))
-			onChange(innerHTML)
-		}
-	}
-
-	return (
-		<Container>
-			<ContentEditable
-				style={editorStyle}
-				html={md.render(content)}
-				onChange={emitChange}
-			/>
-		</Container>
-	)
-}
 
 
 const useStyles = makeStyles({
@@ -60,33 +35,85 @@ const useStyles = makeStyles({
 });
 
 const ChapterEditorPage = () => {
-	const { bookId, id } = useParams();
+	const intl = useIntl();
+	const { enqueueSnackbar } = useSnackbar();
+	const { bookId, chapterNumber } = useParams();
 	const [chapter, setChapter] = useState(null);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [font, setFont] = React.useState('Dubai');
-	const [text, setText] = React.useState("test");
+	const [language, setLanguage] = useState("ur");
+	const [font, setFont] = useState('Dubai');
+	const [text, setText] = useState("");
+	const [content, setContent] = useState(null);
 	const classes = useStyles({ font });
-	const loadData = () => {
+
+	const loadChapter = () => {
 		var editorFont = localStorage.getItem('editorFont');
 		if (editorFont == null) {
 			setFont('Dubai');
 			localStorage.setItem('editorFont', 'Dubai');
 		}
-		libraryService.getChapterContents(bookId, id)
-			.then(data => {
-				setChapter(data);
-				let content = data && data.contents;
-				console.log(content)
-				setText()
+
+		libraryService.getChapter(bookId, chapterNumber)
+			.then(chapter => {
+				setChapter(chapter);
+
+				if (chapter.links.add_content)
+					loadChapterContent(chapter);
+				else {
+					return Promise.reject("user not allowed to edit");
+				}
 			})
 			.catch(() => setError(true))
 			.finally(() => setLoading(false));
 	};
 
+	const loadChapterContent = (chapter) => {
+		libraryService.getChapterContents(bookId, chapter.chapterNumber, language)
+			.then(data => {
+				setContent(data);
+				setText(data.text)
+			})
+			.catch((e) => {
+				if (e.status === 404) {
+					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.addingContent' }), { variant: 'info' })
+					setContent(null);
+					setText("");
+				}
+				else {
+					console.dir(e);
+					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.loading' }), { variant: 'error' })
+				}
+			})
+			.finally(() => setLoading(false));
+	}
+
 	useEffect(() => {
-		loadData();
-	}, [id]);
+		loadChapter();
+	}, [chapterNumber]);
+
+	const saveText = () => {
+		if (content == null) {
+			//  Adding new content
+			libraryService.post(`${chapter.links.add_content}?language=${language}`, text)
+				.then(data => {
+					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' })
+				})
+				.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.saving' }), { variant: 'error' }))
+				.finally(() => setLoading(false));
+		}
+		else {
+			// Updating new content
+			libraryService.put(`${content.links.update}?language=${language}`, text)
+				.then(data => {
+					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' })
+				})
+				.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.saving' }), { variant: 'error' }))
+				.finally(() => setLoading(false));
+		}
+
+
+	}
 
 	const handleFontChange = (event) => {
 		let selectedFont = event.target.value;
@@ -94,7 +121,7 @@ const ChapterEditorPage = () => {
 		localStorage.setItem('editorFont', selectedFont);
 	};
 	return (<Container >
-		<AppBar position="static" color='transparent'>
+		{/* <AppBar position="static" color='transparent'>
 			<Toolbar>
 				<Button><SaveIcon /></Button>
 				<Divider />
@@ -123,16 +150,8 @@ const ChapterEditorPage = () => {
 					<MenuItem value="Jameel Noori Nastaleeq">Jameel Noori Nastaleeq</MenuItem>
 				</Select>
 			</Toolbar>
-		</AppBar>
-		{text}
-		{/* <Editable onChange={(content) => { }} content={text} /> */}
-		{/* <TextField
-			id="outlined-multiline-static"
-			className={classes.editor}
-			multiline
-			fullWidth={true}
-			defaultValue={chapter && chapter.contents}
-		/> */}
+		</AppBar> */}
+		<Editor value={text} onChange={(value) => setText(value)} placeholder="" language="en" onSave={saveText} />
 	</Container>);
 };
 

@@ -35,6 +35,7 @@ import PageEditor from "./pageEditor";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import NotesIcon from '@material-ui/icons/Notes';
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -72,6 +73,11 @@ const PageListItem = ({ page, onCheckChanged, checked, onEdit, onDelete }) => {
 				primary={page.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
 			/>
 			<ListItemSecondaryAction>
+				<Tooltip title={<FormattedMessage id="action.editContent" />} >
+					<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${page.bookId}/pages/${page.sequenceNumber}/editor`}>
+						<NotesIcon />
+					</IconButton>
+				</Tooltip>
 				<Tooltip title={<FormattedMessage id="action.edit" />} >
 					<IconButton edge="end" aria-label="edit" onClick={onEdit}>
 						<EditIcon />

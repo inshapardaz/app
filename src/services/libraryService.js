@@ -9,22 +9,22 @@ const setUserLibrariesCache = (libraries) => window.sessionStorage.setItem("libr
 const librariesUrl = () =>  `${config.apiUrl}/libraries`;
 const libraryUrl = () => `${librariesUrl()}/${getSelectedLibrary().id}`;
 
-const _get = (url) => {
-	return fetchWrapper.get(url, { 'Accept': 'application/json', 'Content-Type': 'application/json' })
+const _get = (url, language = "en") => {
+	return fetchWrapper.get(url, { 'Accept': 'application/json', 'Accept-Language': language, 'Content-Type': 'application/json'})
 		.then(data => _parseObject(data));
 };
 
-const _post = (url, contents, contentType = 'application/json') => {
+const _post = (url, contents, contentType = 'application/json', language = "en") => {
 	delete contents.links;
 
-	return fetchWrapper.post(url, contents, { 'Accept': 'application/json', 'Content-Type': contentType })
+	return fetchWrapper.post(url, contents, { 'Accept': 'application/json', 'Content-Type': contentType, 'Content-Language' : language })
 		.then(data => _parseObject(data));
 };
 
-const _put = (url, contents, contentType = 'application/json') => {
+const _put = (url, contents, contentType = 'application/json', language = "en") => {
 	delete contents.links;
 
-	return fetchWrapper.put(url, contents, { 'Accept': 'application/json', 'Content-Type': contentType })
+	return fetchWrapper.put(url, contents, { 'Accept': 'application/json', 'Content-Type': contentType, 'Content-Language' : language })
 		.then(data => _parseObject(data));
 };
 
@@ -157,10 +157,11 @@ export const libraryService =
 		_get(`${libraryUrl()}/series/${series}/books?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
 	getBook : (id) => _get(`${libraryUrl()}/books/${id}`),
 	getBookChapters : (book) => _get(book.links.chapters),
-	getBookPages : (book, page = 1, pageSize = 12) => _get(`${book.links.pages}?pageNumber=${page}&pageSize=${pageSize}`),
 	getChapters : (bookId) => _get(`${libraryUrl()}/books/${bookId}/chapters`),
 	getChapter : (id, chapterId) => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}`),
-	getChapterContents : (id, chapterId) => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}/contents`),
+	getChapterContents : (id, chapterId, language = "en") => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}/contents?language=${language}`),
+	getBookPages : (book, page = 1, pageSize = 12) => _get(`${book.links.pages}?pageNumber=${page}&pageSize=${pageSize}`),
+	getPage : (bookId, sequenceNumber) => _get(`${libraryUrl()}/books/${bookId}/pages/${sequenceNumber}`),
 	getAuthors : (query = null, page = 1, pageSize = 12) =>
 		_get(`${libraryUrl()}/authors?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
 	searchAuthors : (query, page = 1, pageSize = 6) =>

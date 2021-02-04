@@ -90,8 +90,7 @@ function handleResponse(response) {
                 accountService.logout();
             }
 
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
+			return Promise.reject({ status : response.status, statusText : response.statusText });
         }
 
         return data;

@@ -25,6 +25,7 @@ import ChapterEditorPage from '../app/books/chapterEditorPage';
 import ChaptersPage from '../app/books/chaptersPage';
 import ChapterPage from '../app/books/chapterPage';
 import PagesPage from '../app/books/pagesPage';
+import PageEditorPage from '../app/books/pageEditorPage';
 
 const Routes = () => {
 	const { pathname } = useLocation();
@@ -34,8 +35,9 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/authors/:id" component={AuthorPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/authors" component={AuthorsPage} />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/chapters" component={ChaptersPage} exact />
+			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/pages/:pageId/editor" component={PageEditorPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/pages" component={PagesPage} exact />
-			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/chapter/:id/editor" component={ChapterEditorPage} exact />
+			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/chapter/:chapterNumber/editor" component={ChapterEditorPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:id/editor" component={BookPageEditor} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/chapter/:id" component={ChapterPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books" component={BooksPage} />
