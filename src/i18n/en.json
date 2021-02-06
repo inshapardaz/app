@@ -252,6 +252,7 @@
     "chapter.editor.fields.number.error" : "Chapter number is required",
     "chapter.messages.error.loading" : "Unable to load chapter",
     "chapters.item.book.count" : "{count} chapters",
+    "chapter.toolbar.read" : "Read",
     "chapter.toolbar.edit" : "Edit",
     "chapter.toolbar.backToBook" : "Back to book",
     "chapter.toolbar.chapters" : "Chapters",

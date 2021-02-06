@@ -20,7 +20,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { libraryService } from "../../services";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import ChapterEditor from "./chapterEditor";
 import Link from '@material-ui/core/Link';
 
@@ -151,6 +151,11 @@ const ChapterList = ({ book, allowEdit = true }) => {
 					/>
 					{ allowEdit &&
 						<ListItemSecondaryAction>
+							<Tooltip title={<FormattedMessage id="chapter.toolbar.read" />} >
+								<IconButton edge="end" aria-label="read" href={`/books/${c.bookId}/chapter/${c.chapterNumber}`}>
+									<ImportContactsIcon />
+								</IconButton>
+							</Tooltip>
 							<Tooltip title={<FormattedMessage id="chapter.action.editContent" />} >
 								<IconButton edge="end" aria-label="edit contents" href={`/books/${c.bookId}/chapter/${c.chapterNumber}/editor`}>
 									<DescriptionIcon />

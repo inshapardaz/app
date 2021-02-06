@@ -121,36 +121,11 @@ const ChapterEditorPage = () => {
 		localStorage.setItem('editorFont', selectedFont);
 	};
 	return (<Container >
-		{/* <AppBar position="static" color='transparent'>
+		<AppBar position="static" color='transparent'>
 			<Toolbar>
-				<Button><SaveIcon /></Button>
-				<Divider />
-				<Button><FormatBoldIcon /></Button>
-				<Button><FormatItalicIcon /></Button>
-				<Button><FormatUnderlinedIcon /></Button>
-				<Divider />
-				<Select
-					labelId="demo-controlled-open-select-label"
-					id="demo-controlled-open-select"
-					value={font}
-					onChange={handleFontChange}
-				>
-					<MenuItem value="Fajer Noori Nastalique">Fajer Noori Nastalique</MenuItem>
-					<MenuItem value="Pak Nastaleeq">Pak Nastaleeq</MenuItem>
-					<MenuItem value="Nafees Web Naskh">Nafees Web Naskh</MenuItem>
-					<MenuItem value="Nafees-Nastaleeq">Nafees Nastaleeq</MenuItem>
-					<MenuItem value="Mehr-Nastaleeq">Mehr Nastaleeq</MenuItem>
-					<MenuItem value="DehalviKhushKhat">Dehalvi KhushKhat</MenuItem>
-					<MenuItem value="AdobeArabic">Adobe Arabic</MenuItem>
-					<MenuItem value="MehfilNaskh">Mehfil Naskh</MenuItem>
-					<MenuItem value="Dubai">Dubai</MenuItem>
-					<MenuItem value="UrduNaskhAsiatype">Urdu Naskh Asiatype</MenuItem>
-					<MenuItem value="Noto">Noto</MenuItem>
-					<MenuItem value="Alvi Lahori Nastaleeq">Alvi Lahori Nastaleeq</MenuItem>
-					<MenuItem value="Jameel Noori Nastaleeq">Jameel Noori Nastaleeq</MenuItem>
-				</Select>
+
 			</Toolbar>
-		</AppBar> */}
+		</AppBar>
 		<Editor value={text} onChange={(value) => setText(value)} placeholder="" language="en" onSave={saveText} />
 	</Container>);
 };

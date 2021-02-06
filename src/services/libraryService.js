@@ -85,6 +85,13 @@ const _parseObject = (source) =>
 			source.files = newItems;
 		}
 
+		if (source.contents)
+		{
+			let newItems = [];
+			source.contents.forEach(item => newItems.push(_parseObject(item)));
+			source.contents = newItems;
+		}
+
 		if (Array.isArray(source))
 		{
 			let newItems = [];
