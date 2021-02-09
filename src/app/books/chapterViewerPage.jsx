@@ -12,11 +12,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import DescriptionIcon from '@material-ui/icons/Description';
-
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown'
+import ChapterDropdown from '../../components/chapters/chapterDropDown';
 
 import { libraryService } from '../../services';
+import FontDropdown from '../../components/fontDropDown';
+import FontSize from '../../components/fontSize';
 
 
 const useStyles = makeStyles({
@@ -29,6 +32,10 @@ const useStyles = makeStyles({
 		left: 0,
 		right: 0,
 		margin: 24
+	},
+	heading: {
+		fontSize: '3em',
+		textAlign: "center"
 	}
 });
 
@@ -40,24 +47,11 @@ const ChapterViewerPage = () => {
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [language, setLanguage] = useState("ur");
-	const [font, setFont] = useState('Dubai');
-	const [fontSize, setFontSize] = useState(1);
+	const [font, setFont] = useState(localStorage.getItem('viewerFont') || 'Dubai');
+	const [fontSize, setFontSize] = useState(localStorage.getItem('viewerFontSize') || 1);
 	const [text, setText] = useState(null);
 	const [content, setContent] = useState(null);
 	const classes = useStyles({ font, fontSize });
-
-	var editorFont = localStorage.getItem('viewerFont');
-	if (editorFont == null) {
-		setFont('Dubai');
-		localStorage.setItem('viewerFont', 'Dubai');
-	}
-
-	var editorFontSize = localStorage.getItem('viewerFontSize');
-	if (editorFontSize == null) {
-		editorFontSize = '1';
-		setFontSize(editorFontSize);
-		localStorage.setItem('viewerFontSize', editorFontSize);
-	}
 
 	const loadChapter = () => {
 		libraryService.getChapter(bookId, chapterNumber)
@@ -98,16 +92,13 @@ const ChapterViewerPage = () => {
 			.finally(() => setLoading(false));
 	}
 
-	const handleFontChange = (event) => {
-		let selectedFont = event.target.value;
+	const handleFontChange = (selectedFont) => {
 		setFont(selectedFont);
-		localStorage.setItem('viewerFont', selectedFont);
+
 	};
 
-	const handleFontSizeChange = (event) => {
-		let selectedFontSize = event.target.value;
+	const handleFontSizeChange = (selectedFontSize) => {
 		setFontSize(selectedFontSize);
-		localStorage.setItem('viewerFontSize', selectedFontSize);
 	};
 
 	const renderToolbar = () => {
@@ -130,46 +121,20 @@ const ChapterViewerPage = () => {
 		return null;
 	}
 
-	return (<Container >
+	return (<Container maxWidth="md">
 		<AppBar position="static" color='transparent'>
 			<Toolbar>
+				<ChapterDropdown bookId={bookId} title={<FormattedMessage id={"chapter.toolbar.chapters"} navigate={true} />} />
 				{renderToolbar()}
 				<Divider />
-				<Select
-					labelId="demo-controlled-open-select-label"
-					id="demo-controlled-open-select"
-					value={font}
-					onChange={handleFontChange}
-				>
-					<MenuItem value="Fajer Noori Nastalique">Fajer Noori Nastalique</MenuItem>
-					<MenuItem value="Pak Nastaleeq">Pak Nastaleeq</MenuItem>
-					<MenuItem value="Nafees Web Naskh">Nafees Web Naskh</MenuItem>
-					<MenuItem value="Nafees-Nastaleeq">Nafees Nastaleeq</MenuItem>
-					<MenuItem value="Mehr-Nastaleeq">Mehr Nastaleeq</MenuItem>
-					<MenuItem value="DehalviKhushKhat">Dehalvi KhushKhat</MenuItem>
-					<MenuItem value="AdobeArabic">Adobe Arabic</MenuItem>
-					<MenuItem value="MehfilNaskh">Mehfil Naskh</MenuItem>
-					<MenuItem value="Dubai">Dubai</MenuItem>
-					<MenuItem value="UrduNaskhAsiatype">Urdu Naskh Asiatype</MenuItem>
-					<MenuItem value="Noto">Noto</MenuItem>
-					<MenuItem value="Alvi Lahori Nastaleeq">Alvi Lahori Nastaleeq</MenuItem>
-					<MenuItem value="Jameel Noori Nastaleeq">Jameel Noori Nastaleeq</MenuItem>
-				</Select>
-				<Select
-					labelId="demo-controlled-open-select-label"
-					id="demo-controlled-open-select"
-					value={fontSize}
-					onChange={handleFontSizeChange}
-				>
-					<MenuItem value="0.75">Small</MenuItem>
-					<MenuItem value="1">Normal</MenuItem>
-					<MenuItem value="1.5">Large</MenuItem>
-					<MenuItem value="2">Larger</MenuItem>
-					<MenuItem value="2.5">Extra Large</MenuItem>
-				</Select>
+				<FontDropdown value={font} onFontSelected={handleFontChange} storageKey="viewerFont" />
+				<FontSize value={font} onFontSizeSelected={handleFontSizeChange} storageKey="viewerFontSize" />
 			</Toolbar>
 		</AppBar>
 		<div className={classes.viewer}>
+			<h1 className={classes.heading}>
+				{chapter.title}
+			</h1>
 			<ReactMarkdown>{text}</ReactMarkdown>
 		</div>
 	</Container >);

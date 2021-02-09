@@ -293,5 +293,27 @@
 	"status.1": "In Typing",
 	"status.2": "Typed",
 	"status.3" : "Proof Reading",
-	"status.4" : "Completed"
+	"status.4" : "Completed",
+	"font.none" : "Select Font",
+	"font.FajerNooriNastalique" : "Fajer Noori Nastalique",
+	"font.PakNastaleeq": "Pak Nastaleeq",
+	"font.NafeesWebNaskh" : "Nafees Web Naskh",
+	"font.NafeesNastaleeq" : "Nafees Nastaleeq",
+	"font.MehrNastaleeq" : "Mehr Nastaleeq",
+	"font.DehalviKhushKhat" : "Dehalvi KhushKhat",
+	"font.AdobeArabic": "Adobe Arabic",
+	"font.MehfilNaskh" : "Mehfil Naskh",
+	"font.Dubai" : "Dubai",
+	"font.UrduNaskhAsiatype" : "Urdu Naskh Asiatype",
+	"font.Noto" : "Noto",
+	"font.AlviLahoriNastaleeq" : "Alvi Lahori Nastaleeq",
+	"font.JameelNooriNastaleeq" : "Jameel Noori Nastaleeq",
+	"fontSize.none" : "Select Font Size",
+	"fontSize.small" : "Small",
+	"fontSize.normal" : "Normal",
+	"fontSize.medium" : "Medium",
+	"fontSize.large" : "Large",
+	"fontSize.larger" : "Larger",
+	"fontSize.extraLarge" : "Extra Large"
+
 }

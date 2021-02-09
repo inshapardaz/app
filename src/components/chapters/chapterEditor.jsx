@@ -4,7 +4,6 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { TextField } from 'formik-material-ui';
-import { DropzoneArea } from 'material-ui-dropzone';
 import { libraryService } from '../../services';
 import EditorDialog from '../editorDialog';
 import SubmitButton from '../submitButton';
@@ -43,6 +42,7 @@ const ChapterEditor = ({ show, chapter, chapterCount, createLink, onSaved, onCan
 				.finally(() => setBusy(false));
 		}
 		else if (chapter !== null) {
+			delete fields.contents;
 			libraryService.put(chapter.links.update, fields)
 				.then(() => {
 					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' })
