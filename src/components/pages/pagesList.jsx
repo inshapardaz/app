@@ -17,12 +17,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Typography from "@material-ui/core/Typography";
 import Tooltip from '@material-ui/core/Tooltip';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import EditIcon from '@material-ui/icons/Edit';
 import PostAddIcon from '@material-ui/icons/PostAdd';
@@ -35,8 +30,7 @@ import PageEditor from "./pageEditor";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import NotesIcon from '@material-ui/icons/Notes';
-
+import PageListItem from './pageListItem';
 const useStyles = () =>
 	makeStyles((theme) => ({
 		cardGrid: {
@@ -52,46 +46,6 @@ const useStyles = () =>
 		},
 	}));
 const classes = useStyles();
-
-const PageListItem = ({ page, onCheckChanged, checked, onEdit, onDelete }) => {
-	return (
-		<ListItem key={page.sequenceNumber}>
-			<ListItemIcon>
-				<Checkbox
-					edge="start"
-					checked={checked}
-					onClick={onCheckChanged}
-					tabIndex={-1}
-					disableRipple
-				/>
-			</ListItemIcon>
-			<ListItemAvatar>
-				<Typography variant="body1" align="center">{page.sequenceNumber}
-				</Typography>
-			</ListItemAvatar>
-			<ListItemText
-				primary={page.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
-			/>
-			<ListItemSecondaryAction>
-				<Tooltip title={<FormattedMessage id="action.editContent" />} >
-					<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${page.bookId}/pages/${page.sequenceNumber}/editor`}>
-						<NotesIcon />
-					</IconButton>
-				</Tooltip>
-				<Tooltip title={<FormattedMessage id="action.edit" />} >
-					<IconButton edge="end" aria-label="edit" onClick={onEdit}>
-						<EditIcon />
-					</IconButton>
-				</Tooltip>
-				<Tooltip title={<FormattedMessage id="action.delete" />} >
-					<IconButton edge="end" aria-label="delete" onClick={onDelete}>
-						<DeleteIcon />
-					</IconButton>
-				</Tooltip>
-			</ListItemSecondaryAction>
-		</ListItem>
-	);
-};
 
 const PagesList = ({ book }) => {
 	if (book == null || book.links.pages == null) return null;
@@ -120,7 +74,7 @@ const PagesList = ({ book }) => {
 				setPages(data);
 				setChecked([]);
 			})
-			.catch((e) => setError(true))
+			.catch(() => setError(true))
 			.finally(() => setLoading(false));
 	};
 
@@ -223,7 +177,7 @@ const PagesList = ({ book }) => {
 						setShowFilesUpload(false);
 						loadData();
 					})
-					.catch((e) => {
+					.catch(() => {
 						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.saving' }), { variant: 'error' })
 					})
 					.finally(() => setLoading(false));
@@ -435,7 +389,7 @@ const PagesList = ({ book }) => {
 				dropzoneText={intl.formatMessage({ id: "page.action.uploadZip.help" })}
 				cancelButtonText={intl.formatMessage({ id: "action.cancel" })}
 				submitButtonText={intl.formatMessage({ id: "action.upload" })}
-				onDropRejected={(rejectedFiles, event) => console.dir(rejectedFiles)}
+				onDropRejected={(rejectedFiles) => console.dir(rejectedFiles)}
 			/>
 		</Container>
 	);

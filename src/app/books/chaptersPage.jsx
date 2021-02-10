@@ -31,7 +31,7 @@ const ChaptersPage = () => {
 
 
 	return (<>
-		<BookBanner book={book} />
+		<BookBanner book={book} onUpdate={loadData} />
 		<ChapterList book={book} />
 	</>);
 };

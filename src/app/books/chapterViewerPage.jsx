@@ -144,7 +144,7 @@ const ChapterViewerPage = () => {
 
 	return (<Container maxWidth="md">
 		<HideOnScroll>
-			<AppBar position="static" color='transparent'>
+			<AppBar position="static" color='transparent' elevation={0} variant="outlined">
 				<Toolbar>
 					<ChapterDropdown bookId={bookId} title={chapter && chapter.title} navigate={true} />
 					{renderToolbar()}

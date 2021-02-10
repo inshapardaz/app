@@ -151,11 +151,6 @@ const ChapterList = ({ book, allowEdit = true }) => {
 					/>
 					{ allowEdit &&
 						<ListItemSecondaryAction>
-							<Tooltip title={<FormattedMessage id="chapter.toolbar.read" />} >
-								<IconButton edge="end" aria-label="read" href={`/books/${c.bookId}/chapter/${c.chapterNumber}`}>
-									<ImportContactsIcon />
-								</IconButton>
-							</Tooltip>
 							<Tooltip title={<FormattedMessage id="chapter.action.editContent" />} >
 								<IconButton edge="end" aria-label="edit contents" href={`/books/${c.bookId}/chapter/${c.chapterNumber}/editor`}>
 									<DescriptionIcon />

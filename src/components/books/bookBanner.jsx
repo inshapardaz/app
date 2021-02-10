@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -8,6 +8,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import LayersIcon from '@material-ui/icons/Layers';
+import BookEditor from "./bookEditor.jsx";
 
 const useStyles = makeStyles({
 	banner: {
@@ -29,15 +30,16 @@ const useStyles = makeStyles({
 	}
 });
 
-const BookBanner = ({ book }) => {
+const BookBanner = ({ book, onUpdate }) => {
 	if (book == null) return null;
+	const [showEditor, setShowEditor] = useState(false);
 	const classes = useStyles({ background: book.links.image });
 
 	const renderAction = () => {
 
 		const renderEditLink = () => {
 			if (book && book.links && book.links.update) {
-				return (<Button onClick={() => onEdit(book)} startIcon={<EditOutlinedIcon />}>
+				return (<Button onClick={() => setShowEditor(true)} startIcon={<EditOutlinedIcon />}>
 					<FormattedMessage id="action.edit" />
 				</Button>);
 			}
@@ -71,10 +73,30 @@ const BookBanner = ({ book }) => {
 		</div >);
 	}
 
-	return (<div className={classes.banner}>
-		<div className={classes.bannerTitle}>{book.title}</div>
-		{renderAction()}
-	</div>);
+	const handleClose = () => {
+		setShowEditor(false);
+	};
+
+	const onBookSaved = () => {
+		if (onUpdate) {
+			onUpdate();
+		}
+
+		handleClose();
+	}
+
+	return (
+		<div className={classes.banner}>
+			<div className={classes.bannerTitle}>{book.title}</div>
+			{renderAction()}
+			<BookEditor
+				show={showEditor}
+				book={book}
+				onSaved={onBookSaved}
+				onCancelled={handleClose}
+			/>
+		</div>
+	);
 };
 
 export default BookBanner;
