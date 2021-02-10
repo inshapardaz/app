@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { FormattedMessage } from "react-intl";
 
 import { libraryService } from '../../services';
 
@@ -52,7 +53,7 @@ const ChapterDropdown = ({ bookId, title, onChapterSelected, navigate }) => {
 	return (
 		<div>
 			<Button aria-controls="chapters-menu" aria-haspopup="true" onClick={handleClick} endIcon={<ExpandMoreIcon />}>
-				{title}
+				{title || <FormattedMessage id={"chapter.toolbar.chapters"} />}
 			</Button>
 			<Menu
 				id="simple-menu"

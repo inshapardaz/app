@@ -251,6 +251,7 @@
     "chapter.editor.fields.number.title" : "Chapter Number",
     "chapter.editor.fields.number.error" : "Chapter number is required",
     "chapter.messages.error.loading" : "Unable to load chapter",
+    "chapter.messages.error.noContent" : "Chapter has no content to display",
     "chapters.item.book.count" : "{count} chapters",
     "chapter.toolbar.read" : "Read",
     "chapter.toolbar.edit" : "Edit",

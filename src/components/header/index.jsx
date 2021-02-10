@@ -29,7 +29,7 @@ export default function Header() {
 	const classes = useStyles();
 	let selectedLibrary = libraryService.getSelectedLibrary();
 
-	return (<AppBar position="relative">
+	return (<AppBar position="sticky">
 		<Toolbar>
 			<Link to="/">
 				<img className={classes.icon} height="24" width="24" src="/images/logo.png" style={{ margin: '4px' }} />

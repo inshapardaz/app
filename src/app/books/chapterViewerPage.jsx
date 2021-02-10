@@ -6,21 +6,21 @@ import { useIntl, FormattedMessage } from "react-intl";
 
 import AppBar from '@material-ui/core/AppBar';
 import Divider from '@material-ui/core/Divider';
-import Select from '@material-ui/core/Select';
 import Toolbar from '@material-ui/core/Toolbar';
-import MenuItem from '@material-ui/core/MenuItem';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import DescriptionIcon from '@material-ui/icons/Description';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown'
 import ChapterDropdown from '../../components/chapters/chapterDropDown';
 
+import Loading from '../../components/Loading';
+import ErrorMessage from '../../components/ErrorMessage';
 import { libraryService } from '../../services';
 import FontDropdown from '../../components/fontDropDown';
 import FontSize from '../../components/fontSize';
-
+import HideOnScroll from '../../components/hideOnScroll';
+import BackToTop from '../../components/backToTop';
 
 const useStyles = makeStyles({
 	viewer: {
@@ -46,7 +46,7 @@ const ChapterViewerPage = () => {
 	const [chapter, setChapter] = useState(null);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [language, setLanguage] = useState("ur");
+	const [language] = useState("ur");
 	const [font, setFont] = useState(localStorage.getItem('viewerFont') || 'Dubai');
 	const [fontSize, setFontSize] = useState(localStorage.getItem('viewerFontSize') || 1);
 	const [text, setText] = useState(null);
@@ -54,6 +54,12 @@ const ChapterViewerPage = () => {
 	const classes = useStyles({ font, fontSize });
 
 	const loadChapter = () => {
+		setChapter(null);
+		setContent(null);
+		setText(null);
+		setLoading(true);
+		setError(false);
+
 		libraryService.getChapter(bookId, chapterNumber)
 			.then(chapter => {
 				setChapter(chapter);
@@ -117,25 +123,42 @@ const ChapterViewerPage = () => {
 		return buttons;
 	}
 
-	if (text === null) {
-		return null;
+	const renderContents = () => {
+		if (text === null) {
+			return (<ErrorMessage message={intl.formatMessage({ id: 'chapter.messages.error.noContent' })} />);
+		}
+		return (
+			<>
+				<ReactMarkdown>{text}</ReactMarkdown>
+				<BackToTop />
+			</>);
+	}
+
+	if (loading) {
+		<Loading />
+	}
+
+	if (error) {
+		<ErrorMessage message={intl.formatMessage({ id: 'chapter.messages.error.loading' })} />
 	}
 
 	return (<Container maxWidth="md">
-		<AppBar position="static" color='transparent'>
-			<Toolbar>
-				<ChapterDropdown bookId={bookId} title={<FormattedMessage id={"chapter.toolbar.chapters"} navigate={true} />} />
-				{renderToolbar()}
-				<Divider />
-				<FontDropdown value={font} onFontSelected={handleFontChange} storageKey="viewerFont" />
-				<FontSize value={font} onFontSizeSelected={handleFontSizeChange} storageKey="viewerFontSize" />
-			</Toolbar>
-		</AppBar>
+		<HideOnScroll>
+			<AppBar position="static" color='transparent'>
+				<Toolbar>
+					<ChapterDropdown bookId={bookId} title={chapter && chapter.title} navigate={true} />
+					{renderToolbar()}
+					<Divider />
+					<FontDropdown value={font} onFontSelected={handleFontChange} storageKey="viewerFont" />
+					<FontSize value={fontSize} onFontSizeSelected={handleFontSizeChange} storageKey="viewerFontSize" />
+				</Toolbar>
+			</AppBar>
+		</HideOnScroll>
 		<div className={classes.viewer}>
 			<h1 className={classes.heading}>
-				{chapter.title}
+				{chapter && chapter.title}
 			</h1>
-			<ReactMarkdown>{text}</ReactMarkdown>
+			{renderContents()}
 		</div>
 	</Container >);
 };

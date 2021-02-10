@@ -249,6 +249,7 @@
     "chapter.editor.fields.number.title" : "باب نمبر",
     "chapter.editor.fields.number.error" : "باب نمبر ضروری ہے",
     "chapter.messages.error.loading" : "باب  کے حصول میں  ناکامی ہوئی",
+	"chapter.messages.error.noContent" : "اس باب میں کوئی مواد موجود نہیں۔",
     "chapter.toolbar.read" : "پڑھیں",
     "chapter.toolbar.edit" : "تدوین",
     "chapter.toolbar.backToBook" : "کتاب تک رسائی",
