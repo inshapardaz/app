@@ -20,6 +20,7 @@ import BooksPage from '../app/books/booksPage.jsx';
 import AuthorsPage from '../app/authors/authorsPage.jsx';
 import AuthorPage from '../app/authors/authorPage.jsx';
 import SeriesPage from '../app/series/seriesPage.jsx';
+import SeriePage from '../app/series/serie';
 import CategoriesPage from '../app/categories/categoriesPage.jsx';
 import ChapterEditorPage from '../app/books/chapterEditorPage';
 import ChaptersPage from '../app/books/chaptersPage';
@@ -43,8 +44,9 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:id/editor" component={BookPageEditor} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/chapter/:id" component={ChapterPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books" component={BooksPage} />
-			<RouteWithLayout layout={fullWidthLayout} exact path="/series" component={SeriesPage} />
-			<RouteWithLayout layout={fullWidthLayout} exact path="/categories" component={CategoriesPage} />
+			<RouteWithLayout layout={fullWidthLayout} path="/series/:id" component={SeriePage} exact />
+			<RouteWithLayout layout={fullWidthLayout} path="/series" component={SeriesPage} exact />
+			<RouteWithLayout layout={fullWidthLayout} path="/categories" component={CategoriesPage} exact />
 			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
 			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
 			<Route path="/account/login" component={Login} layout={emptyLayout} />
