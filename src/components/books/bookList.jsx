@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
-import queryString from "query-string";
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useConfirm } from 'material-ui-confirm';
@@ -47,8 +46,7 @@ const buildLinkToPage = (page, authorId, categoryId, seriesId, query) => {
 	return `${location.pathname}${querystring}`;
 };
 
-const BookList = () => {
-	const location = useLocation();
+const BookList = ({ page, query, categoryId, authorId, seriesId }) => {
 	const confirm = useConfirm();
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
@@ -56,34 +54,21 @@ const BookList = () => {
 	const [showEditor, setShowEditor] = useState(false);
 	const [selectedBook, setSelectedBook] = useState(null);
 	const [books, setBooks] = useState(null);
-	const [authorId, setAuthorId] = useState(null);
-	const [categoryId, setCategoryId] = useState(null);
-	const [seriesId, setSeriesId] = useState(null);
-	const [query, setQuery] = useState(true);
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
 
 	const loadData = () => {
-		const values = queryString.parse(location.search);
-		const page = values.page;
-		const q = values.q;
-		const category = values.category;
-		const author = values.author;
-		const series = values.series;
+		console.table({ page, query, categoryId, authorId, seriesId });
 		setLoading(true);
 		libraryService
 			.getBooks(
-				author ? author : null,
-				category ? category : null,
-				series ? series : null,
-				q ? q : null,
+				authorId ? authorId : null,
+				categoryId ? categoryId : null,
+				seriesId ? seriesId : null,
+				query ? query : null,
 				page
 			)
 			.then((data) => {
-				setAuthorId(author);
-				setCategoryId(category);
-				setSeriesId(series);
-				setQuery(q);
 				setBooks(data);
 			})
 			.catch((e) => setError(true))
@@ -92,7 +77,7 @@ const BookList = () => {
 
 	useEffect(() => {
 		loadData();
-	}, [location]);
+	}, [page, query, categoryId, authorId, seriesId]);
 
 	const handleClose = () => {
 		setSelectedBook(null);

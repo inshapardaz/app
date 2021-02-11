@@ -17,6 +17,8 @@ const BooksPage = () => {
 	const [authorId, setAuthorId] = useState(null);
 	const [categoryId, setCategoryId] = useState(null);
 	const [seriesId, setSeriesId] = useState(null);
+	const [query, setQuery] = useState(null);
+	const [page, setPage] = useState(null);
 	const [author, setAuthor] = useState(null);
 	const [category, setCategory] = useState(null);
 	const [series, setSeries] = useState(null);
@@ -26,6 +28,8 @@ const BooksPage = () => {
 	useEffect(() => {
 		const loadData = () => {
 			const values = queryString.parse(location.search);
+			setPage(values.page);
+			setQuery(values.q)
 			setCategoryId(values.category);
 			setAuthorId(values.author);
 			setSeriesId(values.series);
@@ -83,7 +87,7 @@ const BooksPage = () => {
 					<CategoriesList />
 				</Grid>
 				<Grid item xs={10}>
-					<BookList />
+					<BookList page={page} query={query} authorId={authorId} categoryId={categoryId} seriesId={seriesId} />
 				</Grid>
 			</Grid>
 		</>
