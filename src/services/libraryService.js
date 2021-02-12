@@ -132,7 +132,7 @@ export const libraryService =
 		_get(`${libraryUrl()}/books?pageNumber=1&pageSize=12&sortby=DateCreated`),
 	// eslint-disable-next-line max-params
 	getBooks : (authorId = null, categoryId = null, seriesId = null,
-		query = null, page = 1, pageSize = 12) =>
+		query = null, page = 1, sortBy = null, pageSize = 12) =>
 	{
 		let queryVal = getQueryParameter(query);
 		if (authorId)
@@ -146,6 +146,10 @@ export const libraryService =
 		if (seriesId)
 		{
 			queryVal += `&seriesId=${seriesId}`;
+		}
+		if (sortBy)
+		{
+			queryVal += `&sortBy=${sortBy}`;
 		}
 		if (queryVal)
 		{

@@ -31,22 +31,25 @@ const useStyles = () =>
 const classes = useStyles();
 
 // eslint-disable-next-line max-params
-const buildLinkToPage = (page, authorId, categoryId, seriesId, query) => {
+const buildLinkToPage = (page, authorId, categoryId, seriesId, query, appendExtraParams = false) => {
 	const location = useLocation();
 
 	let querystring = "";
-	querystring += page ? `page=${page}` : "";
-	querystring += authorId ? `author=${authorId}` : "";
-	querystring += categoryId ? `category=${categoryId}` : "";
-	querystring += seriesId ? `series=${seriesId}` : "";
-	querystring += query ? `query=${query}` : "";
+	querystring += page ? `page=${page}&` : "";
+	querystring += query ? `query=${query}&` : "";
+	if (appendExtraParams) {
+		querystring += authorId ? `author=${authorId}` : "";
+		querystring += categoryId ? `category=${categoryId}` : "";
+		querystring += seriesId ? `series=${seriesId}` : "";
+		queryString += sortBy ? `sortBy=${sortBy}&` : "";
+	}
 	if (querystring !== "") {
-		querystring = `?${querystring}`;
+		querystring = `?${querystring}`.slice(0, -1);
 	}
 	return `${location.pathname}${querystring}`;
 };
 
-const BookList = ({ page, query, categoryId, authorId, seriesId }) => {
+const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }) => {
 	const confirm = useConfirm();
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
@@ -66,7 +69,8 @@ const BookList = ({ page, query, categoryId, authorId, seriesId }) => {
 				categoryId ? categoryId : null,
 				seriesId ? seriesId : null,
 				query ? query : null,
-				page
+				page,
+				sortBy ? sortBy : null,
 			)
 			.then((data) => {
 				setBooks(data);

@@ -44,7 +44,7 @@ const SeriePage = () => {
 	return (
 		<>
 			<SerieBanner title={serie.name} background={serie && serie.links && serie.links.image ? serie.links.image : null} />
-			<BookList seriesId={id} page={page} query={query} />
+			<BookList seriesId={id} page={page} query={query} sortBy={"seriesIndex"} />
 		</>
 	);
 };

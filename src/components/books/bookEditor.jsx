@@ -25,7 +25,7 @@ const BookEditor = ({ show, book, createLink, onSaved, onCancelled }) => {
 	const initialValues = {
 		title: '',
 		description: '',
-		yearPublished: '',
+		yearPublished: new Date().getFullYear(),
 		authorId: null,
 		authorName: '',
 		seriesId: null,
