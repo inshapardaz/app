@@ -15,10 +15,6 @@ const CategoriesDropDown = ({ error, onCategoriesSelected, defaultValue }, props
 	const [loadingError, setLoadingError] = useState(false);
 
 	useEffect(() => {
-		if (!open) {
-			return;
-		}
-
 		(() => {
 			libraryService.getCategories()
 				.then(response => {
@@ -28,12 +24,6 @@ const CategoriesDropDown = ({ error, onCategoriesSelected, defaultValue }, props
 				.finally(() => setLoading(false));
 		})();
 	}, []);
-
-	React.useEffect(() => {
-		if (!open) {
-			setOptions([]);
-		}
-	}, [open]);
 
 	return (<Field component={Autocomplete} variant="outlined" input={<BootstrapInput />}
 		{...props}
