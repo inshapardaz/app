@@ -6,6 +6,9 @@ import { useConfirm } from 'material-ui-confirm';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -99,6 +102,25 @@ const AuthorsList = ({ page, query }) => {
 		loadData();
 	};
 
+	const renderToolBar = () => {
+		if (authors && authors.links.create) {
+			return (
+				<Toolbar>
+					<IconButton
+						edge="start"
+						className={classes.menuButton}
+						color="inherit"
+						aria-label="menu"
+						onClick={() => onEditClicked(null)}
+					>
+						<AddCircleIcon />
+					</IconButton>
+				</Toolbar>
+			);
+		}
+
+		return null;
+	};
 
 	const renderAuthors = () => {
 		if (isLoading) {
@@ -144,6 +166,7 @@ const AuthorsList = ({ page, query }) => {
 	}
 
 	return (<>
+		{renderToolBar()}
 		<Box>
 			{renderAuthors()}
 		</Box>
