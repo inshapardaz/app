@@ -5,9 +5,11 @@ import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles({
 	banner: {
-		backgroundImage: props => props.background ? `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${props.background})` : 'none',
+		backgroundImage: props => props.background ? `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("${props.background}")` :
+			'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("/images/author_background.jpg")',
 		backgroundRepeat: 'no-repeat',
 		backgroundSize: 'cover',
+		backgroundPosition: 'center center',
 		minHeight: 75,
 		padding: 200,
 		margin: '0 auto'

@@ -94,7 +94,7 @@
 	"header.books.list": "All Books",
 	"header.authors": "Authors",
 	"header.profile" : "Profile",
-	"header.search" : "Search",
+	"header.search" : "Search...",
 	"header.search.placeholder": "Search by title, author, keyword",
 	"header.search.advanced_search": "Advanced Search",
 	"header.administration" : "Administration",

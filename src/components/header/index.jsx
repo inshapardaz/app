@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Nav from './nav.jsx';
 import { libraryService } from '../../services/index.js';
-//import SearchBox from '../searchbox.jsx';
+import SearchBox from './searchBox.jsx';
 
 const useStyles = makeStyles((theme) => ({
 	icon: {
@@ -39,7 +39,7 @@ export default function Header() {
 					{selectedLibrary != null ? selectedLibrary.name : <FormattedMessage id="app" />}
 				</Typography>
 			</div>
-			{/* <SearchBox /> */}
+			<SearchBox />
 			<div className={classes.grow} />
 			<Nav />
 		</Toolbar>

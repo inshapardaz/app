@@ -44,7 +44,7 @@ const CategoryCard = ({ category, onEdit, onDelete }) => {
 
 	return (
 		<Card className={classes.root} key={category.id}>
-			<CardActionArea component={Link} to={`/categories/${category.id}`}>
+			<CardActionArea component={Link} to={`/books?category=${category.id}`}>
 				<CardContent>
 					<Typography gutterBottom variant="h5" component="h2">
 						{category.name}

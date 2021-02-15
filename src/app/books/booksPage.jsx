@@ -87,7 +87,7 @@ const BooksPage = () => {
 					<CategoriesList />
 				</Grid>
 				<Grid item xs={10}>
-					<BookList page={page} query={query} authorId={authorId} categoryId={categoryId} seriesId={seriesId} />
+					<BookList page={page} query={query} authorId={authorId} categoryId={categoryId} seriesId={seriesId} appendExtraParams={true} />
 				</Grid>
 			</Grid>
 		</>

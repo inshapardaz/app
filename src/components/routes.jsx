@@ -28,6 +28,7 @@ import ChapterPage from '../app/books/chapterPage';
 import PagesPage from '../app/books/pagesPage';
 import PageEditorPage from '../app/books/pageEditorPage';
 import ChapterViewerPage from '../app/books/chapterViewerPage';
+import SearchPage from '../app/search';
 
 const Routes = () => {
 	const { pathname } = useLocation();
@@ -47,6 +48,7 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/series/:id" component={SeriePage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/series" component={SeriesPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/categories" component={CategoriesPage} exact />
+			<RouteWithLayout layout={fullWidthLayout} path="/search" component={SearchPage} exact />
 			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
 			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
 			<Route path="/account/login" component={Login} layout={emptyLayout} />

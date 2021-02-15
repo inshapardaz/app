@@ -61,7 +61,6 @@ const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }
 	const [isError, setError] = useState(false);
 
 	const loadData = () => {
-		console.table({ page, query, categoryId, authorId, seriesId });
 		setLoading(true);
 		libraryService
 			.getBooks(

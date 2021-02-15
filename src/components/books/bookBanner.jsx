@@ -12,7 +12,8 @@ import BookEditor from "./bookEditor.jsx";
 
 const useStyles = makeStyles({
 	banner: {
-		backgroundImage: props => props.background ? `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${props.background})` : 'none',
+		backgroundImage: props => props.background ? `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("${props.background}")` :
+			'linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("/images/book_background.jpg")',
 		backgroundRepeat: 'no-repeat',
 		backgroundSize: 'cover',
 		minHeight: 35,
@@ -34,7 +35,7 @@ const BookBanner = ({ book, onUpdate }) => {
 	if (book == null) return null;
 	const [showEditor, setShowEditor] = useState(false);
 	const classes = useStyles({ background: book.links.image });
-
+	console.log(book.links.image);
 	const renderAction = () => {
 
 		const renderEditLink = () => {
