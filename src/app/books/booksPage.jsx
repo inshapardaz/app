@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import { FormattedMessage, useIntl } from 'react-intl';
 import CategoriesList from '../../components/categories/categoriesList.jsx';
@@ -10,6 +8,8 @@ import { libraryService } from '../../services';
 import BookList from '../../components/books/bookList.jsx';
 import Loading from '../../components/Loading.jsx';
 import ErrorMessage from '../../components/ErrorMessage.jsx';
+
+import BooksBanner from '../../components/books/booksBanner';
 
 const BooksPage = () => {
 	const intl = useIntl();
@@ -79,9 +79,8 @@ const BooksPage = () => {
 
 	return (
 		<>
-			<Box>
-				<Typography variant="h3">{headerContent}</Typography>
-			</Box>
+			<BooksBanner title={headerContent}>
+			</BooksBanner>
 			<Grid container spacing={3}>
 				<Grid item xs={2}>
 					<CategoriesList />

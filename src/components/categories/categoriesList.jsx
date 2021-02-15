@@ -6,7 +6,9 @@ import { Typography } from '@material-ui/core';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CategoryIcon from '@material-ui/icons/Category';
 import {
 	CategoryProvider,
 	CategoryTitle,
@@ -17,7 +19,12 @@ import { libraryService } from '../../services';
 
 const CategoryListItem = ({ category, selectedCategory }) => {
 	return (<ListItem key={category.id} button selected={selectedCategory && Number(selectedCategory) === category.id}>
-		<ListItemText primary={<Link to={`/books?category=${category.id}`}>{category.name}</Link>} />
+		<ListItemIcon>
+			<CategoryIcon />
+		</ListItemIcon>
+		<ListItemText
+			primary={<Link to={`/books?category=${category.id}`}>{category.name}</Link>}
+			secondary={<FormattedMessage id="categories.item.book.count" values={{ count: category.bookCount }} />} />
 	</ListItem>);
 };
 
@@ -53,15 +60,15 @@ const CategoriesList = () => {
 				</Typography>);
 		}
 
-		return (<CategoryProvider useStyles={useNikiCategoryMenuStyles}>
-			<CategoryTitle><FormattedMessage id="header.categories" /></CategoryTitle>
-			{categories.data.map(c => (
-				<CategoryItem key={c.id} as={Link} to={`/books?category=${c.id}`}
-					active={selectedCategory && Number(selectedCategory) === c.id}>
-					{c.name}
-				</CategoryItem>
-			))}
-		</CategoryProvider >);
+		// return (<CategoryProvider useStyles={useNikiCategoryMenuStyles}>
+		// 	<CategoryTitle><FormattedMessage id="header.categories" /></CategoryTitle>
+		// 	{categories.data.map(c => (
+		// 		<CategoryItem key={c.id} as={Link} to={`/books?category=${c.id}`}
+		// 			active={selectedCategory && Number(selectedCategory) === c.id}>
+		// 			{c.name}
+		// 		</CategoryItem>
+		// 	))}
+		// </CategoryProvider >);
 		return (
 			<List component="nav" aria-label="main categories">
 				{categories.data.map((c) => (
