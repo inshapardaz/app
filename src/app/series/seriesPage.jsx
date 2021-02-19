@@ -19,10 +19,11 @@ import { libraryService } from '../../services';
 import SeriesBanner from '../../components/series/seriesBanner.jsx';
 import SeriesCard from '../../components/series/seriesCard.jsx';
 import SeriesEditor from '../../components/series/seriesEditor.jsx';
+import { Container } from '@material-ui/core';
 
 const useStyles = makeStyles({
 	cellGrid: {
-		padding: 60
+		marginTop: 60
 	}
 });
 
@@ -161,10 +162,10 @@ const SeriesPage = () => {
 		<>
 			<SeriesBanner title={<FormattedMessage id="header.series" />}
 				createLink={series && series.links.create} onCreate={() => onEditClicked(null)} />
-			<Grid container spacing={3}>
+			<Container>
 				{renderSeries()}
 				{renderPagination()}
-			</Grid>
+			</Container>
 			<SeriesEditor show={showEditor}
 				series={selectedSeries}
 				createLink={series && series.links.create}

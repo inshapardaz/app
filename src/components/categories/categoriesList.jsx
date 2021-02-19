@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import queryString from 'query-string';
 import { FormattedMessage } from 'react-intl';
 import { Typography } from '@material-ui/core';
@@ -18,12 +18,18 @@ import { useNikiCategoryMenuStyles } from '@mui-treasury/styles/categoryMenu/nik
 import { libraryService } from '../../services';
 
 const CategoryListItem = ({ category, selectedCategory }) => {
-	return (<ListItem key={category.id} button selected={selectedCategory && Number(selectedCategory) === category.id}>
+	const history = useHistory();
+
+	const categoryClicked = useCallback(() => {
+		history.push(`/books?category=${category.id}`);
+	}, [category]);
+
+	return (<ListItem key={category.id} button divider selected={selectedCategory && Number(selectedCategory) === category.id} onClick={categoryClicked}>
 		<ListItemIcon>
 			<CategoryIcon />
 		</ListItemIcon>
 		<ListItemText
-			primary={<Link to={`/books?category=${category.id}`}>{category.name}</Link>}
+			primary={category.name}
 			secondary={<FormattedMessage id="categories.item.book.count" values={{ count: category.bookCount }} />} />
 	</ListItem>);
 };

@@ -11,7 +11,7 @@ const useStyles = makeStyles({
 		backgroundSize: 'cover',
 		backgroundPosition: 'center center',
 		minHeight: 75,
-		padding: 200,
+		padding: 50,
 		margin: '0 auto'
 	},
 	bannerTitle: {

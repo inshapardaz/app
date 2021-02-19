@@ -10,6 +10,7 @@ import Loading from '../../components/Loading.jsx';
 import ErrorMessage from '../../components/ErrorMessage.jsx';
 
 import BooksBanner from '../../components/books/booksBanner';
+import { Container } from '@material-ui/core';
 
 const BooksPage = () => {
 	const intl = useIntl();
@@ -81,14 +82,16 @@ const BooksPage = () => {
 		<>
 			<BooksBanner title={headerContent}>
 			</BooksBanner>
-			<Grid container spacing={3}>
-				<Grid item xs={2}>
-					<CategoriesList />
+			<Container >
+				<Grid container>
+					<Grid item xs={2}>
+						<CategoriesList />
+					</Grid>
+					<Grid item xs={10}>
+						<BookList page={page} query={query} authorId={authorId} categoryId={categoryId} seriesId={seriesId} appendExtraParams={true} />
+					</Grid>
 				</Grid>
-				<Grid item xs={10}>
-					<BookList page={page} query={query} authorId={authorId} categoryId={categoryId} seriesId={seriesId} appendExtraParams={true} />
-				</Grid>
-			</Grid>
+			</Container>
 		</>
 	);
 };

@@ -20,6 +20,7 @@ import { libraryService } from "../../services";
 import BookCard from "./bookCard.jsx";
 import BookEditor from "./bookEditor.jsx";
 import BookPopup from "./bookPopup";
+import { Button } from "@material-ui/core";
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -204,15 +205,15 @@ const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }
 		if (books && books.links.create) {
 			return (
 				<Toolbar>
-					<IconButton
-						edge="start"
-						className={classes.menuButton}
-						color="inherit"
+					<Button
+						variant="contained"
+						color="primary"
 						aria-label="menu"
 						onClick={() => onEditClicked(null)}
+						startIcon={<AddCircleIcon />}
 					>
-						<AddCircleIcon />
-					</IconButton>
+						<FormattedMessage id="books.action.create" />
+					</Button>
 				</Toolbar>
 			);
 		}

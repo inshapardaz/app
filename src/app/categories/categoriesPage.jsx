@@ -12,6 +12,7 @@ import { libraryService } from '../../services';
 import CategoriesBanner from '../../components/categories/categoriesBanner.jsx';
 import CategoryCard from '../../components/categories/categoryCard.jsx';
 import CategoryEditor from '../../components/categories/categoryEditor.jsx';
+import { Container } from '@material-ui/core';
 
 const useStyles = makeStyles({
 	cellGrid: {
@@ -106,9 +107,9 @@ const CategoriesPage = () => {
 	return (<>
 		<CategoriesBanner title={<FormattedMessage id="header.categories" />}
 			createLink={categories && categories.links.create} onCreate={() => onEditClicked(null)} />
-		<Grid container spacing={4}>
+		<Container >
 			{renderCategories()}
-		</Grid>
+		</Container>
 		<CategoryEditor show={showEditor}
 			category={selectedCategory}
 			createLink={categories && categories.links.create}

@@ -7,7 +7,7 @@ import { useConfirm } from 'material-ui-confirm';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
+import Button from "@material-ui/core/Button";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
@@ -18,6 +18,7 @@ import PaginationItem from '@material-ui/lab/PaginationItem';
 import { libraryService } from '../../services';
 import AuthorCard from '../../components/authors/authorCard.jsx';
 import AuthorEditor from '../../components/authors/authorEditor.jsx';
+import { Container } from '@material-ui/core';
 
 const useStyles = makeStyles({
 	cellGrid: {
@@ -106,15 +107,15 @@ const AuthorsList = ({ page, query }) => {
 		if (authors && authors.links.create) {
 			return (
 				<Toolbar>
-					<IconButton
+					<Button
 						edge="start"
-						className={classes.menuButton}
-						color="inherit"
-						aria-label="menu"
+						variant="contained"
+						color="primary"
 						onClick={() => onEditClicked(null)}
+						startIcon={<AddCircleIcon />}
 					>
-						<AddCircleIcon />
-					</IconButton>
+						<FormattedMessage id="authors.action.create" />
+					</Button>
 				</Toolbar>
 			);
 		}
@@ -140,7 +141,7 @@ const AuthorsList = ({ page, query }) => {
 		}
 
 		return (<Grid className={classes.cellGrid} container spacing={3}>{authors.data.map(a => (
-			<Grid item key={a.id} xs={12} sm={6} md={3} lg={2}>
+			<Grid item key={a.id} xs={12} sm={6} md={4} lg={3}>
 				<AuthorCard author={a} key={a.id} onEdit={onEditClicked} onDelete={onDeleteClicked} />
 			</Grid>))}
 		</Grid>);
@@ -166,13 +167,12 @@ const AuthorsList = ({ page, query }) => {
 	}
 
 	return (<>
-		{renderToolBar()}
-		<Box>
+		<Container>
+			{renderToolBar()}
 			{renderAuthors()}
-		</Box>
-		<Box>
 			{renderPagination()}
-		</Box>
+		</Container>
+
 		<AuthorEditor show={showEditor}
 			author={selectedAuthor}
 			createLink={authors && authors.links.create}
