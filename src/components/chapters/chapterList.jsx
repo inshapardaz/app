@@ -44,6 +44,7 @@ const ChapterList = ({ book, allowEdit = true }) => {
 	const [chapters, setChapters] = useState(null);
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
+
 	const loadData = () => {
 		setLoading(true);
 		libraryService

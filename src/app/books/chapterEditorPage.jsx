@@ -1,28 +1,25 @@
 import { Button, Container, Toolbar } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 
+import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import AppBar from '@material-ui/core/AppBar';
-import Divider from '@material-ui/core/Divider';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
-import SaveIcon from '@material-ui/icons/Save';
-import FormatBoldIcon from '@material-ui/icons/FormatBold';
-import FormatItalicIcon from '@material-ui/icons/FormatItalic';
-import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
-import FontDownloadIcon from '@material-ui/icons/FontDownload';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import BookIcon from '@material-ui/icons/Book';
+import LayersIcon from '@material-ui/icons/Layers';
 
 import Editor from 'for-editor'
 
+import ChapterDropdown from '../../components/chapters/chapterDropDown';
+import ChapterEditor from '../../components/chapters/chapterEditor';
 import { libraryService } from '../../services';
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 	editor: {
 		fontFamily: props => props.font,
 		position: 'relative',
@@ -31,16 +28,25 @@ const useStyles = makeStyles({
 		left: 0,
 		right: 0,
 		margin: 24
-	}
-});
+	},
+	icon: {
+		marginRight: theme.spacing(0.5),
+		width: 20,
+		height: 20,
+	},
+}));
 
 const ChapterEditorPage = () => {
 	const intl = useIntl();
+	const history = useHistory();
 	const { enqueueSnackbar } = useSnackbar();
 	const { bookId, chapterNumber } = useParams();
+	const [book, setBook] = useState(null);
+	const [chapters, setChapters] = useState(null);
 	const [chapter, setChapter] = useState(null);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [showAdd, setShowAdd] = useState(false);
 	const [language, setLanguage] = useState("ur");
 	const [font, setFont] = useState('Dubai');
 	const [text, setText] = useState("");
@@ -53,6 +59,20 @@ const ChapterEditorPage = () => {
 			setFont('Dubai');
 			localStorage.setItem('editorFont', 'Dubai');
 		}
+
+		libraryService.getBook(bookId)
+			.then(book => {
+				setBook(book);
+
+				libraryService
+					.getBookChapters(book)
+					.then((data) => {
+						setChapters(data);
+					})
+					.catch(() => setError(true))
+					.finally(() => setLoading(false));
+			})
+			.catch(() => setError(true))
 
 		libraryService.getChapter(bookId, chapterNumber)
 			.then(chapter => {
@@ -97,9 +117,12 @@ const ChapterEditorPage = () => {
 			//  Adding new content
 			libraryService.post(`${chapter.links.add_content}?language=${language}`, text)
 				.then(data => {
+					setContent(data);
+					setText(data.text);
 					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' })
 				})
 				.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.saving' }), { variant: 'error' }))
+
 				.finally(() => setLoading(false));
 		}
 		else {
@@ -120,13 +143,38 @@ const ChapterEditorPage = () => {
 		setFont(selectedFont);
 		localStorage.setItem('editorFont', selectedFont);
 	};
-	return (<Container >
-		<AppBar position="static" color='transparent'>
-			<Toolbar>
 
-			</Toolbar>
-		</AppBar>
+	const addChapter = () => {
+		setShowAdd(true);
+	}
+	const handleClose = () => {
+		setShowAdd(false);
+	}
+	const chapterCreated = (c) => {
+		handleClose();
+		history.push(`/books/${bookId}/chapter/${c.chapterNumber}/editor`);
+	}
+
+	return (<Container >
+		<Toolbar>
+			<Breadcrumbs aria-label="breadcrumb" separator="›">
+				{book && <Link color="inherit" href={`/books/${book.id}/chapters`}><BookIcon className={classes.icon} />{book.title}</Link>}
+				<ChapterDropdown chapters={chapters && chapters.data} title={<> <LayersIcon className={classes.icon} /> {chapter && chapter.title}</>} onChapterSelected={(c) => history.push(`/books/${bookId}/chapter/${c.chapterNumber}/editor`)} />
+			</Breadcrumbs>
+
+			<Button onClick={addChapter}>
+				<AddCircleIcon /> <FormattedMessage id="chapter.action.create" />
+			</Button>
+		</Toolbar>
 		<Editor value={text} onChange={(value) => setText(value)} placeholder="" language="en" onSave={saveText} />
+		<ChapterEditor
+			show={showAdd}
+			createLink={book && book.links.create_chapter}
+			chapter={null}
+			chapterCount={chapters && chapters.data.length}
+			onSaved={chapterCreated}
+			onCancelled={handleClose}
+		/>
 	</Container>);
 };
 

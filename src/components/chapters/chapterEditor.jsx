@@ -32,11 +32,11 @@ const ChapterEditor = ({ show, chapter, chapterCount, createLink, onSaved, onCan
 		setBusy(true);
 		if (chapter === null && createLink !== null) {
 			libraryService.post(createLink, fields)
-				.then(() => {
+				.then((chapter) => {
 					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' })
-					onSaved();
+					onSaved(chapter);
 				})
-				.catch(() => {
+				.catch((e) => {
 					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.saving' }), { variant: 'error' })
 				})
 				.finally(() => setBusy(false));
@@ -44,9 +44,9 @@ const ChapterEditor = ({ show, chapter, chapterCount, createLink, onSaved, onCan
 		else if (chapter !== null) {
 			delete fields.contents;
 			libraryService.put(chapter.links.update, fields)
-				.then(() => {
+				.then((chapter) => {
 					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' })
-					onSaved();
+					onSaved(chapter);
 				})
 				.catch(() => {
 					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.saving' }), { variant: 'error' })

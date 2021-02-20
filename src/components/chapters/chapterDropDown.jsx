@@ -8,24 +8,29 @@ import { FormattedMessage } from "react-intl";
 
 import { libraryService } from '../../services';
 
-const ChapterDropdown = ({ bookId, title, onChapterSelected, navigate }) => {
+const ChapterDropdown = ({ bookId, title, chapters, onChapterSelected, navigate }) => {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [chapters, setChapters] = useState(null);
+	const [data, setData] = useState(null);
 
 	const loadChapters = () => {
-		libraryService.getChapters(bookId)
-			.then(response => {
-				setChapters(response.data);
-			})
-			.catch(() => setError(true))
-			.finally(() => setLoading(false));
+		if (bookId) {
+			libraryService.getChapters(bookId)
+				.then(response => {
+					setData(response.data);
+				})
+				.catch(() => setError(true))
+				.finally(() => setLoading(false));
+		}
+		else {
+			setData(chapters);
+		}
 	};
 
 	useEffect(() => {
 		loadChapters();
-	}, [bookId]);
+	}, [bookId, chapters]);
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -44,10 +49,10 @@ const ChapterDropdown = ({ bookId, title, onChapterSelected, navigate }) => {
 
 	const renderMenuItem = (chapter) => {
 		if (navigate) {
-			return (<MenuItem key={chapter.id} onClick={handleClose} component={Link} to={`/books/${chapter.bookId}/chapter/${chapter.chapterNumber}`}>{chapter.title}</MenuItem>);
+			return (<MenuItem key={chapter.id} onClick={handleClose} component={Link} to={`/books/${chapter.bookId}/chapter/${chapter.chapterNumber}`}>{`${chapter.chapterNumber} - ${chapter.title}`}</MenuItem>);
 		}
 
-		return (<MenuItem key={chapter.id} onClick={() => onItemClicked(chapter)}>{chapter.title}</MenuItem>);
+		return (<MenuItem key={chapter.id} onClick={() => onItemClicked(chapter)}>{`${chapter.chapterNumber} - ${chapter.title}`}</MenuItem>);
 	}
 
 	return (
@@ -61,7 +66,7 @@ const ChapterDropdown = ({ bookId, title, onChapterSelected, navigate }) => {
 				keepMounted
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
-			> {chapters && chapters.map(c => renderMenuItem(c))}
+			> {data && data.map(c => renderMenuItem(c))}
 			</Menu>
 		</div>
 	);
