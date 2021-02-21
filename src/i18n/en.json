@@ -268,6 +268,7 @@
     "copyrights.2": "Open",
 	"copyrights.3": "Creative Commons",
 	"pages.label" : "Pages",
+	"page.assignedToMe.label": "Assigned to me",
 	"page.assignedTo.label": "Assigned to {name}",
 	"page.editor.header.add": "Adding new page",
 	"page.editor.header.edit": "Editing page {sequenceNumber}",

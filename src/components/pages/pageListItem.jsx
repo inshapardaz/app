@@ -13,6 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 import NotesIcon from '@material-ui/icons/Notes';
 import PageStatusIcon from './pageStatusIcon';
@@ -40,7 +41,7 @@ const PageListItem = ({ page, onCheckChanged, checked, onEdit, onDelete }) => {
 			<ListItemSecondaryAction>
 				<Tooltip title={<FormattedMessage id="action.editContent" />} >
 					<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${page.bookId}/pages/${page.sequenceNumber}/editor`}>
-						<NotesIcon />
+						<DescriptionIcon />
 					</IconButton>
 				</Tooltip>
 				<Tooltip title={<FormattedMessage id="action.edit" />} >

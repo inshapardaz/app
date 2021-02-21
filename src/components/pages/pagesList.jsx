@@ -15,7 +15,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Typography from "@material-ui/core/Typography";
-import Tooltip from '@material-ui/core/Tooltip';
+import DescriptionIcon from '@material-ui/icons/Description';
+
 import List from '@material-ui/core/List';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -24,13 +25,21 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { DropzoneDialog } from 'material-ui-dropzone'
-
+import MenuItem from '@material-ui/core/MenuItem';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
+import CropOriginalIcon from '@material-ui/icons/CropOriginal';
 import { libraryService } from "../../services";
 import PageEditor from "./pageEditor";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import PageListItem from './pageListItem';
+import DropDownMenu from "../dropdownMenu";
+import { ListItemIcon } from "@material-ui/core";
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+
 const useStyles = () =>
 	makeStyles((theme) => ({
 		cardGrid: {
@@ -54,6 +63,7 @@ const PagesList = ({ book }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
 
+	const [showPreview, setShowPreview] = useState(false);
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
 	const [showEditor, setShowEditor] = useState(false);
@@ -141,7 +151,7 @@ const PagesList = ({ book }) => {
 					else {
 						return Promise.resolve();
 					}
-				})
+				});
 
 				Promise.all(promises)
 					.then(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.deleted' }), { variant: 'success' }))
@@ -207,52 +217,99 @@ const PagesList = ({ book }) => {
 		}, [pages]
 	);
 
+	const onAssignToMe = () => {
+		var promises = [];
+
+		checked.map(id => {
+			var p = pages.data.find(p => p.sequenceNumber === id);
+			if (p !== null && p !== undefined) {
+				if (p.links.assign_to_me) {
+					return promises.push(libraryService.post(p.links.assign_to_me));
+				}
+			}
+
+			return Promise.resolve();
+		});
+
+		Promise.all(promises)
+			.then(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.deleted' }), { variant: 'success' }))
+			.then(() => loadData())
+			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.error.delete' }), { variant: 'error' }));
+	};
+
 	const renderToolBar = () => {
 		if (pages && pages.links && pages.links.create) {
 			return (
 				<Toolbar>
-					<Tooltip title={<FormattedMessage id="page.action.create" />} >
-						<Button
+					<DropDownMenu title={<FormattedMessage id="page.action.create" />} >
+						<MenuItem
 							edge="start"
 							className={classes.menuButton}
 							color="inherit"
 							aria-label="menu"
-							onClick={() => onEditClicked(null)}
-							startIcon={<AddCircleIcon />}>
-							<FormattedMessage id="page.action.create" />
-						</Button>
-					</Tooltip>
-					<Tooltip title={<FormattedMessage id="page.action.upload" />} >
-						<Button
+							onClick={() => onEditClicked(null)}>
+							<ListItemIcon>
+								<AddCircleIcon fontSize="small" />
+							</ListItemIcon>
+							<Typography variant="inherit"><FormattedMessage id="page.action.create" /></Typography>
+						</MenuItem>
+						<MenuItem
 							edge="start"
 							className={classes.menuButton}
 							color="inherit"
 							aria-label="menu"
-							onClick={() => setShowFilesUpload(true)}
-							startIcon={<PostAddIcon />}>
-							<FormattedMessage id="page.action.upload" />
-						</Button>
-					</Tooltip>
-					<Tooltip title={<FormattedMessage id="page.action.uploadZip" />} >
-						<Button
+							onClick={() => setShowFilesUpload(true)}>
+							<ListItemIcon>
+								<PostAddIcon fontSize="small" />
+							</ListItemIcon>
+							<Typography variant="inherit"><FormattedMessage id="page.action.upload" /></Typography>
+						</MenuItem>
+						<MenuItem
 							edge="start"
 							className={classes.menuButton}
 							color="inherit"
 							aria-label="menu"
-							onClick={() => setShowZipUpload(true)}
-							startIcon={<CloudUploadIcon />}>
-							<FormattedMessage id="page.action.uploadZip" />
-						</Button>
-					</Tooltip >
+							onClick={() => setShowZipUpload(true)}>
+							<ListItemIcon>
+								<CloudUploadIcon fontSize="small" />
+							</ListItemIcon>
+							<Typography variant="inherit"><FormattedMessage id="page.action.uploadZip" /></Typography>
+						</MenuItem>
+					</DropDownMenu>
+					<ToggleButtonGroup
+						value={showPreview}
+						exclusive
+						onChange={(event, newValue) => setShowPreview(newValue)}
+						aria-label="view"
+					>
+						<ToggleButton variant="text" value={false} aria-label="list-view">
+							<FormatAlignJustifyIcon />
+						</ToggleButton>
+						<ToggleButton variant="text" value={true} aria-label="preview">
+							<CropOriginalIcon />
+						</ToggleButton>
+					</ToggleButtonGroup>
 					<Button
 						edge="start"
 						className={classes.menuButton}
 						color="inherit"
 						disabled={checked.length <= 0}
 						aria-label="menu"
+						variant="text"
 						onClick={onDeleteMultipleClicked}
 						startIcon={<DeleteIcon />}>
 						<FormattedMessage id="action.delete" />
+					</Button>
+					<Button
+						edge="start"
+						className={classes.menuButton}
+						color="inherit"
+						disabled={checked.length <= 0}
+						aria-label="menu"
+						variant="text"
+						onClick={onAssignToMe}
+						startIcon={<AssignmentIndIcon />}>
+						<FormattedMessage id="page.assignedToMe.label" />
 					</Button>
 				</Toolbar >
 			);
@@ -306,6 +363,39 @@ const PagesList = ({ book }) => {
 			);
 		}
 
+		if (showPreview) {
+			return (
+				<GridList cellHeight={280} className={classes.gridList} cols={3}>
+					{pages.data.map((page) => (
+						<GridListTile key={page.sequenceNumber}>
+							<img src={page.links.image != null ? page.links.image : "/images/no_image.png"} alt={page.sequenceNumber} />
+							<GridListTileBar
+								title={page.sequenceNumber}
+								subtitle={page.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
+								actionIcon={
+									<>
+										<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(page)}>
+											<DescriptionIcon style={{ color: "white" }} />
+										</IconButton>
+										<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(page)}>
+											<DeleteIcon style={{ color: "white" }} />
+										</IconButton>
+										<Checkbox
+											edge="start"
+											checked={checked.indexOf(page.sequenceNumber) !== -1}
+											onClick={handleToggle(page.sequenceNumber)}
+											tabIndex={-1}
+											disableRipple
+										/>
+									</>
+								}
+							/>
+						</GridListTile>
+					))}
+				</GridList>
+			);
+		}
+
 		return (<List >
 			{pages.data.map(p => (<PageListItem page={p} key={p.sequenceNumber}
 				checked={checked.indexOf(p.sequenceNumber) !== -1}
@@ -315,39 +405,6 @@ const PagesList = ({ book }) => {
 			/>))
 			}
 		</List >);
-
-		return (
-			<GridList cellHeight={280} className={classes.gridList} cols={3}>
-				{pages.data.map((page) => (
-					<GridListTile key={page.sequenceNumber}>
-						<img src={page.links.image != null ? page.links.image : "/images/no_image.png"} alt={page.sequenceNumber} />
-						<GridListTileBar
-							title={page.sequenceNumber}
-							subtitle={page.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
-							actionIcon={
-								<>
-									<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(page)}>
-										<EditIcon style={{ color: "white" }} />
-									</IconButton>
-									<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(page)}>
-										<DeleteIcon style={{ color: "white" }} />
-									</IconButton>
-									<Checkbox
-										edge="start"
-										checked={checked.indexOf(page.sequenceNumber) !== -1}
-										onClick={handleToggle(page.sequenceNumber)}
-										tabIndex={-1}
-										disableRipple
-									/>
-								</>
-							}
-						/>
-					</GridListTile>
-				))}
-			</GridList>
-		);
-
-
 	}
 
 	return (

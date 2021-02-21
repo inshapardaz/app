@@ -15,14 +15,18 @@ const _get = (url, language = "en") => {
 };
 
 const _post = (url, contents, contentType = 'application/json', language = "en") => {
-	delete contents.links;
+	if (contents) {
+		delete contents.links;
+	}
 
 	return fetchWrapper.post(url, contents, { 'Accept': 'application/json', 'Content-Type': contentType, 'Content-Language' : language })
 		.then(data => _parseObject(data));
 };
 
 const _put = (url, contents, contentType = 'application/json', language = "en") => {
-	delete contents.links;
+	if (contents) {
+		delete contents.links;
+	}
 
 	return fetchWrapper.put(url, contents, { 'Accept': 'application/json', 'Content-Type': contentType, 'Content-Language' : language })
 		.then(data => _parseObject(data));
@@ -66,7 +70,7 @@ const _parseObject = (source) =>
 			let newLinks = {};
 			source.links.forEach(link =>
 			{
-				newLinks[link.rel.replace('-', '_')] = link.href;
+				newLinks[link.rel.replaceAll('-', '_')] = link.href;
 			});
 			source.links = newLinks;
 		}
