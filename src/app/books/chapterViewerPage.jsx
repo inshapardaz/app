@@ -11,10 +11,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { makeStyles } from '@material-ui/core/styles';
-import ReactMarkdown from 'react-markdown'
 import ChapterDropdown from '../../components/chapters/chapterDropDown';
 
 import Loading from '../../components/Loading';
+import Reader from '../../components/reader';
 import ErrorMessage from '../../components/ErrorMessage';
 import { libraryService } from '../../services';
 import FontDropdown from '../../components/fontDropDown';
@@ -129,7 +129,7 @@ const ChapterViewerPage = () => {
 		}
 		return (
 			<>
-				<ReactMarkdown>{text}</ReactMarkdown>
+				<Reader data={text} format="markdown" />
 				<BackToTop />
 			</>);
 	}

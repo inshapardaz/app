@@ -252,6 +252,7 @@
     "chapter.editor.fields.number.error" : "Chapter number is required",
     "chapter.messages.error.loading" : "Unable to load chapter",
     "chapter.messages.error.noContent" : "Chapter has no content to display",
+    "chapter.messages.addContent" : "Start typing chapter...",
     "chapters.item.book.count" : "{count} chapters",
     "chapter.toolbar.read" : "Read",
     "chapter.toolbar.edit" : "Edit",
@@ -291,6 +292,7 @@
 	"page.action.uploadZip" : "Add new page by uploading zip file",
 	"page.action.uploadZip.help" : "Select zip file containing images to upload and create pages. All pages are appended at the end of existing pages",
 	"person.messages.empty": "Please select a person...",
+	"page.all": "All pages",
 	"status.0" : "Available",
 	"status.1": "In Typing",
 	"status.2": "Typed",
@@ -317,5 +319,4 @@
 	"fontSize.large" : "Large",
 	"fontSize.larger" : "Larger",
 	"fontSize.extraLarge" : "Extra Large"
-
 }

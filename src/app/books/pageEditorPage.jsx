@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useIntl } from "react-intl";
 import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { FormattedMessage, useIntl } from "react-intl";
 
 import Grid from '@material-ui/core/Grid';
-
-import Editor from 'for-editor'
 
 import ErrorMessage from '../../components/ErrorMessage';
 import Loading from '../../components/Loading';
@@ -14,6 +12,8 @@ import { libraryService } from '../../services';
 import { ButtonGroup, Button, Toolbar, AppBar, Typography } from '@material-ui/core';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import SaveIcon from '@material-ui/icons/Save';
+import Editor from '../../components/editor';
 
 const PageEditorPage = () => {
 	const intl = useIntl();
@@ -54,8 +54,8 @@ const PageEditorPage = () => {
 		loadData();
 	}, [pageId]);
 
-	const saveText = (value) => {
-		page.text = value;
+	const saveText = () => {
+		page.text = text;
 		libraryService.put(page.links.update, page)
 			.then(data => {
 				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
@@ -73,25 +73,29 @@ const PageEditorPage = () => {
 					<Button onClick={onZoomIn}><ZoomInIcon /></Button>
 					<Button onClick={onZoomOut}><ZoomOutIcon /></Button>
 				</ButtonGroup>
+
+				<Button onClick={saveText}>
+					<SaveIcon /> <FormattedMessage id="action.save" />
+				</Button>
 			</Toolbar>
 		</AppBar>)
 	};
 
-	if (loading) return <Loading />;
+	// if (loading) return <Loading />;
 
-	if (error) return <ErrorMessage message="Error loading page" />;
+	// if (error) return <ErrorMessage message="Error loading page" />;
 
-	if (page == null) return <ErrorMessage message="Page not found" />;
+	// if (page == null) return <ErrorMessage message="Page not found" />;
 
 	return (
 		<>
 			{renderToolbar()}
 			<Grid alignContent="stretch" alignItems="stretch" direction="row" container>
 				<Grid item xs={6} >
-					<Editor value={text} style={{ height: '100%' }} onChange={(value) => setText(value)} placeholder="" language="en" onSave={saveText} />
+					<Editor data={text} onChange={content => setText(content)} />
 				</Grid>
 				<Grid item xs={6} >
-					<ImageViewer scale={scale} imageUrl={page.links && page.links.image ? page.links.image : "/images/no_image.png"} />
+					<ImageViewer scale={scale} imageUrl={page && page.links && page.links.image ? page.links.image : "/images/no_image.png"} />
 				</Grid>
 			</Grid>
 		</>);

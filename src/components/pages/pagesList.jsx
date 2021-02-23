@@ -3,42 +3,50 @@ import { Link, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
-import { useConfirm } from 'material-ui-confirm';
 
+// mui
+import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Toolbar from "@material-ui/core/Toolbar";
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Pagination from "@material-ui/lab/Pagination";
-import PaginationItem from "@material-ui/lab/PaginationItem";
+import Box from "@material-ui/core/Box";;
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Typography from "@material-ui/core/Typography";
-import DescriptionIcon from '@material-ui/icons/Description';
-
 import List from '@material-ui/core/List';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import EditIcon from '@material-ui/icons/Edit';
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { DropzoneDialog } from 'material-ui-dropzone'
 import MenuItem from '@material-ui/core/MenuItem';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
-import CropOriginalIcon from '@material-ui/icons/CropOriginal';
-import { libraryService } from "../../services";
-import PageEditor from "./pageEditor";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Pagination from "@material-ui/lab/Pagination";
+import PaginationItem from "@material-ui/lab/PaginationItem"
+//mui icons
+import EditIcon from '@material-ui/icons/Edit';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import PersonIcon from '@material-ui/icons/Person';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CropOriginalIcon from '@material-ui/icons/CropOriginal';
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import DescriptionIcon from '@material-ui/icons/Description';
+import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+// 3rd party
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { DropzoneDialog } from 'material-ui-dropzone'
+import { useConfirm } from 'material-ui-confirm';
+//component
+import { libraryService } from "../../services";
+import PageEditor from "./pageEditor";
 import PageListItem from './pageListItem';
 import DropDownMenu from "../dropdownMenu";
-import { ListItemIcon } from "@material-ui/core";
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import PageStatusIcon from '../../components/pages/pageStatusIcon';
+import { Divider } from "@material-ui/core";
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -56,6 +64,26 @@ const useStyles = () =>
 	}));
 const classes = useStyles();
 
+// eslint-disable-next-line max-params
+const buildLinkToPage = (page, filter, assignmentFilter) => {
+	const location = useLocation();
+
+	let querystring = "";
+	querystring += page ? `page=${page}&` : "";
+	if (filter && filter !== 'none') {
+		querystring += `filter=${filter}&`;
+	}
+	if (assignmentFilter && assignmentFilter !== 'all') {
+		querystring += `assignmentFilter=${assignmentFilter}&`;
+	}
+
+	if (querystring !== "") {
+		querystring = `?${querystring}`.slice(0, -1);
+	}
+
+	return `${location.pathname}${querystring}`;
+};
+
 const PagesList = ({ book }) => {
 	if (book == null || book.links.pages == null) return null;
 	const location = useLocation();
@@ -64,6 +92,8 @@ const PagesList = ({ book }) => {
 	const { enqueueSnackbar } = useSnackbar();
 
 	const [showPreview, setShowPreview] = useState(false);
+	const [filter, setFilter] = useState('none');
+	const [assignmentFilter, setAssignmentFilter] = useState('all');
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
 	const [showEditor, setShowEditor] = useState(false);
@@ -276,19 +306,6 @@ const PagesList = ({ book }) => {
 							<Typography variant="inherit"><FormattedMessage id="page.action.uploadZip" /></Typography>
 						</MenuItem>
 					</DropDownMenu>
-					<ToggleButtonGroup
-						value={showPreview}
-						exclusive
-						onChange={(event, newValue) => setShowPreview(newValue)}
-						aria-label="view"
-					>
-						<ToggleButton variant="text" value={false} aria-label="list-view">
-							<FormatAlignJustifyIcon />
-						</ToggleButton>
-						<ToggleButton variant="text" value={true} aria-label="preview">
-							<CropOriginalIcon />
-						</ToggleButton>
-					</ToggleButtonGroup>
 					<Button
 						edge="start"
 						className={classes.menuButton}
@@ -317,6 +334,64 @@ const PagesList = ({ book }) => {
 
 		return null;
 	};
+
+	const renderViewToolBar = () => {
+		return (<Toolbar>
+			<ToggleButtonGroup
+				value={showPreview}
+				exclusive
+				onChange={(event, newValue) => setShowPreview(newValue)}
+				aria-label="view"
+			>
+				<ToggleButton variant="text" value={false} aria-label="list-view">
+					<FormatAlignJustifyIcon />
+				</ToggleButton>
+				<ToggleButton variant="text" value={true} aria-label="preview">
+					<CropOriginalIcon />
+				</ToggleButton>
+			</ToggleButtonGroup>
+			<Divider orientation="vertical" />
+			<ToggleButtonGroup exclusive aria-label="assignment-filter"
+				value={filter}
+				onChange={(event, newValue) => setFilter(newValue)}>
+				<ToggleButton variant="text" value='none' aria-label="all-pages">
+					<PageStatusIcon status={-1} />
+				</ToggleButton>
+				<ToggleButton variant="text" value='available' aria-label="available">
+					<PageStatusIcon status={0} />
+				</ToggleButton>
+				<ToggleButton variant="text" value='typing' aria-label="typing">
+					<PageStatusIcon status={1} />
+				</ToggleButton>
+				<ToggleButton variant="text" value='typed' aria-label="typed">
+					<PageStatusIcon status={2} />
+				</ToggleButton>
+				<ToggleButton variant="text" value='proofread' aria-label="proof-read">
+					<PageStatusIcon status={3} />
+				</ToggleButton>
+				<ToggleButton variant="text" value='completed' aria-label="completed">
+					<PageStatusIcon status={4} />
+				</ToggleButton>
+			</ToggleButtonGroup>
+			<Divider orientation="vertical" />
+			<ToggleButtonGroup exclusive aria-label="assignment-type"
+				value={assignmentFilter}
+				onChange={(event, newValue) => setAssignmentFilter(newValue)}>
+				<ToggleButton variant="text" value='all' aria-label="all-pages">
+					<DescriptionIcon />
+				</ToggleButton>
+				<ToggleButton variant="text" value='unassigned' aria-label="unassigned-pages">
+					<CheckBoxOutlineBlankIcon />
+				</ToggleButton>
+				<ToggleButton variant="text" value='assigned' aria-label="assigned">
+					<PeopleAltIcon />
+				</ToggleButton>
+				<ToggleButton variant="text" value='mine' aria-label="assigned-to-me">
+					<PersonIcon />
+				</ToggleButton>
+			</ToggleButtonGroup>
+		</Toolbar>);
+	}
 
 	const renderPagination = () => {
 		if (!isLoading && pages) {
@@ -410,6 +485,7 @@ const PagesList = ({ book }) => {
 	return (
 		<Container className={classes.cardGrid} maxWidth="md">
 			{renderToolBar()}
+			{renderViewToolBar()}
 			{renderPages()}
 			{renderPagination()}
 			<PageEditor

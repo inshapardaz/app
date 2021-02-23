@@ -6,6 +6,7 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import DescriptionIcon from '@material-ui/icons/Description';
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
 
 const PageStatusIcon = ({ status }) => {
@@ -34,6 +35,11 @@ const PageStatusIcon = ({ status }) => {
 			return (
 				<Tooltip title={<FormattedMessage id="status.4" />} >
 					<CheckCircleIcon />
+				</Tooltip>);
+		default:
+			return (
+				<Tooltip title={<FormattedMessage id="page.all" />} >
+					<DescriptionIcon />
 				</Tooltip>);
 	}
 

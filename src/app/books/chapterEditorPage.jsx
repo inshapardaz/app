@@ -11,12 +11,12 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import BookIcon from '@material-ui/icons/Book';
 import LayersIcon from '@material-ui/icons/Layers';
-
-import Editor from 'for-editor'
+import SaveIcon from '@material-ui/icons/Save';
 
 import ChapterDropdown from '../../components/chapters/chapterDropDown';
 import ChapterEditor from '../../components/chapters/chapterEditor';
 import { libraryService } from '../../services';
+import Editor from '../../components/editor';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -165,8 +165,13 @@ const ChapterEditorPage = () => {
 			<Button onClick={addChapter}>
 				<AddCircleIcon /> <FormattedMessage id="chapter.action.create" />
 			</Button>
+			<Button onClick={saveText}>
+				<SaveIcon /> <FormattedMessage id="action.save" />
+			</Button>
 		</Toolbar>
-		<Editor value={text} onChange={(value) => setText(value)} placeholder="" language="en" onSave={saveText} />
+
+		<Editor data={text} onChange={content => setText(content)} />
+
 		<ChapterEditor
 			show={showAdd}
 			createLink={book && book.links.create_chapter}

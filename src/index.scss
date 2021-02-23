@@ -166,3 +166,7 @@ a {
   background-color: #e8e9ea;
   border-bottom: 1px solid #ccc;
 }
+
+.ck-editor__editable_inline {
+    min-height: 60vh !important;
+}
