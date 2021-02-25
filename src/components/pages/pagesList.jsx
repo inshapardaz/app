@@ -502,7 +502,7 @@ const PagesList = ({ book }) => {
 				acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
 				showPreviews={true}
 				maxFileSize={5000000}
-				filesLimit={10}
+				filesLimit={50}
 				fullWidth={true}
 				showAlerts={false}
 				onClose={() => setShowFilesUpload(false)}
@@ -516,6 +516,7 @@ const PagesList = ({ book }) => {
 				onSave={handleZipFileUpload}
 				acceptedFiles={['application/zip', 'application/x-zip-compressed']}
 				filesLimit={1}
+				maxFileSize={5000000}
 				showPreviews={false}
 				onClose={() => setShowZipUpload(false)}
 				dialogTitle={intl.formatMessage({ id: "page.action.uploadZip" })}
