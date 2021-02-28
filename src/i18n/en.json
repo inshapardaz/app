@@ -93,6 +93,7 @@
 	"header.books": "Books",
 	"header.books.list": "All Books",
 	"header.authors": "Authors",
+	"header.publishing": "Publishing",
 	"header.profile" : "Profile",
 	"header.search" : "Search...",
 	"header.search.placeholder": "Search by title, author, keyword",

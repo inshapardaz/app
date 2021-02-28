@@ -94,6 +94,7 @@
     "header.books": "کتابیں",
     "header.books.list": "تمام کتابیں",
     "header.authors": "مصنّف",
+	"header.publishing": "پبلشنگ",
     "header.search.placeholder": "تلاش برائے عنوان، مصنّف، زمرہ",
 	"header.search.advanced_search": "بہتر تلاش",
 	"header.profile" : "پروفائل",

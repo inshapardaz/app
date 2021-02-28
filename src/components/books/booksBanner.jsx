@@ -51,7 +51,6 @@ const BooksBanner = ({ title, subTitle, createLink, onCreate, background }) => {
 			<div className={classes.bannerTitle}>{title}</div>
 			{renderSubTitle()}
 			{renderAction()}
-			df
 		</div>
 	);
 };

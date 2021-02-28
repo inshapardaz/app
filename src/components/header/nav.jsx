@@ -7,6 +7,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PersonIcon from '@material-ui/icons/Person';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import CreateIcon from '@material-ui/icons/Create';
 import CollectionsBookmarkIcon from '@material-ui/icons/CollectionsBookmark';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,6 +15,7 @@ import ProfileMenu from './profileMenu.jsx';
 import LanguageSelector from './languageSelector.jsx';
 import CategorySelector from './categorySelector.jsx';
 import LibrarySelector from './librarySelector.jsx';
+import { libraryService } from '../../services';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -52,6 +54,34 @@ function Nav() {
 		setMobileMoreAnchorEl(event.currentTarget);
 	};
 
+	const renderPublishingButton = (isMobile = false) => {
+		const selectedLibrary = libraryService.getSelectedLibrary();
+
+		if (selectedLibrary && selectedLibrary.links.create_book) {
+			if (isMobile) {
+				return (<MenuItem>
+					<IconButton aria-label="publishing" color="inherit"
+						component={Link} to="/publishing">
+						<CreateIcon />
+					</IconButton>
+					<FormattedMessage id="header.publishing" />
+				</MenuItem>);
+			}
+			else {
+				return (<Button aria-label="publishing"
+					color="inherit"
+					component={Link} to="/publishing"
+					className={classes.button}
+					startIcon={<CreateIcon />}
+				>
+					<FormattedMessage id="header.publishing" />
+				</Button>);
+			}
+		}
+
+		return null;
+	};
+
 	const mobileMenuId = 'primary-search-account-menu-mobile';
 	const renderMobileMenu = (
 		<Menu
@@ -84,6 +114,7 @@ function Nav() {
 				</IconButton>
 				<FormattedMessage id="header.series" />
 			</MenuItem>
+			{renderPublishingButton(true)}
 			<CategorySelector />
 			<LanguageSelector />
 			<LibrarySelector />
@@ -119,6 +150,7 @@ function Nav() {
 					<FormattedMessage id="header.series" />
 				</Button>
 				<CategorySelector />
+				{renderPublishingButton()}
 				<LanguageSelector />
 				<LibrarySelector />
 				<ProfileMenu />

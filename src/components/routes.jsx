@@ -28,6 +28,7 @@ import ChapterPage from '../app/books/chapterPage';
 import PagesPage from '../app/books/pagesPage';
 import PageEditorPage from '../app/books/pageEditorPage';
 import ChapterViewerPage from '../app/books/chapterViewerPage';
+import PublishingPage from '../app/publishing/home.jsx';
 import SearchPage from '../app/search';
 
 const Routes = () => {
@@ -49,6 +50,7 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/series" component={SeriesPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/categories" component={CategoriesPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/search" component={SearchPage} exact />
+			<RouteWithLayout layout={fullWidthLayout} path="/publishing" component={PublishingPage} exact />
 			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
 			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
 			<Route path="/account/login" component={Login} layout={emptyLayout} />
