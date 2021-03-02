@@ -230,7 +230,7 @@
     "book.editor.fields.copyrights.title": "حقوق",
     "book.editor.fields.copyrights.placeholder": "حقوق کا انتخاب کریں۔۔۔",
     "book.editor.fields.public" : "عوامی",
-    "book.editor.fields.status" : "کیفیت",
+    "book.editor.fields.status.title" : "کیفیت",
     "book.messages.error.loading" : "کتاب  کے حصول میں  ناکامی ہوئی",
     "chapter.action.create" : "نئے باب کا اضافہ کریں",
     "chapter.messages.saved" : "باب محفوظ کر دیا گیا ہے",

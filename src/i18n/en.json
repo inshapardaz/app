@@ -230,7 +230,7 @@
     "book.editor.fields.copyrights.title": "Copyrights",
     "book.editor.fields.copyrights.placeholder": "Select copyrights...",
     "book.editor.fields.public" : "Public",
-    "book.editor.fields.status" : "Status",
+    "book.editor.fields.status.title" : "Status",
     "book.messages.error.loading" : "Unable to load book",
     "books.item.book.count" : "{count} Books",
     "chapter.action.create" : "Create new chapter",
