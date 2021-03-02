@@ -11,6 +11,7 @@ import AuthorDropDown from "../authors/authorDropdown";
 import SeriesDropDown from "../series/seriesDropdown";
 import LanguageDropDown from '../languageDropDown';
 import CopyrightDropDown from "../copyrightDropDown";
+import BookStatusDropDown from "./bookStatusDropDown";
 import CategoriesDropDown from "../categories/categoriesDropdown";
 import SubmitButton from "../submitButton";
 import EditorDialog from '../editorDialog';
@@ -34,6 +35,7 @@ const BookEditor = ({ show, book, createLink, onSaved, onCancelled }) => {
 		copyrights: 0,
 		language: 'en',
 		isPublic: false,
+		status: 0,
 		categories: []
 	};
 
@@ -176,6 +178,11 @@ const BookEditor = ({ show, book, createLink, onSaved, onCancelled }) => {
 							<InputLabel ><FormattedMessage id="book.editor.fields.copyrights.title" /></InputLabel>
 							<CopyrightDropDown name="copyrights" as="select" error={errors.copyrights && touched.copyrights} />
 						</FormControl>
+						<FormControl variant="outlined" margin="normal" fullWidth error={errors.status && touched.status}>
+							<InputLabel ><FormattedMessage id="book.editor.fields.status.title" /></InputLabel>
+							<BookStatusDropDown name="status" as="select" error={errors.copyrights && touched.status} />
+						</FormControl>
+
 						{book && book.links && book.links.image_upload && (
 							<DropzoneArea
 								onChange={(files) => handleImageUpload(files)}

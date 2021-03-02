@@ -230,6 +230,7 @@
     "book.editor.fields.copyrights.title": "Copyrights",
     "book.editor.fields.copyrights.placeholder": "Select copyrights...",
     "book.editor.fields.public" : "Public",
+    "book.editor.fields.status" : "Status",
     "book.messages.error.loading" : "Unable to load book",
     "books.item.book.count" : "{count} Books",
     "chapter.action.create" : "Create new chapter",
@@ -299,6 +300,12 @@
 	"status.2": "Typed",
 	"status.3" : "Proof Reading",
 	"status.4" : "Completed",
+	"book.status.none" : "Select Book Status",
+	"book.status.0" : "Published",
+	"book.status.1": "Ready for typing",
+	"book.status.2": "Being Typed",
+	"book.status.3" : "Ready for proof reading",
+	"book.status.4" : "Proof Read",
 	"font.none" : "Select Font",
 	"font.FajerNooriNastalique" : "Fajer Noori Nastalique",
 	"font.PakNastaleeq": "Pak Nastaleeq",
@@ -319,5 +326,6 @@
 	"fontSize.medium" : "Medium",
 	"fontSize.large" : "Large",
 	"fontSize.larger" : "Larger",
-	"fontSize.extraLarge" : "Extra Large"
+	"fontSize.extraLarge" : "Extra Large",
+	"publishing.books.filter" : "Get books in status"
 }

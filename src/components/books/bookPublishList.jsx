@@ -31,16 +31,14 @@ const useStyles = () =>
 const classes = useStyles();
 
 // eslint-disable-next-line max-params
-const buildLinkToPage = (page, authorId, categoryId, seriesId, query, appendExtraParams = false) => {
+const buildLinkToPage = (page, status, query, appendExtraParams = false) => {
 	const location = useLocation();
 
 	let querystring = "";
 	querystring += page ? `page=${page}&` : "";
 	querystring += query ? `query=${query}&` : "";
+	querystring += status ? `status=${status}&` : "";
 	if (appendExtraParams) {
-		querystring += authorId ? `author=${authorId}` : "";
-		querystring += categoryId ? `category=${categoryId}` : "";
-		querystring += seriesId ? `series=${seriesId}` : "";
 		queryString += sortBy ? `sortBy=${sortBy}&` : "";
 	}
 	if (querystring !== "") {
@@ -49,7 +47,7 @@ const buildLinkToPage = (page, authorId, categoryId, seriesId, query, appendExtr
 	return `${location.pathname}${querystring}`;
 };
 
-const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }) => {
+const BookPublishList = ({ page = 1, query = null, status = 'AvailableForTyping', sortBy = null }) => {
 	const confirm = useConfirm();
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
@@ -61,13 +59,15 @@ const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }
 	const [isError, setError] = useState(false);
 
 	const loadData = () => {
+		if (status === null) {
+			return;
+		}
+
 		setLoading(true);
 		libraryService
-			.getBooks(
-				authorId ? authorId : null,
-				categoryId ? categoryId : null,
-				seriesId ? seriesId : null,
+			.getBooksInPublish(
 				query ? query : null,
+				status ? status : null,
 				page,
 				sortBy ? sortBy : null,
 			)
@@ -80,7 +80,7 @@ const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }
 
 	useEffect(() => {
 		loadData();
-	}, [page, query, categoryId, authorId, seriesId]);
+	}, [page, query, status]);
 
 	const handleClose = () => {
 		setSelectedBook(null);
@@ -184,9 +184,7 @@ const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }
 								component={Link}
 								to={buildLinkToPage(
 									item.page,
-									authorId,
-									categoryId,
-									seriesId,
+									status,
 									query
 								)}
 								{...item}
@@ -242,4 +240,4 @@ const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }
 	);
 };
 
-export default BookList;
+export default BookPublishList;

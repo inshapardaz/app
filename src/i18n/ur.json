@@ -230,6 +230,7 @@
     "book.editor.fields.copyrights.title": "حقوق",
     "book.editor.fields.copyrights.placeholder": "حقوق کا انتخاب کریں۔۔۔",
     "book.editor.fields.public" : "عوامی",
+    "book.editor.fields.status" : "کیفیت",
     "book.messages.error.loading" : "کتاب  کے حصول میں  ناکامی ہوئی",
     "chapter.action.create" : "نئے باب کا اضافہ کریں",
     "chapter.messages.saved" : "باب محفوظ کر دیا گیا ہے",
@@ -295,6 +296,12 @@
 	"status.2": "ٹائپ مکمل",
 	"status.3" : "پروف ریڈ",
 	"status.4" : "مکمل",
+	"book.status.none" : "کتاب کی کیفیت چنیں",
+	"book.status.0" : "چھپ چکی ہے",
+	"book.status.1": "ٹایپ کے لئے دستیاب",
+	"book.status.2": "ٹایپ ہو رہے ہے",
+	"book.status.3" : "پروف ریڈ کے لئے تیار",
+	"book.status.4" : "پروف ریڈ ہو رہی ہے",
 	"font.none" : "فونٹ چنیں",
 	"font.FajerNooriNastalique" : "فجر نوری نستعلیق",
 	"font.PakNastaleeq": "پاک نستعلیق",
@@ -308,12 +315,14 @@
 	"font.UrduNaskhAsiatype" : "اردو نسخ ایشیا ٹائپ",
 	"font.Noto" : "نوٹو",
 	"font.AlviLahoriNastaleeq" : "علوی لاہوری نستعلیق",
-	"font.JameelNooriNastaleeq" : "جمیل نورہ نستعلیق",
+	"font.JameelNooriNastaleeq" : "جمیل نوری نستعلیق",
 	"fontSize.none" : "فونٹ سائز چنیں",
 	"fontSize.small" : "چھوٹا",
 	"fontSize.normal" : "عام",
 	"fontSize.medium" : "درمیانہ",
 	"fontSize.large" : "بڑا",
 	"fontSize.larger" : "مزید بڑا",
-	"fontSize.extraLarge" : "بڑا تر"
+	"fontSize.extraLarge" : "بڑا تر",
+	"publishing.books.filter" : "کتاب کیفیت میں"
+
 }

@@ -36,14 +36,14 @@ function App() {
 						libraryService.get(selectedLibrary.links.self)
 							.then(lib => {
 
-								if (lib == null) {
-									var firstLibrary = response.data[0];
-									libraryService.setSelectedLibrary(firstLibrary);
-									setLibrary(firstLibrary);
+								if (lib !== null) {
+									libraryService.setSelectedLibrary(lib);
+									setLibrary(lib);
 								}
-								else {
-									setLibrary(selectedLibrary);
-								}
+							}, e => {
+								var firstLibrary = response.data[0];
+								libraryService.setSelectedLibrary(firstLibrary);
+								setLibrary(firstLibrary);
 							});
 					}
 
