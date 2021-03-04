@@ -7,26 +7,26 @@ import BootstrapInput from '../bootstrapInput';
 
 const BookStatusDropDown = (props) => {
 	const intl = useIntl();
-	const locals = [{
-		id: 0,
-		name: intl.formatMessage({ id: 'book.status.0' })
+	const statuses = [{
+		key: 'Published',
+		name: intl.formatMessage({ id: 'book.status.Published' })
 	}, {
-		id: 1,
-		name: intl.formatMessage({ id: 'book.status.1' })
+		key: 'AvailableForTyping',
+		name: intl.formatMessage({ id: 'book.status.AvailableForTyping' })
 	}, {
-		id: 2,
-		name: intl.formatMessage({ id: 'book.status.2' })
+		key: 'BeingTyped',
+		name: intl.formatMessage({ id: 'book.status.BeingTyped' })
 	}, {
-		id: 3,
-		name: intl.formatMessage({ id: 'book.status.3' })
+		key: 'ReadyForProofRead',
+		name: intl.formatMessage({ id: 'book.status.ReadyForProofRead' })
 	}, {
-		id: 4,
-		name: intl.formatMessage({ id: 'book.status.4' })
+		key: 'ProofRead',
+		name: intl.formatMessage({ id: 'book.status.ProofRead' })
 	}];
 
 	return (
 		<Field component={Select} as="select" variant="outlined" input={<BootstrapInput />} {...props}>
-			{locals.map(l => <MenuItem key={l.id} value={l.id}>{l.name}</MenuItem>)}
+			{statuses.map(l => <MenuItem key={l.key} value={l.key}>{l.name}</MenuItem>)}
 		</Field>
 	);
 };

@@ -10,25 +10,20 @@ const BookStatusDropDown = ({ value, onStatusSelected }) => {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
 	const statuses = [{
-		id: 0,
 		key: 'Published',
-		name: intl.formatMessage({ id: 'book.status.0' })
+		name: intl.formatMessage({ id: 'book.status.Published' })
 	}, {
-		id: 1,
 		key: 'AvailableForTyping',
-		name: intl.formatMessage({ id: 'book.status.1' })
+		name: intl.formatMessage({ id: 'book.status.AvailableForTyping' })
 	}, {
-		id: 2,
 		key: 'BeingTyped',
-		name: intl.formatMessage({ id: 'book.status.2' })
+		name: intl.formatMessage({ id: 'book.status.BeingTyped' })
 	}, {
-		id: 3,
 		key: 'ReadyForProofRead',
-		name: intl.formatMessage({ id: 'book.status.3' })
+		name: intl.formatMessage({ id: 'book.status.ReadyForProofRead' })
 	}, {
-		id: 4,
 		key: 'ProofRead',
-		name: intl.formatMessage({ id: 'book.status.4' })
+		name: intl.formatMessage({ id: 'book.status.ProofRead' })
 	}];
 
 	const handleClick = (event) => {
@@ -47,7 +42,7 @@ const BookStatusDropDown = ({ value, onStatusSelected }) => {
 	};
 
 	const renderMenuItem = (status) => {
-		return (<MenuItem key={status.id} onClick={() => onItemClicked(status)}>{`${status.name}`}</MenuItem>);
+		return (<MenuItem key={status.key} onClick={() => onItemClicked(status)}>{`${status.name}`}</MenuItem>);
 	}
 
 	const selectedStatus = statuses.find(s => s.key === value);

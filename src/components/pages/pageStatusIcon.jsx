@@ -13,27 +13,27 @@ const PageStatusIcon = ({ status }) => {
 	switch (status) {
 		case 0: //Available
 			return (
-				<Tooltip title={<FormattedMessage id="status.0" />} >
+				<Tooltip title={<FormattedMessage id="status.Available" />} >
 					<InsertDriveFileOutlinedIcon />
 				</Tooltip>);
 		case 1: //Typing
 			return (
-				<Tooltip title={<FormattedMessage id="status.1" />} >
+				<Tooltip title={<FormattedMessage id="status.Typing" />} >
 					<AssignmentIndIcon />
 				</Tooltip>);
 		case 2: //Typed
 			return (
-				<Tooltip title={<FormattedMessage id="status.2" />} >
+				<Tooltip title={<FormattedMessage id="status.Typed" />} >
 					<AssignmentTurnedInIcon />
 				</Tooltip>);
 		case 3: //InReview
 			return (
-				<Tooltip title={<FormattedMessage id="status.3" />} >
+				<Tooltip title={<FormattedMessage id="status.InReview" />} >
 					<RateReviewIcon />
 				</Tooltip>);
 		case 4: //Completed
 			return (
-				<Tooltip title={<FormattedMessage id="status.4" />} >
+				<Tooltip title={<FormattedMessage id="status.Completed" />} >
 					<CheckCircleIcon />
 				</Tooltip>);
 		default:

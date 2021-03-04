@@ -9,16 +9,16 @@ const CopyrightDropDown = (props) => {
 	const intl = useIntl();
 	const locals = [{
 		id: 0,
-		name: intl.formatMessage({ id: 'copyrights.0' })
+		name: intl.formatMessage({ id: 'copyrights.Copyright' })
 	}, {
 		id: 1,
-		name: intl.formatMessage({ id: 'copyrights.1' })
+		name: intl.formatMessage({ id: 'copyrights.PublicDomain' })
 	}, {
 		id: 2,
-		name: intl.formatMessage({ id: 'copyrights.2' })
+		name: intl.formatMessage({ id: 'copyrights.Open' })
 	}, {
 		id: 3,
-		name: intl.formatMessage({ id: 'copyrights.3' })
+		name: intl.formatMessage({ id: 'copyrights.CreativeCommons' })
 	}];
 
 	return (
