@@ -18,7 +18,6 @@ const SeriePage = () => {
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
 
-	console.log(`Loading series page for ${id}`);
 	const loadData = () => {
 		const values = queryString.parse(location.search);
 		setPage(values.page);

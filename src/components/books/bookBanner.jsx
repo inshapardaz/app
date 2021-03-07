@@ -35,7 +35,6 @@ const BookBanner = ({ book, onUpdate }) => {
 	if (book == null) return null;
 	const [showEditor, setShowEditor] = useState(false);
 	const classes = useStyles({ background: book.links.image });
-	console.log(book.links.image);
 	const renderAction = () => {
 
 		const renderEditLink = () => {

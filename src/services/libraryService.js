@@ -166,13 +166,15 @@ export const libraryService =
 	getBooksInPublish : (query = null, status = "AvailableForTyping", page = 1, sortBy = null, pageSize = 12) =>
 	{
 		let queryVal = getQueryParameter(query);
+
 		if (sortBy)
 		{
 			queryVal += `&sortBy=${sortBy}`;
 		}
+
 		if (queryVal)
 		{
-			return _get(`${libraryUrl()}/books?pageNumber=${page}&pageSize=${pageSize}&status=${status}`);
+			return _get(`${libraryUrl()}/books?pageNumber=${page}&pageSize=${pageSize}&status=${status}${queryVal}`);
 		}
 
 		return _get(`${libraryUrl()}/books?pageNumber=${page}&pageSize=${pageSize}&status=${status}${getQueryParameter(query)}`);

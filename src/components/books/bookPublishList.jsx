@@ -64,12 +64,13 @@ const BookPublishList = ({ page = 1, query = null, status = 'AvailableForTyping'
 		}
 
 		setLoading(true);
+
 		libraryService
 			.getBooksInPublish(
-				query ? query : null,
-				status ? status : null,
+				query,
+				status,
 				page,
-				sortBy ? sortBy : null,
+				sortBy,
 			)
 			.then((data) => {
 				setBooks(data);
