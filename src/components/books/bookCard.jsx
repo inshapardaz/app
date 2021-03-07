@@ -19,7 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 
 import Tooltip from '@material-ui/core/Tooltip';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { libraryService } from '../../services';
 import { LinearProgress } from '@material-ui/core';
 
@@ -106,13 +106,17 @@ const BookProgress = ({ book }) => {
 
 	const open = Boolean(anchorEl);
 
-	return (<>
+	if (book.status === 'Published') return null;
+
+	return (<CardActions>
 		<Typography variant="body2" color="textSecondary" component="span" onClick={handleClick} className={classes.progress}>
 			{book.pageCount > 0
-				? <FormattedMessage id="pages.progress" values={{ completed: book.progress, count: book.pageCount }} />
+				? <>
+					<FormattedMessage id="pages.progress" values={{ completed: book.progress, count: book.pageCount }} />
+					<LinearProgress value={book.progress} variant="determinate" />
+				</>
 				: <FormattedMessage id="pages.progress.none" />
 			}
-			<LinearProgress value={book.progress} variant="determinate" />
 		</Typography>
 		<Popover
 			id={book.id}
@@ -130,10 +134,11 @@ const BookProgress = ({ book }) => {
 		>
 			{popOver()}
 		</Popover>
-	</>);
+	</CardActions>);
 };
 
 const BookCell = ({ book, onOpen, onEdit, onDelete, onUpdated, showProgress = false }) => {
+	const intl = useIntl();
 	const classes = makeStyles(() => ({
 		root: {
 			maxWidth: 345
@@ -192,6 +197,34 @@ const BookCell = ({ book, onOpen, onEdit, onDelete, onUpdated, showProgress = fa
 		ev.target.src = defaultBookImage;
 	};
 
+	const renderBookStatus = () => {
+		const statuses = [{
+			key: 'Published',
+			name: intl.formatMessage({ id: 'book.status.Published' })
+		}, {
+			key: 'AvailableForTyping',
+			name: intl.formatMessage({ id: 'book.status.AvailableForTyping' })
+		}, {
+			key: 'BeingTyped',
+			name: intl.formatMessage({ id: 'book.status.BeingTyped' })
+		}, {
+			key: 'ReadyForProofRead',
+			name: intl.formatMessage({ id: 'book.status.ReadyForProofRead' })
+		}, {
+			key: 'ProofRead',
+			name: intl.formatMessage({ id: 'book.status.ProofRead' })
+		}];
+
+		if (!showProgress) return null;
+
+		return (
+			<CardActions>
+				<Typography variant="body2" color="textSecondary" component="span">
+					{statuses.find(x => x.key === book.status).name}
+				</Typography>
+			</CardActions>);
+	}
+
 	return (
 		<Card className={classes.root}>
 			<CardActionArea>
@@ -215,7 +248,8 @@ const BookCell = ({ book, onOpen, onEdit, onDelete, onUpdated, showProgress = fa
 					</Typography>
 				</CardContent>
 			</CardActionArea>
-			{showProgress && <CardActions><BookProgress book={book} /></CardActions>}
+			{renderBookStatus()}
+			{ showProgress && <BookProgress book={book} />}
 			<CardActions>
 				{renderEditLink()}
 				{renderDeleteLink()}

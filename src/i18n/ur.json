@@ -301,7 +301,7 @@
 	"book.status.none" : "کتاب کی کیفیت چنیں",
 	"book.status.Published" : "چھپ چکی ہے",
 	"book.status.AvailableForTyping": "ٹایپ کے لئے دستیاب",
-	"book.status.BeingTyped": "ٹایپ ہو رہے ہے",
+	"book.status.BeingTyped": "ٹایپ ہو رہی ہے",
 	"book.status.ReadyForProofRead" : "پروف ریڈ کے لئے تیار",
 	"book.status.ProofRead" : "پروف ریڈ ہو رہی ہے",
 	"font.none" : "فونٹ چنیں",
