@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,18 +13,32 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import EditAttributesIcon from '@material-ui/icons/EditAttributes';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import LayersIcon from '@material-ui/icons/Layers';
 import { makeStyles } from '@material-ui/core/styles';
+import Popover from '@material-ui/core/Popover';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import { FormattedMessage } from 'react-intl';
 import { libraryService } from '../../services';
+import { LinearProgress } from '@material-ui/core';
 
 const defaultBookImage = '/images/book_placeholder.jpg';
 
-function FavoriteButton({ book, onUpdated, onOpen }) {
+const useStyles = makeStyles((theme) => ({
+	progress: {
+		cursor: 'pointer'
+	},
+	popoverRoot: {
+		minWidth: 200
+	},
+	progressBar: {
+		marginTop: '2px',
+		marginBottom: '2px',
+	}
+}));
+
+const FavoriteButton = ({ book, onUpdated, onOpen }) => {
 	const changeFavorite = () => {
 		try {
 			if (book && book.links && book.links.create_favorite) {
@@ -59,10 +74,73 @@ function FavoriteButton({ book, onUpdated, onOpen }) {
 	return null;
 }
 
-function BookCell({ book, onOpen, onEdit, onDelete, onUpdated }) {
+const BookProgress = ({ book }) => {
+	const classes = useStyles();
+	const [anchorEl, setAnchorEl] = React.useState(null);
+
+	const handleClick = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const popOver = () => {
+		if (book.pageStatus) {
+			return (
+				<Box p={2} className={classes.popoverRoot}>
+					{
+						book.pageStatus.map(s => (
+							<div key={s.status}>
+								<Typography variant="caption" display="block" gutterBottom><FormattedMessage id={`status.${s.status}`} /></Typography>
+								<LinearProgress value={s.percentage} variant="determinate" className={classes.progressBar} color={s.status === 'Completed' ? 'primary' : 'secondary'} />
+							</div>
+						))
+					}
+				</Box>);
+		}
+
+		return (<Box p={2} className={classes.popoverRoot}><Typography component="span"><FormattedMessage id="pages.progress.none" /></Typography></Box >);
+	}
+
+	const open = Boolean(anchorEl);
+
+	return (<>
+		<Typography variant="body2" color="textSecondary" component="span" onClick={handleClick} className={classes.progress}>
+			{book.pageCount > 0
+				? <FormattedMessage id="pages.progress" values={{ completed: book.progress, count: book.pageCount }} />
+				: <FormattedMessage id="pages.progress.none" />
+			}
+			<LinearProgress value={book.progress} variant="determinate" />
+		</Typography>
+		<Popover
+			id={book.id}
+			open={open}
+			anchorEl={anchorEl}
+			onClose={handleClose}
+			anchorOrigin={{
+				vertical: 'bottom',
+				horizontal: 'left',
+			}}
+			transformOrigin={{
+				vertical: 'top',
+				horizontal: 'center',
+			}}
+		>
+			{popOver()}
+		</Popover>
+	</>);
+};
+
+const BookCell = ({ book, onOpen, onEdit, onDelete, onUpdated, showProgress = false }) => {
 	const classes = makeStyles(() => ({
 		root: {
 			maxWidth: 345
+		},
+		cardProgress: {
+			paddingTop: '2px',
+			paddingBottom: '2px',
 		}
 	}));
 
@@ -137,6 +215,7 @@ function BookCell({ book, onOpen, onEdit, onDelete, onUpdated }) {
 					</Typography>
 				</CardContent>
 			</CardActionArea>
+			{showProgress && <CardActions><BookProgress book={book} /></CardActions>}
 			<CardActions>
 				{renderEditLink()}
 				{renderDeleteLink()}

@@ -163,6 +163,7 @@ const BookPublishList = ({ page = 1, query = null, status = 'AvailableForTyping'
 							onEdit={onEditClicked}
 							onDelete={onDeleteClicked}
 							onUpdated={handleDataChanged}
+							showProgress={true}
 						/>
 					</Grid>
 				))}
