@@ -76,6 +76,7 @@ const FavoriteButton = ({ book, onUpdated, onOpen }) => {
 
 const BookProgress = ({ book }) => {
 	const classes = useStyles();
+	const intl = useIntl();
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
 	const handleClick = (event) => {
@@ -112,7 +113,11 @@ const BookProgress = ({ book }) => {
 		<Typography variant="body2" color="textSecondary" component="span" onClick={handleClick} className={classes.progress}>
 			{book.pageCount > 0
 				? <>
-					<FormattedMessage id="pages.progress" values={{ completed: book.progress, count: book.pageCount }} />
+					<FormattedMessage id="pages.progress" values={{
+						completed: intl.formatNumber(book.progress, {
+							style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 0
+						}), count: book.pageCount
+					}} />
 					<LinearProgress value={book.progress} variant="determinate" />
 				</>
 				: <FormattedMessage id="pages.progress.none" />

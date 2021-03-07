@@ -271,7 +271,7 @@
     "copyrights.Open": "Open",
 	"copyrights.CreativeCommons": "Creative Commons",
 	"pages.label" : "Pages",
-	"pages.progress" : "Completed { completed }% of {count} Pages",
+	"pages.progress" : "Completed { completed } of {count} Pages",
 	"pages.progress.none" : "Book contains no pages",
 	"page.assignedToMe.label": "Assigned to me",
 	"page.assignedTo.label": "Assigned to {name}",

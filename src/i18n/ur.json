@@ -268,7 +268,7 @@
 	"copyrights.Open": "آزاد",
 	"copyrights.CreativeCommons":	"کریئیٹو کامن",
 	"pages.label" : "صفحات",
-	"pages.progress" : "{count} صفحات میں {completed }%  مکمل ہیں",
+	"pages.progress" : "{count} صفحات میں {completed }  مکمل ہیں",
 	"pages.progress.none" : "کتاب کے صفحات موجود نہیں۔",
 	"page.assignedToMe.label": "مجھے سونپ دیں",
 	"page.assignedTo.label": "سونپا گیا ہے {name} کو",
