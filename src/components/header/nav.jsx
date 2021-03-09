@@ -16,6 +16,7 @@ import LanguageSelector from './languageSelector.jsx';
 import CategorySelector from './categorySelector.jsx';
 import LibrarySelector from './librarySelector.jsx';
 import { libraryService } from '../../services';
+import { orange } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -37,6 +38,13 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		[theme.breakpoints.up('md')]: {
 			display: 'none'
+		}
+	},
+	publishButton: {
+		color: theme.palette.getContrastText(orange[500]),
+		backgroundColor: orange[500],
+		'&:hover': {
+			backgroundColor: orange[700],
 		}
 	}
 }));
@@ -69,9 +77,9 @@ function Nav() {
 			}
 			else {
 				return (<Button aria-label="publishing"
-					color="inherit"
+					color="primary"
 					component={Link} to="/publishing"
-					className={classes.button}
+					className={classes.publishButton}
 					startIcon={<CreateIcon />}
 				>
 					<FormattedMessage id="header.publishing" />
