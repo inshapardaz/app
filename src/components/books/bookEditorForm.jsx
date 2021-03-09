@@ -13,27 +13,28 @@ import LanguageDropDown from '../languageDropDown';
 import CopyrightDropDown from "../copyrightDropDown";
 import CategoriesDropDown from "../categories/categoriesDropdown";
 import SubmitButton from "../submitButton";
-import EditorDialog from '../editorDialog';
 import { libraryService } from "../../services";
 
-const BookEditorForm = ({ book, createLink }) => {
+const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
 	const [busy, setBusy] = useState(false);
 	const [savedBook, setSavedBook] = useState();
+	const selectedLibrary = libraryService.getSelectedLibrary();
 
 	const initialValues = {
 		title: '',
 		description: '',
-		yearPublished: '',
+		yearPublished: null,
 		authorId: null,
 		authorName: '',
 		seriesId: null,
 		seriesName: '',
 		seriesIndex: null,
-		copyrights: 0,
-		language: 'en',
+		copyrights: "Copyright",
+		language: selectedLibrary != null ? selectedLibrary.language : 'en',
 		isPublic: false,
+		status: "AvailableForTyping",
 		categories: []
 	};
 
@@ -52,13 +53,18 @@ const BookEditorForm = ({ book, createLink }) => {
 
 	function onSubmit(fields) {
 		setBusy(true);
-		if (fields.categories && fields.categories.length > 0) {
-			fields.categories = fields.categories.map((c) => ({ id: c.id }));
+		onBusy && onBusy(true);
+		const data = { ...fields };
+		if (data.categories && data.categories.length > 0) {
+			data.categories = data.categories.map((c) => ({ id: c.id }));
+		}
+		else {
+			data.categories = null;
 		}
 
 		if (book === null && createLink !== null) {
 			libraryService
-				.post(createLink, fields)
+				.post(createLink, data)
 				.then(() => {
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 					if (onSaved) onSaved();
@@ -70,7 +76,7 @@ const BookEditorForm = ({ book, createLink }) => {
 		}
 		else if (book !== null) {
 			libraryService
-				.put(book.links.update, fields)
+				.put(book.links.update, data)
 				.then(() => {
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 					if (onSaved) onSaved();
@@ -80,6 +86,7 @@ const BookEditorForm = ({ book, createLink }) => {
 				})
 				.finally(() => setBusy(false));
 		}
+		onBusy && onBusy(false);
 		setBusy(false);
 	}
 

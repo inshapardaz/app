@@ -8,16 +8,16 @@ import BootstrapInput from './bootstrapInput';
 const CopyrightDropDown = (props) => {
 	const intl = useIntl();
 	const locals = [{
-		id: 0,
+		id: "Copyright",
 		name: intl.formatMessage({ id: 'copyrights.Copyright' })
 	}, {
-		id: 1,
+		id: "PublicDomain",
 		name: intl.formatMessage({ id: 'copyrights.PublicDomain' })
 	}, {
-		id: 2,
+		id: "Open",
 		name: intl.formatMessage({ id: 'copyrights.Open' })
 	}, {
-		id: 3,
+		id: "CreativeCommons",
 		name: intl.formatMessage({ id: 'copyrights.CreativeCommons' })
 	}];
 
