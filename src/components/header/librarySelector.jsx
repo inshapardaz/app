@@ -43,6 +43,7 @@ export default function LibrarySelector() {
 	const selectLibrary = (library) => {
 		libraryService.setSelectedLibrary(library);
 		history.push(`/`);
+		handleClose();
 	};
 
 	const langMenu = (
