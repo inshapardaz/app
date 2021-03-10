@@ -1,5 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
@@ -9,9 +10,9 @@ import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
 import { libraryService } from '../../services';
-import { FormattedMessage } from 'react-intl';
 
 export default function LibrarySelector() {
+	const history = useHistory();
 	let libraries = libraryService.getUserLibrariesFromCache();
 	let selectedLibrary = libraryService.getSelectedLibrary();
 
@@ -41,7 +42,7 @@ export default function LibrarySelector() {
 
 	const selectLibrary = (library) => {
 		libraryService.setSelectedLibrary(library);
-		window.location.reload();
+		history.push(`/`);
 	};
 
 	const langMenu = (
