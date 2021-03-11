@@ -4,7 +4,7 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { DropzoneArea } from "material-ui-dropzone";
-import { FormControl, InputLabel } from "@material-ui/core";
+import { FormControl, InputLabel, Grid } from "@material-ui/core";
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 
 import AuthorDropDown from "../authors/authorDropdown";
@@ -25,22 +25,18 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 	const initialValues = {
 		title: '',
 		description: '',
-		yearPublished: null,
-		authorId: null,
+		yearPublished: '',
+		authorId: '',
 		authorName: '',
-		seriesId: null,
+		seriesId: '',
 		seriesName: '',
-		seriesIndex: null,
+		seriesIndex: '',
 		copyrights: "Copyright",
 		language: selectedLibrary != null ? selectedLibrary.language : 'en',
 		isPublic: false,
 		status: "AvailableForTyping",
 		categories: []
 	};
-
-	useEffect(() => {
-		setSavedBook(book);
-	}, [book]);
 
 	const validationSchema = Yup.object().shape({
 		title: Yup.string()
@@ -50,6 +46,10 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 		language: Yup.string()
 			.required(intl.formatMessage({ id: 'book.editor.fields.language.error' }))
 	});
+
+	useEffect(() => {
+		setSavedBook(book);
+	}, [book]);
 
 	function onSubmit(fields) {
 		setBusy(true);
@@ -109,78 +109,93 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 		}
 	};
 
+	const canUpload = () => book && book.links && book.links.image_upload;
+
 	return (<Formik initialValues={savedBook || initialValues} validationSchema={validationSchema} onSubmit={onSubmit} enableReinitialize>
 		{({ errors, touched, isSubmitting, values, setFieldValue }) => (
 			<Form>
-				<Field component={TextField} autoFocus name="title" type="text" variant="outlined" margin="normal" fullWidth
-					label={<FormattedMessage id="book.editor.fields.name.title" />} error={errors.title && touched.title}
-				/>
-				<Field component={TextField} name="description" type="text" variant="outlined" margin="normal" fullWidth
-					multiline rows={5}
-					label={<FormattedMessage id="book.editor.fields.description.title" />} error={errors.description && touched.description}
-				/>
-				<FormControl variant="outlined" margin="normal" fullWidth error={errors.authorId && touched.authorId}>
-					<InputLabel><FormattedMessage id="book.editor.fields.author.title" /></InputLabel>
-					<AuthorDropDown name="authorId" error={errors.authorId && touched.authorId}
-						value={{ id: values.authorId, name: values.authorName }}
-						onAuthorSelected={(selectedAuthor) => {
-							setFieldValue(
-								"authorId",
-								selectedAuthor !== null ? selectedAuthor : initialValues.authorId
-							);
-						}} />
-				</FormControl>
-				<Field component={CheckboxWithLabel} type="checkbox" id="isPublic" name="isPublic" margin="normal"
-					Label={{ label: intl.formatMessage({ id: "book.editor.fields.public" }) }}
-					error={errors.isPublic && touched.isPublic}
-				/>
-				<FormControl variant="outlined" margin="normal" fullWidth error={errors.authorId && touched.authorId}>
-					<InputLabel><FormattedMessage id="book.editor.fields.categories.title" /></InputLabel>
-					<CategoriesDropDown name="categories" error={errors.categories && touched.categories}
-						defaultValue={values.categories}
-						onCategoriesSelected={(selectedCategories) => {
-							setFieldValue(
-								"categories",
-								selectedCategories !== null ? selectedCategories : initialValues.categories
-							);
-						}} />
-				</FormControl>
-				<Field component={TextField} name="yearPublished" type="number" variant="outlined" margin="normal" fullWidth
-					label={<FormattedMessage id="book.editor.fields.yearPublished.title" />} error={errors.yearPublished && touched.yearPublished}
-				/>
-				<FormControl variant="outlined" margin="normal" fullWidth error={errors.language && touched.language}>
-					<InputLabel ><FormattedMessage id="book.editor.fields.language.title" /></InputLabel>
-					<LanguageDropDown name="language" as="select" error={errors.language && touched.language} />
-				</FormControl>
-				<FormControl variant="outlined" margin="normal" fullWidth error={errors.seriesId && touched.seriesId}>
-					<InputLabel><FormattedMessage id="book.editor.fields.series.title" /></InputLabel>
-					<SeriesDropDown fullWidth id="seriesId" error={errors.seriesId && touched.seriesId}
-						defaultValue={{ id: values.seriesId, name: values.seriesName }}
-						onSeriesSelected={(selectedSeries) => {
-							setFieldValue(
-								"seriesId",
-								selectedSeries !== null ? selectedSeries : initialValues.authorId
-							);
-						}} />
-				</FormControl>
-				<Field component={TextField} name="seriesIndex" type="number" variant="outlined" margin="normal" fullWidth
-					value={values.seriesIndex || ''}
-					label={<FormattedMessage id="book.editor.fields.seriesIndex.title" />} error={errors.seriesIndex && touched.seriesIndex}
-				/>
-				<FormControl variant="outlined" margin="normal" fullWidth error={errors.copyrights && touched.copyrights}>
-					<InputLabel ><FormattedMessage id="book.editor.fields.copyrights.title" /></InputLabel>
-					<CopyrightDropDown name="copyrights" as="select" error={errors.copyrights && touched.copyrights} />
-				</FormControl>
-				{book && book.links && book.links.image_upload && (
-					<DropzoneArea
-						onChange={(files) => handleImageUpload(files)}
-						filesLimit={1}
-						acceptedFiles={["image/*"]}
-						dropzoneText={intl.formatMessage({
-							id: "message.image.upload",
-						})}
-					/>
-				)}
+				<Grid container spacing={3}>
+					<Grid item md={canUpload() ? 6 : 12} >
+						<Field component={TextField} autoFocus name="title" type="text" variant="outlined" margin="normal" fullWidth
+							label={<FormattedMessage id="book.editor.fields.name.title" />} error={errors.title && touched.title}
+						/>
+						<Field component={TextField} name="description" type="text" variant="outlined" margin="normal" fullWidth
+							multiline rows={5}
+							label={<FormattedMessage id="book.editor.fields.description.title" />} error={errors.description && touched.description}
+						/>
+						<FormControl margin="normal" fullWidth>
+							<AuthorDropDown name="authorId" variant="outlined"
+								error={errors.authorId && touched.authorId}
+								label={intl.formatMessage({ id: "book.editor.fields.author.title" })}
+								value={values.authorId ? { id: values.authorId, name: values.authorName } : null}
+								onAuthorSelected={(selectedAuthor) => {
+									setFieldValue("authorId", selectedAuthor !== null ? selectedAuthor.id : initialValues.authorId);
+									setFieldValue("authorName", selectedAuthor !== null ? selectedAuthor.name : initialValues.authorName);
+								}} />
+						</FormControl>
+						<Field component={CheckboxWithLabel} type="checkbox" id="isPublic" name="isPublic" margin="normal"
+							Label={{ label: intl.formatMessage({ id: "book.editor.fields.public" }) }}
+							error={errors.isPublic && touched.isPublic}
+						/>
+					</Grid>
+					{canUpload() && (
+						<Grid item md={6}>
+							<DropzoneArea
+								onChange={(files) => handleImageUpload(files)}
+								filesLimit={1}
+								acceptedFiles={["image/*"]}
+								dropzoneText={intl.formatMessage({
+									id: "message.image.upload",
+								})}
+							/>
+						</Grid>
+					)}
+				</Grid>
+				<Grid container spacing={3} >
+					<Grid item md={6}>
+						<FormControl variant="outlined" margin="normal" fullWidth error={errors.categories && touched.categories}>
+							<CategoriesDropDown name="categories" error={errors.categories && touched.categories}
+								label={intl.formatMessage({ id: "book.editor.fields.categories.title" })}
+								value={values.categories}
+								onCategoriesSelected={(selectedCategories) => {
+									setFieldValue(
+										"categories",
+										selectedCategories !== null ? selectedCategories : initialValues.categories
+									);
+								}} />
+						</FormControl>
+						<Field component={TextField} name="yearPublished" type="number" variant="outlined" margin="normal" fullWidth
+							label={intl.formatMessage({ id: "book.editor.fields.yearPublished.title" })}
+							error={errors.yearPublished && touched.yearPublished}
+						/>
+						<FormControl variant="outlined" margin="normal" fullWidth error={errors.language && touched.language}>
+							<LanguageDropDown name="language" as="select"
+								label={intl.formatMessage({ id: "book.editor.fields.language.title" })}
+								error={errors.language && touched.language} />
+						</FormControl>
+					</Grid>
+					<Grid item md={6}>
+						<FormControl variant="outlined" margin="normal" fullWidth error={errors.seriesId && touched.seriesId}>
+							<SeriesDropDown fullWidth id="seriesId" error={errors.seriesId && touched.seriesId}
+								label={intl.formatMessage({ id: "book.editor.fields.series.title" })}
+								value={values.seriesId ? { id: values.seriesId, name: values.seriesName } : null}
+								onSeriesSelected={(selectedSeries) => {
+									setFieldValue("seriesId", selectedSeries !== null ? selectedSeries.id : initialValues.seriesId);
+									setFieldValue("seriesName", selectedSeries !== null ? selectedSeries.name : initialValues.seriesName);
+								}} />
+						</FormControl>
+						<Field component={TextField} name="seriesIndex" type="number" variant="outlined" margin="normal" fullWidth
+							label={<FormattedMessage id="book.editor.fields.seriesIndex.title" />}
+							error={errors.seriesIndex && touched.seriesIndex}
+						/>
+						<FormControl variant="outlined" margin="normal" fullWidth error={errors.copyrights && touched.copyrights}
+							label={intl.formatMessage({ id: "book.editor.fields.copyrights.title" })}
+						>
+							<CopyrightDropDown name="copyrights" as="select" error={errors.copyrights && touched.copyrights} />
+						</FormControl>
+					</Grid>
+				</Grid>
+
 				<SubmitButton busy={isSubmitting} label={<FormattedMessage id="action.save" />} />
 			</Form>
 		)}
