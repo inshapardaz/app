@@ -27,6 +27,7 @@ const SeriesDropDown = ({ label, value, onSeriesSelected }, props) => {
 		onChange={(event, newValue) => onSeriesSelected(newValue)}
 		getOptionSelected={(option, value) => option.id === value.id}
 		getOptionLabel={(option) => option.name}
+		onInputChange={(e, value) => setText(value)}
 		renderInput={(params) => <TextField {...params} label={label} variant="outlined" />}
 	/>);
 };

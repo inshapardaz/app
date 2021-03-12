@@ -3,7 +3,6 @@ import { useIntl } from "react-intl";
 import { Field } from 'formik';
 import { Select } from 'formik-material-ui';
 import MenuItem from '@material-ui/core/MenuItem';
-import BootstrapInput from './bootstrapInput';
 
 const CopyrightDropDown = (props) => {
 	const intl = useIntl();
@@ -22,7 +21,7 @@ const CopyrightDropDown = (props) => {
 	}];
 
 	return (
-		<Field component={Select} as="select" variant="outlined" input={<BootstrapInput />} {...props}>
+		<Field component={Select} as="select" {...props}>
 			{locals.map(l => <MenuItem key={l.id} value={l.id}>{l.name}</MenuItem>)}
 		</Field>
 	);

@@ -33,7 +33,8 @@ const AuthorDropDown = ({ onAuthorSelected, error, value, label, variant }, prop
 		getOptionSelected={(option, value) => option.id === value.id}
 		getOptionLabel={(option) => option ? option.name : ''}
 		noOptionsText={intl.formatMessage({ id: "authors.messages.empty" })}
-		renderInput={(params) => <TextField {...params} label={label} variant="outlined" />}
+		onInputChange={(e, value) => setText(value)}
+		renderInput={(params) => <TextField {...params} label={label} error={error} variant={variant} />}
 	/>);
 };
 

@@ -55,6 +55,11 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 		setBusy(true);
 		onBusy && onBusy(true);
 		const data = { ...fields };
+
+		if (data.yearPublished === '') data.yearPublished = null;
+		if (data.seriesId === '') data.seriesId = null;
+		if (data.seriesIndex === '') data.seriesIndex = null;
+
 		if (data.categories && data.categories.length > 0) {
 			data.categories = data.categories.map((c) => ({ id: c.id }));
 		}
@@ -188,10 +193,9 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 							label={<FormattedMessage id="book.editor.fields.seriesIndex.title" />}
 							error={errors.seriesIndex && touched.seriesIndex}
 						/>
-						<FormControl variant="outlined" margin="normal" fullWidth error={errors.copyrights && touched.copyrights}
-							label={intl.formatMessage({ id: "book.editor.fields.copyrights.title" })}
-						>
-							<CopyrightDropDown name="copyrights" as="select" error={errors.copyrights && touched.copyrights} />
+						<FormControl variant="outlined" margin="normal" fullWidth error={errors.copyrights && touched.copyrights}>
+							<CopyrightDropDown name="copyrights" as="select" error={errors.copyrights && touched.copyrights}
+								label={intl.formatMessage({ id: "book.editor.fields.copyrights.title" })} />
 						</FormControl>
 					</Grid>
 				</Grid>
