@@ -25,7 +25,7 @@ const BookStatusDropDown = (props) => {
 	}];
 
 	return (
-		<Field component={Select} as="select" variant="outlined" input={<BootstrapInput />} {...props}>
+		<Field component={Select} as="select" input={<BootstrapInput />} {...props}>
 			{statuses.map(l => <MenuItem key={l.key} value={l.key}>{l.name}</MenuItem>)}
 		</Field>
 	);

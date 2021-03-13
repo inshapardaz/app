@@ -4,6 +4,7 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { DropzoneArea } from "material-ui-dropzone";
+import ImageUpload from '../imageUpload';
 import { FormControl, InputLabel, Grid } from "@material-ui/core";
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 
@@ -14,29 +15,31 @@ import CopyrightDropDown from "../copyrightDropDown";
 import CategoriesDropDown from "../categories/categoriesDropdown";
 import SubmitButton from "../submitButton";
 import { libraryService } from "../../services";
+import BookStatusDropDown from "./bookStatusDropDown";
+
+const selectedLibrary = libraryService.getSelectedLibrary();
+const initialValues = {
+	title: '',
+	description: '',
+	yearPublished: '',
+	authorId: '',
+	authorName: '',
+	seriesId: '',
+	seriesName: '',
+	seriesIndex: '',
+	copyrights: "Copyright",
+	language: selectedLibrary != null ? selectedLibrary.language : 'en',
+	isPublic: false,
+	status: "AvailableForTyping",
+	categories: []
+};
 
 const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
 	const [busy, setBusy] = useState(false);
+	const [newCover, setNewCover] = useState(null);
 	const [savedBook, setSavedBook] = useState();
-	const selectedLibrary = libraryService.getSelectedLibrary();
-
-	const initialValues = {
-		title: '',
-		description: '',
-		yearPublished: '',
-		authorId: '',
-		authorName: '',
-		seriesId: '',
-		seriesName: '',
-		seriesIndex: '',
-		copyrights: "Copyright",
-		language: selectedLibrary != null ? selectedLibrary.language : 'en',
-		isPublic: false,
-		status: "AvailableForTyping",
-		categories: []
-	};
 
 	const validationSchema = Yup.object().shape({
 		title: Yup.string()
@@ -70,11 +73,16 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 		if (book === null && createLink !== null) {
 			libraryService
 				.post(createLink, data)
-				.then(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
+				.then((res) => {
 					if (onSaved) onSaved();
+					if (newCover) {
+						return uploadImage(res);
+					}
+					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 				})
-				.catch(() => {
+				.catch((e) => {
+					console.log('error creating book');
+					console.dir(e)
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
 				})
 				.finally(() => setBusy(false));
@@ -83,44 +91,51 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 			libraryService
 				.put(book.links.update, data)
 				.then(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 					if (onSaved) onSaved();
+					if (newCover) {
+						return uploadImage(book);
+					}
+					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 				})
-				.catch(() => {
+				.catch((e) => {
+					console.log('error updating book');
+					console.dir(e)
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
 				})
 				.finally(() => setBusy(false));
 		}
-		onBusy && onBusy(false);
-		setBusy(false);
 	}
 
-	const handleImageUpload = (files) => {
-		if (files.length < 1) {
+	const uploadImage = (response) => {
+		if (!response || !response.links || !response.links.image_upload) {
 			return;
 		}
 
 		setBusy(true);
-		if (book && book.links.image_upload !== null) {
-			libraryService.upload(book.links.image_upload, files[0])
-				.then(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
-					if (onSaved) onSaved();
-				})
-				.catch(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
-				})
-				.finally(() => setBusy(false));
+		libraryService.upload(response.links.image_upload, newCover)
+			.then(() => {
+				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
+				if (onSaved) onSaved();
+			})
+			.catch((e) => {
+				console.log('error saving image');
+				console.dir(e)
+				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
+			})
+			.finally(() => setBusy(false));
+	}
+
+	const handleImageUpload = (file) => {
+		if (file) {
+			setNewCover(file);
 		}
 	};
-
-	const canUpload = () => book && book.links && book.links.image_upload;
 
 	return (<Formik initialValues={savedBook || initialValues} validationSchema={validationSchema} onSubmit={onSubmit} enableReinitialize>
 		{({ errors, touched, isSubmitting, values, setFieldValue }) => (
 			<Form>
 				<Grid container spacing={3}>
-					<Grid item md={canUpload() ? 6 : 12} >
+					<Grid item md={6} >
 						<Field component={TextField} autoFocus name="title" type="text" variant="outlined" margin="normal" fullWidth
 							label={<FormattedMessage id="book.editor.fields.name.title" />} error={errors.title && touched.title}
 						/>
@@ -142,19 +157,19 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 							Label={{ label: intl.formatMessage({ id: "book.editor.fields.public" }) }}
 							error={errors.isPublic && touched.isPublic}
 						/>
+						<FormControl variant="outlined" margin="normal" fullWidth error={errors.status && touched.status}>
+							<BookStatusDropDown name="status" as="select"
+								label={intl.formatMessage({ id: "book.editor.fields.status.title" })}
+								error={errors.status && touched.status} />
+						</FormControl>
 					</Grid>
-					{canUpload() && (
-						<Grid item md={6}>
-							<DropzoneArea
-								onChange={(files) => handleImageUpload(files)}
-								filesLimit={1}
-								acceptedFiles={["image/*"]}
-								dropzoneText={intl.formatMessage({
-									id: "message.image.upload",
-								})}
-							/>
-						</Grid>
-					)}
+					<Grid item md={6}>
+						<FormControl variant="outlined" margin="normal" fullWidth>
+							<ImageUpload imageUrl={savedBook && savedBook.links ? savedBook.links.image : null} defaultImage='/images/book_placeholder.jpg'
+								onImageSelected={handleImageUpload}
+								height="420" />
+						</FormControl>
+					</Grid>
 				</Grid>
 				<Grid container spacing={3} >
 					<Grid item md={6}>
