@@ -24,7 +24,7 @@ function AuthorCard({ author, onEdit, onDelete }) {
 	}));
 
 	const renderEditLink = () => {
-		if (author.links.update) {
+		if (author && author.links && author.links.update) {
 			return (
 				<IconButton onClick={() => onEdit(author)}>
 					<EditOutlinedIcon />
@@ -34,7 +34,7 @@ function AuthorCard({ author, onEdit, onDelete }) {
 	};
 
 	const renderDeleteLink = () => {
-		if (author.links.delete) {
+		if (author && author.links && author.links.delete) {
 			return (
 				<IconButton onClick={() => onDelete(author)}>
 					<DeleteForeverOutlinedIcon />

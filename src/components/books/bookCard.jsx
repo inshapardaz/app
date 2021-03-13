@@ -236,8 +236,8 @@ const BookCell = ({ book, onOpen, onEdit, onDelete, onUpdated, showProgress = fa
 				<CardMedia
 					component="img"
 					alt={book.title}
-					width="360"
-					height="509"
+					width="282"
+					height="400"
 					image={(book.links ? book.links.image : null) || defaultBookImage}
 					title={book.title}
 					onError={setDefaultBookImage}

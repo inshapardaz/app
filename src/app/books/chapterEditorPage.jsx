@@ -101,7 +101,6 @@ const ChapterEditorPage = () => {
 					setText("");
 				}
 				else {
-					console.dir(e);
 					enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.loading' }), { variant: 'error' })
 				}
 			})

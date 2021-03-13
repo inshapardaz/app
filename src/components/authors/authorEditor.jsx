@@ -4,7 +4,8 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { TextField } from 'formik-material-ui';
-import { DropzoneArea } from 'material-ui-dropzone';
+import { FormControl, Grid } from "@material-ui/core";
+import ImageUpload from '../imageUpload';
 import { libraryService } from '../../services';
 import EditorDialog from '../editorDialog';
 import SubmitButton from '../submitButton';
@@ -12,7 +13,7 @@ import SubmitButton from '../submitButton';
 const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
-
+	const [newCover, setNewCover] = useState(null);
 	const [busy, setBusy] = useState(false);
 	const [savedAuthor, setSavedAuthor] = useState(null);
 
@@ -33,7 +34,11 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) => {
 		setBusy(true);
 		if (author === null && createLink !== null) {
 			libraryService.post(createLink, fields)
-				.then(() => {
+				.then((res) => {
+					if (newCover && res.links && res.links.image_upload) {
+						return uploadImage(res.links.image_upload);
+					}
+
 					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.saved' }), { variant: 'success' })
 					onSaved();
 				})
@@ -44,7 +49,11 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) => {
 		}
 		else if (author !== null) {
 			libraryService.put(author.links.update, fields)
-				.then(() => {
+				.then((res) => {
+					if (newCover && res.links && res.links.image_upload) {
+						return uploadImage(res.links.image_upload);
+					}
+
 					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.saved' }), { variant: 'success' })
 					onSaved();
 				})
@@ -57,21 +66,29 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) => {
 		setBusy(false)
 	};
 
-	const onImageUpload = (files) => {
-		if (files.length < 1) {
+	const uploadImage = (uploadLink) => {
+		setBusy(true);
+
+		if (!uploadLink) {
+			setBusy(false);
+			if (onSaved) onSaved();
 			return;
 		}
 
-		if (author && author.links.image_upload !== null) {
-			libraryService.upload(author.links.image_upload, files[0])
-				.then(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.saved' }), { variant: 'success' })
-					onSaved();
-				})
-				.catch(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.error.saving' }), { variant: 'error' })
-				})
-				.finally(() => setBusy(false));
+		libraryService.upload(uploadLink, newCover)
+			.then(() => {
+				if (onSaved) onSaved();
+				enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.saved' }), { variant: 'success' })
+			})
+			.catch((e) => {
+				enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.error.saving' }), { variant: 'error' })
+			})
+			.finally(() => setBusy(false));
+	};
+
+	const handleImageUpload = (file) => {
+		if (file) {
+			setNewCover(file);
 		}
 	};
 
@@ -84,13 +101,20 @@ const AuthorEditor = ({ show, author, createLink, onSaved, onCancelled }) => {
 			<Formik initialValues={savedAuthor || initialValues} validationSchema={validationSchema} onSubmit={onSubmit} enableReinitialize>
 				{({ errors, touched, isSubmitting }) => (
 					<Form>
-						<Field component={TextField} autoFocus name="name" type="text" variant="outlined" margin="normal" fullWidth
-							label={<FormattedMessage id="library.name.label" />} error={errors.name && touched.name}
-						/>
-						{
-							author && author.links.image_upload &&
-							<DropzoneArea onChange={files => onImageUpload(files)} filesLimit={1} acceptedFiles={['image/*']} />
-						}
+						<Grid container spacing={3}>
+							<Grid item md={6} >
+								<Field component={TextField} autoFocus name="name" type="text" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="library.name.label" />} error={errors.name && touched.name}
+								/>
+							</Grid>
+							<Grid item md={6} >
+								<FormControl variant="outlined" margin="normal" fullWidth>
+									<ImageUpload imageUrl={savedAuthor && savedAuthor.links ? savedAuthor.links.image : null} defaultImage='/images/author_placeholder.jpg'
+										onImageSelected={handleImageUpload}
+										height="420" />
+								</FormControl>
+							</Grid>
+						</Grid>
 						<SubmitButton busy={isSubmitting} label={<FormattedMessage id="action.save" />} />
 					</Form>
 				)}

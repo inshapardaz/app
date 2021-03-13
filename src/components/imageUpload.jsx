@@ -1,6 +1,51 @@
 import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import PublishIcon from '@material-ui/icons/Publish';
+
+const useStyles = makeStyles(() => ({
+	container: {
+		position: 'relative',
+		width: '50%',
+		cursor: props => props.readOnly ? 'default' : 'pointer'
+	},
+
+	image: {
+		display: 'block',
+		width: '100%',
+		height: 'auto'
+	},
+
+	overlay: {
+		position: 'absolute',
+		top: 0,
+		bottom: 0,
+		left: 0,
+		right: 0,
+		height: '100%',
+		width: '100%',
+		opacity: 0,
+		transition: '.5s ease',
+		backgroundColor: 'black',
+		"&:hover": {
+			opacity: 0.8
+		}
+	},
+	text: {
+		color: 'white',
+		fontSize: '20px',
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		transform: 'translate(-50%, -50%)',
+		textAlign: 'center'
+	},
+	upload: {
+		display: 'none'
+	}
+}));
 
 const ImageUpload = ({ imageUrl, defaultImage, height, onImageSelected, readOnly }) => {
+	const classes = useStyles({ readOnly });
 	let inputElement = null;
 	const [newImage, setNewImage] = useState(null);
 
@@ -23,18 +68,24 @@ const ImageUpload = ({ imageUrl, defaultImage, height, onImageSelected, readOnly
 		}
 	};
 
+	const setDefaultImage = (ev) => {
+		ev.target.src = defaultAuthorImage;
+	};
+
 	const image = newImage !== null ? newImage : imageUrl ? imageUrl : defaultImage;
-	const imageStyle = { height, width: height * 0.7 };
-	if (!readOnly)
-		imageStyle.cursor = 'pointer';
 
 	return (
-		<>
-			<img src={image} style={imageStyle} onClick={onImageClicked} />
-			<input id="file" name="file" type="file" style={{ display: 'none' }}
+		<div className={classes.container}>
+			<img src={image} height={height} width={height * 0.7} onError={setDefaultImage} />
+			<div className={classes.overlay} onClick={onImageClicked}>
+				<div className={classes.text}><PublishIcon /></div>
+			</div>
+			<input id="file" name="file" type="file" className={classes.upload}
+				accept="image/*"
 				ref={input => inputElement = input} onChange={onImageChanged}
 			/>
-		</>);
+		</div>
+	);
 };
 
 export default ImageUpload;

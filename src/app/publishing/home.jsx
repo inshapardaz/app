@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 		backgroundRepeat: 'no-repeat',
 		backgroundSize: 'cover',
 		minHeight: 35,
-		padding: 50,
+		padding: 20,
 		margin: '0 auto'
 	},
 	bannerTitle: {

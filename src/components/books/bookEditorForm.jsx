@@ -3,9 +3,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
-import { DropzoneArea } from "material-ui-dropzone";
 import ImageUpload from '../imageUpload';
-import { FormControl, InputLabel, Grid } from "@material-ui/core";
+import { FormControl, Grid } from "@material-ui/core";
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 
 import AuthorDropDown from "../authors/authorDropdown";
@@ -74,15 +73,13 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 			libraryService
 				.post(createLink, data)
 				.then((res) => {
-					if (onSaved) onSaved();
 					if (newCover) {
 						return uploadImage(res);
 					}
+					if (onSaved) onSaved();
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 				})
 				.catch((e) => {
-					console.log('error creating book');
-					console.dir(e)
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
 				})
 				.finally(() => setBusy(false));
@@ -91,15 +88,13 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 			libraryService
 				.put(book.links.update, data)
 				.then(() => {
-					if (onSaved) onSaved();
 					if (newCover) {
 						return uploadImage(book);
 					}
+					if (onSaved) onSaved();
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 				})
 				.catch((e) => {
-					console.log('error updating book');
-					console.dir(e)
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
 				})
 				.finally(() => setBusy(false));
@@ -108,18 +103,18 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 
 	const uploadImage = (response) => {
 		if (!response || !response.links || !response.links.image_upload) {
+			setBusy(false);
+			if (onSaved) onSaved();
 			return;
 		}
 
 		setBusy(true);
 		libraryService.upload(response.links.image_upload, newCover)
 			.then(() => {
-				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 				if (onSaved) onSaved();
+				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 			})
 			.catch((e) => {
-				console.log('error saving image');
-				console.dir(e)
 				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
 			})
 			.finally(() => setBusy(false));

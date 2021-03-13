@@ -23,7 +23,7 @@ const SeriesCard = ({ series, onEdit, onDelete }) => {
 	}));
 
 	const renderEditLink = () => {
-		if (series.links.update) {
+		if (series && series.links && series.links.update) {
 			return (
 				<IconButton onClick={() => onEdit(series)}>
 					<EditOutlinedIcon />
@@ -33,7 +33,7 @@ const SeriesCard = ({ series, onEdit, onDelete }) => {
 	};
 
 	const renderDeleteLink = () => {
-		if (series.links.delete) {
+		if (series && series.links && series.links.delete) {
 			return (
 				<IconButton onClick={() => onDelete(series)}>
 					<DeleteForeverOutlinedIcon />

@@ -4,7 +4,8 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { TextField } from 'formik-material-ui';
-import { DropzoneArea } from 'material-ui-dropzone';
+import { FormControl, Grid } from "@material-ui/core";
+import ImageUpload from '../imageUpload';
 import { libraryService } from '../../services';
 import EditorDialog from '../editorDialog';
 import SubmitButton from '../submitButton';
@@ -12,6 +13,7 @@ import SubmitButton from '../submitButton';
 const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
+	const [newCover, setNewCover] = useState(null);
 	const [busy, setBusy] = useState(false);
 	const [savedSeries, setSavedSeries] = useState(null);
 
@@ -33,7 +35,10 @@ const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) => {
 		setBusy(true);
 		if (series === null && createLink !== null) {
 			libraryService.post(createLink, fields)
-				.then(() => {
+				.then((res) => {
+					if (newCover && res.links && res.links.image_upload) {
+						return uploadImage(res.links.image_upload);
+					}
 					enqueueSnackbar(intl.formatMessage({ id: 'series.messages.saved' }), { variant: 'success' })
 					onSaved();
 				})
@@ -44,7 +49,11 @@ const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) => {
 		}
 		else if (series !== null) {
 			libraryService.put(series.links.update, fields)
-				.then(() => {
+				.then((res) => {
+					if (newCover && res.links && res.links.image_upload) {
+						return uploadImage(res.links.image_upload);
+					}
+
 					enqueueSnackbar(intl.formatMessage({ id: 'series.messages.saved' }), { variant: 'success' })
 					onSaved();
 				})
@@ -57,21 +66,29 @@ const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) => {
 		setBusy(false)
 	};
 
-	const onImageUpload = (files) => {
-		if (files.length < 1) {
+	const uploadImage = (uploadLink) => {
+		setBusy(true);
+
+		if (!uploadLink) {
+			setBusy(false);
+			if (onSaved) onSaved();
 			return;
 		}
 
-		if (series && series.links.image_upload !== null) {
-			libraryService.upload(series.links.image_upload, files[0])
-				.then(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'series.messages.saved' }), { variant: 'success' })
-					onSaved();
-				})
-				.catch(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'series.messages.error.saving' }), { variant: 'error' })
-				})
-				.finally(() => setBusy(false));
+		libraryService.upload(uploadLink, newCover)
+			.then(() => {
+				if (onSaved) onSaved();
+				enqueueSnackbar(intl.formatMessage({ id: 'series.messages.saved' }), { variant: 'success' })
+			})
+			.catch((e) => {
+				enqueueSnackbar(intl.formatMessage({ id: 'series.messages.error.saving' }), { variant: 'error' })
+			})
+			.finally(() => setBusy(false));
+	};
+
+	const handleImageUpload = (file) => {
+		if (file) {
+			setNewCover(file);
 		}
 	};
 
@@ -84,17 +101,26 @@ const SeriesEditor = ({ show, series, createLink, onSaved, onCancelled }) => {
 			<Formik initialValues={savedSeries || initialValues} validationSchema={validationSchema} onSubmit={onSubmit} enableReinitialize>
 				{({ errors, touched, isSubmitting }) => (
 					<Form>
-						<Field component={TextField} autoFocus name="name" type="text" variant="outlined" margin="normal" fullWidth
-							label={<FormattedMessage id="series.editor.fields.name.title" />} error={errors.name && touched.name}
-						/>
-						<Field component={TextField} name="description" type="text" variant="outlined" margin="normal" fullWidth
-							multiline rows={5}
-							label={<FormattedMessage id="series.editor.fields.description.title" />} error={errors.description && touched.description}
-						/>
-						{
-							series && series.links.image_upload &&
-							<DropzoneArea onChange={files => onImageUpload(files)} filesLimit={1} acceptedFiles={['image/*']} />
-						}
+						<Grid container spacing={3}>
+							<Grid item md={6} >
+								<Field component={TextField} autoFocus name="name" type="text" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="series.editor.fields.name.title" />} error={errors.name && touched.name}
+								/>
+								<Field component={TextField} name="description" type="text" variant="outlined" margin="normal" fullWidth
+									multiline rows={5}
+									label={<FormattedMessage id="series.editor.fields.description.title" />} error={errors.description && touched.description}
+								/>
+
+							</Grid>
+
+							<Grid item md={6} >
+								<FormControl variant="outlined" margin="normal" fullWidth>
+									<ImageUpload imageUrl={savedSeries && savedSeries.links ? savedSeries.links.image : null} defaultImage='/images/series_placeholder.jpg'
+										onImageSelected={handleImageUpload}
+										height="420" />
+								</FormControl>
+							</Grid>
+						</Grid>
 						<SubmitButton busy={isSubmitting} label={<FormattedMessage id="action.save" />} />
 					</Form>
 				)}
