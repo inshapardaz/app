@@ -5,7 +5,7 @@ import PublishIcon from '@material-ui/icons/Publish';
 const useStyles = makeStyles(() => ({
 	container: {
 		position: 'relative',
-		width: '50%',
+		width: '100%',
 		cursor: props => props.readOnly ? 'default' : 'pointer'
 	},
 
