@@ -41,9 +41,7 @@ export default function LibrarySelector() {
 	};
 
 	const selectLibrary = (library) => {
-		libraryService.setSelectedLibrary(library);
-		history.push(`/`);
-		setOpen(false);
+		history.push(`/library/${library.id}`);
 	};
 
 	const langMenu = (

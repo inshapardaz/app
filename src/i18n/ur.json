@@ -325,6 +325,7 @@
 	"fontSize.large" : "بڑا",
 	"fontSize.larger" : "مزید بڑا",
 	"fontSize.extraLarge" : "بڑا تر",
-	"publishing.books.filter" : "کتاب کیفیت میں"
-
+	"publishing.books.filter" : "کتاب کیفیت میں",
+	"error.generic" : "غیر متوقع خلل واقع ہوا ہے",
+	"error.library_not_found" : "آپ کی چنی ہوئی لائبریری نہیں مل سکی"
 }

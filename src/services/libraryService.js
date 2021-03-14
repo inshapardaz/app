@@ -182,6 +182,7 @@ export const libraryService =
 	getLibraries: (query = null, page = 1, pageSize = 12) => {
 		return _get(`${librariesUrl()}?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`);
 	},
+	getLibraryById : (id) => _get(`${librariesUrl()}/${id}`),
 	getBooksByCategory : (category, page = 1, pageSize = 12, query = null) =>
 		_get(`${libraryUrl()}/categories/${category}/books?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
 	getBooksBySeries : (series, page = 1, pageSize = 12, query = null) =>

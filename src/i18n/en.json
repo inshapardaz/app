@@ -329,5 +329,7 @@
 	"fontSize.large" : "Large",
 	"fontSize.larger" : "Larger",
 	"fontSize.extraLarge" : "Extra Large",
-	"publishing.books.filter" : "Get books in status"
+	"publishing.books.filter" : "Get books in status",
+	"error.generic" : "Unexpected error occurred",
+	"error.library_not_found" : "Your selected library is not found"
 }

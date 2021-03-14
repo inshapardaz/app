@@ -30,6 +30,8 @@ import PageEditorPage from '../app/books/pageEditorPage';
 import ChapterViewerPage from '../app/books/chapterViewerPage';
 import PublishingPage from '../app/publishing/home.jsx';
 import SearchPage from '../app/search';
+import LibrarySwitch from './library/librarySwitch';
+import ErrorPage from '../app/ErrorPage';
 
 const Routes = () => {
 	const { pathname } = useLocation();
@@ -53,11 +55,13 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/publishing" component={PublishingPage} exact />
 			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
 			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
+			<PrivateRoute layout={fullWidthLayout} path="/library/:id" component={LibrarySwitch} />
 			<Route path="/account/login" component={Login} layout={emptyLayout} />
 			<Route path="/account/register" component={Register} />
 			<Route path="/account/verify-email" component={VerifyEmail} />
 			<Route path="/account/forgot-password" component={ForgotPassword} />
 			<Route path="/account/reset-password" component={ResetPassword} />
+			<Route path="/error" component={ErrorPage} layout={fullWidthLayout} />
 			<Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
 			<Route exact path="/" component={Home} />
 			{/* <Redirect from="*" to="/" /> */}
