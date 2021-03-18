@@ -80,6 +80,7 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 				})
 				.catch((e) => {
+					console.error(e);
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
 				})
 				.finally(() => setBusy(false));
@@ -95,6 +96,7 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 				})
 				.catch((e) => {
+					console.error(e);
 					enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
 				})
 				.finally(() => setBusy(false));
@@ -115,6 +117,7 @@ const BookEditorForm = ({ book, createLink, onBusy, onSaved }) => {
 				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 			})
 			.catch((e) => {
+				console.error(e);
 				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' })
 			})
 			.finally(() => setBusy(false));

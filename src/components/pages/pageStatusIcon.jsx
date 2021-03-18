@@ -9,41 +9,57 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DescriptionIcon from '@material-ui/icons/Description';
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
 
-const PageStatusIcon = ({ status }) => {
-	switch (status) {
-		case 0: //Available
-			return (
-				<Tooltip title={<FormattedMessage id="status.Available" />} >
-					<InsertDriveFileOutlinedIcon />
-				</Tooltip>);
-		case 1: //Typing
-			return (
-				<Tooltip title={<FormattedMessage id="status.Typing" />} >
-					<AssignmentIndIcon />
-				</Tooltip>);
-		case 2: //Typed
-			return (
-				<Tooltip title={<FormattedMessage id="status.Typed" />} >
-					<AssignmentTurnedInIcon />
-				</Tooltip>);
-		case 3: //InReview
-			return (
-				<Tooltip title={<FormattedMessage id="status.InReview" />} >
-					<RateReviewIcon />
-				</Tooltip>);
-		case 4: //Completed
-			return (
-				<Tooltip title={<FormattedMessage id="status.Completed" />} >
-					<CheckCircleIcon />
-				</Tooltip>);
-		default:
-			return (
-				<Tooltip title={<FormattedMessage id="page.all" />} >
-					<DescriptionIcon />
-				</Tooltip>);
+const PageStatusIcon = ({ status, tooltip = true }) => {
+
+	if (tooltip) {
+		switch (status) {
+			case "Available":
+				return (
+					<Tooltip title={<FormattedMessage id="status.Available" />} >
+						<InsertDriveFileOutlinedIcon />
+					</Tooltip>);
+			case "Typing":
+				return (
+					<Tooltip title={<FormattedMessage id="status.Typing" />} >
+						<AssignmentIndIcon />
+					</Tooltip>);
+			case "Typed":
+				return (
+					<Tooltip title={<FormattedMessage id="status.Typed" />} >
+						<AssignmentTurnedInIcon />
+					</Tooltip>);
+			case "InReview":
+				return (
+					<Tooltip title={<FormattedMessage id="status.InReview" />} >
+						<RateReviewIcon />
+					</Tooltip>);
+			case "Completed":
+				return (
+					<Tooltip title={<FormattedMessage id="status.Completed" />} >
+						<CheckCircleIcon />
+					</Tooltip>);
+			default:
+				return (
+					<Tooltip title={<FormattedMessage id="page.all" />} >
+						<DescriptionIcon />
+					</Tooltip>);
+		}
 	}
 
-	return null;
+	switch (status) {
+		case "Available":
+			return (<InsertDriveFileOutlinedIcon />);
+		case "Typing":
+			return (<AssignmentIndIcon />);
+		case "Typed":
+			return (<AssignmentTurnedInIcon />);
+		case "InReview":
+			return (<RateReviewIcon />);
+		case "Completed":
+			return (<CheckCircleIcon />);
+		default:
+			return (<DescriptionIcon />);
+	}
 }
 
 export default PageStatusIcon;

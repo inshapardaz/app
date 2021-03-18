@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 
 // mui
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";;
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import MenuItem from '@material-ui/core/MenuItem';
+import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -46,10 +49,16 @@ import PageEditor from "./pageEditor";
 import PageListItem from './pageListItem';
 import DropDownMenu from "../dropdownMenu";
 import PageStatusIcon from '../../components/pages/pageStatusIcon';
-import { Divider } from "@material-ui/core";
+
+
 
 const useStyles = () =>
 	makeStyles((theme) => ({
+		root: {
+			width: '100%',
+			maxWidth: 360,
+			backgroundColor: theme.palette.background.paper,
+		},
 		cardGrid: {
 			paddingTop: theme.spacing(8),
 			paddingBottom: theme.spacing(8),
@@ -64,35 +73,16 @@ const useStyles = () =>
 	}));
 const classes = useStyles();
 
-// eslint-disable-next-line max-params
-const buildLinkToPage = (page, filter, assignmentFilter) => {
-	const location = useLocation();
-
-	let querystring = "";
-	querystring += page ? `page=${page}&` : "";
-	if (filter && filter !== 'none') {
-		querystring += `filter=${filter}&`;
-	}
-	if (assignmentFilter && assignmentFilter !== 'all') {
-		querystring += `assignmentFilter=${assignmentFilter}&`;
-	}
-
-	if (querystring !== "") {
-		querystring = `?${querystring}`.slice(0, -1);
-	}
-
-	return `${location.pathname}${querystring}`;
-};
-
 const PagesList = ({ book }) => {
 	if (book == null || book.links.pages == null) return null;
 	const location = useLocation();
+	const history = useHistory();
 	const confirm = useConfirm();
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
 
 	const [showPreview, setShowPreview] = useState(false);
-	const [filter, setFilter] = useState('none');
+	const [filter, setFilter] = useState(null);
 	const [assignmentFilter, setAssignmentFilter] = useState('all');
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
@@ -104,12 +94,39 @@ const PagesList = ({ book }) => {
 
 	const [pages, setPages] = useState({});
 
-	const loadData = () => {
+	const getQueryParams = () => {
 		const values = queryString.parse(location.search);
-		const page = values.page;
+		return { page: values.page, filter: values.filter, assignmentFilter: values.assignmentFilter };
+	};
+
+	// eslint-disable-next-line max-params
+	const buildLinkToPage = (page, newFilter, newAssignmentFilter) => {
+		let querystring = "";
+		querystring += page ? `page=${page}&` : "";
+		if (newFilter) {
+			querystring += `filter=${newFilter}&`;
+		}
+		if (newAssignmentFilter && newAssignmentFilter !== 'all') {
+			querystring += `assignmentFilter=${newAssignmentFilter}&`;
+		}
+
+		if (querystring !== "") {
+			querystring = `?${querystring}`.slice(0, -1);
+		}
+
+		return `${location.pathname}${querystring}`;
+	};
+
+	const loadData = () => {
+
+		const params = getQueryParams();
+		let filterToUse = params.filter;
+		setAssignmentFilter(params.assignmentFilter);
+		setFilter(filterToUse);
+
 		setLoading(true);
 		libraryService
-			.getBookPages(book, page)
+			.getBookPages(book, filterToUse !== 'all' ? filterToUse : null, params.page)
 			.then((data) => {
 				setPages(data);
 				setChecked([]);
@@ -119,7 +136,22 @@ const PagesList = ({ book }) => {
 	};
 
 	useEffect(() => {
-		loadData();
+		const params = getQueryParams();
+		if (params.filter == null) {
+			const map = {
+				'AvailableForTyping': 'Available',
+				'BeingTyped': 'Available',
+				'ReadyForProofRead': 'Typed',
+				'ProofRead': 'InReview',
+				'Published': 'Completed'
+			}
+
+			const params = getQueryParams();
+			history.push(buildLinkToPage(params.page, map[book.status], params.assignmentFilter));
+		}
+		else {
+			loadData();
+		}
 	}, [location]);
 
 	const handleDataChanged = () => {
@@ -271,63 +303,7 @@ const PagesList = ({ book }) => {
 		if (pages && pages.links && pages.links.create) {
 			return (
 				<Toolbar>
-					<DropDownMenu title={<FormattedMessage id="page.action.create" />} >
-						<MenuItem
-							edge="start"
-							className={classes.menuButton}
-							color="inherit"
-							aria-label="menu"
-							onClick={() => onEditClicked(null)}>
-							<ListItemIcon>
-								<AddCircleIcon fontSize="small" />
-							</ListItemIcon>
-							<Typography variant="inherit"><FormattedMessage id="page.action.create" /></Typography>
-						</MenuItem>
-						<MenuItem
-							edge="start"
-							className={classes.menuButton}
-							color="inherit"
-							aria-label="menu"
-							onClick={() => setShowFilesUpload(true)}>
-							<ListItemIcon>
-								<PostAddIcon fontSize="small" />
-							</ListItemIcon>
-							<Typography variant="inherit"><FormattedMessage id="page.action.upload" /></Typography>
-						</MenuItem>
-						<MenuItem
-							edge="start"
-							className={classes.menuButton}
-							color="inherit"
-							aria-label="menu"
-							onClick={() => setShowZipUpload(true)}>
-							<ListItemIcon>
-								<CloudUploadIcon fontSize="small" />
-							</ListItemIcon>
-							<Typography variant="inherit"><FormattedMessage id="page.action.uploadZip" /></Typography>
-						</MenuItem>
-					</DropDownMenu>
-					<Button
-						edge="start"
-						className={classes.menuButton}
-						color="inherit"
-						disabled={checked.length <= 0}
-						aria-label="menu"
-						variant="text"
-						onClick={onDeleteMultipleClicked}
-						startIcon={<DeleteIcon />}>
-						<FormattedMessage id="action.delete" />
-					</Button>
-					<Button
-						edge="start"
-						className={classes.menuButton}
-						color="inherit"
-						disabled={checked.length <= 0}
-						aria-label="menu"
-						variant="text"
-						onClick={onAssignToMe}
-						startIcon={<AssignmentIndIcon />}>
-						<FormattedMessage id="page.assignedToMe.label" />
-					</Button>
+
 				</Toolbar >
 			);
 		}
@@ -335,81 +311,194 @@ const PagesList = ({ book }) => {
 		return null;
 	};
 
-	const renderViewToolBar = () => {
-		return (<Toolbar>
-			<ToggleButtonGroup
-				value={showPreview}
-				exclusive
-				onChange={(event, newValue) => setShowPreview(newValue)}
-				aria-label="view"
-			>
-				<ToggleButton variant="text" value={false} aria-label="list-view">
-					<FormatAlignJustifyIcon />
-				</ToggleButton>
-				<ToggleButton variant="text" value={true} aria-label="preview">
-					<CropOriginalIcon />
-				</ToggleButton>
-			</ToggleButtonGroup>
-			<Divider orientation="vertical" />
-			<ToggleButtonGroup exclusive aria-label="assignment-filter"
-				value={filter}
-				onChange={(event, newValue) => setFilter(newValue)}>
-				<ToggleButton variant="text" value='none' aria-label="all-pages">
-					<PageStatusIcon status={-1} />
-				</ToggleButton>
-				<ToggleButton variant="text" value='available' aria-label="available">
-					<PageStatusIcon status={0} />
-				</ToggleButton>
-				<ToggleButton variant="text" value='typing' aria-label="typing">
-					<PageStatusIcon status={1} />
-				</ToggleButton>
-				<ToggleButton variant="text" value='typed' aria-label="typed">
-					<PageStatusIcon status={2} />
-				</ToggleButton>
-				<ToggleButton variant="text" value='proofread' aria-label="proof-read">
-					<PageStatusIcon status={3} />
-				</ToggleButton>
-				<ToggleButton variant="text" value='completed' aria-label="completed">
-					<PageStatusIcon status={4} />
-				</ToggleButton>
-			</ToggleButtonGroup>
-			<Divider orientation="vertical" />
-			<ToggleButtonGroup exclusive aria-label="assignment-type"
-				value={assignmentFilter}
-				onChange={(event, newValue) => setAssignmentFilter(newValue)}>
-				<ToggleButton variant="text" value='all' aria-label="all-pages">
-					<DescriptionIcon />
-				</ToggleButton>
-				<ToggleButton variant="text" value='unassigned' aria-label="unassigned-pages">
-					<CheckBoxOutlineBlankIcon />
-				</ToggleButton>
-				<ToggleButton variant="text" value='assigned' aria-label="assigned">
-					<PeopleAltIcon />
-				</ToggleButton>
-				<ToggleButton variant="text" value='mine' aria-label="assigned-to-me">
-					<PersonIcon />
-				</ToggleButton>
-			</ToggleButtonGroup>
-		</Toolbar>);
+	const handleFilterChange = (newFilter) => {
+
+		const params = getQueryParams();
+		history.push(buildLinkToPage(params.page, newFilter, params.assignmentFilter));
+	}
+
+	const handleAssignmentFilterChange = (newAssignmentFilter) => {
+		const params = getQueryParams();
+		history.push(buildLinkToPage(params.page, params.filter, newAssignmentFilter));
+	}
+
+	const getPageCountInStatus = (book, status) => {
+		if (book && book.pageStatus) {
+			let stat = book.pageStatus.find(s => s.status === status);
+			if (stat) return stat.count;
+		}
+
+		return null;
+	}
+
+	const renderSideBar = () => {
+		return (
+			<div className={classes.root}>
+				<DropDownMenu title={<FormattedMessage id="page.action.create" />} >
+					<MenuItem
+						edge="start"
+						className={classes.menuButton}
+						color="inherit"
+						aria-label="menu"
+						onClick={() => onEditClicked(null)}>
+						<ListItemIcon>
+							<AddCircleIcon fontSize="small" />
+						</ListItemIcon>
+						<Typography variant="inherit"><FormattedMessage id="page.action.create" /></Typography>
+					</MenuItem>
+					<MenuItem
+						edge="start"
+						className={classes.menuButton}
+						color="inherit"
+						aria-label="menu"
+						onClick={() => setShowFilesUpload(true)}>
+						<ListItemIcon>
+							<PostAddIcon fontSize="small" />
+						</ListItemIcon>
+						<Typography variant="inherit"><FormattedMessage id="page.action.upload" /></Typography>
+					</MenuItem>
+					<MenuItem
+						edge="start"
+						className={classes.menuButton}
+						color="inherit"
+						aria-label="menu"
+						onClick={() => setShowZipUpload(true)}>
+						<ListItemIcon>
+							<CloudUploadIcon fontSize="small" />
+						</ListItemIcon>
+						<Typography variant="inherit"><FormattedMessage id="page.action.uploadZip" /></Typography>
+					</MenuItem>
+				</DropDownMenu>
+				<MenuItem
+					edge="start"
+					className={classes.menuButton}
+					color="inherit"
+					disabled={checked.length <= 0}
+					aria-label="menu"
+					variant="text"
+					onClick={onDeleteMultipleClicked}>
+					<ListItemIcon>
+						<DeleteIcon fontSize="small" />
+					</ListItemIcon>
+					<FormattedMessage id="action.delete" />
+				</MenuItem>
+				<MenuItem
+					edge="start"
+					className={classes.menuButton}
+					disabled={checked.length <= 0}
+					aria-label="menu"
+					onClick={onAssignToMe} >
+					<ListItemIcon>
+						<AssignmentIndIcon fontSize="small" />
+					</ListItemIcon>
+					<FormattedMessage id="page.assignedToMe.label" />
+				</MenuItem>
+				<Divider />
+				<List component="nav" aria-label="main mailbox folders">
+					<ListItem button onClick={() => handleFilterChange('all')} selected={filter == 'all'}>
+						<ListItemIcon>
+							<PageStatusIcon status="AllPages" tooltip={false} />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="page.all" />} secondary={book.pageCount} />
+					</ListItem>
+					<ListItem button onClick={() => handleFilterChange('available')} selected={filter == 'available'}>
+						<ListItemIcon>
+							<PageStatusIcon status="Available" tooltip={false} />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="status.Available" />} secondary={getPageCountInStatus(book, 'Available')} />
+					</ListItem>
+					<ListItem button onClick={() => handleFilterChange('typing')} selected={filter == 'typing'}>
+						<ListItemIcon>
+							<PageStatusIcon status="Typing" tooltip={false} />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="status.Typing" />} secondary={getPageCountInStatus(book, 'Typing')} />
+					</ListItem>
+					<ListItem button onClick={() => handleFilterChange('typed')} selected={filter == 'typed'}>
+						<ListItemIcon>
+							<PageStatusIcon status="Typed" tooltip={false} />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="status.Typed" />} secondary={getPageCountInStatus(book, 'Typed')} />
+					</ListItem>
+					<ListItem button onClick={() => handleFilterChange('inReview')} selected={filter == 'inReview'}>
+						<ListItemIcon>
+							<PageStatusIcon status="InReview" tooltip={false} />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="status.InReview" />} secondary={getPageCountInStatus(book, 'InReview')} />
+					</ListItem>
+					<ListItem button onClick={() => handleFilterChange('completed')} selected={filter == 'completed'}>
+						<ListItemIcon>
+							<PageStatusIcon status="Completed" tooltip={false} />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="status.Completed" />} secondary={getPageCountInStatus(book, 'Completed')} />
+					</ListItem>
+				</List>
+				<Divider />
+				<List component="nav" aria-label="secondary mailbox folders">
+					<ListItem button onClick={() => handleAssignmentFilterChange('mine')} selected={assignmentFilter == 'mine'}>
+						<ListItemIcon>
+							<PersonIcon />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="page.assign.mine" />} />
+					</ListItem>
+					<ListItem button onClick={() => handleAssignmentFilterChange('all')} selected={assignmentFilter == 'all'}>
+						<ListItemIcon>
+							<DescriptionIcon />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="page.assign.all" />} />
+					</ListItem>
+					<ListItem button onClick={() => handleAssignmentFilterChange('unassigned')} selected={assignmentFilter == 'unassigned'}>
+						<ListItemIcon>
+							<PeopleAltIcon />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="page.assign.assigned" />} />
+					</ListItem>
+					<ListItem button onClick={() => handleAssignmentFilterChange('assigned')} selected={assignmentFilter == 'assigned'}>
+						<ListItemIcon>
+							<CheckBoxOutlineBlankIcon />
+						</ListItemIcon>
+						<ListItemText primary={<FormattedMessage id="page.assign.unassigned" />} />
+					</ListItem>
+				</List>
+			</div>);
 	}
 
 	const renderPagination = () => {
 		if (!isLoading && pages) {
 			return (
 				<Box mt={8} mb={8}>
-					<Pagination
-						page={pages.currentPageIndex}
-						count={pages.pageCount}
-						variant="outlined"
-						shape="rounded"
-						renderItem={(item) => (
-							<PaginationItem
-								component={Link}
-								to={`${location.pathname}?page=${item.page}`}
-								{...item}
+					<Grid container>
+						<Grid>
+							<Pagination
+								page={pages.currentPageIndex}
+								count={pages.pageCount}
+								variant="outlined"
+								shape="rounded"
+								renderItem={(item) => (
+									<PaginationItem
+										component={Link}
+										to={buildLinkToPage(item.page, filter, assignmentFilter)}
+										{...item}
+									/>
+								)}
 							/>
-						)}
-					/>
+						</Grid>
+						<Grid>
+							<ToggleButtonGroup
+								size="small"
+								value={showPreview}
+								exclusive
+								onChange={(event, newValue) => setShowPreview(newValue)}
+								aria-label="view"
+							>
+								<ToggleButton value={false} aria-label="list-view">
+									<FormatAlignJustifyIcon fontSize="small" />
+								</ToggleButton>
+								<ToggleButton value={true} aria-label="preview">
+									<CropOriginalIcon fontSize="small" />
+								</ToggleButton>
+							</ToggleButtonGroup>
+						</Grid>
+					</Grid>
 				</Box>
 			);
 		}
@@ -425,7 +514,7 @@ const PagesList = ({ book }) => {
 		if (isError) {
 			return (
 				<Typography variant="h6" component="h6" align="center">
-					<FormattedMessage id="chapters.messages.error.loading" />
+					<FormattedMessage id="pages.messages.error.loading" />
 				</Typography>
 			);
 		}
@@ -433,7 +522,7 @@ const PagesList = ({ book }) => {
 		if (pages === null || pages.data === null || pages.data.length < 1) {
 			return (
 				<Typography variant="h6" component="h6" align="center">
-					<FormattedMessage id="chapters.messages.empty" />
+					<FormattedMessage id="pages.messages.empty" />
 				</Typography>
 			);
 		}
@@ -483,11 +572,14 @@ const PagesList = ({ book }) => {
 	}
 
 	return (
-		<Container className={classes.cardGrid} maxWidth="md">
-			{renderToolBar()}
-			{renderViewToolBar()}
-			{renderPages()}
-			{renderPagination()}
+		<Grid container spacing={3}>
+			<Grid sm={2} item>
+				{renderSideBar()}
+			</Grid>
+			<Grid sm={10} item>
+				{renderPages()}
+				{renderPagination()}
+			</Grid>
 			<PageEditor
 				show={showEditor}
 				page={selectedPage}
@@ -525,7 +617,15 @@ const PagesList = ({ book }) => {
 				submitButtonText={intl.formatMessage({ id: "action.upload" })}
 				onDropRejected={(rejectedFiles) => console.dir(rejectedFiles)}
 			/>
-		</Container>
+		</Grid>
+
+		// <Container className={classes.cardGrid} maxWidth="md">
+		// 	{renderToolBar()}
+		// 	{renderViewToolBar()}
+		// 	{renderPages()}
+		// 	{renderPagination()}
+
+		// </Container>
 	);
 };
 
