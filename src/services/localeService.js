@@ -72,6 +72,6 @@ export const localeService =
 	},
 	getPreferredFont: () => {
 		// always return array
-		return ["Mehr-Nastaleeq"];
+		return ["SEGOEUIL", "Dubai", "Mehr-Nastaleeq"];
 	}
 }

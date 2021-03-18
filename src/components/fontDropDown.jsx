@@ -8,54 +8,32 @@ import { useIntl, FormattedMessage } from "react-intl";
 
 const getFonts = (intl) => [
 	{
-		key: "Fajer Noori Nastalique",
-		value: intl.formatMessage({ id: "font.FajerNooriNastalique" })
-	},
-	{
-		key: "Pak Nastaleeq",
-		value: intl.formatMessage({ id: "font.PakNastaleeq" })
-	},
-	{
 		key: "Nafees Web Naskh",
 		value: intl.formatMessage({ id: "font.NafeesWebNaskh" })
 	},
 	{
-		key: "Nafees-Nastaleeq",
-		value: intl.formatMessage({ id: "font.NafeesNastaleeq" })
-	}, {
 		key: "Mehr-Nastaleeq",
 		value: intl.formatMessage({ id: "font.MehrNastaleeq" })
-	}, {
-		key: "DehalviKhushKhat",
-		value: intl.formatMessage({ id: "font.DehalviKhushKhat" })
 	},
 	{
 		key: "AdobeArabic",
 		value: intl.formatMessage({ id: "font.AdobeArabic" })
 	},
 	{
-		key: "MehfilNaskh",
-		value: intl.formatMessage({ id: "font.MehfilNaskh" })
-	},
-	{
 		key: "Dubai",
 		value: intl.formatMessage({ id: "font.Dubai" })
-	},
-	{
-		key: "UrduNaskhAsiatype",
-		value: intl.formatMessage({ id: "font.UrduNaskhAsiatype" })
 	},
 	{
 		key: "Noto",
 		value: intl.formatMessage({ id: "font.Noto" })
 	},
 	{
-		key: "Alvi Lahori Nastaleeq",
-		value: intl.formatMessage({ id: "font.AlviLahoriNastaleeq" })
-	},
-	{
 		key: "Jameel Noori Nastaleeq",
 		value: intl.formatMessage({ id: "font.JameelNooriNastaleeq" })
+	},
+	{
+		key: "SegoeUIL",
+		value: intl.formatMessage({ id: "font.SegoeUILight" })
 	}
 ];
 
