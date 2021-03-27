@@ -6,27 +6,22 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 // mui
 import { makeStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
 import Box from "@material-ui/core/Box";;
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
+import Button from '@material-ui/core/Button';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import LayersIcon from '@material-ui/icons/Layers';
 import Typography from "@material-ui/core/Typography";
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import Checkbox from '@material-ui/core/Checkbox';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
+
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Pagination from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem"
 //mui icons
-import EditIcon from '@material-ui/icons/Edit';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import PersonIcon from '@material-ui/icons/Person';
@@ -45,12 +40,14 @@ import { DropzoneDialog } from 'material-ui-dropzone'
 import { useConfirm } from 'material-ui-confirm';
 //component
 import { libraryService } from "../../services";
+import Page from './page';
 import PageEditor from "./pageEditor";
 import PageListItem from './pageListItem';
-import DropDownMenu from "../dropdownMenu";
 import PageStatusIcon from '../../components/pages/pageStatusIcon';
+import CustomButton from '../customButton';
 
-
+// sidebar
+import GmailSidebarItem from '@mui-treasury/components/sidebarItem/gmail';
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -83,7 +80,7 @@ const PagesList = ({ book }) => {
 
 	const [showPreview, setShowPreview] = useState(false);
 	const [filter, setFilter] = useState(null);
-	const [assignmentFilter, setAssignmentFilter] = useState('all');
+	const [assignmentFilter, setAssignmentFilter] = useState('assignedToMe');
 	const [isLoading, setLoading] = useState(true);
 	const [isError, setError] = useState(false);
 	const [showEditor, setShowEditor] = useState(false);
@@ -106,7 +103,7 @@ const PagesList = ({ book }) => {
 		if (newFilter) {
 			querystring += `filter=${newFilter}&`;
 		}
-		if (newAssignmentFilter && newAssignmentFilter !== 'all') {
+		if (newAssignmentFilter) {
 			querystring += `assignmentFilter=${newAssignmentFilter}&`;
 		}
 
@@ -126,7 +123,7 @@ const PagesList = ({ book }) => {
 
 		setLoading(true);
 		libraryService
-			.getBookPages(book, filterToUse !== 'all' ? filterToUse : null, params.page)
+			.getBookPages(book, filterToUse !== 'all' ? filterToUse : null, params.assignmentFilter !== 'all' ? params.assignmentFilter : null, params.page)
 			.then((data) => {
 				setPages(data);
 				setChecked([]);
@@ -139,15 +136,15 @@ const PagesList = ({ book }) => {
 		const params = getQueryParams();
 		if (params.filter == null) {
 			const map = {
-				'AvailableForTyping': 'Available',
-				'BeingTyped': 'Available',
-				'ReadyForProofRead': 'Typed',
-				'ProofRead': 'InReview',
-				'Published': 'Completed'
+				'AvailableForTyping': 'available',
+				'BeingTyped': 'available',
+				'ReadyForProofRead': 'typed',
+				'ProofRead': 'inReview',
+				'Published': 'completed'
 			}
 
 			const params = getQueryParams();
-			history.push(buildLinkToPage(params.page, map[book.status], params.assignmentFilter));
+			history.push(buildLinkToPage(params.page, map[book.status], params.assignmentFilter ? params.assignmentFilter : 'assignedToMe'));
 		}
 		else {
 			loadData();
@@ -299,18 +296,6 @@ const PagesList = ({ book }) => {
 			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.error.delete' }), { variant: 'error' }));
 	};
 
-	const renderToolBar = () => {
-		if (pages && pages.links && pages.links.create) {
-			return (
-				<Toolbar>
-
-				</Toolbar >
-			);
-		}
-
-		return null;
-	};
-
 	const handleFilterChange = (newFilter) => {
 
 		const params = getQueryParams();
@@ -330,11 +315,33 @@ const PagesList = ({ book }) => {
 
 		return null;
 	}
+	const renderEditLink = () => {
+		if (book && book.links && book.links.update) {
+			return (<Button onClick={() => setShowEditor(true)} startIcon={<EditOutlinedIcon />}>
+				<FormattedMessage id="action.edit" />
+			</Button>);
+		}
+		return null;
+	};
+
+	const renderChaptersLink = () => {
+		if (book && book.links && book.links.update) {
+			return (<Button component={Link} to={`/books/${book.id}/chapters`} startIcon={<LayersIcon />}>
+				<FormattedMessage id="chapter.toolbar.chapters" />
+			</Button>);
+		}
+		return null;
+	}
 
 	const renderSideBar = () => {
 		return (
 			<div className={classes.root}>
-				<DropDownMenu title={<FormattedMessage id="page.action.create" />} >
+				<Typography variant="h5">{book != null ? book.title : ''}</Typography>
+				<Typography>{book != null ? (<FormattedMessage id={`book.status.${book.status}`} />) : ''}</Typography>
+				{renderEditLink()}
+				{renderChaptersLink()}
+				<Divider />
+				<CustomButton title={<FormattedMessage id="page.action.create" />} fullWidth menu>
 					<MenuItem
 						edge="start"
 						className={classes.menuButton}
@@ -368,7 +375,7 @@ const PagesList = ({ book }) => {
 						</ListItemIcon>
 						<Typography variant="inherit"><FormattedMessage id="page.action.uploadZip" /></Typography>
 					</MenuItem>
-				</DropDownMenu>
+				</CustomButton>
 				<MenuItem
 					edge="start"
 					className={classes.menuButton}
@@ -394,71 +401,88 @@ const PagesList = ({ book }) => {
 					<FormattedMessage id="page.assignedToMe.label" />
 				</MenuItem>
 				<Divider />
-				<List component="nav" aria-label="main mailbox folders">
-					<ListItem button onClick={() => handleFilterChange('all')} selected={filter == 'all'}>
-						<ListItemIcon>
-							<PageStatusIcon status="AllPages" tooltip={false} />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="page.all" />} secondary={book.pageCount} />
-					</ListItem>
-					<ListItem button onClick={() => handleFilterChange('available')} selected={filter == 'available'}>
-						<ListItemIcon>
-							<PageStatusIcon status="Available" tooltip={false} />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="status.Available" />} secondary={getPageCountInStatus(book, 'Available')} />
-					</ListItem>
-					<ListItem button onClick={() => handleFilterChange('typing')} selected={filter == 'typing'}>
-						<ListItemIcon>
-							<PageStatusIcon status="Typing" tooltip={false} />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="status.Typing" />} secondary={getPageCountInStatus(book, 'Typing')} />
-					</ListItem>
-					<ListItem button onClick={() => handleFilterChange('typed')} selected={filter == 'typed'}>
-						<ListItemIcon>
-							<PageStatusIcon status="Typed" tooltip={false} />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="status.Typed" />} secondary={getPageCountInStatus(book, 'Typed')} />
-					</ListItem>
-					<ListItem button onClick={() => handleFilterChange('inReview')} selected={filter == 'inReview'}>
-						<ListItemIcon>
-							<PageStatusIcon status="InReview" tooltip={false} />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="status.InReview" />} secondary={getPageCountInStatus(book, 'InReview')} />
-					</ListItem>
-					<ListItem button onClick={() => handleFilterChange('completed')} selected={filter == 'completed'}>
-						<ListItemIcon>
-							<PageStatusIcon status="Completed" tooltip={false} />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="status.Completed" />} secondary={getPageCountInStatus(book, 'Completed')} />
-					</ListItem>
-				</List>
+				<GmailSidebarItem
+					color={'#e37400'}
+					startIcon={<PageStatusIcon status="AllPages" tooltip={false} />}
+					label={intl.formatMessage({ id: "page.all" })}
+					amount={book.pageCount}
+					selected={filter === 'all'}
+					onClick={() => handleFilterChange('all')}
+				/>
+
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<PageStatusIcon status="Available" tooltip={false} />}
+					label={intl.formatMessage({ id: "status.Available" })}
+					amount={getPageCountInStatus(book, 'Available')}
+					selected={filter === 'available'}
+					onClick={() => handleFilterChange('available')}
+				/>
+
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<PageStatusIcon status="Typing" tooltip={false} />}
+					label={intl.formatMessage({ id: "status.Typing" })}
+					amount={getPageCountInStatus(book, 'Typing')}
+					selected={filter === 'typing'}
+					onClick={() => handleFilterChange('typing')}
+				/>
+
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<PageStatusIcon status="Typed" tooltip={false} />}
+					label={intl.formatMessage({ id: "status.Typed" })}
+					amount={getPageCountInStatus(book, 'Typed')}
+					selected={filter === 'typed'}
+					onClick={() => handleFilterChange('typed')}
+				/>
+
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<PageStatusIcon status="InReview" tooltip={false} />}
+					label={intl.formatMessage({ id: "status.InReview" })}
+					amount={getPageCountInStatus(book, 'InReview')}
+					selected={filter === 'inReview'}
+					onClick={() => handleFilterChange('inReview')}
+				/>
+
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<PageStatusIcon status="Completed" tooltip={false} />}
+					label={intl.formatMessage({ id: "status.Completed" })}
+					amount={getPageCountInStatus(book, 'Completed')}
+					selected={filter === 'completed'}
+					onClick={() => handleFilterChange('completed')}
+				/>
 				<Divider />
-				<List component="nav" aria-label="secondary mailbox folders">
-					<ListItem button onClick={() => handleAssignmentFilterChange('mine')} selected={assignmentFilter == 'mine'}>
-						<ListItemIcon>
-							<PersonIcon />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="page.assign.mine" />} />
-					</ListItem>
-					<ListItem button onClick={() => handleAssignmentFilterChange('all')} selected={assignmentFilter == 'all'}>
-						<ListItemIcon>
-							<DescriptionIcon />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="page.assign.all" />} />
-					</ListItem>
-					<ListItem button onClick={() => handleAssignmentFilterChange('unassigned')} selected={assignmentFilter == 'unassigned'}>
-						<ListItemIcon>
-							<PeopleAltIcon />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="page.assign.assigned" />} />
-					</ListItem>
-					<ListItem button onClick={() => handleAssignmentFilterChange('assigned')} selected={assignmentFilter == 'assigned'}>
-						<ListItemIcon>
-							<CheckBoxOutlineBlankIcon />
-						</ListItemIcon>
-						<ListItemText primary={<FormattedMessage id="page.assign.unassigned" />} />
-					</ListItem>
-				</List>
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<PersonIcon />}
+					label={intl.formatMessage({ id: "page.assign.assignedToMe" })}
+					selected={assignmentFilter == 'assignedToMe'}
+					onClick={() => handleAssignmentFilterChange('assignedToMe')}
+				/>
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<DescriptionIcon />}
+					label={intl.formatMessage({ id: "page.assign.all" })}
+					selected={assignmentFilter == 'all'}
+					onClick={() => handleAssignmentFilterChange('all')}
+				/>
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<PeopleAltIcon />}
+					label={intl.formatMessage({ id: "page.assign.unassigned" })}
+					selected={assignmentFilter == 'unassigned'}
+					onClick={() => handleAssignmentFilterChange('unassigned')}
+				/>
+				<GmailSidebarItem
+					color={'#da3125'}
+					startIcon={<CheckBoxOutlineBlankIcon />}
+					label={intl.formatMessage({ id: "page.assign.assigned" })}
+					selected={assignmentFilter == 'assigned'}
+					onClick={() => handleAssignmentFilterChange('assigned')}
+				/>
 			</div>);
 	}
 
@@ -507,6 +531,7 @@ const PagesList = ({ book }) => {
 	};
 
 	const renderPages = () => {
+
 		if (isLoading) {
 			return <CircularProgress />;
 		}
@@ -531,31 +556,12 @@ const PagesList = ({ book }) => {
 			return (
 				<GridList cellHeight={280} className={classes.gridList} cols={3}>
 					{pages.data.map((page) => (
-						<GridListTile key={page.sequenceNumber}>
-							<img src={page.links.image != null ? page.links.image : "/images/no_image.png"} alt={page.sequenceNumber} />
-							<GridListTileBar
-								title={page.sequenceNumber}
-								subtitle={page.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
-								actionIcon={
-									<>
-										<IconButton edge="end" aria-label="edit" onClick={() => onEditClicked(page)}>
-											<DescriptionIcon style={{ color: "white" }} />
-										</IconButton>
-										<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(page)}>
-											<DeleteIcon style={{ color: "white" }} />
-										</IconButton>
-										<Checkbox
-											edge="start"
-											checked={checked.indexOf(page.sequenceNumber) !== -1}
-											onClick={handleToggle(page.sequenceNumber)}
-											tabIndex={-1}
-											disableRipple
-										/>
-									</>
-								}
-							/>
-						</GridListTile>
-					))}
+						<Page page={page} key={page.sequenceNumber}
+							onEdit={() => onEditClicked(page)}
+							onChecked={checked.indexOf(page.sequenceNumber) !== -1}
+							onClick={handleToggle(page.sequenceNumber)}
+							onDeleted={() => loadData()}
+						/>))}
 				</GridList>
 			);
 		}
@@ -588,6 +594,12 @@ const PagesList = ({ book }) => {
 				onSaved={handleDataChanged}
 				onCancelled={handleClose}
 			/>
+			{/* <BookEditor
+				show={showEditor}
+				book={book}
+				onSaved={onBookSaved}
+				onCancelled={handleClose}
+			/> */}
 			<DropzoneDialog
 				open={showFilesUpload}
 				onSave={handleFileUpload}
@@ -618,14 +630,6 @@ const PagesList = ({ book }) => {
 				onDropRejected={(rejectedFiles) => console.dir(rejectedFiles)}
 			/>
 		</Grid>
-
-		// <Container className={classes.cardGrid} maxWidth="md">
-		// 	{renderToolBar()}
-		// 	{renderViewToolBar()}
-		// 	{renderPages()}
-		// 	{renderPagination()}
-
-		// </Container>
 	);
 };
 

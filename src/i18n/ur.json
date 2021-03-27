@@ -294,7 +294,7 @@
 	"page.action.uploadZip" : "نئے صفحے کا اضافہ بذریعہ زپ اپلوڈ",
 	"page.action.uploadZip.help" : "صفحات کے زپ فائل چنیں جس کو استعمال کرنے ہوئے آخر میں اضافی صفحے بنائے جائیں گے۔",
 	"page.assign.all" : "تمام صفحات",
-	"page.assign.mine" : "میرے صفحات",
+	"page.assign.assignedToMe" : "میرے صفحات",
 	"page.assign.assigned" : "صفحات جو سونپے جا چکے",
 	"page.assign.unassigned" : "میسر صفحات",
 	"page.all": "تمام صفحات",

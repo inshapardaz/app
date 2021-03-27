@@ -192,7 +192,7 @@ export const libraryService =
 	getChapters : (bookId) => _get(`${libraryUrl()}/books/${bookId}/chapters`),
 	getChapter : (id, chapterId) => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}`),
 	getChapterContents : (id, chapterId, language = "en") => _get(`${libraryUrl()}/books/${id}/chapters/${chapterId}/contents?language=${language}`),
-	getBookPages : (book, filter = 'Available', page = 1, pageSize = 12) => _get(`${book.links.pages}?pageNumber=${page}&pageSize=${pageSize}${filter ? '&status=' + filter : ''}`),
+	getBookPages: (book, status = 'Available', assignmentFilter  = 'all', page = 1, pageSize = 12) => _get(`${book.links.pages}?pageNumber=${page}&pageSize=${pageSize}${status ? '&status=' + status : ''}${ assignmentFilter  ? '&assignmentFilter=' + assignmentFilter  : ''}`),
 	getPage : (bookId, sequenceNumber) => _get(`${libraryUrl()}/books/${bookId}/pages/${sequenceNumber}`),
 	getAuthors : (query = null, page = 1, pageSize = 12) =>
 		_get(`${libraryUrl()}/authors?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),

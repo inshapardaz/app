@@ -15,7 +15,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import DescriptionIcon from '@material-ui/icons/Description';
 
-import NotesIcon from '@material-ui/icons/Notes';
 import PageStatusIcon from './pageStatusIcon';
 
 const PageListItem = ({ page, onCheckChanged, checked, onEdit, onDelete }) => {

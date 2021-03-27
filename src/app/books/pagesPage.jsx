@@ -71,23 +71,24 @@ const PagesPage = () => {
 
 	if (error) return <ErrorMessage message="Error loading book." />
 
-	if (book == null) return <ErrorMessage message="Book not found" />
+	if (!loading && !error && book == null) return <ErrorMessage message="Book not found" />
 
 
 	return (<>
-		<Toolbar variant='regular'>
-			<Typography color="primary">{book && book.title}</Typography>
-			{renderEditLink()}
-			{renderChaptersLink()}
-			{renderPagesLink()}
-		</Toolbar>
+		{/* <div style={{ backgroundColor: 'green' }}>
+			<Toolbar variant='regular'>
+				<Typography variant="h3">{book.title}</Typography>
+				{renderEditLink()}
+				{renderChaptersLink()}
+			</Toolbar>
+		</div> */}
 		<PagesList book={book} />
-		<BookEditor
+		{/* <BookEditor
 			show={showEditor}
 			book={book}
 			onSaved={onBookSaved}
 			onCancelled={handleClose}
-		/>
+		/> */}
 	</>);
 };
 
