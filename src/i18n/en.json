@@ -275,6 +275,7 @@
 	"pages.progress.none" : "Book contains no pages",
 	"page.assignedToMe.label": "Assigned to me",
 	"page.assignedTo.label": "Assigned to {name}",
+	"page.available.label" : "Available",
 	"page.editor.header.add": "Adding new page",
 	"page.editor.header.edit": "Editing page {sequenceNumber}",
 	"page.editor.fields.sequenceNumber.title" : "Page Number",

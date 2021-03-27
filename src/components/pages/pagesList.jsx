@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 
 // mui
+import Link from '@material-ui/core/Link';
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";;
 import Button from '@material-ui/core/Button';
@@ -17,7 +18,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
-
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from '@material-ui/icons/Edit';
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Pagination from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem"
@@ -45,9 +48,11 @@ import PageEditor from "./pageEditor";
 import PageListItem from './pageListItem';
 import PageStatusIcon from '../../components/pages/pageStatusIcon';
 import CustomButton from '../customButton';
+import PageGrid from './pageGrid';
 
 // sidebar
 import GmailSidebarItem from '@mui-treasury/components/sidebarItem/gmail';
+import { Toolbar } from "@material-ui/core";
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -326,7 +331,7 @@ const PagesList = ({ book }) => {
 
 	const renderChaptersLink = () => {
 		if (book && book.links && book.links.update) {
-			return (<Button component={Link} to={`/books/${book.id}/chapters`} startIcon={<LayersIcon />}>
+			return (<Button component={Link} href={`/books/${book.id}/chapters`} startIcon={<LayersIcon />}>
 				<FormattedMessage id="chapter.toolbar.chapters" />
 			</Button>);
 		}
@@ -336,11 +341,6 @@ const PagesList = ({ book }) => {
 	const renderSideBar = () => {
 		return (
 			<div className={classes.root}>
-				<Typography variant="h5">{book != null ? book.title : ''}</Typography>
-				<Typography>{book != null ? (<FormattedMessage id={`book.status.${book.status}`} />) : ''}</Typography>
-				{renderEditLink()}
-				{renderChaptersLink()}
-				<Divider />
 				<CustomButton title={<FormattedMessage id="page.action.create" />} fullWidth menu>
 					<MenuItem
 						edge="start"
@@ -486,44 +486,31 @@ const PagesList = ({ book }) => {
 			</div>);
 	}
 
-	const renderPagination = () => {
+	const renderToolbar = () => {
 		if (!isLoading && pages) {
 			return (
-				<Box mt={8} mb={8}>
-					<Grid container>
-						<Grid>
-							<Pagination
-								page={pages.currentPageIndex}
-								count={pages.pageCount}
-								variant="outlined"
-								shape="rounded"
-								renderItem={(item) => (
-									<PaginationItem
-										component={Link}
-										to={buildLinkToPage(item.page, filter, assignmentFilter)}
-										{...item}
-									/>
-								)}
-							/>
-						</Grid>
-						<Grid>
-							<ToggleButtonGroup
-								size="small"
-								value={showPreview}
-								exclusive
-								onChange={(event, newValue) => setShowPreview(newValue)}
-								aria-label="view"
-							>
-								<ToggleButton value={false} aria-label="list-view">
-									<FormatAlignJustifyIcon fontSize="small" />
-								</ToggleButton>
-								<ToggleButton value={true} aria-label="preview">
-									<CropOriginalIcon fontSize="small" />
-								</ToggleButton>
-							</ToggleButtonGroup>
-						</Grid>
-					</Grid>
-				</Box>
+				<Toolbar >
+					<Typography variant="h5">{book != null ? book.title : ''}</Typography>
+					<Typography>{book != null ? (<FormattedMessage id={`book.status.${book.status}`} />) : ''}</Typography>
+					{renderEditLink()}
+					{renderChaptersLink()}
+					<Divider />
+
+					<ToggleButtonGroup
+						size="small"
+						value={showPreview}
+						exclusive
+						onChange={(event, newValue) => setShowPreview(newValue)}
+						aria-label="view"
+					>
+						<ToggleButton value={false} aria-label="list-view">
+							<FormatAlignJustifyIcon fontSize="small" />
+						</ToggleButton>
+						<ToggleButton value={true} aria-label="preview">
+							<CropOriginalIcon fontSize="small" />
+						</ToggleButton>
+					</ToggleButtonGroup>
+				</Toolbar>
 			);
 		}
 
@@ -566,15 +553,12 @@ const PagesList = ({ book }) => {
 			);
 		}
 
-		return (<List >
-			{pages.data.map(p => (<PageListItem page={p} key={p.sequenceNumber}
-				checked={checked.indexOf(p.sequenceNumber) !== -1}
-				onCheckChanged={handleToggle(p.sequenceNumber)}
-				onEdit={() => onEditClicked(p)}
-				onDelete={() => onDeleteClicked(p)}
-			/>))
-			}
-		</List >);
+		return (<PageGrid pages={pages}
+			onPageChange={p => history.push(buildLinkToPage(p, filter, assignmentFilter))}
+			loading={isLoading} onSelectionChanged={selection => setChecked(selection)}
+			onEdit={page => onEditClicked(page)}
+			onDelete={page => onDeleteClicked(page)}
+		/>);
 	}
 
 	return (
@@ -583,8 +567,8 @@ const PagesList = ({ book }) => {
 				{renderSideBar()}
 			</Grid>
 			<Grid sm={10} item>
+				{renderToolbar()}
 				{renderPages()}
-				{renderPagination()}
 			</Grid>
 			<PageEditor
 				show={showEditor}
