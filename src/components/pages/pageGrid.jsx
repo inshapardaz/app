@@ -16,8 +16,8 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 		{
 			field: 'status',
 			headerName: ' ',
-			headerName: intl.formatMessage({ id: 'page.editor.fields.status.title' }),
 			width: 40,
+			sortable: false,
 			disableClickEventBubbling: true,
 			renderCell: (params) => (<PageStatusIcon status={params.value} />)
 		},
@@ -26,6 +26,7 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			headerName: intl.formatMessage({ id: 'page.editor.fields.sequenceNumber.title' }),
 			flex: 1,
 			disableClickEventBubbling: true,
+			sortable: false,
 			renderCell: (params) => (<Link href={`/books/${params.row.bookId}/pages/${params.value}/editor`}>{params.value} </Link>)
 		},
 		{
@@ -33,12 +34,14 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			headerName: intl.formatMessage({ id: 'page.editor.fields.accountId.title' }),
 			flex: 1,
 			disableClickEventBubbling: true,
+			sortable: false,
 			renderCell: (params) => params.value ? params.value : (<Typography variant="caption">{intl.formatMessage({ id: 'page.available.label' })}</Typography>)
 		},
 		{
 			field: 'bookId',
 			headerName: ' ',
 			width: 100,
+			sortable: false,
 			disableClickEventBubbling: true,
 			renderCell: (params) => (
 				<>
@@ -61,7 +64,7 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 		return <DataGrid rows={pages.data} columns={columns} loading={loading} getRowId={row => row.sequenceNumber}
 			pageSize={pages.pageSize} pageIndex={pages.currentPageIndex} rowCount={pages.totalCount}
 			paginationMode="server" onPageChange={p => onPageChange && onPageChange(p.page + 1)}
-			checkboxSelection disableColumnMenu
+			checkboxSelection disableColumnMenu autoHeight
 			onSelectionModelChange={(newSelection) => {
 				if (onSelectionChanged) {
 					onSelectionChanged(newSelection.selectionModel);

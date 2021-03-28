@@ -7,23 +7,17 @@ import { FormattedMessage, useIntl } from "react-intl";
 // mui
 import Link from '@material-ui/core/Link';
 import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";;
+;
 import Button from '@material-ui/core/Button';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import LayersIcon from '@material-ui/icons/Layers';
 import Typography from "@material-ui/core/Typography";
-import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from "@material-ui/core/IconButton";
-import EditIcon from '@material-ui/icons/Edit';
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Pagination from "@material-ui/lab/Pagination";
-import PaginationItem from "@material-ui/lab/PaginationItem"
 //mui icons
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -45,7 +39,6 @@ import { useConfirm } from 'material-ui-confirm';
 import { libraryService } from "../../services";
 import Page from './page';
 import PageEditor from "./pageEditor";
-import PageListItem from './pageListItem';
 import PageStatusIcon from '../../components/pages/pageStatusIcon';
 import CustomButton from '../customButton';
 import PageGrid from './pageGrid';
@@ -53,30 +46,35 @@ import PageGrid from './pageGrid';
 // sidebar
 import GmailSidebarItem from '@mui-treasury/components/sidebarItem/gmail';
 import { Toolbar } from "@material-ui/core";
+import BookPageProgress from "./bookPgeProgress";
 
-const useStyles = () =>
-	makeStyles((theme) => ({
-		root: {
-			width: '100%',
-			maxWidth: 360,
-			backgroundColor: theme.palette.background.paper,
-		},
-		cardGrid: {
-			paddingTop: theme.spacing(8),
-			paddingBottom: theme.spacing(8),
-		},
-		gridList: {
-			width: 500,
-			height: 450,
-		},
-		icon: {
-			color: 'rgba(255, 255, 255, 0.54)',
-		},
-	}));
-const classes = useStyles();
+const useStyles = makeStyles((theme) => ({
+	root: {
+		width: '100%',
+		maxWidth: 360,
+		paddingTop: 20,
+		backgroundColor: theme.palette.background.paper,
+	},
+	cardGrid: {
+		paddingTop: theme.spacing(8),
+		paddingBottom: theme.spacing(8),
+	},
+	gridList: {
+		width: 500,
+		height: 450,
+	},
+	icon: {
+		color: 'rgba(255, 255, 255, 0.54)',
+	},
+	grow: {
+		flex: 1
+	}
+}));
 
 const PagesList = ({ book }) => {
 	if (book == null || book.links.pages == null) return null;
+	const classes = useStyles();
+
 	const location = useLocation();
 	const history = useHistory();
 	const confirm = useConfirm();
@@ -483,6 +481,8 @@ const PagesList = ({ book }) => {
 					selected={assignmentFilter == 'assigned'}
 					onClick={() => handleAssignmentFilterChange('assigned')}
 				/>
+				<Divider />
+				<BookPageProgress book={book} />
 			</div>);
 	}
 
@@ -491,11 +491,9 @@ const PagesList = ({ book }) => {
 			return (
 				<Toolbar >
 					<Typography variant="h5">{book != null ? book.title : ''}</Typography>
-					<Typography>{book != null ? (<FormattedMessage id={`book.status.${book.status}`} />) : ''}</Typography>
 					{renderEditLink()}
 					{renderChaptersLink()}
-					<Divider />
-
+					<div className={classes.grow} />
 					<ToggleButtonGroup
 						size="small"
 						value={showPreview}
@@ -562,7 +560,7 @@ const PagesList = ({ book }) => {
 	}
 
 	return (
-		<Grid container spacing={3}>
+		<Grid container>
 			<Grid sm={2} item>
 				{renderSideBar()}
 			</Grid>
