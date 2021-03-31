@@ -2,12 +2,12 @@ import React from 'react';
 import { FormattedMessage } from "react-intl";
 
 import Tooltip from '@material-ui/core/Tooltip';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-import RateReviewIcon from '@material-ui/icons/RateReview';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import DescriptionIcon from '@material-ui/icons/Description';
-import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
+import KeyboardIcon from '@material-ui/icons/Keyboard';
+import KeyboardHideIcon from '@material-ui/icons/KeyboardHide';
+import SpellcheckIcon from '@material-ui/icons/Spellcheck';
+import DoneIcon from '@material-ui/icons/Done';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import PhotoFilterIcon from '@material-ui/icons/PhotoFilter';
 
 const PageStatusIcon = ({ status, tooltip = true }) => {
 
@@ -16,49 +16,49 @@ const PageStatusIcon = ({ status, tooltip = true }) => {
 			case "Available":
 				return (
 					<Tooltip title={<FormattedMessage id="status.Available" />} >
-						<InsertDriveFileOutlinedIcon />
+						<PhotoFilterIcon />
 					</Tooltip>);
 			case "Typing":
 				return (
 					<Tooltip title={<FormattedMessage id="status.Typing" />} >
-						<AssignmentIndIcon />
+						<KeyboardIcon />
 					</Tooltip>);
 			case "Typed":
 				return (
 					<Tooltip title={<FormattedMessage id="status.Typed" />} >
-						<AssignmentTurnedInIcon />
+						<KeyboardHideIcon />
 					</Tooltip>);
 			case "InReview":
 				return (
 					<Tooltip title={<FormattedMessage id="status.InReview" />} >
-						<RateReviewIcon />
+						<SpellcheckIcon />
 					</Tooltip>);
 			case "Completed":
 				return (
 					<Tooltip title={<FormattedMessage id="status.Completed" />} >
-						<CheckCircleIcon />
+						<DoneIcon />
 					</Tooltip>);
 			default:
 				return (
 					<Tooltip title={<FormattedMessage id="page.all" />} >
-						<DescriptionIcon />
+						<FileCopyIcon />
 					</Tooltip>);
 		}
 	}
 
 	switch (status) {
 		case "Available":
-			return (<InsertDriveFileOutlinedIcon />);
+			return (<PhotoFilterIcon />);
 		case "Typing":
-			return (<AssignmentIndIcon />);
+			return (<KeyboardIcon />);
 		case "Typed":
-			return (<AssignmentTurnedInIcon />);
+			return (<KeyboardHideIcon />);
 		case "InReview":
-			return (<RateReviewIcon />);
+			return (<SpellcheckIcon />);
 		case "Completed":
-			return (<CheckCircleIcon />);
+			return (<DoneIcon />);
 		default:
-			return (<DescriptionIcon />);
+			return (<FileCopyIcon />);
 	}
 }
 

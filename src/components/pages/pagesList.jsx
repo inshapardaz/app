@@ -7,44 +7,33 @@ import { FormattedMessage, useIntl } from "react-intl";
 // mui
 import Link from '@material-ui/core/Link';
 import { makeStyles } from "@material-ui/core/styles";
-;
 import Button from '@material-ui/core/Button';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import LayersIcon from '@material-ui/icons/Layers';
 import Typography from "@material-ui/core/Typography";
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import MenuItem from '@material-ui/core/MenuItem';
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 //mui icons
-import PostAddIcon from '@material-ui/icons/PostAdd';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import PersonIcon from '@material-ui/icons/Person';
-import DeleteIcon from '@material-ui/icons/Delete';
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import DescriptionIcon from '@material-ui/icons/Description';
 import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
-import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 // 3rd party
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { DropzoneDialog } from 'material-ui-dropzone'
 import { useConfirm } from 'material-ui-confirm';
 //component
 import { libraryService } from "../../services";
 import Page from './page';
 import PageEditor from "./pageEditor";
-import PageStatusIcon from '../../components/pages/pageStatusIcon';
-import CustomButton from '../customButton';
+import PageUploadButton from './pageUploadButton';
+import PageDeleteButton from './pageDeleteButton';
+import PageAssignButton from './pageAssignButton';
+import PageFilterSideBar from './pageFilterSideBar';
+import PageAssignmentFilterSideBar from './pageAssignmentFilterSideBar';
 import PageGrid from './pageGrid';
 
 // sidebar
-import GmailSidebarItem from '@mui-treasury/components/sidebarItem/gmail';
 import { Toolbar } from "@material-ui/core";
 import BookPageProgress from "./bookPgeProgress";
 
@@ -52,8 +41,7 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		width: '100%',
 		maxWidth: 360,
-		paddingTop: 20,
-		backgroundColor: theme.palette.background.paper,
+		paddingTop: 20
 	},
 	cardGrid: {
 		paddingTop: theme.spacing(8),
@@ -88,8 +76,6 @@ const PagesList = ({ book }) => {
 	const [isError, setError] = useState(false);
 	const [showEditor, setShowEditor] = useState(false);
 	const [selectedPage, setSelectedPage] = useState(null);
-	const [showFilesUpload, setShowFilesUpload] = useState(false);
-	const [showZipUpload, setShowZipUpload] = useState(false);
 	const [checked, setChecked] = React.useState([]);
 
 	const [pages, setPages] = useState({});
@@ -193,35 +179,6 @@ const PagesList = ({ book }) => {
 		[pages]
 	);
 
-	const onDeleteMultipleClicked = useCallback(() => {
-		confirm({
-			title: intl.formatMessage({ id: "action.delete" }),
-			description: intl.formatMessage({ id: "page.action.confirmDeleteMultiple" }, { count: checked.length }),
-			confirmationText: intl.formatMessage({ id: "action.yes" }),
-			cancellationText: intl.formatMessage({ id: "action.no" }),
-			confirmationButtonProps: { variant: "contained", color: "secondary" },
-			cancellationButtonProps: { color: "secondary" }
-		})
-			.then(() => {
-				var promises = [];
-
-				checked.map(id => {
-					var page = pages.data.find(p => p.sequenceNumber === id);
-					if (page && page.links && page.links.delete) {
-						return promises.push(libraryService.delete(page.links.delete));
-					}
-					else {
-						return Promise.resolve();
-					}
-				});
-
-				Promise.all(promises)
-					.then(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.deleted' }), { variant: 'success' }))
-					.then(() => loadData())
-					.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.error.delete' }), { variant: 'error' }));
-			}).catch(() => { })
-	}, [pages, checked]);
-
 	const handleToggle = (value) => () => {
 		const currentIndex = checked.indexOf(value);
 		const newChecked = [...checked];
@@ -235,70 +192,6 @@ const PagesList = ({ book }) => {
 		setChecked(newChecked);
 	};
 
-	const handleFileUpload = useCallback(
-		(files) => {
-			if (files.length < 1) {
-				return;
-			}
-
-			setLoading(true);
-			if (pages && pages.links.create_multiple !== null) {
-				libraryService.postMultipleFile(pages.links.create_multiple, files)
-					.then(() => {
-						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.saved' }), { variant: 'success' })
-						setShowFilesUpload(false);
-						loadData();
-					})
-					.catch(() => {
-						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.saving' }), { variant: 'error' })
-					})
-					.finally(() => setLoading(false));
-			}
-		}, [pages]
-	);
-
-	const handleZipFileUpload = useCallback(
-		(files) => {
-			if (files.length < 1) {
-				return;
-			}
-
-			setLoading(true);
-			if (pages && pages.links.bulk_upload !== null) {
-				libraryService.postFile(pages.links.bulk_upload, files[0])
-					.then(() => {
-						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.saved' }), { variant: 'success' })
-						setShowZipUpload(false);
-						loadData();
-					})
-					.catch(() => {
-						enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.saving' }), { variant: 'error' })
-					})
-					.finally(() => setLoading(false));
-			}
-		}, [pages]
-	);
-
-	const onAssignToMe = () => {
-		var promises = [];
-
-		checked.map(id => {
-			var p = pages.data.find(p => p.sequenceNumber === id);
-			if (p !== null && p !== undefined) {
-				if (p.links.assign_to_me) {
-					return promises.push(libraryService.post(p.links.assign_to_me));
-				}
-			}
-
-			return Promise.resolve();
-		});
-
-		Promise.all(promises)
-			.then(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.deleted' }), { variant: 'success' }))
-			.then(() => loadData())
-			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.error.delete' }), { variant: 'error' }));
-	};
-
 	const handleFilterChange = (newFilter) => {
 
 		const params = getQueryParams();
@@ -310,14 +203,6 @@ const PagesList = ({ book }) => {
 		history.push(buildLinkToPage(params.page, params.filter, newAssignmentFilter));
 	}
 
-	const getPageCountInStatus = (book, status) => {
-		if (book && book.pageStatus) {
-			let stat = book.pageStatus.find(s => s.status === status);
-			if (stat) return stat.count;
-		}
-
-		return null;
-	}
 	const renderEditLink = () => {
 		if (book && book.links && book.links.update) {
 			return (<Button onClick={() => setShowEditor(true)} startIcon={<EditOutlinedIcon />}>
@@ -339,148 +224,13 @@ const PagesList = ({ book }) => {
 	const renderSideBar = () => {
 		return (
 			<div className={classes.root}>
-				<CustomButton title={<FormattedMessage id="page.action.create" />} fullWidth menu>
-					<MenuItem
-						edge="start"
-						className={classes.menuButton}
-						color="inherit"
-						aria-label="menu"
-						onClick={() => onEditClicked(null)}>
-						<ListItemIcon>
-							<AddCircleIcon fontSize="small" />
-						</ListItemIcon>
-						<Typography variant="inherit"><FormattedMessage id="page.action.create" /></Typography>
-					</MenuItem>
-					<MenuItem
-						edge="start"
-						className={classes.menuButton}
-						color="inherit"
-						aria-label="menu"
-						onClick={() => setShowFilesUpload(true)}>
-						<ListItemIcon>
-							<PostAddIcon fontSize="small" />
-						</ListItemIcon>
-						<Typography variant="inherit"><FormattedMessage id="page.action.upload" /></Typography>
-					</MenuItem>
-					<MenuItem
-						edge="start"
-						className={classes.menuButton}
-						color="inherit"
-						aria-label="menu"
-						onClick={() => setShowZipUpload(true)}>
-						<ListItemIcon>
-							<CloudUploadIcon fontSize="small" />
-						</ListItemIcon>
-						<Typography variant="inherit"><FormattedMessage id="page.action.uploadZip" /></Typography>
-					</MenuItem>
-				</CustomButton>
-				<MenuItem
-					edge="start"
-					className={classes.menuButton}
-					color="inherit"
-					disabled={checked.length <= 0}
-					aria-label="menu"
-					variant="text"
-					onClick={onDeleteMultipleClicked}>
-					<ListItemIcon>
-						<DeleteIcon fontSize="small" />
-					</ListItemIcon>
-					<FormattedMessage id="action.delete" />
-				</MenuItem>
-				<MenuItem
-					edge="start"
-					className={classes.menuButton}
-					disabled={checked.length <= 0}
-					aria-label="menu"
-					onClick={onAssignToMe} >
-					<ListItemIcon>
-						<AssignmentIndIcon fontSize="small" />
-					</ListItemIcon>
-					<FormattedMessage id="page.assignedToMe.label" />
-				</MenuItem>
+				<PageUploadButton onAdd={() => onEditClicked(null)} pages={pages} onFilesUploaded={loadData} />
+				<PageDeleteButton checked={checked} pages={pages} onDeleted={loadData} />
+				<PageAssignButton checked={checked} pages={pages} onAssigned={loadData} />
 				<Divider />
-				<GmailSidebarItem
-					color={'#e37400'}
-					startIcon={<PageStatusIcon status="AllPages" tooltip={false} />}
-					label={intl.formatMessage({ id: "page.all" })}
-					amount={book.pageCount}
-					selected={filter === 'all'}
-					onClick={() => handleFilterChange('all')}
-				/>
-
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<PageStatusIcon status="Available" tooltip={false} />}
-					label={intl.formatMessage({ id: "status.Available" })}
-					amount={getPageCountInStatus(book, 'Available')}
-					selected={filter === 'available'}
-					onClick={() => handleFilterChange('available')}
-				/>
-
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<PageStatusIcon status="Typing" tooltip={false} />}
-					label={intl.formatMessage({ id: "status.Typing" })}
-					amount={getPageCountInStatus(book, 'Typing')}
-					selected={filter === 'typing'}
-					onClick={() => handleFilterChange('typing')}
-				/>
-
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<PageStatusIcon status="Typed" tooltip={false} />}
-					label={intl.formatMessage({ id: "status.Typed" })}
-					amount={getPageCountInStatus(book, 'Typed')}
-					selected={filter === 'typed'}
-					onClick={() => handleFilterChange('typed')}
-				/>
-
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<PageStatusIcon status="InReview" tooltip={false} />}
-					label={intl.formatMessage({ id: "status.InReview" })}
-					amount={getPageCountInStatus(book, 'InReview')}
-					selected={filter === 'inReview'}
-					onClick={() => handleFilterChange('inReview')}
-				/>
-
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<PageStatusIcon status="Completed" tooltip={false} />}
-					label={intl.formatMessage({ id: "status.Completed" })}
-					amount={getPageCountInStatus(book, 'Completed')}
-					selected={filter === 'completed'}
-					onClick={() => handleFilterChange('completed')}
-				/>
+				<PageFilterSideBar book={book} filter={filter} setFilter={(filter) => handleFilterChange(filter)} />
 				<Divider />
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<PersonIcon />}
-					label={intl.formatMessage({ id: "page.assign.assignedToMe" })}
-					selected={assignmentFilter == 'assignedToMe'}
-					onClick={() => handleAssignmentFilterChange('assignedToMe')}
-				/>
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<DescriptionIcon />}
-					label={intl.formatMessage({ id: "page.assign.all" })}
-					selected={assignmentFilter == 'all'}
-					onClick={() => handleAssignmentFilterChange('all')}
-				/>
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<PeopleAltIcon />}
-					label={intl.formatMessage({ id: "page.assign.unassigned" })}
-					selected={assignmentFilter == 'unassigned'}
-					onClick={() => handleAssignmentFilterChange('unassigned')}
-				/>
-				<GmailSidebarItem
-					color={'#da3125'}
-					startIcon={<CheckBoxOutlineBlankIcon />}
-					label={intl.formatMessage({ id: "page.assign.assigned" })}
-					selected={assignmentFilter == 'assigned'}
-					onClick={() => handleAssignmentFilterChange('assigned')}
-				/>
+				<PageAssignmentFilterSideBar assignmentFilter={assignmentFilter} onAssignmentFilterChanged={(af) => handleAssignmentFilterChange(af)} />
 				<Divider />
 				<BookPageProgress book={book} />
 			</div>);
@@ -539,7 +289,7 @@ const PagesList = ({ book }) => {
 
 		if (showPreview) {
 			return (
-				<GridList cellHeight={280} className={classes.gridList} cols={3}>
+				<GridList cellHeight={280} className={classes.gridList} cols={4}>
 					{pages.data.map((page) => (
 						<Page page={page} key={page.sequenceNumber}
 							onEdit={() => onEditClicked(page)}
@@ -575,41 +325,6 @@ const PagesList = ({ book }) => {
 				pageNumber={pages && pages.data && pages.data.length}
 				onSaved={handleDataChanged}
 				onCancelled={handleClose}
-			/>
-			{/* <BookEditor
-				show={showEditor}
-				book={book}
-				onSaved={onBookSaved}
-				onCancelled={handleClose}
-			/> */}
-			<DropzoneDialog
-				open={showFilesUpload}
-				onSave={handleFileUpload}
-				acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
-				showPreviews={true}
-				maxFileSize={5000000}
-				filesLimit={50}
-				fullWidth={true}
-				showAlerts={false}
-				onClose={() => setShowFilesUpload(false)}
-				dialogTitle={intl.formatMessage({ id: "page.action.upload" })}
-				dropzoneText={intl.formatMessage({ id: "page.action.upload.help" })}
-				cancelButtonText={intl.formatMessage({ id: "action.cancel" })}
-				submitButtonText={intl.formatMessage({ id: "action.upload" })}
-			/>
-			<DropzoneDialog
-				open={showZipUpload}
-				onSave={handleZipFileUpload}
-				acceptedFiles={['application/zip', 'application/x-zip-compressed']}
-				filesLimit={1}
-				maxFileSize={5000000}
-				showPreviews={false}
-				onClose={() => setShowZipUpload(false)}
-				dialogTitle={intl.formatMessage({ id: "page.action.uploadZip" })}
-				dropzoneText={intl.formatMessage({ id: "page.action.uploadZip.help" })}
-				cancelButtonText={intl.formatMessage({ id: "action.cancel" })}
-				submitButtonText={intl.formatMessage({ id: "action.upload" })}
-				onDropRejected={(rejectedFiles) => console.dir(rejectedFiles)}
 			/>
 		</Grid>
 	);

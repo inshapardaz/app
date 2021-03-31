@@ -286,6 +286,8 @@
 	"page.messages.error.saving": "Error saving page",
 	"pages.messages.saved": "Pages saved successfully",
 	"pages.messages.error.saving": "Error saving pages",
+	"pages.messages.assigned": "Pages assigned successfully",
+	"pages.messages.error.assigned": "Error assigning pages",
 	"pages.messages.error.loading" : "Error loading pages",
 	"pages.messages.empty": "No pages found",
 	"page.action.confirmDelete" : "Do you want to remove page {sequenceNumber}?",

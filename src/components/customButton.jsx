@@ -42,7 +42,7 @@ const styles = ({ palette }) => {
 };
 
 const useStyles = makeStyles(styles, { name: 'GmailButton' })
-const CustomButton = ({ collapsed, classes, label = 'Compose', menu = false, ...props }) => {
+const CustomButton = ({ collapsed, classes, label = '', menu = false, ...props }) => {
 	const styles = useStyles({ collapsed, ...props })
 	const { img: imgClassName, ...buttonClasses } = styles;
 	const { children } = props;
@@ -85,6 +85,7 @@ const CustomButton = ({ collapsed, classes, label = 'Compose', menu = false, ...
 						open={Boolean(anchorEl)}
 						onClose={handleClose}
 					>
+						{label}
 						{children}
 					</Menu>
 				)
