@@ -47,7 +47,7 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			renderCell: (params) => (
 				<>
 					<Tooltip title={<FormattedMessage id="action.editContent" />} >
-						<IconButton component={Link} edge="end" aria-label="edit" href={`/books/${params.row.bookId}/pages/${params.value}/editor`}>
+						<IconButton component={Link} edge="end" aria-label="edit" href={`/books/${params.row.bookId}/pages/${params.row.sequenceNumber}/editor`}>
 							<DescriptionIcon />
 						</IconButton>
 					</Tooltip>
