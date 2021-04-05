@@ -8,6 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PageStatusIcon from '../../components/pages/pageStatusIcon';
+import DescriptionIcon from '@material-ui/icons/Description';
 import { DataGrid } from '@material-ui/data-grid';
 
 const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, loading }) => {
@@ -40,11 +41,16 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 		{
 			field: 'bookId',
 			headerName: ' ',
-			width: 100,
+			width: 140,
 			sortable: false,
 			disableClickEventBubbling: true,
 			renderCell: (params) => (
 				<>
+					<Tooltip title={<FormattedMessage id="action.editContent" />} >
+						<IconButton component={Link} edge="end" aria-label="edit" href={`/books/${params.row.bookId}/pages/${params.value}/editor`}>
+							<DescriptionIcon />
+						</IconButton>
+					</Tooltip>
 					<Tooltip title={<FormattedMessage id="action.edit" />} >
 						<IconButton edge="end" aria-label="edit" onClick={() => onEdit && onEdit(params.row)}>
 							<EditIcon />

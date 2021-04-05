@@ -5,7 +5,7 @@ import MarkdownEditor from '@jdinabox/ckeditor5-build-markdown';
 const Editor = ({ data, onChange }) => {
 	return (<CKEditor
 		editor={MarkdownEditor}
-		data={data}
+		data={data || ''}
 		onChange={(event, editor) => {
 			if (onChange) {
 				const data = editor.getData();
