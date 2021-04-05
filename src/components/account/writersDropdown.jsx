@@ -7,64 +7,35 @@ import { libraryService } from '../../services';
 import { Field } from 'formik';
 import BootstrapInput from '../bootstrapInput';
 
-const WritersDropDown = ({ onWriterSelected, error, value }, props) => {
+const WritersDropDown = ({ onWriterSelected, error, value, label, variant }, props) => {
 	const intl = useIntl();
-	const [open, setOpen] = React.useState(false);
 	const [options, setOptions] = React.useState([]);
 	const [text, setText] = React.useState('');
 	const [loading, setLoading] = React.useState(false);
 	const [loadingError, setLoadingError] = React.useState(false);
 
 	useEffect(() => {
-		let active = true;
 		(() => {
 			setLoading(true);
-			libraryService.getWriters()
-				.then(response => active && setOptions(response))
+			libraryService.getWriters(text == value && value.accountName ? null : text)
+				.then(response => setOptions(response))
 				.catch(() => setLoadingError(true))
 				.finally(() => setLoading(false));
 		})();
-	}, []);
+	}, [text]);
 
-	// React.useEffect(() => {
-	// 	if (!open) {
-	// 		setOptions([]);
-	// 	}
-	// }, [open]);
 
-	return (<Field component={Autocomplete} as="select" variant="outlined" input={<BootstrapInput />}
+	return (<Autocomplete
 		{...props}
 		options={options}
 		loading={loading}
-		open={open}
-		onOpen={() => {
-			setOpen(true);
-		}}
-		onClose={() => {
-			setOpen(false);
-		}}
 		value={value}
+		onChange={(event, newValue) => onWriterSelected(newValue)}
 		getOptionSelected={(option, value) => option.id === value.id}
-		getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+		getOptionLabel={(option) => option ? `${option.accountName}` : ''}
 		noOptionsText={intl.formatMessage({ id: "person.messages.empty" })}
-		onChange={(event, newValue) => onWriterSelected(newValue.id)}
-		renderInput={(params) => (
-			<TextField variant="outlined"
-				{...params}
-				label={props.label}
-				error={error}
-				onChange={event => setText(event.target.value)}
-				InputProps={{
-					...params.InputProps,
-					endAdornment: (
-						<React.Fragment>
-							{loading ? <CircularProgress color="inherit" size={20} /> : null}
-							{params.InputProps.endAdornment}
-						</React.Fragment>
-					)
-				}}
-			/>
-		)}
+		onInputChange={(e, value) => setText(value)}
+		renderInput={(params) => <TextField {...params} label={label} error={error} variant={variant} />}
 	/>);
 };
 

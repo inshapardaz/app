@@ -89,6 +89,14 @@ function Nav() {
 
 		return null;
 	};
+	const renderCategorySelector = () => {
+		const selectedLibrary = libraryService.getSelectedLibrary();
+		if (selectedLibrary) {
+			return <CategorySelector />;
+		}
+
+		return null;
+	}
 
 	const mobileMenuId = 'primary-search-account-menu-mobile';
 	const renderMobileMenu = (
@@ -123,7 +131,7 @@ function Nav() {
 				<FormattedMessage id="header.series" />
 			</MenuItem>
 			{renderPublishingButton(true)}
-			<CategorySelector />
+			{renderCategorySelector()}
 			<LanguageSelector />
 			<LibrarySelector />
 			<ProfileMenu />
@@ -157,7 +165,7 @@ function Nav() {
 				>
 					<FormattedMessage id="header.series" />
 				</Button>
-				<CategorySelector />
+				{renderCategorySelector()}
 				{renderPublishingButton()}
 				<LanguageSelector />
 				<LibrarySelector />

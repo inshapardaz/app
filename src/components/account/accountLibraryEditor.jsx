@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { makeStyles } from '@material-ui/core/styles';
-import { useSnackbar } from 'notistack';
-import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, IconButton } from "@material-ui/core";
+import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, IconButton, Button } from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditorDialog from '../editorDialog';
 import { accountService } from "../../services";
+import { useSnackbar } from 'notistack';
 import DeleteAccountLibrary from "./deleteAccountLibrary";
-
+import LibrarySelectDialog from '../library/librarySelector';
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -39,9 +39,12 @@ const useStyles = makeStyles((theme) => ({
 const AccountLibraryEditor = ({ show, account, onCancelled }) => {
 	const classes = useStyles();
 	const intl = useIntl();
+	const { enqueueSnackbar } = useSnackbar();
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
+	const [busy, setBusy] = useState(false);
 	const [libraries, setLibraries] = useState(null);
+	const [showAdd, setShowAdd] = useState(false);
 	const [showDelete, setShowDelete] = useState(false);
 	const [selectedLibrary, setSelectedLibrary] = useState(null);
 
@@ -66,7 +69,18 @@ const AccountLibraryEditor = ({ show, account, onCancelled }) => {
 	};
 
 	const addLibrary = (library) => {
-
+		setBusy(true);
+		accountService.addAccountLibrary(account.id, library.id)
+			.then(() => {
+				enqueueSnackbar(intl.formatMessage({ id: 'library.assign.success' }), { variant: 'success' })
+				handleDataChanged();
+			})
+			.catch((e) => {
+				console.error(e);
+				enqueueSnackbar(intl.formatMessage({ id: 'library.assign.error' }), { variant: 'error' })
+				setError(true);
+			})
+			.finally(() => setBusy(false));
 	};
 
 	const handleDataChanged = () => {
@@ -76,6 +90,7 @@ const AccountLibraryEditor = ({ show, account, onCancelled }) => {
 
 	const handleClose = () => {
 		setSelectedLibrary(null);
+		setShowAdd(false);
 		setShowDelete(false);
 	};
 
@@ -104,6 +119,11 @@ const AccountLibraryEditor = ({ show, account, onCancelled }) => {
 								</TableCell>
 							</TableRow>
 						)}
+						<TableRow>
+							<TableCell colSpan="4" className="text-center">
+								<Button onClick={() => setShowAdd(true)} ><FormattedMessage id="library.assign" /></Button>
+							</TableCell>
+						</TableRow>
 						{loading &&
 							<TableRow>
 								<TableCell colSpan="4" className="text-center">
@@ -114,6 +134,7 @@ const AccountLibraryEditor = ({ show, account, onCancelled }) => {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			<LibrarySelectDialog open={showAdd} onLibrarySelected={addLibrary} onClose={handleClose} />
 			<DeleteAccountLibrary
 				show={showDelete}
 				library={selectedLibrary}

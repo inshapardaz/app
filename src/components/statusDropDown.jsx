@@ -3,16 +3,32 @@ import { Field } from 'formik';
 import { Select } from 'formik-material-ui';
 import MenuItem from '@material-ui/core/MenuItem';
 import BootstrapInput from './bootstrapInput';
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 
-const StatusDropDown = (props) => (
-	<Field component={Select} as="select" variant="outlined" input={<BootstrapInput />} {...props}>
-		<MenuItem value={0}><FormattedMessage id="status.Available" /></MenuItem>
-		<MenuItem value={1}><FormattedMessage id="status.Typing" /></MenuItem>
-		<MenuItem value={2}><FormattedMessage id="status.Typed" /></MenuItem>
-		<MenuItem value={3}><FormattedMessage id="status.InReview" /></MenuItem>
-		<MenuItem value={4}><FormattedMessage id="status.Completed" /></MenuItem>
-	</Field>
-);
+const StatusDropDown = (props) => {
+	const intl = useIntl();
+	const statuses = [{
+		key: 'Available',
+		name: intl.formatMessage({ id: 'status.Available' })
+	}, {
+		key: 'Typing',
+		name: intl.formatMessage({ id: 'status.Typing' })
+	}, {
+		key: 'Typed',
+		name: intl.formatMessage({ id: 'status.Typed' })
+	}, {
+		key: 'InReview',
+		name: intl.formatMessage({ id: 'status.InReview' })
+	}, {
+		key: 'Completed',
+		name: intl.formatMessage({ id: 'status.Completed' })
+	}];
+
+	return (
+		<Field component={Select} as="select" input={<BootstrapInput />} {...props}>
+			{statuses.map(l => <MenuItem key={l.key} value={l.key}>{l.name}</MenuItem>)}
+		</Field>
+	);
+};
 
 export default StatusDropDown;

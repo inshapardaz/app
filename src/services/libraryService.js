@@ -1,8 +1,17 @@
 import { fetchWrapper} from '../helpers';
 import config from 'config';
 
-const getSelectedLibrary = () => JSON.parse(window.localStorage.getItem("selectedLibrary"));
-const setSelectedLibrary = (selectedLibrary) => window.localStorage.setItem("selectedLibrary", JSON.stringify(selectedLibrary));
+const getSelectedLibrary = () => {
+	const selectedLibrary = window.localStorage.getItem("selectedLibrary");
+	if (selectedLibrary != null && selectedLibrary != undefined) {
+		return JSON.parse(selectedLibrary);
+	}
+	return null;
+}
+const setSelectedLibrary = (selectedLibrary) => {
+	if (selectedLibrary != null && selectedLibrary != undefined)
+	window.localStorage.setItem("selectedLibrary", JSON.stringify(selectedLibrary));
+};
 const getUserLibrariesFromCache = () => JSON.parse(window.sessionStorage.getItem("libraries"));
 const setUserLibrariesCache = (libraries) => window.sessionStorage.setItem("libraries", JSON.stringify(libraries));
 
@@ -124,7 +133,7 @@ export const libraryService =
 	postFile: _postFile,
 	postMultipleFile: _postMultipleFile,
 	getEntry: () => _get(`${libraryUrl()}`),
-	getWriters: () => _get(`${libraryUrl()}/writers`),
+	getWriters: (query) => _get(`${libraryUrl()}/writers${query ? '?query=' + query : '' }`),
 	getCategories : () => _get(`${libraryUrl()}/categories`),
 	getCategory : (id) => _get(`${libraryUrl()}/categories/${id}`),
 	getSeries : (query = null, pageNumber = 1, pageSize = 12) =>
@@ -179,8 +188,8 @@ export const libraryService =
 
 		return _get(`${libraryUrl()}/books?pageNumber=${page}&pageSize=${pageSize}&status=${status}${getQueryParameter(query)}`);
 	},
-	getLibraries: (query = null, page = 1, pageSize = 12) => {
-		return _get(`${librariesUrl()}?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`);
+	getLibraries: (query = null, unassignedOnly = false, page = 1, pageSize = 12) => {
+		return _get(`${librariesUrl()}?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}${unassignedOnly?'&unassignedOnly=true':''}`);
 	},
 	getLibraryById : (id) => _get(`${librariesUrl()}/${id}`),
 	getBooksByCategory : (category, page = 1, pageSize = 12, query = null) =>

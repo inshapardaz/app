@@ -69,7 +69,7 @@ const ImageUpload = ({ imageUrl, defaultImage, height, onImageSelected, readOnly
 	};
 
 	const setDefaultImage = (ev) => {
-		ev.target.src = defaultAuthorImage;
+		ev.target.src = defaultImage;
 	};
 
 	const image = newImage !== null ? newImage : imageUrl ? imageUrl : defaultImage;

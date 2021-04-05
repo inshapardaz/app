@@ -135,7 +135,7 @@ function getAccountLibraries(id) {
 }
 
 function addAccountLibrary(id, libraryId) {
-	return fetchWrapper.post(`${baseUrl}/${id}/libraries/${libraryId}`);
+	return fetchWrapper.post(`${baseUrl}/${id}/libraries/`, libraryId );
 }
 
 function deleteAccountLibrary(id, libraryId) {

@@ -1,20 +1,28 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { createMuiTheme, StylesProvider, ThemeProvider, jssPreset } from '@material-ui/core/styles';
 import { IntlProvider } from 'react-intl';
+import { useHistory, useLocation } from 'react-router-dom';
 import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { Helmet } from 'react-helmet';
 import { accountService, localeService, libraryService } from '../services';
 import Loading from '../components/Loading.jsx';
-import Routes from '../components/routes';
+import Routes from '../routes';
 import { SnackbarProvider } from 'notistack';
 import { ConfirmProvider } from 'material-ui-confirm';
 
 function App() {
+	const history = useHistory();
 	const [, setUser] = useState({});
 	const [isLoading, setIsLoading] = useState(true);
 	const [library, setLibrary] = useState(null);
+	const { pathname } = useLocation();
 
+	const goToLibrarySelect = () => {
+		if (pathname !== '/admin') {
+			history.push('/libraries/select');
+		}
+	}
 	useEffect(() => {
 		const fetchEntry = () => {
 			setIsLoading(true);
@@ -22,15 +30,13 @@ function App() {
 			libraryService.getLibraries()
 				.then((response) => {
 					if (!response.data || response.data.length < 1) {
-						// redirect to error page. user hasn't got any library.
+						goToLibrarySelect();
 					}
 
 					libraryService.setUserLibrariesCache(response.data);
 					let selectedLibrary = libraryService.getSelectedLibrary();
 					if (selectedLibrary === null) {
-						var firstLibrary = response.data[0];
-						libraryService.setSelectedLibrary(firstLibrary);
-						setLibrary(firstLibrary);
+						goToLibrarySelect();
 					}
 					else {
 						libraryService.get(selectedLibrary.links.self)

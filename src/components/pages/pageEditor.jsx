@@ -5,8 +5,9 @@ import { FormControl, InputLabel } from "@material-ui/core";
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
 import { TextField } from 'formik-material-ui';
-import { DropzoneArea } from 'material-ui-dropzone';
+import Grid from "@material-ui/core/Grid";
 import { libraryService } from '../../services';
+import ImageUpload from '../imageUpload';
 import StatusDropDown from '../statusDropDown';
 import EditorDialog from '../editorDialog';
 import SubmitButton from '../submitButton';
@@ -17,11 +18,12 @@ const PageEditor = ({ show, page, pageNumber, createLink, onSaved, onCancelled }
 	const { enqueueSnackbar } = useSnackbar();
 	const [busy, setBusy] = useState(false);
 	const [savedPage, setSavedPage] = useState(null);
+	const [newCover, setNewCover] = useState(null);
 
 	const initialValues = {
 		sequenceNumber: pageNumber + 1,
 		text: '',
-		status: 0,
+		status: 'Available',
 		accountId: null
 	};
 
@@ -38,7 +40,11 @@ const PageEditor = ({ show, page, pageNumber, createLink, onSaved, onCancelled }
 		setBusy(true);
 		if (page === null && createLink !== null) {
 			libraryService.post(createLink, fields)
-				.then(() => {
+				.then((res) => {
+					if (newCover && res.links && res.links.image_upload) {
+						return uploadImage(res.links.image_upload);
+					}
+
 					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.saved' }), { variant: 'success' })
 					onSaved();
 				})
@@ -49,7 +55,11 @@ const PageEditor = ({ show, page, pageNumber, createLink, onSaved, onCancelled }
 		}
 		else if (page !== null) {
 			libraryService.put(page.links.update, fields)
-				.then(() => {
+				.then((res) => {
+					if (newCover && res.links && res.links.image_upload) {
+						return uploadImage(res.links.image_upload);
+					}
+
 					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.saved' }), { variant: 'success' })
 					onSaved();
 				})
@@ -62,7 +72,7 @@ const PageEditor = ({ show, page, pageNumber, createLink, onSaved, onCancelled }
 		setBusy(false)
 	};
 
-	const onImageUpload = (files) => {
+	/*const onImageUpload = (files) => {
 		if (files.length < 1) {
 			return;
 		}
@@ -70,6 +80,9 @@ const PageEditor = ({ show, page, pageNumber, createLink, onSaved, onCancelled }
 		if (page && page.links.image_upload !== null) {
 			libraryService.upload(page.links.image_upload, files[0])
 				.then(() => {
+					if (newCover) {
+						return uploadImage(page.links.image_upload);
+					}
 					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.saved' }), { variant: 'success' })
 					onSaved();
 				})
@@ -78,6 +91,32 @@ const PageEditor = ({ show, page, pageNumber, createLink, onSaved, onCancelled }
 				})
 				.finally(() => setBusy(false));
 		}
+	};*/
+
+	const handleImageUpload = (file) => {
+		if (file) {
+			setNewCover(file);
+		}
+	};
+
+	const uploadImage = (uploadLink) => {
+		setBusy(true);
+
+		if (!uploadLink) {
+			setBusy(false);
+			if (onSaved) onSaved();
+			return;
+		}
+
+		libraryService.upload(uploadLink, newCover)
+			.then(() => {
+				if (onSaved) onSaved();
+				enqueueSnackbar(intl.formatMessage({ id: 'page.messages.saved' }), { variant: 'success' })
+			})
+			.catch((e) => {
+				enqueueSnackbar(intl.formatMessage({ id: 'page.messages.error.saving' }), { variant: 'error' })
+			})
+			.finally(() => setBusy(false));
 	};
 
 	const title = page === null
@@ -89,28 +128,34 @@ const PageEditor = ({ show, page, pageNumber, createLink, onSaved, onCancelled }
 			<Formik initialValues={savedPage || initialValues} validationSchema={validationSchema} onSubmit={onSubmit} enableReinitialize>
 				{({ errors, touched, isSubmitting, values, setFieldValue }) => (
 					<Form>
-						<Field component={TextField} autoFocus name="sequenceNumber" type="number" variant="outlined" margin="normal" fullWidth
-							label={<FormattedMessage id="page.editor.fields.sequenceNumber.title" />} error={errors.sequenceNumber && touched.sequenceNumber}
-						/>
-						<FormControl variant="outlined" margin="normal" fullWidth error={errors.status && touched.status}>
-							<InputLabel ><FormattedMessage id="page.editor.fields.status.title" /></InputLabel>
-							<StatusDropDown name="status" as="select" error={errors.status && touched.status} />
-						</FormControl>
-						<FormControl variant="outlined" margin="normal" fullWidth error={errors.accountId && touched.accountId}>
-							<InputLabel><FormattedMessage id="page.editor.fields.accountId.title" /></InputLabel>
-							<WritersDropDown name="accountId" error={errors.accountId && touched.accountId}
-								label={intl.formatMessage({ id: "page.editor.fields.accountId.title" })}
-								onWriterSelected={(selectedWriter) => {
-									setFieldValue(
-										"accountId",
-										selectedWriter !== null ? selectedWriter : initialValues.accountId
-									);
-								}} />
-						</FormControl>
-						{
-							page && page.links.image_upload &&
-							<DropzoneArea onChange={files => onImageUpload(files)} filesLimit={1} acceptedFiles={['image/*']} />
-						}
+						<Grid container spacing={3}>
+							<Grid item md={6} >
+								<Field component={TextField} autoFocus name="sequenceNumber" type="number" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="page.editor.fields.sequenceNumber.title" />} error={errors.sequenceNumber && touched.sequenceNumber}
+								/>
+								<FormControl variant="outlined" margin="normal" fullWidth error={errors.status && touched.status}>
+									<InputLabel ><FormattedMessage id="page.editor.fields.status.title" /></InputLabel>
+									<StatusDropDown name="status" as="select" error={errors.status && touched.status} />
+								</FormControl>
+								<FormControl variant="outlined" margin="normal" fullWidth>
+									<WritersDropDown name="accountId" variant="outlined"
+										error={errors.accountId && touched.accountId}
+										label={intl.formatMessage({ id: "page.editor.fields.accountId.title" })}
+										value={values.accountId ? { id: values.accountId, accountName: `${values.accountName}` } : null}
+										onWriterSelected={(selectedWriter) => {
+											setFieldValue("accountId", selectedWriter !== null ? selectedWriter.id : initialValues.accountId);
+											setFieldValue("accountName", selectedWriter !== null ? `${selectedWriter.accountName}` : initialValues.accountName);
+										}} />
+								</FormControl>
+							</Grid>
+							<Grid item md={6} >
+								<FormControl variant="outlined" margin="normal" fullWidth>
+									<ImageUpload imageUrl={savedPage && savedPage.links ? savedPage.links.image : null} defaultImage='/images/page_placeholder.jpg'
+										onImageSelected={handleImageUpload}
+										height="420" />
+								</FormControl>
+							</Grid>
+						</Grid>
 						<SubmitButton busy={isSubmitting} label={<FormattedMessage id="action.save" />} />
 					</Form>
 				)}

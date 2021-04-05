@@ -17,6 +17,7 @@ import { libraryService } from "../../services";
 import BookStatusDropDown from "./bookStatusDropDown";
 
 const selectedLibrary = libraryService.getSelectedLibrary();
+
 const initialValues = {
 	title: '',
 	description: '',

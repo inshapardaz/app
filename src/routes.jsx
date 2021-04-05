@@ -2,36 +2,37 @@ import React from 'react';
 import { Redirect, Switch } from 'react-router';
 import { Route, useLocation } from 'react-router-dom';
 
-import RouteWithLayout from './layout/routeWithLayout';
-import { PrivateRoute } from './layout/privateRoute';
-import { Role } from '../helpers';
-import { emptyLayout, fullWidthLayout, boxedLayout } from './layout';
-import { Profile } from '../app/profile';
-import { Admin } from '../app/admin';
-import Register from '../app/account/register';
-import Login from '../app/account/login';
-import ForgotPassword from '../app/account/forgotPassword';
-import VerifyEmail from '../app/account/verifyEmail';
-import ResetPassword from '../app/account/resetPassword';
+import RouteWithLayout from './components/layout/routeWithLayout';
+import { PrivateRoute } from './components/layout/privateRoute';
+import { Role } from './helpers';
+import { emptyLayout, fullWidthLayout, boxedLayout } from './components/layout';
+import { Profile } from './app/profile';
+import { Admin } from './app/admin';
+import Register from './app/account/register';
+import Login from './app/account/login';
+import ForgotPassword from './app/account/forgotPassword';
+import VerifyEmail from './app/account/verifyEmail';
+import ResetPassword from './app/account/resetPassword';
 
-import Home from '../app/home';
-import BookPageEditor from '../app/books/bookEditorPage';
-import BooksPage from '../app/books/booksPage.jsx';
-import AuthorsPage from '../app/authors/authorsPage.jsx';
-import AuthorPage from '../app/authors/authorPage.jsx';
-import SeriesPage from '../app/series/seriesPage.jsx';
-import SeriePage from '../app/series/serie';
-import CategoriesPage from '../app/categories/categoriesPage.jsx';
-import ChapterEditorPage from '../app/books/chapterEditorPage';
-import ChaptersPage from '../app/books/chaptersPage';
-import ChapterPage from '../app/books/chapterPage';
-import PagesPage from '../app/books/pagesPage';
-import PageEditorPage from '../app/books/pageEditorPage';
-import ChapterViewerPage from '../app/books/chapterViewerPage';
-import PublishingPage from '../app/publishing/home.jsx';
-import SearchPage from '../app/search';
-import LibrarySwitch from './library/librarySwitch';
-import ErrorPage from '../app/ErrorPage';
+import Home from './app/home';
+import BookPageEditor from './app/books/bookEditorPage';
+import BooksPage from './app/books/booksPage.jsx';
+import AuthorsPage from './app/authors/authorsPage.jsx';
+import AuthorPage from './app/authors/authorPage.jsx';
+import SeriesPage from './app/series/seriesPage.jsx';
+import SeriePage from './app/series/serie';
+import CategoriesPage from './app/categories/categoriesPage.jsx';
+import ChapterEditorPage from './app/books/chapterEditorPage';
+import ChaptersPage from './app/books/chaptersPage';
+import ChapterPage from './app/books/chapterPage';
+import PagesPage from './app/books/pagesPage';
+import PageEditorPage from './app/books/pageEditorPage';
+import ChapterViewerPage from './app/books/chapterViewerPage';
+import PublishingPage from './app/publishing/home.jsx';
+import SearchPage from './app/search';
+import LibrarySwitch from './components/library/librarySwitch';
+import ErrorPage from './app/ErrorPage';
+import LibrarySelectorPage from './app/librarySelector';
 
 const Routes = () => {
 	const { pathname } = useLocation();
@@ -56,6 +57,7 @@ const Routes = () => {
 			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
 			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
 			<PrivateRoute layout={fullWidthLayout} path="/library/:id" component={LibrarySwitch} />
+			<Route path="/libraries/select" component={LibrarySelectorPage} exact />
 			<Route path="/account/login" component={Login} layout={emptyLayout} />
 			<Route path="/account/register" component={Register} />
 			<Route path="/account/verify-email" component={VerifyEmail} />
