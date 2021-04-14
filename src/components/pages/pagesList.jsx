@@ -279,7 +279,7 @@ const PagesList = ({ book }) => {
 			);
 		}
 
-		if (pages === null || pages.data === null || pages.data.length < 1) {
+		if (pages === null || pages.data === null) {
 			return (
 				<Typography variant="h6" component="h6" align="center">
 					<FormattedMessage id="pages.messages.empty" />
