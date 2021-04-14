@@ -8,14 +8,15 @@ import Typography from "@material-ui/core/Typography";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import PostAddIcon from '@material-ui/icons/PostAdd';
-
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CustomButton from '../customButton';
 import { libraryService } from "../../services";
 
-const PageUploadButton = ({ pages, onAdd, onFilesUploaded }) => {
+const PageUploadButton = ({ pages, onAdd, onUploadStarted, onFilesUploaded }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
-	const [isLoading, setLoading] = useState(true);
+	const [isLoading, setLoading] = useState(false);
 	const [showFilesUpload, setShowFilesUpload] = useState(false);
 
 	const handleFileUpload = useCallback((files) => {
@@ -24,6 +25,7 @@ const PageUploadButton = ({ pages, onAdd, onFilesUploaded }) => {
 		}
 
 		setLoading(true);
+		onUploadStarted && onUploadStarted(true);
 		if (pages && pages.links.create_multiple !== null) {
 			libraryService.postMultipleFile(pages.links.create_multiple, files)
 				.then(() => {
@@ -34,7 +36,10 @@ const PageUploadButton = ({ pages, onAdd, onFilesUploaded }) => {
 				.catch(() => {
 					enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.saving' }), { variant: 'error' })
 				})
-				.finally(() => setLoading(false));
+				.finally(() => {
+					setLoading(false);
+					onUploadStarted && onUploadStarted(false);
+				});
 		}
 	}, [pages]);
 
@@ -60,21 +65,25 @@ const PageUploadButton = ({ pages, onAdd, onFilesUploaded }) => {
 				</ListItemIcon>
 				<Typography variant="inherit"><FormattedMessage id="page.action.upload" /></Typography>
 			</MenuItem>
-			<DropzoneDialog
-				open={showFilesUpload}
-				onSave={handleFileUpload}
-				acceptedFiles={['image/jpeg', 'image/png', 'image/bmp', 'application/pdf', 'application/zip', 'application/x-zip-compressed']}
-				showPreviews={true}
-				maxFileSize={104857600}
-				filesLimit={50}
-				fullWidth={true}
-				showAlerts={true}
-				onClose={() => setShowFilesUpload(false)}
-				dialogTitle={intl.formatMessage({ id: "page.action.upload" })}
-				dropzoneText={intl.formatMessage({ id: "page.action.upload.help" })}
-				cancelButtonText={intl.formatMessage({ id: "action.cancel" })}
-				submitButtonText={intl.formatMessage({ id: "action.upload" })}
-			/>
+			<Backdrop open={isLoading}>
+				<CircularProgress color="inherit" />
+			</Backdrop>
+			{!isLoading &&
+				<DropzoneDialog
+					open={showFilesUpload}
+					onSave={handleFileUpload}
+					acceptedFiles={['image/jpeg', 'image/png', 'image/bmp', 'application/pdf', 'application/zip', 'application/x-zip-compressed']}
+					showPreviews={true}
+					maxFileSize={104857600}
+					filesLimit={50}
+					fullWidth={true}
+					showAlerts={true}
+					onClose={() => setShowFilesUpload(false)}
+					dialogTitle={intl.formatMessage({ id: "page.action.upload" })}
+					dropzoneText={intl.formatMessage({ id: "page.action.upload.help" })}
+					cancelButtonText={intl.formatMessage({ id: "action.cancel" })}
+					submitButtonText={intl.formatMessage({ id: "action.upload" })}
+				/>}
 		</CustomButton>
 	);
 };
