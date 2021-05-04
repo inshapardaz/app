@@ -303,6 +303,8 @@
 	"page.assign.assigned" : "صفحات جو تفویض کیے جا چکے",
 	"page.assign.unassigned" : "غیر تفویض شدہ صفحات",
 	"page.all": "تمام صفحات",
+	"page.edit.next" : "اگلے صفحے کہ تدوین",
+	"page.edit.previous" : "گزشتہ صفحے کی تدوین",
 	"person.messages.empty": "کوئی ایک انتخاب کریں۔۔۔",
 	"status.Available" : "دستیاب",
 	"status.Typing": "ٹائپنگ",

@@ -6,7 +6,7 @@ const useStyles = makeStyles({
 	imageContainer: {
 		overflow: 'auto',
 		maxWidth: '100%',
-		maxHeight: '67vh'
+		maxHeight: '100%'
 	},
 	image: {
 		width: props => `${props.scale}%`

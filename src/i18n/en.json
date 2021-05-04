@@ -308,6 +308,8 @@
 	"page.assign.assigned" : "Assigned",
 	"page.assign.unassigned" : "Unassigned",
 	"page.all": "All pages",
+	"page.edit.next" : "Edit next page",
+	"page.edit.previous" : "Edit previous page",
 	"status.Available" : "Available",
 	"status.Typing": "In Typing",
 	"status.Typed": "Typed",
