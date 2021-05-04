@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useConfirm } from 'material-ui-confirm';
@@ -22,7 +23,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import ChapterEditor from "./chapterEditor";
-import Link from '@material-ui/core/Link';
 
 const useStyles = () =>
 	makeStyles((theme) => ({
@@ -148,12 +148,12 @@ const ChapterList = ({ book, allowEdit = true }) => {
 						<Typography variant="body1" align="center">{c.chapterNumber}</Typography>
 					</ListItemAvatar>
 					<ListItemText
-						primary={<Link href={`/books/${c.bookId}/chapter/${c.chapterNumber}`} color="inherit" variant="body1" >{c.title}</Link>}
+						primary={<Link to={`/books/${c.bookId}/chapter/${c.chapterNumber}`} color="inherit" variant="body1" >{c.title}</Link>}
 					/>
 					{ allowEdit &&
 						<ListItemSecondaryAction>
 							<Tooltip title={<FormattedMessage id="chapter.action.editContent" />} >
-								<IconButton edge="end" aria-label="edit contents" href={`/books/${c.bookId}/chapter/${c.chapterNumber}/editor`}>
+								<IconButton component={Link} edge="end" aria-label="edit contents" to={`/books/${c.bookId}/chapter/${c.chapterNumber}/editor`}>
 									<DescriptionIcon />
 								</IconButton>
 							</Tooltip>

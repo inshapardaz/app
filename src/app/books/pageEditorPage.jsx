@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -22,7 +22,8 @@ import Editor from '../../components/editor';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		height: '80vh',
+		height: 'calc(100vh - 124px)',
+		overflow: 'hidden'
 	},
 	fullScreen: {
 		backgroundColor: 'white',
@@ -35,8 +36,12 @@ const useStyles = makeStyles((theme) => ({
 		height: '100vh',
 	},
 	pane: {
-		maxHeight: '67vh'
-	}
+
+		height: '100%'
+	},
+	grow: {
+		flexGrow: 1
+	},
 }));
 
 const PageLink = ({ children, bookId, pageId }) => {
@@ -59,7 +64,7 @@ const PageLink = ({ children, bookId, pageId }) => {
 	if (loading) return null;
 	if (page == null) return null;
 
-	return <Button href={`/books/${bookId}/pages/${pageId}/editor`} >
+	return <Button component={Link} to={`/books/${bookId}/pages/${pageId}/editor`} >
 		{children}
 	</Button>
 }
@@ -130,10 +135,7 @@ const PageEditorPage = () => {
 						<Button onClick={saveText}>
 							<SaveIcon /> <FormattedMessage id="action.save" />
 						</Button>
-						<Divider />
-						<Button onClick={() => setFullScreen(!fullScreen)}>
-							{fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-						</Button>
+						<div className={classes.grow} />
 						<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}>
 							<KeyboardArrowRightIcon /> <FormattedMessage id="page.edit.previous" />
 						</PageLink>
@@ -149,8 +151,15 @@ const PageEditorPage = () => {
 							<Button onClick={onZoomIn}><ZoomInIcon /></Button>
 							<Button onClick={onZoomOut}><ZoomOutIcon /></Button>
 						</ButtonGroup>
+						<div className={classes.grow} />
+						<Button onClick={() => setFullScreen(!fullScreen)}>
+							{fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+						</Button>
 					</Toolbar>
-					<ImageViewer scale={scale} imageUrl={page && page.links && page.links.image ? page.links.image : "/images/no_image.png"} />
+					<ImageViewer scale={scale}
+						imageUrl={page && page.links && page.links.image ? page.links.image : "/images/no_image.png"}
+						fullScreen={fullScreen}
+					/>
 				</Grid>
 			</Grid>
 		</>);

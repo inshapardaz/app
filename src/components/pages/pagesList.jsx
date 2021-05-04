@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, Link } from "react-router-dom";
 import queryString from "query-string";
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 
 // mui
-import Link from '@material-ui/core/Link';
 import { makeStyles } from "@material-ui/core/styles";
 import Button from '@material-ui/core/Button';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
@@ -214,7 +213,7 @@ const PagesList = ({ book }) => {
 
 	const renderChaptersLink = () => {
 		if (book && book.links && book.links.update) {
-			return (<Button component={Link} href={`/books/${book.id}/chapters`} startIcon={<LayersIcon />}>
+			return (<Button component={Link} to={`/books/${book.id}/chapters`} startIcon={<LayersIcon />}>
 				<FormattedMessage id="chapter.toolbar.chapters" />
 			</Button>);
 		}

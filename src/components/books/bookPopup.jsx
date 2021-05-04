@@ -1,9 +1,9 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import { ButtonBase, Grid, Typography, Chip } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import EditorDialog from '../editorDialog';
 import { FormattedMessage } from "react-intl";
-import { Link } from "react-router-dom";
 import ChapterList from '../chapters/chapterList';
 
 const useStyles = makeStyles((theme) => ({
@@ -69,7 +69,7 @@ const BookPopup = ({ show, book, onClosed }) => {
 							</Typography>
 						</Grid>
 						{book.categories && book.categories.length > 0 && <Grid item>
-							{book.categories.map(c => (<Chip key={c.id} component="a" href={`/books?category=${c.id}`} clickable variant="outlined" label={c.name} />))}
+							{book.categories.map(c => (<Chip key={c.id} component={Link} to={`/books?category=${c.id}`} clickable variant="outlined" label={c.name} />))}
 						</Grid>}
 						<Typography variant="h4"><FormattedMessage id="chapter.toolbar.chapters" /></Typography>
 						<ChapterList book={book} allowEdit={false} />

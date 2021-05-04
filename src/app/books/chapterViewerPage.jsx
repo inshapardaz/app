@@ -1,6 +1,6 @@
 import { Container } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { useIntl, FormattedMessage } from "react-intl";
 
@@ -113,7 +113,7 @@ const ChapterViewerPage = () => {
 
 			buttons.push(
 				<Tooltip key="edit" title={<FormattedMessage id="chapter.action.editContent" />} >
-					<IconButton edge="end" aria-label="edit contents" href={`/books/${content.bookId}/chapter/${content.chapterNumber}/editor`}>
+					<IconButton component={Link} edge="end" aria-label="edit contents" to={`/books/${content.bookId}/chapter/${content.chapterNumber}/editor`}>
 						<DescriptionIcon />
 					</IconButton>
 				</Tooltip>);

@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { Formik, Field, Form } from 'formik';
+import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import { Container, Typography, Link, FormControl } from '@material-ui/core';
+import { Container, Typography, FormControl } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Select } from 'formik-material-ui';
 import Button from '@material-ui/core/Button';
@@ -192,7 +193,7 @@ function AddEdit({ history, match }) {
 									</Grid>
 									<Grid item xs={6} >
 										<Button component={Link}
-											href='/admin/users'
+											to='/admin/users'
 											fullWidth
 											variant="contained"
 											className={classes.submit}

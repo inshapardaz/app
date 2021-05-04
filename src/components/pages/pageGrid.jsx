@@ -1,7 +1,7 @@
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { Link } from 'react-router-dom';
 
-import Link from '@material-ui/core/Link';
 import Typography from "@material-ui/core/Typography";
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from "@material-ui/core/IconButton";
@@ -28,7 +28,7 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			flex: 1,
 			disableClickEventBubbling: true,
 			sortable: false,
-			renderCell: (params) => (<Link href={`/books/${params.row.bookId}/pages/${params.value}/editor`}>{params.value} </Link>)
+			renderCell: (params) => (<Link to={`/books/${params.row.bookId}/pages/${params.value}/editor`}>{params.value} </Link>)
 		},
 		{
 			field: 'accountName',
@@ -47,7 +47,7 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			renderCell: (params) => (
 				<>
 					<Tooltip title={<FormattedMessage id="action.editContent" />} >
-						<IconButton component={Link} edge="end" aria-label="edit" href={`/books/${params.row.bookId}/pages/${params.row.sequenceNumber}/editor`}>
+						<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${params.row.bookId}/pages/${params.row.sequenceNumber}/editor`}>
 							<DescriptionIcon />
 						</IconButton>
 					</Tooltip>

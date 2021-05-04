@@ -1,10 +1,9 @@
 import { Button, Container, Toolbar } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
@@ -157,7 +156,7 @@ const ChapterEditorPage = () => {
 	return (<Container >
 		<Toolbar>
 			<Breadcrumbs aria-label="breadcrumb" separator="›">
-				{book && <Link color="inherit" href={`/books/${book.id}/chapters`}><BookIcon className={classes.icon} />{book.title}</Link>}
+				{book && <Link color="inherit" to={`/books/${book.id}/chapters`}><BookIcon className={classes.icon} />{book.title}</Link>}
 				<ChapterDropdown chapters={chapters && chapters.data} title={<> <LayersIcon className={classes.icon} /> {chapter && chapter.title}</>} onChapterSelected={(c) => history.push(`/books/${bookId}/chapter/${c.chapterNumber}/editor`)} />
 			</Breadcrumbs>
 

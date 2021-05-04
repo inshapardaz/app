@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 
-import { Container, Typography, Link, FormControl } from '@material-ui/core';
+import { Container, Typography, FormControl } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Select } from 'formik-material-ui';
 import Button from '@material-ui/core/Button';
@@ -144,7 +145,7 @@ function Update({ history }) {
 								</Grid>
 								<Grid item xs={6} >
 									<Button component={Link}
-										href="."
+										to="."
 										fullWidth
 										variant="contained"
 										className={classes.submit}
