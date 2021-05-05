@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import Typography from "@material-ui/core/Typography";
 import Tooltip from '@material-ui/core/Tooltip';
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -28,7 +29,7 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			flex: 1,
 			disableClickEventBubbling: true,
 			sortable: false,
-			renderCell: (params) => (<Link to={`/books/${params.row.bookId}/pages/${params.value}/editor`}>{params.value} </Link>)
+			renderCell: (params) => (<Button component={Link} to={`/books/${params.row.bookId}/pages/${params.value}/editor`}>{params.value} </Button>)
 		},
 		{
 			field: 'accountName',

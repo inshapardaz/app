@@ -1,25 +1,37 @@
 import React from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import MarkdownEditor from '@jdinabox/ckeditor5-build-markdown';
+import { makeStyles } from "@material-ui/core/styles";
 
-const Editor = ({ data, onChange }) => {
-	return (<CKEditor
-		editor={MarkdownEditor}
-		data={data || ''}
-		onChange={(event, editor) => {
-			if (onChange) {
-				const data = editor.getData();
-				onChange(data);
-			}
-		}}
-		config={{
-			language: {
-				ui: 'en',
-				content: 'ar'
-			}
-		}}
+const useStyles = makeStyles({
+	editor: {
+		fontSize: props => `${props.textScale}em`
+	}
+});
 
-	/>);
+const Editor = ({ data, textScale, onChange }) => {
+	const classes = useStyles({ textScale });
+
+	return (<div className={classes.editor}>
+		<CKEditor
+			editor={MarkdownEditor}
+			data={data || ''}
+			onChange={(event, editor) => {
+				if (onChange) {
+					const data = editor.getData();
+					onChange(data);
+				}
+			}}
+			config={{
+				language: {
+					ui: 'en',
+					content: 'ar'
+				}
+			}}
+
+		/>
+	</div>
+	);
 }
 
 export default Editor;

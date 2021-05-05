@@ -17,6 +17,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import CloseIcon from '@material-ui/icons/Close';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import Editor from '../../components/editor';
 
@@ -71,7 +72,6 @@ const PageLink = ({ children, bookId, pageId }) => {
 const PageEditorPage = () => {
 	const classes = useStyles();
 	const intl = useIntl();
-	const imageRef = React.useRef(null);
 	const { enqueueSnackbar } = useSnackbar();
 	const { bookId, pageId } = useParams();
 	const [error, setError] = useState(false);
@@ -81,13 +81,30 @@ const PageEditorPage = () => {
 	const [text, setText] = useState("");
 	const [page, setPage] = useState(null);
 	const [scale, setScale] = useState(100);
+	const [textScale, setTextScale] = useState(localStorage.getItem('editor.fontSize') || 1.0);
 
 	const onZoomIn = () => {
 		setScale(scale + 5);
 	};
 
 	const onZoomOut = () => {
-		setScale(scale - 5);
+		if (scale > 5) {
+			setScale(scale - 5);
+		}
+	};
+
+	const onZoomInText = () => {
+		let newScale = textScale + 0.1
+		setTextScale(newScale);
+		localStorage.setItem('editor.fontSize', newScale);
+	};
+
+	const onZoomOutText = () => {
+		if (textScale > 1) {
+			let newScale = textScale - 0.1
+			setTextScale(newScale);
+			localStorage.setItem('editor.fontSize', newScale);
+		}
 	};
 
 	const loadData = () => {
@@ -114,6 +131,7 @@ const PageEditorPage = () => {
 		page.text = text;
 		libraryService.put(page.links.update, page)
 			.then(data => {
+				setPage(data);
 				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
 			})
 			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' }))
@@ -136,14 +154,12 @@ const PageEditorPage = () => {
 							<SaveIcon /> <FormattedMessage id="action.save" />
 						</Button>
 						<div className={classes.grow} />
-						<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}>
-							<KeyboardArrowRightIcon /> <FormattedMessage id="page.edit.previous" />
-						</PageLink>
-						<PageLink bookId={bookId} pageId={parseInt(pageId) + 1} >
-							<FormattedMessage id="page.edit.next" /> <KeyboardArrowLeftIcon />
-						</PageLink>
+						<ButtonGroup size="small" aria-label="small outlined button group">
+							<Button onClick={onZoomInText}><ZoomInIcon /></Button>
+							<Button onClick={onZoomOutText}><ZoomOutIcon /></Button>
+						</ButtonGroup>
 					</Toolbar>
-					<Editor data={text} onChange={content => setText(content)} />
+					<Editor data={text} onChange={content => setText(content)} textScale={textScale} />
 				</Grid>
 				<Grid item xs={6} className={classes.pane}>
 					<Toolbar>
@@ -152,8 +168,17 @@ const PageEditorPage = () => {
 							<Button onClick={onZoomOut}><ZoomOutIcon /></Button>
 						</ButtonGroup>
 						<div className={classes.grow} />
+						<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}>
+							<KeyboardArrowRightIcon /> <FormattedMessage id="page.edit.previous" />
+						</PageLink>
+						<PageLink bookId={bookId} pageId={parseInt(pageId) + 1} >
+							<FormattedMessage id="page.edit.next" /> <KeyboardArrowLeftIcon />
+						</PageLink>
 						<Button onClick={() => setFullScreen(!fullScreen)}>
 							{fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+						</Button>
+						<Button component={Link} to={`/books/${bookId}/pages`}>
+							<CloseIcon />
 						</Button>
 					</Toolbar>
 					<ImageViewer scale={scale}
