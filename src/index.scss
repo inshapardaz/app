@@ -103,3 +103,16 @@ a {
 .GmailSidebarItem-label{
 	font-family: "Segoe Ui Light",Dubai,Mehr-Nastaleeq,Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
 }
+
+.fullScreen
+{
+	.ck-editor__editable {
+		min-height: calc(100vh - 108px) !important;
+		max-height: calc(100vh - 108px) !important;
+	}
+}
+
+.ck-editor__editable {
+	min-height: calc(100vh - 227px) !important;
+	max-height: calc(100vh - 227px) !important;
+}

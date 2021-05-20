@@ -24,6 +24,7 @@ import Editor from '../../components/editor';
 const useStyles = makeStyles((theme) => ({
 	container: {
 		height: 'calc(100vh - 124px)',
+		paddingLeft: '4px',
 		overflow: 'hidden'
 	},
 	fullScreen: {
@@ -33,11 +34,10 @@ const useStyles = makeStyles((theme) => ({
 		right: 0,
 		top: 0,
 		bottom: 0,
-		zIndex: 2000,
+		zIndex: 1300,
 		height: '100vh',
 	},
 	pane: {
-
 		height: '100%'
 	},
 	grow: {
@@ -94,14 +94,16 @@ const PageEditorPage = () => {
 	};
 
 	const onZoomInText = () => {
-		let newScale = textScale + 0.1
-		setTextScale(newScale);
-		localStorage.setItem('editor.fontSize', newScale);
+		if (parseFloat(textScale) < 3.0) {
+			let newScale = (parseFloat(textScale) + 0.1).toFixed(2);
+			setTextScale(newScale);
+			localStorage.setItem('editor.fontSize', newScale);
+		}
 	};
 
 	const onZoomOutText = () => {
-		if (textScale > 1) {
-			let newScale = textScale - 0.1
+		if (parseFloat(textScale) > 1) {
+			let newScale = (parseFloat(textScale) - 0.1).toFixed(2);
 			setTextScale(newScale);
 			localStorage.setItem('editor.fontSize', newScale);
 		}
@@ -155,11 +157,11 @@ const PageEditorPage = () => {
 						</Button>
 						<div className={classes.grow} />
 						<ButtonGroup size="small" aria-label="small outlined button group">
-							<Button onClick={onZoomInText}><ZoomInIcon /></Button>
-							<Button onClick={onZoomOutText}><ZoomOutIcon /></Button>
+							<Button onClick={onZoomInText} disabled={parseFloat(textScale) >= 3}><ZoomInIcon /></Button>
+							<Button onClick={onZoomOutText} disabled={parseFloat(textScale) <= 1}><ZoomOutIcon /></Button>
 						</ButtonGroup>
 					</Toolbar>
-					<Editor data={text} onChange={content => setText(content)} textScale={textScale} />
+					<Editor data={text} onChange={content => setText(content)} textScale={textScale} fullScreen={fullScreen} />
 				</Grid>
 				<Grid item xs={6} className={classes.pane}>
 					<Toolbar>
