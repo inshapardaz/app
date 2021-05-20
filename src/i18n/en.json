@@ -21,6 +21,7 @@
 	"action.close" : "Close",
 	"action.upload" : "Upload",
 	"action.read" : "Read",
+	"action.preview" : "Preview",
 	"action.editContent" : "Edit contents",
     "action.changeImage" : "Change Image",
     "action.view" : "View",

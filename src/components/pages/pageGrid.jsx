@@ -1,11 +1,11 @@
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from 'react-router-dom';
-
 import Typography from "@material-ui/core/Typography";
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import ImageIcon from '@material-ui/icons/Image';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import PageStatusIcon from '../../components/pages/pageStatusIcon';
@@ -47,6 +47,11 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			disableClickEventBubbling: true,
 			renderCell: (params) => (
 				<>
+					{/* <Tooltip title={<FormattedMessage id="action.preview" />} >
+						<IconButton edge="end" aria-label="preview" onClick={() => onImageClick(params.row)} to={`/books/${params.row.bookId}/pages/${params.row.sequenceNumber}/editor`}>
+							<ImageIcon />
+						</IconButton>
+					</Tooltip> */}
 					<Tooltip title={<FormattedMessage id="action.editContent" />} >
 						<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${params.row.bookId}/pages/${params.row.sequenceNumber}/editor`}>
 							<DescriptionIcon />
@@ -67,10 +72,20 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 		}
 	];
 
+	const onImageClick = (page) => {
+		console.log(page.links.image);
+		PageImagePreview.show(page.links.image);
+	}
+
+	const handlePageChanged = (p) => {
+		onPageChange && onPageChange(p.page + 1);
+	};
+
 	if (pages && pages.data) {
 		return <DataGrid rows={pages.data} columns={columns} loading={loading} getRowId={row => row.sequenceNumber}
-			pageSize={pages.pageSize} pageIndex={pages.currentPageIndex} rowCount={pages.totalCount}
-			paginationMode="server" onPageChange={p => onPageChange && onPageChange(p.page + 1)}
+			pageSize={pages.pageSize} page={pages.currentPageIndex - 1} rowCount={pages.totalCount}
+			paginationMode="server" onPageChange={handlePageChanged}
+			rowsPerPageOptions={[10, 20, 30, 50, 75, 100]}
 			checkboxSelection disableColumnMenu autoHeight
 			onSelectionModelChange={(newSelection) => {
 				if (onSelectionChanged) {
