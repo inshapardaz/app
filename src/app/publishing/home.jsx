@@ -50,13 +50,13 @@ const PublishingPage = () => {
 	const onSearch = (value) => {
 		if (value && value.trim() !== '') {
 			setQuery(value.trim());
-			navigateToPage(page, status, value.trim())
+			navigateToPage(1, status, value.trim())
 		}
 	}
 
 	const onFilterChanged = (newFilter) => {
 		setStatus(newFilter);
-		navigateToPage(page, newFilter, query)
+		navigateToPage(1, newFilter, query)
 	}
 
 	console.dir(page);

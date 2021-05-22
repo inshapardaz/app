@@ -1,9 +1,9 @@
 const PageStatus = {
-	AvailableForTyping: 'available',
-	BeingTyped: 'available',
-	ReadyForProofRead: 'typed',
-	ProofRead: 'inReview',
-	Published: 'completed'
+	AvailableForTyping: 'Available',
+	Typing: 'Typing',
+	Typed: 'Typed',
+	InReview: 'InReview',
+	Completed: 'Completed'
 };
 
 export default PageStatus;

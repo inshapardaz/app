@@ -318,6 +318,7 @@
 	"book.status.BeingTyped": "ٹائپ ہو رہی ہے",
 	"book.status.ReadyForProofRead" : "پروف خوانی کے لیے تیار",
 	"book.status.ProofRead" : "پروف خوانی ہو رہی ہے",
+	"book.status.Completed" : "مکمل",
 	"font.none" : "فونٹ چنیں",
 	"font.FajerNooriNastalique" : "فجر نوری نستعلیق",
 	"font.PakNastaleeq": "پاک نستعلیق",

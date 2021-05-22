@@ -10,7 +10,6 @@ import Button from '@material-ui/core/Button';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import LayersIcon from '@material-ui/icons/Layers';
 import Typography from "@material-ui/core/Typography";
-import Divider from '@material-ui/core/Divider';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
@@ -25,16 +24,11 @@ import { useConfirm } from 'material-ui-confirm';
 import { libraryService } from "../../services";
 import Page from './page';
 import PageEditor from "./pageEditor";
-import PageUploadButton from './pageUploadButton';
-import PageDeleteButton from './pageDeleteButton';
-import PageAssignButton from './pageAssignButton';
-import PageFilterSideBar from './pageFilterSideBar';
-import PageAssignmentFilterSideBar from './pageAssignmentFilterSideBar';
 import PageGrid from './pageGrid';
 
 // sidebar
 import { Toolbar } from "@material-ui/core";
-import BookPageProgress from "./bookPgeProgress";
+import PagesSidebar from "./pagesSidebar";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -220,21 +214,6 @@ const PagesList = ({ book, onBookSaved }) => {
 		return null;
 	}
 
-	const renderSideBar = () => {
-		return (
-			<div className={classes.root}>
-				<PageUploadButton onAdd={() => onEditClicked(null)} pages={pages} onFilesUploaded={loadData} />
-				<PageDeleteButton checked={checked} pages={pages} onDeleted={loadData} />
-				<PageAssignButton checked={checked} pages={pages} onAssigned={loadData} />
-				<Divider />
-				<PageFilterSideBar book={book} filter={filter} setFilter={(filter) => handleFilterChange(filter)} />
-				<Divider />
-				<PageAssignmentFilterSideBar assignmentFilter={assignmentFilter} onAssignmentFilterChanged={(af) => handleAssignmentFilterChange(af)} />
-				<Divider />
-				<BookPageProgress book={book} />
-			</div>);
-	}
-
 	const renderToolbar = () => {
 		if (!isLoading && pages) {
 			return (
@@ -311,7 +290,10 @@ const PagesList = ({ book, onBookSaved }) => {
 	return (
 		<Grid container>
 			<Grid sm={2} item>
-				{renderSideBar()}
+				<PagesSidebar book={book} pages={pages}
+					filter={filter} onStatusFilter={(filter) => handleFilterChange(filter)}
+					assignmentFilter={assignmentFilter} onAssignmentFilterChanged={(af) => handleAssignmentFilterChange(af)}
+					onFilesUploaded={loadData} onAddClicked={() => onEditClicked(null)} />
 			</Grid>
 			<Grid sm={10} item>
 				{renderToolbar()}
