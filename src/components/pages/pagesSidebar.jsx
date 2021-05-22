@@ -20,7 +20,8 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import PageUploadButton from './pageUploadButton';
 import PageStatus from '../../models/pageStatus';
-
+import PageDeleteButton from './pageDeleteButton';
+import PageAssignButton from './pageAssignButton';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -45,11 +46,8 @@ const getPageCountInStatus = (book, status) => {
 		let stat = book.pageStatus.find(s => s.status === status);
 
 		if (stat) {
-			console.log(`staus : ${status} count : ${stat.count}`);
 			return stat.count;
 		}
-
-		console.log(`staus : ${status} not found`);
 
 		return 0;
 	}
@@ -57,7 +55,7 @@ const getPageCountInStatus = (book, status) => {
 	return null;
 }
 
-const PagesSidebar = ({ book, pages, filter, onStatusFilter, assignmentFilter, onAssignmentFilterChanged, onFilesUploaded, onAddClicked }) => {
+const PagesSidebar = ({ book, pages, filter, checked, onStatusFilter, assignmentFilter, onAssignmentFilterChanged, onFilesUploaded, onAddClicked, onUpdated }) => {
 	const intl = useIntl();
 	const classes = useStyles();
 
@@ -136,6 +134,9 @@ const PagesSidebar = ({ book, pages, filter, onStatusFilter, assignmentFilter, o
 	return (
 		<div className={classes.root}>
 			<PageUploadButton onAdd={onAddClicked} pages={pages} onFilesUploaded={onFilesUploaded} />
+			<Divider />
+			<PageDeleteButton checked={checked} pages={pages} onDeleted={onUpdated} />
+			<PageAssignButton checked={checked} pages={pages} onAssigned={onUpdated} />
 			<Divider />
 			<List component="nav" aria-label="status filters" dense>
 				<ListSubheader component="div">

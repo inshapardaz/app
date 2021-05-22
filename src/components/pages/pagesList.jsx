@@ -290,7 +290,7 @@ const PagesList = ({ book, onBookSaved }) => {
 	return (
 		<Grid container>
 			<Grid sm={2} item>
-				<PagesSidebar book={book} pages={pages}
+				<PagesSidebar book={book} pages={pages} checked={checked} onUpdated={loadData}
 					filter={filter} onStatusFilter={(filter) => handleFilterChange(filter)}
 					assignmentFilter={assignmentFilter} onAssignmentFilterChanged={(af) => handleAssignmentFilterChange(af)}
 					onFilesUploaded={loadData} onAddClicked={() => onEditClicked(null)} />
