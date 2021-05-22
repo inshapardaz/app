@@ -6,4 +6,4 @@ const BookStatus = {
 	ProofRead : 'ProofRead'
 };
 
-export default 'ProofRead';
+export default BookStatus;

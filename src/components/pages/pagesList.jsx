@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const PagesList = ({ book }) => {
+const PagesList = ({ book, onBookSaved }) => {
 	if (book == null || book.links.pages == null) return null;
 	const classes = useStyles();
 
@@ -322,7 +322,7 @@ const PagesList = ({ book }) => {
 				page={selectedPage}
 				createLink={pages && pages.links && pages.links.create}
 				pageNumber={pages && pages.data && pages.data.length}
-				onSaved={handleDataChanged}
+				onSaved={onBookSaved}
 				onCancelled={handleClose}
 			/>
 		</Grid>

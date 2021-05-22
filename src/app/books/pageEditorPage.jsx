@@ -16,6 +16,7 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import SaveIcon from '@material-ui/icons/Save';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import CloseIcon from '@material-ui/icons/Close';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
@@ -125,6 +126,14 @@ const PageEditorPage = () => {
 			.finally(() => setLoading(false));
 	};
 
+	const assignPage = () => {
+		libraryService.post(page.links.assign_to_me)
+			.then(() => {
+				enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.assigned' }), { variant: 'success' })
+			})
+			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.assigned' }), { variant: 'error' }))
+	}
+
 	useEffect(() => {
 		loadData();
 	}, [pageId]);
@@ -155,6 +164,11 @@ const PageEditorPage = () => {
 						<Button onClick={saveText}>
 							<SaveIcon /> <FormattedMessage id="action.save" />
 						</Button>
+						{page.links.assign_to_me &&
+							<Button onClick={assignPage}>
+								<AssignmentIndIcon /> <FormattedMessage id="page.assignedToMe.label" />
+							</Button>
+						}
 						<div className={classes.grow} />
 						<ButtonGroup size="small" aria-label="small outlined button group">
 							<Button onClick={onZoomInText} disabled={parseFloat(textScale) >= 3}><ZoomInIcon /></Button>

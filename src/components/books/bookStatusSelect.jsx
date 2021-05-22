@@ -4,33 +4,19 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useIntl } from "react-intl";
+import BookStatus from '../../models/bookStatus';
 
 const BookStatusDropDown = ({ value, onStatusSelected }) => {
 	const intl = useIntl();
 	const [anchorEl, setAnchorEl] = React.useState(null);
-
-	const statuses = [{
-		key: 'Published',
-		name: intl.formatMessage({ id: 'book.status.Published' })
-	}, {
-		key: 'AvailableForTyping',
-		name: intl.formatMessage({ id: 'book.status.AvailableForTyping' })
-	}, {
-		key: 'BeingTyped',
-		name: intl.formatMessage({ id: 'book.status.BeingTyped' })
-	}, {
-		key: 'ReadyForProofRead',
-		name: intl.formatMessage({ id: 'book.status.ReadyForProofRead' })
-	}, {
-		key: 'ProofRead',
-		name: intl.formatMessage({ id: 'book.status.ProofRead' })
-	}];
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
 
 	const onItemClicked = (status) => {
+		console.log(`new status is : ${status}`);
+
 		if (status !== null && onStatusSelected !== null) {
 			onStatusSelected(status)
 		}
@@ -41,15 +27,19 @@ const BookStatusDropDown = ({ value, onStatusSelected }) => {
 		setAnchorEl(null);
 	};
 
-	const renderMenuItem = (status) => {
-		return (<MenuItem key={status.key} onClick={() => onItemClicked(status)}>{`${status.name}`}</MenuItem>);
-	}
+	const renderMenuItems = () => {
+		let menuItems = [];
+		for (var status in BookStatus) {
+			menuItems.push(<MenuItem key={status} onClick={() => onItemClicked(status)}>{intl.formatMessage({ id: `book.status.${BookStatus[status]}` })}</MenuItem>);
+		}
 
-	const selectedStatus = statuses.find(s => s.key === value);
+		return menuItems;
+	}
+	console.log(`value : ${value}`);
 	return (
 		<div>
 			<Button aria-controls="chapters-menu" aria-haspopup="true" onClick={handleClick} endIcon={<ExpandMoreIcon />}>
-				{selectedStatus ? selectedStatus.name : value}
+				{intl.formatMessage({ id: `book.status.${BookStatus[value]}` })}
 			</Button>
 			<Menu
 				id="simple-menu"
@@ -57,7 +47,7 @@ const BookStatusDropDown = ({ value, onStatusSelected }) => {
 				keepMounted
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
-			> {statuses.map(s => renderMenuItem(s))}
+			> {renderMenuItems()}
 			</Menu>
 		</div>
 	);
