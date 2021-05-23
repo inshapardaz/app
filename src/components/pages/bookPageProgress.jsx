@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { LinearProgress } from '@material-ui/core';
+import { LinearProgress, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import Typography from '@material-ui/core/Typography';
 import BookStatus from '../../models/bookStatus';
@@ -40,22 +40,31 @@ const getBookProgress = (book) => {
 
 	var pageStatus = book.pageStatus.find(s => s.status === status);
 	if (pageStatus) {
-		return pageStatus.percentage;
+		return {
+			completed: book.pageCount - pageStatus.count,
+			percentage: pageStatus.percentage
+		};
 	}
-	return 0;
+	return {
+		percentage: 0,
+		count: 0
+	};
 }
 
 const BookPageProgress = ({ book }) => {
 	const classes = useStyles();
 
+	const pagesProgress = getBookProgress(book);
 	if (book != null) {
 
 		return (
 			<>
 				<Typography variant="caption" display="block" gutterBottom>
-					<FormattedMessage id={`book.status.${book.status}`} />
+					<FormattedMessage id={`book.status.${book.status}`} />|<FormattedMessage id="pages.progress" values={{ count: book.pageCount, completed: pagesProgress.completed }} />
 				</Typography>
-				<LinearProgress value={getBookProgress(book)} variant="determinate" color="secondary" className={classes.progressBar} />
+				<Tooltip title={`${100 - pagesProgress.percentage}%`}>
+					<LinearProgress value={100 - pagesProgress.percentage} variant="determinate" color="secondary" className={classes.progressBar} />
+				</Tooltip>
 			</>);
 	}
 	return "";
