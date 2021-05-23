@@ -53,7 +53,7 @@ const getPageCountInStatus = (book, status) => {
 	return null;
 }
 
-const PagesSidebar = ({ book, filter, checked, onStatusFilter, assignmentFilter, onAssignmentFilterChanged }) => {
+const PagesSidebar = ({ book, filter, onStatusFilter, assignmentFilter, onAssignmentFilterChanged }) => {
 	const intl = useIntl();
 	const classes = useStyles();
 

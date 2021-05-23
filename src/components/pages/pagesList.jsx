@@ -36,6 +36,8 @@ import PagesSidebar from "./pagesSidebar";
 import PageStatus from '../../models/pageStatus';
 import BookStatus from '../../models/bookStatus';
 import Loading from "../Loading";
+import PagePagesAssignButton from "./pagePagesAssignButton";
+import PageChapterAssignButton from "./pageChapterAssignButton";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -65,6 +67,14 @@ const getPreviewSetting = () => {
 }
 
 const setPreviewSetting = (preview) => localStorage.setItem('pages.list.preview', preview);
+
+const getSelectedPages = (pages, checked) => {
+	if (pages && pages.data && checked.length > 0) {
+		return pages.data.filter(p => checked.includes(`${p.sequenceNumber}`));
+	}
+
+	return [];
+}
 
 const PagesList = ({ book, onBookSaved }) => {
 	if (book == null || book.links.pages == null) return null;
@@ -228,6 +238,8 @@ const PagesList = ({ book, onBookSaved }) => {
 		return null;
 	}
 
+	const selectedPages = getSelectedPages(pages, checked);
+
 	const renderToolbar = () => {
 		if (!isLoading && pages) {
 			return (
@@ -238,8 +250,10 @@ const PagesList = ({ book, onBookSaved }) => {
 					<Divider />
 					<PageUploadButton onAdd={() => onEditClicked(null)} pages={pages} onFilesUploaded={loadData} />
 					<Divider />
-					<PageDeleteButton checked={checked} pages={pages} onDeleted={loadData} />
-					<PageAssignButton checked={checked} pages={pages} onAssigned={loadData} />
+					<PageDeleteButton selectedPages={selectedPages} onDeleted={loadData} />
+					<PageAssignButton selectedPages={selectedPages} onAssigned={loadData} />
+					<PagePagesAssignButton selectedPages={selectedPages} onAssigned={loadData} />
+					<PageChapterAssignButton selectedPages={selectedPages} book={book} onUpdated={loadData} />
 					<div className={classes.grow} />
 					<ToggleButtonGroup
 						size="small"
@@ -296,7 +310,7 @@ const PagesList = ({ book, onBookSaved }) => {
 	return (
 		<Grid container>
 			<Grid sm={2} item>
-				<PagesSidebar book={book} pages={pages} checked={checked} onUpdated={loadData}
+				<PagesSidebar book={book} pages={pages} onUpdated={loadData}
 					filter={filter} onStatusFilter={(filter) => handleFilterChange(filter)}
 					assignmentFilter={assignmentFilter} onAssignmentFilterChanged={(af) => handleAssignmentFilterChange(af)}
 				/>

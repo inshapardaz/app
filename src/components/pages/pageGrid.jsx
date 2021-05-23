@@ -32,6 +32,14 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			renderCell: (params) => (<Button component={Link} to={`/books/${params.row.bookId}/pages/${params.value}/editor`}>{params.value} </Button>)
 		},
 		{
+			field: 'chapterTitle',
+			headerName: intl.formatMessage({ id: 'page.editor.fields.chapter.title' }),
+			flex: 1,
+			disableClickEventBubbling: true,
+			sortable: false,
+			renderCell: (params) => params.value ? params.value : ''
+		},
+		{
 			field: 'accountName',
 			headerName: intl.formatMessage({ id: 'page.editor.fields.accountId.title' }),
 			flex: 1,

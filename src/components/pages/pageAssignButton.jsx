@@ -6,18 +6,17 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 import { libraryService } from "../../services";
 
-const PageAssignButton = ({ checked, pages, onAssigned }) => {
+const PageAssignButton = ({ selectedPages, onAssigned }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
 
 	const onAssignToMe = useCallback(() => {
 		var promises = [];
 
-		checked.map(id => {
-			var p = pages.data.find(pg => pg.sequenceNumber == id);
-			if (p !== null && p !== undefined) {
-				if (p.links.assign_to_me) {
-					return promises.push(libraryService.post(p.links.assign_to_me));
+		selectedPages.map(page => {
+			if (page !== null && page !== undefined) {
+				if (page.links.assign_to_me) {
+					return promises.push(libraryService.post(page.links.assign_to_me));
 				}
 			}
 
@@ -28,11 +27,11 @@ const PageAssignButton = ({ checked, pages, onAssigned }) => {
 			.then(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.assigned' }), { variant: 'success' }))
 			.then(() => onAssigned())
 			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.assigned' }), { variant: 'error' }));
-	}, [checked, pages]);
+	}, [selectedPages]);
 
 	return (
 		<Button
-			disabled={checked.length <= 0}
+			disabled={selectedPages.length <= 0}
 			onClick={onAssignToMe}
 			startIcon={<AssignmentIndIcon />}>
 			<FormattedMessage id="page.assignedToMe.label" />

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useHistory, Link } from "react-router-dom";
+import { useSnackbar } from 'notistack';
 
 import { useConfirm } from 'material-ui-confirm';
 import { makeStyles } from "@material-ui/core/styles";
@@ -31,6 +32,7 @@ const Pages = ({ book, pages, checkedPages, onClicked, onCheckedChanged, onEdit,
 	const classes = useStyles();
 	const history = useHistory();
 	const confirm = useConfirm();
+	const { enqueueSnackbar } = useSnackbar();
 	const [checked, setChecked] = React.useState(checkedPages);
 
 	const onDeleteClicked = useCallback((page) => {
