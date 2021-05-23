@@ -161,6 +161,7 @@ const PagesList = ({ book, onBookSaved }) => {
 
 	const handleDataChanged = () => {
 		handleClose();
+		onBookSaved();
 		loadData();
 	};
 
@@ -197,19 +198,6 @@ const PagesList = ({ book, onBookSaved }) => {
 		},
 		[pages]
 	);
-
-	const handleToggle = (value) => () => {
-		const currentIndex = checked.indexOf(value);
-		const newChecked = [...checked];
-
-		if (currentIndex === -1) {
-			newChecked.push(value);
-		} else {
-			newChecked.splice(currentIndex, 1);
-		}
-
-		setChecked(newChecked);
-	};
 
 	const handleFilterChange = (newFilter) => {
 
@@ -322,7 +310,7 @@ const PagesList = ({ book, onBookSaved }) => {
 				page={selectedPage}
 				createLink={pages && pages.links && pages.links.create}
 				pageNumber={pages && pages.data && pages.data.length}
-				onSaved={onBookSaved}
+				onSaved={handleDataChanged}
 				onCancelled={handleClose}
 			/>
 		</Grid>
