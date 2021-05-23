@@ -8,7 +8,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import KeyboardHideIcon from '@material-ui/icons/KeyboardHide';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
@@ -16,12 +15,11 @@ import DoneIcon from '@material-ui/icons/Done';
 import PhotoFilterIcon from '@material-ui/icons/PhotoFilter';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import PersonIcon from '@material-ui/icons/Person';
+import RateReviewIcon from '@material-ui/icons/RateReview';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
-import PageUploadButton from './pageUploadButton';
 import PageStatus from '../../models/pageStatus';
-import PageDeleteButton from './pageDeleteButton';
-import PageAssignButton from './pageAssignButton';
+import BookPageProgress from '../pages/bookPageProgress';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -55,7 +53,7 @@ const getPageCountInStatus = (book, status) => {
 	return null;
 }
 
-const PagesSidebar = ({ book, pages, filter, checked, onStatusFilter, assignmentFilter, onAssignmentFilterChanged, onFilesUploaded, onAddClicked, onUpdated }) => {
+const PagesSidebar = ({ book, filter, checked, onStatusFilter, assignmentFilter, onAssignmentFilterChanged }) => {
 	const intl = useIntl();
 	const classes = useStyles();
 
@@ -81,13 +79,13 @@ const PagesSidebar = ({ book, pages, filter, checked, onStatusFilter, assignment
 			</ListItem>
 			<ListItem button key={PageStatus.Typed} onClick={() => onStatusFilter(PageStatus.Typed)} selected={PageStatus.Typed === filter}>
 				<ListItemIcon>
-					<KeyboardHideIcon />
+					<SpellcheckIcon />
 				</ListItemIcon>
 				<ListItemText primary={intl.formatMessage({ id: `book.status.ReadyForProofRead` })} secondary={getPageCountInStatus(book, PageStatus.Typed)} />
 			</ListItem>
 			<ListItem button key={PageStatus.InReview} onClick={() => onStatusFilter(PageStatus.InReview)} selected={PageStatus.InReview === filter}>
 				<ListItemIcon>
-					<SpellcheckIcon />
+					<RateReviewIcon />
 				</ListItemIcon>
 				<ListItemText primary={intl.formatMessage({ id: `book.status.ProofRead` })} secondary={getPageCountInStatus(book, PageStatus.InReview)} />
 			</ListItem>
@@ -133,11 +131,6 @@ const PagesSidebar = ({ book, pages, filter, checked, onStatusFilter, assignment
 
 	return (
 		<div className={classes.root}>
-			<PageUploadButton onAdd={onAddClicked} pages={pages} onFilesUploaded={onFilesUploaded} />
-			<Divider />
-			<PageDeleteButton checked={checked} pages={pages} onDeleted={onUpdated} />
-			<PageAssignButton checked={checked} pages={pages} onAssigned={onUpdated} />
-			<Divider />
 			<List component="nav" aria-label="status filters" dense>
 				<ListSubheader component="div">
 					<FormattedMessage id="publishing.books.filter" />
@@ -148,6 +141,8 @@ const PagesSidebar = ({ book, pages, filter, checked, onStatusFilter, assignment
 			<List component="nav" aria-label="assignment filters" dense>
 				{renderAssignmentFilter()}
 			</List>
+			<Divider />
+			<BookPageProgress book={book} />
 		</div>
 	);
 };

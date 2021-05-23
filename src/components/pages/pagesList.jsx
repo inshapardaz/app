@@ -20,6 +20,11 @@ import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { useConfirm } from 'material-ui-confirm';
+import PageUploadButton from './pageUploadButton';
+import PageDeleteButton from './pageDeleteButton';
+import PageAssignButton from './pageAssignButton';
+import Divider from '@material-ui/core/Divider';
+
 //component
 import { libraryService } from "../../services";
 import Page from './page';
@@ -29,6 +34,8 @@ import PageGrid from './pageGrid';
 // sidebar
 import { Toolbar } from "@material-ui/core";
 import PagesSidebar from "./pagesSidebar";
+import PageStatus from '../../models/pageStatus';
+import BookStatus from '../../models/bookStatus';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -117,16 +124,28 @@ const PagesList = ({ book, onBookSaved }) => {
 	useEffect(() => {
 		const params = getQueryParams();
 		if (params.filter == null) {
-			const map = {
-				'AvailableForTyping': 'available',
-				'BeingTyped': 'available',
-				'ReadyForProofRead': 'typed',
-				'ProofRead': 'inReview',
-				'Published': 'completed'
+
+			let statusToShow = PageStatus.AvailableForTyping;
+
+			switch (book.status) {
+				case BookStatus.AvailableForTyping:
+					statusToShow = PageStatus.AvailableForTyping;
+					break;
+				case BookStatus.BeingTyped:
+					statusToShow = PageStatus.Typing;
+					break;
+				case BookStatus.ReadyForProofRead:
+					statusToShow = PageStatus.Typed;
+					break;
+				case BookStatus.ProofRead:
+					statusToShow = PageStatus.InReview;
+					break;
+				case BookStatus.Published:
+					statusToShow = PageStatus.Completed;
 			}
 
 			const params = getQueryParams();
-			history.push(buildLinkToPage(params.page, map[book.status], params.assignmentFilter ? params.assignmentFilter : 'assignedToMe'));
+			history.push(buildLinkToPage(params.page, statusToShow, params.assignmentFilter ? params.assignmentFilter : 'assignedToMe'));
 		}
 		else {
 			loadData();
@@ -221,6 +240,11 @@ const PagesList = ({ book, onBookSaved }) => {
 					<Typography variant="h5">{book != null ? book.title : ''}</Typography>
 					{renderEditLink()}
 					{renderChaptersLink()}
+					<Divider />
+					<PageUploadButton onAdd={() => onEditClicked(null)} pages={pages} onFilesUploaded={loadData} />
+					<Divider />
+					<PageDeleteButton checked={checked} pages={pages} onDeleted={loadData} />
+					<PageAssignButton checked={checked} pages={pages} onAssigned={loadData} />
 					<div className={classes.grow} />
 					<ToggleButtonGroup
 						size="small"
@@ -293,7 +317,7 @@ const PagesList = ({ book, onBookSaved }) => {
 				<PagesSidebar book={book} pages={pages} checked={checked} onUpdated={loadData}
 					filter={filter} onStatusFilter={(filter) => handleFilterChange(filter)}
 					assignmentFilter={assignmentFilter} onAssignmentFilterChanged={(af) => handleAssignmentFilterChange(af)}
-					onFilesUploaded={loadData} onAddClicked={() => onEditClicked(null)} />
+				/>
 			</Grid>
 			<Grid sm={10} item>
 				{renderToolbar()}

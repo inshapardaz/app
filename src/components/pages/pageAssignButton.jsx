@@ -1,9 +1,7 @@
 import React, { useCallback } from 'react';
 import { FormattedMessage, useIntl } from "react-intl";
 import { useSnackbar } from 'notistack';
-
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import Button from '@material-ui/core/Button';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 import { libraryService } from "../../services";
@@ -33,16 +31,12 @@ const PageAssignButton = ({ checked, pages, onAssigned }) => {
 	}, [checked, pages]);
 
 	return (
-		<MenuItem
-			edge="start"
+		<Button
 			disabled={checked.length <= 0}
-			aria-label="menu"
-			onClick={onAssignToMe} >
-			<ListItemIcon>
-				<AssignmentIndIcon fontSize="small" />
-			</ListItemIcon>
+			onClick={onAssignToMe}
+			startIcon={<AssignmentIndIcon />}>
 			<FormattedMessage id="page.assignedToMe.label" />
-		</MenuItem>
+		</Button>
 	);
 };
 

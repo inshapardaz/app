@@ -14,7 +14,6 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import InsertCommentIcon from '@material-ui/icons/InsertComment';

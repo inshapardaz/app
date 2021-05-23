@@ -3,10 +3,8 @@ import { FormattedMessage, useIntl } from "react-intl";
 import { useConfirm } from 'material-ui-confirm';
 import { useSnackbar } from 'notistack';
 
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import DeleteIcon from '@material-ui/icons/Delete';
-
+import Button from '@material-ui/core/Button';
 import { libraryService } from "../../services";
 
 const PageDeleteButton = ({ checked, pages, onDeleted }) => {
@@ -45,18 +43,12 @@ const PageDeleteButton = ({ checked, pages, onDeleted }) => {
 	}, [checked, pages]);
 
 	return (
-		<MenuItem
-			edge="start"
-			color="inherit"
+		<Button
 			disabled={checked.length <= 0}
-			aria-label="menu"
-			variant="text"
-			onClick={onDeleteMultipleClicked}>
-			<ListItemIcon>
-				<DeleteIcon fontSize="small" />
-			</ListItemIcon>
+			onClick={onDeleteMultipleClicked}
+			startIcon={<DeleteIcon />}>
 			<FormattedMessage id="action.delete" />
-		</MenuItem>
+		</Button>
 	);
 };
 
