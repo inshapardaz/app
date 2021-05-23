@@ -47,11 +47,6 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			disableClickEventBubbling: true,
 			renderCell: (params) => (
 				<>
-					{/* <Tooltip title={<FormattedMessage id="action.preview" />} >
-						<IconButton edge="end" aria-label="preview" onClick={() => onImageClick(params.row)} to={`/books/${params.row.bookId}/pages/${params.row.sequenceNumber}/editor`}>
-							<ImageIcon />
-						</IconButton>
-					</Tooltip> */}
 					<Tooltip title={<FormattedMessage id="action.editContent" />} >
 						<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${params.row.bookId}/pages/${params.row.sequenceNumber}/editor`}>
 							<DescriptionIcon />

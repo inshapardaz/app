@@ -12,7 +12,6 @@ import LayersIcon from '@material-ui/icons/Layers';
 import Typography from "@material-ui/core/Typography";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
-import GridList from "@material-ui/core/GridList";
 //mui icons
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
 import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
@@ -27,7 +26,7 @@ import Divider from '@material-ui/core/Divider';
 
 //component
 import { libraryService } from "../../services";
-import Page from './page';
+import Pages from './pages';
 import PageEditor from "./pageEditor";
 import PageGrid from './pageGrid';
 
@@ -36,6 +35,7 @@ import { Toolbar } from "@material-ui/core";
 import PagesSidebar from "./pagesSidebar";
 import PageStatus from '../../models/pageStatus';
 import BookStatus from '../../models/bookStatus';
+import Loading from "../Loading";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -59,6 +59,13 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
+const getPreviewSetting = () => {
+	const preview = localStorage.getItem('pages.list.preview');
+	return preview !== null && preview === 'true';
+}
+
+const setPreviewSetting = (preview) => localStorage.setItem('pages.list.preview', preview);
+
 const PagesList = ({ book, onBookSaved }) => {
 	if (book == null || book.links.pages == null) return null;
 	const classes = useStyles();
@@ -69,7 +76,7 @@ const PagesList = ({ book, onBookSaved }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
 
-	const [showPreview, setShowPreview] = useState(false);
+	const [showPreview, setShowPreview] = useState(getPreviewSetting());
 	const [filter, setFilter] = useState(null);
 	const [assignmentFilter, setAssignmentFilter] = useState('assignedToMe');
 	const [isLoading, setLoading] = useState(true);
@@ -250,7 +257,7 @@ const PagesList = ({ book, onBookSaved }) => {
 						size="small"
 						value={showPreview}
 						exclusive
-						onChange={(event, newValue) => setShowPreview(newValue)}
+						onChange={(event, newValue) => { setShowPreview(newValue); setPreviewSetting(newValue) }}
 						aria-label="view"
 					>
 						<ToggleButton value={false} aria-label="list-view">
@@ -270,7 +277,7 @@ const PagesList = ({ book, onBookSaved }) => {
 	const renderPages = () => {
 
 		if (isLoading) {
-			return <CircularProgress />;
+			return <Loading fullScreen={false} />;
 		}
 
 		if (isError) {
@@ -281,26 +288,13 @@ const PagesList = ({ book, onBookSaved }) => {
 			);
 		}
 
-		if (pages === null || pages.data === null) {
-			return (
-				<Typography variant="h6" component="h6" align="center">
-					<FormattedMessage id="pages.messages.empty" />
-				</Typography>
-			);
-		}
-
 		if (showPreview) {
-			return (
-				<GridList cellHeight={280} className={classes.gridList} cols={4}>
-					{pages.data.map((page) => (
-						<Page page={page} key={page.sequenceNumber}
-							onEdit={() => onEditClicked(page)}
-							onChecked={checked.indexOf(page.sequenceNumber) !== -1}
-							onClick={handleToggle(page.sequenceNumber)}
-							onDeleted={() => loadData()}
-						/>))}
-				</GridList>
-			);
+			return (<Pages book={book} pages={pages}
+				onCheckedChanged={(checkedList) => setChecked(checkedList)}
+				checkedPages={checked}
+				onEdit={(page) => onEditClicked(page)}
+				onDeleted={() => loadData()}
+			/>);
 		}
 
 		return (<PageGrid pages={pages}

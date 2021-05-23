@@ -59,8 +59,6 @@ const PublishingPage = () => {
 		navigateToPage(1, newFilter, query)
 	}
 
-	console.dir(page);
-
 	return (
 		<Grid container>
 			<Grid sm={2} item className={classes.sidebar}>
