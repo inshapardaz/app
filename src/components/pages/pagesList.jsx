@@ -212,12 +212,12 @@ const PagesList = ({ book, onBookSaved }) => {
 	const handleFilterChange = (newFilter) => {
 
 		const params = getQueryParams();
-		history.push(buildLinkToPage(params.page, newFilter, params.assignmentFilter));
+		history.push(buildLinkToPage(1, newFilter, params.assignmentFilter));
 	}
 
 	const handleAssignmentFilterChange = (newAssignmentFilter) => {
 		const params = getQueryParams();
-		history.push(buildLinkToPage(params.page, params.filter, newAssignmentFilter));
+		history.push(buildLinkToPage(1, params.filter, newAssignmentFilter));
 	}
 
 	const renderEditLink = () => {
@@ -297,6 +297,7 @@ const PagesList = ({ book, onBookSaved }) => {
 				checkedPages={checked}
 				onEdit={(page) => onEditClicked(page)}
 				onDeleted={() => loadData()}
+				onPageChange={p => history.push(buildLinkToPage(p, filter, assignmentFilter))}
 			/>);
 		}
 

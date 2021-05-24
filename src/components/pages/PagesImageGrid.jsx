@@ -16,6 +16,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Toolbar } from '@material-ui/core';
+import TablePagination from '@material-ui/core/TablePagination';
 
 const useStyles = makeStyles((theme) => ({
 	gridListTileBar: {
@@ -38,7 +39,7 @@ const WhiteCheckbox = withStyles({
 	checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-const PagesImageGrid = ({ book, pages, checkedPages, onSelectionChanged, onEdit, onDeleted }) => {
+const PagesImageGrid = ({ book, pages, checkedPages, onSelectionChanged, onPageChange, onEdit, onDeleted }) => {
 	const intl = useIntl();
 	const classes = useStyles();
 	const history = useHistory();
@@ -86,43 +87,57 @@ const PagesImageGrid = ({ book, pages, checkedPages, onSelectionChanged, onEdit,
 		}
 	}
 
+	const handlePageChanged = (e, page) => {
+		onPageChange && onPageChange(page + 1);
+	};
+
 	return (
-		<GridList cellHeight={280} cols={4}>
-			{pages.data.map((page) => (
-				<GridListTile key={page.sequenceNumber} >
-					<img src={page.links.image != null ? page.links.image : "/images/no_image.png"} alt={page.sequenceNumber} />
-					<GridListTileBar titlePosition="top" title={page.sequenceNumber} subtitle={page.chapterTitle}
-						className={classes.gridListTileBar}
-						actionIcon={<WhiteCheckbox
-							edge="start"
-							checked={checked.indexOf(page.sequenceNumber) >= 0}
-							onChange={(e) => handleCheckedChanged(e, page)}
-							tabIndex={-1}
-							disableRipple
-						/>} />
-					<GridListTileBar subtitle={page.accountId && page.accountName} className={classes.gridListTileBarBottom}
-						actionIcon={
-							<Toolbar variant="dense">
-								<Tooltip title={<FormattedMessage id="action.edit" />} >
-									<IconButton edge="end" aria-label="edit" onClick={() => onEdit(page)}>
-										<EditIcon style={{ color: "white" }} fontSize="small" />
-									</IconButton>
-								</Tooltip>
-								<Tooltip title={<FormattedMessage id="action.delete" />} >
-									<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(page)}>
-										<DeleteIcon style={{ color: "white" }} fontSize="small" />
-									</IconButton>
-								</Tooltip>
-								<Tooltip title={<FormattedMessage id="action.editContent" />} >
-									<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${book.id}/pages/${page.sequenceNumber}/editor`}>
-										<DescriptionIcon style={{ color: "white" }} fontSize="small" />
-									</IconButton>
-								</Tooltip>
-							</Toolbar>
-						}
-					/>
-				</GridListTile >))}
-		</GridList>
+		<>
+			<GridList cellHeight={280} cols={4}>
+				{pages.data.map((page) => (
+					<GridListTile key={page.sequenceNumber} >
+						<img src={page.links.image != null ? page.links.image : "/images/no_image.png"} alt={page.sequenceNumber} />
+						<GridListTileBar titlePosition="top" title={page.sequenceNumber} subtitle={page.chapterTitle}
+							className={classes.gridListTileBar}
+							actionIcon={<WhiteCheckbox
+								edge="start"
+								checked={checked.indexOf(page.sequenceNumber) >= 0}
+								onChange={(e) => handleCheckedChanged(e, page)}
+								tabIndex={-1}
+								disableRipple
+							/>} />
+						<GridListTileBar subtitle={page.accountId && page.accountName} className={classes.gridListTileBarBottom}
+							actionIcon={
+								<Toolbar variant="dense">
+									<Tooltip title={<FormattedMessage id="action.edit" />} >
+										<IconButton edge="end" aria-label="edit" onClick={() => onEdit(page)}>
+											<EditIcon style={{ color: "white" }} fontSize="small" />
+										</IconButton>
+									</Tooltip>
+									<Tooltip title={<FormattedMessage id="action.delete" />} >
+										<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(page)}>
+											<DeleteIcon style={{ color: "white" }} fontSize="small" />
+										</IconButton>
+									</Tooltip>
+									<Tooltip title={<FormattedMessage id="action.editContent" />} >
+										<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${book.id}/pages/${page.sequenceNumber}/editor`}>
+											<DescriptionIcon style={{ color: "white" }} fontSize="small" />
+										</IconButton>
+									</Tooltip>
+								</Toolbar>
+							}
+						/>
+					</GridListTile >))}
+			</GridList>
+			<TablePagination
+				component="div"
+				page={pages.currentPageIndex - 1}
+				count={pages.totalCount}
+				onChangePage={handlePageChanged}
+				rowsPerPage={pages.pageSize}
+				rowsPerPageOptions={[pages.pageSize]}
+			/>
+		</>
 	);
 };
 
