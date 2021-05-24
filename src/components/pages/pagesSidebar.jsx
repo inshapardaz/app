@@ -1,5 +1,6 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { Link } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -10,6 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import KeyboardHideIcon from '@material-ui/icons/KeyboardHide';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import LayersIcon from '@material-ui/icons/Layers';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
 import DoneIcon from '@material-ui/icons/Done';
 import PhotoFilterIcon from '@material-ui/icons/PhotoFilter';
@@ -20,6 +23,8 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import PageStatus from '../../models/pageStatus';
 import BookPageProgress from '../pages/bookPageProgress';
+import BookEditor from '../books/bookEditor';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -53,9 +58,40 @@ const getPageCountInStatus = (book, status) => {
 	return null;
 }
 
-const PagesSidebar = ({ book, filter, onStatusFilter, assignmentFilter, onAssignmentFilterChanged }) => {
+const PagesSidebar = ({ book, filter, onStatusFilter, onUpdated, assignmentFilter, onAssignmentFilterChanged }) => {
 	const intl = useIntl();
 	const classes = useStyles();
+	const [showEditor, setShowEditor] = useState(false);
+
+	const renderEditLink = () => {
+		if (book && book.links && book.links.update) {
+			return (
+				<ListItem button key='editBook' onClick={() => setShowEditor(true)}>
+					<ListItemIcon>
+						<EditOutlinedIcon />
+					</ListItemIcon>
+					<ListItemText primary={intl.formatMessage({ id: `action.edit` })} />
+				</ListItem>);
+		}
+		return null;
+	};
+
+	const renderChaptersLink = () => {
+		if (book && book.links && book.links.update) {
+			return (<ListItem button component={Link} to={`/books/${book.id}/chapters`}>
+				<ListItemIcon>
+					<LayersIcon />
+				</ListItemIcon>
+				<ListItemText primary={intl.formatMessage({ id: `chapter.toolbar.chapters` })} />
+			</ListItem>);
+		}
+		return null;
+	}
+
+	const handleBookUpChanged = () => {
+		setShowEditor(false);
+		onUpdated && onUpdated();
+	}
 
 	const renderStatusFilters = () => {
 		return (<>
@@ -131,6 +167,10 @@ const PagesSidebar = ({ book, filter, onStatusFilter, assignmentFilter, onAssign
 
 	return (
 		<div className={classes.root}>
+			<Typography variant="h5">{book != null ? book.title : ''}</Typography>
+			{renderEditLink()}
+			{renderChaptersLink()}
+			<Divider />
 			<List component="nav" aria-label="status filters" dense>
 				<ListSubheader component="div">
 					<FormattedMessage id="publishing.books.filter" />
@@ -143,6 +183,12 @@ const PagesSidebar = ({ book, filter, onStatusFilter, assignmentFilter, onAssign
 			</List>
 			<Divider />
 			<BookPageProgress book={book} />
+			<BookEditor
+				show={showEditor}
+				book={book}
+				onSaved={handleBookUpChanged}
+				onCancelled={() => setShowEditor(false)}
+			/>
 		</div>
 	);
 };

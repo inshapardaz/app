@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useHistory, useLocation, Link } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
 
 // mui
 import { makeStyles } from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import LayersIcon from '@material-ui/icons/Layers';
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 //mui icons
@@ -220,34 +217,12 @@ const PagesList = ({ book, onBookSaved }) => {
 		history.push(buildLinkToPage(1, params.filter, newAssignmentFilter));
 	}
 
-	const renderEditLink = () => {
-		if (book && book.links && book.links.update) {
-			return (<Button onClick={() => setShowEditor(true)} startIcon={<EditOutlinedIcon />}>
-				<FormattedMessage id="action.edit" />
-			</Button>);
-		}
-		return null;
-	};
-
-	const renderChaptersLink = () => {
-		if (book && book.links && book.links.update) {
-			return (<Button component={Link} to={`/books/${book.id}/chapters`} startIcon={<LayersIcon />}>
-				<FormattedMessage id="chapter.toolbar.chapters" />
-			</Button>);
-		}
-		return null;
-	}
-
 	const selectedPages = getSelectedPages(pages, checked);
 
 	const renderToolbar = () => {
 		if (!isLoading && pages) {
 			return (
 				<Toolbar >
-					<Typography variant="h5">{book != null ? book.title : ''}</Typography>
-					{renderEditLink()}
-					{renderChaptersLink()}
-					<Divider />
 					<PageUploadButton onAdd={() => onEditClicked(null)} pages={pages} onFilesUploaded={loadData} />
 					<Divider />
 					<PageDeleteButton selectedPages={selectedPages} onDeleted={loadData} />
