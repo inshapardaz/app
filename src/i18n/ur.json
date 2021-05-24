@@ -278,6 +278,7 @@
 	"page.assignedToMe.label": "مجھے تفویض کریں",
 	"page.assignedTo.label": "تفویض یا گیا ہے {name} کو",
 	"pages.assignToUser" : "صارف کو تفویض کریں",
+	"pages.setStatus" : "تبدیلی کیفیت",
 	"pages.associateWithChapter" : "باب سے منسلک کریں",
 	"page.editor.header.add": "نئے صفحے کا اضافہ",
 	"page.editor.header.edit": "صفحہ {sequenceNumber} کی تدوین",

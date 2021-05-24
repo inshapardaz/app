@@ -38,6 +38,7 @@ import BookStatus from '../../models/bookStatus';
 import Loading from "../Loading";
 import PagePagesAssignButton from "./pagePagesAssignButton";
 import PageChapterAssignButton from "./pageChapterAssignButton";
+import PageStatusUpdateButton from "./pageStatusUpdateButton";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -254,6 +255,7 @@ const PagesList = ({ book, onBookSaved }) => {
 					<PageAssignButton selectedPages={selectedPages} onAssigned={loadData} />
 					<PagePagesAssignButton selectedPages={selectedPages} onAssigned={loadData} />
 					<PageChapterAssignButton selectedPages={selectedPages} book={book} onUpdated={loadData} />
+					<PageStatusUpdateButton selectedPages={selectedPages} onUpdated={loadData} />
 					<div className={classes.grow} />
 					<ToggleButtonGroup
 						size="small"

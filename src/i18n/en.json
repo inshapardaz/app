@@ -281,6 +281,7 @@
 	"page.assignedToMe.label": "Assigned to me",
 	"page.assignedTo.label": "Assigned to {name}",
 	"pages.assignToUser" : "Assign to user",
+	"pages.setStatus" : "Set status",
 	"pages.associateWithChapter" : "Relate to chapter",
 	"page.available.label" : "Available",
 	"page.editor.header.add": "Adding new page",
