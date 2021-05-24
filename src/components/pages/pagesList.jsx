@@ -10,7 +10,6 @@ import Button from '@material-ui/core/Button';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import LayersIcon from '@material-ui/icons/Layers';
 import Typography from "@material-ui/core/Typography";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 //mui icons
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
@@ -26,7 +25,7 @@ import Divider from '@material-ui/core/Divider';
 
 //component
 import { libraryService } from "../../services";
-import Pages from './pages';
+import PagesImageGrid from './PagesImageGrid';
 import PageEditor from "./pageEditor";
 import PageGrid from './pageGrid';
 
@@ -71,7 +70,7 @@ const setPreviewSetting = (preview) => localStorage.setItem('pages.list.preview'
 
 const getSelectedPages = (pages, checked) => {
 	if (pages && pages.data && checked.length > 0) {
-		return pages.data.filter(p => checked.includes(`${p.sequenceNumber}`));
+		return pages.data.filter(p => checked.includes(p.sequenceNumber));
 	}
 
 	return [];
@@ -293,8 +292,8 @@ const PagesList = ({ book, onBookSaved }) => {
 		}
 
 		if (showPreview) {
-			return (<Pages book={book} pages={pages}
-				onCheckedChanged={(checkedList) => setChecked(checkedList)}
+			return (<PagesImageGrid book={book} pages={pages}
+				onSelectionChanged={checkedList => setChecked(checkedList)}
 				checkedPages={checked}
 				onEdit={(page) => onEditClicked(page)}
 				onDeleted={() => loadData()}

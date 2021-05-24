@@ -4,7 +4,8 @@ import { useHistory, Link } from "react-router-dom";
 import { useSnackbar } from 'notistack';
 
 import { useConfirm } from 'material-ui-confirm';
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+
 import GridList from "@material-ui/core/GridList";
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from "@material-ui/core/IconButton";
@@ -18,7 +19,7 @@ import { Toolbar } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 	gridListTileBar: {
-		height: 36,
+		height: 50,
 		backgroundColor: 'rgba(0,0,0,0.3)'
 	},
 	gridListTileBarBottom: {
@@ -27,7 +28,17 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const Pages = ({ book, pages, checkedPages, onClicked, onCheckedChanged, onEdit, onDeleted }) => {
+const WhiteCheckbox = withStyles({
+	root: {
+		color: 'white',
+		'&$checked': {
+			color: 'white',
+		},
+	},
+	checked: {},
+})((props) => <Checkbox color="default" {...props} />);
+
+const PagesImageGrid = ({ book, pages, checkedPages, onSelectionChanged, onEdit, onDeleted }) => {
 	const intl = useIntl();
 	const classes = useStyles();
 	const history = useHistory();
@@ -63,11 +74,10 @@ const Pages = ({ book, pages, checkedPages, onClicked, onCheckedChanged, onEdit,
 		}
 
 		setChecked(newChecked);
-		onCheckedChanged && onCheckedChanged(newChecked);
+		onSelectionChanged && onSelectionChanged(newChecked);
 	};
 
 	const handleCheckedChanged = (event, page) => {
-		console.log(`changing checked for ${page.sequenceNumber} to ${event.target.checked}`);
 		if (event.target.checked) {
 			handleToggle(page.sequenceNumber)
 		}
@@ -76,16 +86,14 @@ const Pages = ({ book, pages, checkedPages, onClicked, onCheckedChanged, onEdit,
 		}
 	}
 
-
-
 	return (
 		<GridList cellHeight={280} cols={4}>
 			{pages.data.map((page) => (
 				<GridListTile key={page.sequenceNumber} >
 					<img src={page.links.image != null ? page.links.image : "/images/no_image.png"} alt={page.sequenceNumber} />
-					<GridListTileBar titlePosition="top" title={page.sequenceNumber}
+					<GridListTileBar titlePosition="top" title={page.sequenceNumber} subtitle={page.chapterTitle}
 						className={classes.gridListTileBar}
-						actionIcon={<Checkbox
+						actionIcon={<WhiteCheckbox
 							edge="start"
 							checked={checked.indexOf(page.sequenceNumber) >= 0}
 							onChange={(e) => handleCheckedChanged(e, page)}
@@ -118,4 +126,4 @@ const Pages = ({ book, pages, checkedPages, onClicked, onCheckedChanged, onEdit,
 	);
 };
 
-export default Pages;
+export default PagesImageGrid;

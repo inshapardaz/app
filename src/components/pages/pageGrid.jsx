@@ -92,7 +92,7 @@ const PageGrid = ({ pages, onPageChange, onSelectionChanged, onEdit, onDelete, l
 			checkboxSelection disableColumnMenu autoHeight
 			onSelectionModelChange={(newSelection) => {
 				if (onSelectionChanged) {
-					onSelectionChanged(newSelection.selectionModel);
+					onSelectionChanged(newSelection.selectionModel.map(m => parseInt(m)));
 				}
 			}} />;
 	}
