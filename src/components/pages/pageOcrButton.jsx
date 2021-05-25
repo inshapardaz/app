@@ -32,7 +32,7 @@ const getOcrStatusIcon = (status) => {
 	if (status === 'pending') {
 		return (<ScheduleIcon />);
 	}
-	else if (status === 'inProgress') {
+	else if (status === 'processing') {
 		return (<HourglassEmptyIcon />);
 	}
 	else if (status === 'complete') {
