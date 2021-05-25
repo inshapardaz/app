@@ -36,12 +36,12 @@ const PageUploadButton = ({ pages, onAdd, onUploadStarted, onFilesUploaded }) =>
 		}
 
 		setLoading(true);
+		setOpen(false);
 		onUploadStarted && onUploadStarted(true);
 		if (pages && pages.links.create_multiple !== null) {
 			libraryService.postMultipleFile(pages.links.create_multiple, files)
 				.then(() => {
 					enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.saved' }), { variant: 'success' })
-					setShowFilesUpload(false);
 					onFilesUploaded();
 				})
 				.catch(() => {
@@ -49,6 +49,7 @@ const PageUploadButton = ({ pages, onAdd, onUploadStarted, onFilesUploaded }) =>
 				})
 				.finally(() => {
 					setLoading(false);
+					setShowFilesUpload(false);
 					onUploadStarted && onUploadStarted(false);
 				});
 		}

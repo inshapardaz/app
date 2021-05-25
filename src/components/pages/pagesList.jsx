@@ -35,6 +35,7 @@ import Loading from "../Loading";
 import PagePagesAssignButton from "./pagePagesAssignButton";
 import PageChapterAssignButton from "./pageChapterAssignButton";
 import PageStatusUpdateButton from "./pageStatusUpdateButton";
+import PageOcrButton from './pageOcrButton';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -230,6 +231,7 @@ const PagesList = ({ book, onBookSaved }) => {
 					<PagePagesAssignButton selectedPages={selectedPages} onAssigned={loadData} />
 					<PageChapterAssignButton selectedPages={selectedPages} book={book} onUpdated={loadData} />
 					<PageStatusUpdateButton selectedPages={selectedPages} onUpdated={loadData} />
+					<PageOcrButton selectedPages={selectedPages} />
 					<div className={classes.grow} />
 					<ToggleButtonGroup
 						size="small"

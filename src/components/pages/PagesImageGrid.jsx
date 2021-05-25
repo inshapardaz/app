@@ -109,6 +109,11 @@ const PagesImageGrid = ({ book, pages, checkedPages, onSelectionChanged, onPageC
 						<GridListTileBar subtitle={page.accountId && page.accountName} className={classes.gridListTileBarBottom}
 							actionIcon={
 								<Toolbar variant="dense">
+									<Tooltip title={<FormattedMessage id="action.editContent" />} >
+										<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${book.id}/pages/${page.sequenceNumber}/editor`}>
+											<DescriptionIcon style={{ color: "white" }} fontSize="small" />
+										</IconButton>
+									</Tooltip>
 									<Tooltip title={<FormattedMessage id="action.edit" />} >
 										<IconButton edge="end" aria-label="edit" onClick={() => onEdit(page)}>
 											<EditIcon style={{ color: "white" }} fontSize="small" />
@@ -117,11 +122,6 @@ const PagesImageGrid = ({ book, pages, checkedPages, onSelectionChanged, onPageC
 									<Tooltip title={<FormattedMessage id="action.delete" />} >
 										<IconButton edge="end" aria-label="delete" onClick={() => onDeleteClicked(page)}>
 											<DeleteIcon style={{ color: "white" }} fontSize="small" />
-										</IconButton>
-									</Tooltip>
-									<Tooltip title={<FormattedMessage id="action.editContent" />} >
-										<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${book.id}/pages/${page.sequenceNumber}/editor`}>
-											<DescriptionIcon style={{ color: "white" }} fontSize="small" />
 										</IconButton>
 									</Tooltip>
 								</Toolbar>
