@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
 import FindInPageIcon from '@material-ui/icons/FindInPage';
 import { blue } from '@material-ui/core/colors';
 import { FormattedMessage, useIntl } from "react-intl";
-import WritersDropDown from '../account/writersDropdown';
 import { libraryService } from "../../services";
-import { TextField } from '@material-ui/core';
+import { TextField, Typography } from '@material-ui/core';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import { green, red, } from '@material-ui/core/colors';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableRow from '@material-ui/core/TableRow';
+import EditorDialog from '../editorDialog';
 
 
 const useStyles = makeStyles({
@@ -22,62 +28,121 @@ const useStyles = makeStyles({
 	},
 });
 
+const getOcrStatusIcon = (status) => {
+	if (status === 'pending') {
+		return (<ScheduleIcon />);
+	}
+	else if (status === 'inProgress') {
+		return (<HourglassEmptyIcon />);
+	}
+	else if (status === 'complete') {
+		return (<CheckCircleOutlineIcon style={{ color: green[500] }} />);
+	}
+	else if (status === 'error') {
+		return (<ErrorOutlineIcon style={{ color: red[500] }} />);
+	}
+}
+
+const OcrGrid = ({ pages }) => {
+	return (
+		<TableContainer>
+			<Table >
+				<TableBody>
+					{pages.map((page) => (
+						<TableRow key={page.sequenceNumber}>
+							<TableCell component="th" scope="row">
+								{page.sequenceNumber}
+							</TableCell>
+							<TableCell align="right">{getOcrStatusIcon(page.ocrStatus)}</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
+	);
+}
+
 function SimpleDialog(props) {
-	const classes = useStyles();
 	const intl = useIntl();
-	const { enqueueSnackbar } = useSnackbar();
-	const [key, setKey] = React.useState('');
+	const [key, setKey] = useState('');
+	const [busy, setBusy] = useState(false);
+	const [pagesStatus, setPagesStatus] = useState([]);
 
 	const { onClose, open, selectedPages } = props;
+
+	useEffect(() => {
+		if (selectedPages) {
+			setPagesStatus(selectedPages.map(p => ({ sequenceNumber: p.sequenceNumber, ocrStatus: 'pending' })))
+		}
+	}, [selectedPages]);
 
 	const handleClose = () => {
 		onClose();
 	};
 
+	const setPageStatus = (page, status) => {
+		var newPages = pagesStatus.map(p => {
+			if (p.sequenceNumber === page.sequenceNumber) {
+				p.ocrStatus = status;
+			}
+
+			return p;
+		});
+
+		setPagesStatus(newPages);
+	}
+
 	const handleSubmit = () => {
 		var promises = [];
-
+		setBusy(true);
 		selectedPages.map(page => {
-			if (page !== null && page !== undefined) {
+			if (page !== null && page !== undefined && page.ocrStatus !== 'completed') {
 				if (page.links.ocr) {
-					return promises.push(libraryService.post(page.links.ocr, key));
+					setPageStatus(page, 'processing')
+					return promises.push(libraryService.post(page.links.ocr, key)
+						.then(() => setPageStatus(page, 'complete'))
+						.catch(() => setPageStatus(page, 'error')));
 				}
+			}
+			else {
+				setPageStatus(page, 'skipped')
 			}
 
 			return Promise.resolve();
 		});
 
 		Promise.all(promises)
-			.then(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.assigned' }), { variant: 'success' }))
-			.then(() => handleClose())
-			.catch(e => console.error(e))
-			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.assigned' }), { variant: 'error' }));
+			.then(() => setBusy(false))
+			.catch(e => console.error(e));
 	};
 
+	const hasProcessablePages = pagesStatus.filter(x => x.ocrStatus === 'error' || x.ocrStatus === 'pending').length > 0;
+
 	return (
-		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth='sm' fullWidth>
-			<DialogTitle id="simple-dialog-title"><FormattedMessage id="pages.ocr" /></DialogTitle>
-			<DialogContent>
+		<EditorDialog show={open} busy={busy}
+			title={<FormattedMessage id="pages.ocr" />}
+			onCancelled={handleClose}  >
+			<Typography>
 				<FormattedMessage id="pages.ocr.description" />
-				<TextField
-					autoFocus
-					margin="dense"
-					id="key"
-					value={key}
-					onChange={(event) => setKey(event.target.value)}
-					label={intl.formatMessage({ id: 'pages.ocr.title' })}
-					fullWidth
-				/>
-			</DialogContent>
-			<DialogActions>
-				<Button onClick={handleClose} variant="contained" >
-					<FormattedMessage id="action.cancel" />
-				</Button>
-				<Button onClick={handleSubmit} disabled={!key} variant="contained" color="primary">
-					<FormattedMessage id="pages.ocr" />
-				</Button>
-			</DialogActions>
-		</Dialog>
+			</Typography>
+			<TextField
+				autoFocus
+				margin="dense"
+				id="key"
+				value={key}
+				onChange={(event) => setKey(event.target.value)}
+				label={intl.formatMessage({ id: 'pages.ocr.title' })}
+				fullWidth
+			/>
+			<OcrGrid pages={pagesStatus} />
+			<Button aria-controls="get-text" aria-haspopup="false" onClick={handleSubmit}
+				disabled={!key || !hasProcessablePages}
+				startIcon={<FindInPageIcon />} fullWidth
+				variant="contained"
+				color="primary">
+				<FormattedMessage id="pages.ocr" />
+			</Button>
+		</EditorDialog >
 	);
 }
 
@@ -87,7 +152,7 @@ SimpleDialog.propTypes = {
 };
 
 const PageOcrButton = ({ selectedPages }) => {
-	const [open, setOpen] = React.useState(false);
+	const [open, setOpen] = useState(false);
 
 	const handleClickOpen = () => {
 		setOpen(true);
