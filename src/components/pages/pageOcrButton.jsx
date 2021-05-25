@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import FindInPageIcon from '@material-ui/icons/FindInPage';
-import { blue } from '@material-ui/core/colors';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import { FormattedMessage, useIntl } from "react-intl";
 import { libraryService } from "../../services";
 import { TextField, Typography } from '@material-ui/core';
@@ -19,14 +18,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import EditorDialog from '../editorDialog';
-
-
-const useStyles = makeStyles({
-	avatar: {
-		backgroundColor: blue[100],
-		color: blue[600],
-	},
-});
 
 const getOcrStatusIcon = (status) => {
 	if (status === 'pending') {
@@ -66,17 +57,24 @@ function SimpleDialog(props) {
 	const intl = useIntl();
 	const [key, setKey] = useState('');
 	const [busy, setBusy] = useState(false);
+	const [storeApiKey, setStoreApiKey] = useState(false);
 	const [pagesStatus, setPagesStatus] = useState([]);
 
 	const { onClose, open, selectedPages } = props;
 
 	useEffect(() => {
+		var ocrKey = localStorage.getItem("ocr.key");
+		if (ocrKey && ocrKey.length > 0) {
+			setKey(ocrKey);
+			setStoreApiKey(true);
+		}
 		if (selectedPages) {
 			setPagesStatus(selectedPages.map(p => ({ sequenceNumber: p.sequenceNumber, ocrStatus: 'pending' })))
 		}
 	}, [selectedPages]);
 
 	const handleClose = () => {
+		if (!storeApiKey) setKey('');
 		onClose();
 	};
 
@@ -113,6 +111,14 @@ function SimpleDialog(props) {
 
 		Promise.all(promises)
 			.then(() => setBusy(false))
+			.then(() => {
+				if (storeApiKey) {
+					localStorage.setItem("ocr.key", key);
+				}
+				else {
+					localStorage.removeItem("ocr.key");
+				}
+			})
 			.catch(e => console.error(e));
 	};
 
@@ -134,7 +140,15 @@ function SimpleDialog(props) {
 				label={intl.formatMessage({ id: 'pages.ocr.title' })}
 				fullWidth
 			/>
-			<OcrGrid pages={pagesStatus} />
+			<FormControlLabel
+				control={
+					<Checkbox
+						checked={storeApiKey}
+						onChange={event => setStoreApiKey(event.target.checked)}
+					/>
+				}
+				label={<FormattedMessage id="pages.ocr.storeLocal" />}
+			/><OcrGrid pages={pagesStatus} />
 			<Button aria-controls="get-text" aria-haspopup="false" onClick={handleSubmit}
 				disabled={!key || !hasProcessablePages}
 				startIcon={<FindInPageIcon />} fullWidth
