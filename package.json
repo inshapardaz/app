@@ -61,7 +61,7 @@
         "babel-eslint": "10.0.1",
         "babel-loader": "8.0.5",
         "base64-inline-loader": "1.1.1",
-        "browserslist": "4.4.2",
+        "browserslist": "4.16.5",
         "chai": "4.2.0",
         "copy-webpack-plugin": "5.0.0",
         "core-js": "2.6.5",
