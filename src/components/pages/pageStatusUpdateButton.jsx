@@ -49,11 +49,15 @@ const getStatusIcon = (status) => {
 function SimpleDialog(props) {
 	const classes = useStyles();
 	const intl = useIntl();
+	const [dataChanged, setDataChanged] = useState(false);
 	const { enqueueSnackbar } = useSnackbar();
 	const { onClose, open, selectedPages, onUpdated } = props;
 
-	const handleClose = (success = false) => {
-		if (success && onUpdated) onUpdated();
+	const handleClose = () => {
+		if (dataChanged && onUpdated) {
+			onUpdated();
+		}
+
 		onClose();
 	};
 
@@ -63,7 +67,7 @@ function SimpleDialog(props) {
 			if (p !== null && p !== undefined) {
 				if (p.links.update) {
 					p.status = newStatus;
-					return promises.push(libraryService.put(p.links.update, p));
+					return promises.push(libraryService.put(p.links.update, p).then(() => setDataChanged(true)));
 				}
 			}
 
