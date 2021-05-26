@@ -1,34 +1,67 @@
-import React from 'react';
-import { useSnackbar } from 'notistack';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import { blue } from '@material-ui/core/colors';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableRow from '@material-ui/core/TableRow';
+import { green, red, } from '@material-ui/core/colors';
 import { FormattedMessage, useIntl } from "react-intl";
 import WritersDropDown from '../account/writersDropdown';
+import EditorDialog from '../editorDialog';
 import { libraryService } from "../../services";
 
+const getStatusIcon = (status) => {
+	if (status === 'pending') {
+		return (<ScheduleIcon />);
+	}
+	else if (status === 'processing') {
+		return (<HourglassEmptyIcon />);
+	}
+	else if (status === 'complete') {
+		return (<CheckCircleOutlineIcon style={{ color: green[500] }} />);
+	}
+	else if (status === 'error') {
+		return (<ErrorOutlineIcon style={{ color: red[500] }} />);
+	}
+}
 
-const emails = ['username@gmail.com', 'user02@gmail.com'];
-const useStyles = makeStyles({
-	avatar: {
-		backgroundColor: blue[100],
-		color: blue[600],
-	},
-});
+const AssignList = ({ pages }) => {
+	return (
+		<TableContainer>
+			<Table >
+				<TableBody>
+					{pages.map((page) => (
+						<TableRow key={page.sequenceNumber}>
+							<TableCell component="th" scope="row">
+								{page.sequenceNumber}
+							</TableCell>
+							<TableCell align="right">{getStatusIcon(page.assignStatus)}</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
+	);
+}
 
-function SimpleDialog(props) {
-	const classes = useStyles();
+function SimpleDialog({ onClose, open, selectedPages, onAssigned }) {
 	const intl = useIntl();
-	const { enqueueSnackbar } = useSnackbar();
-	const [selectedAccount, setSelectedAccount] = React.useState(null);
+	const [busy, setBusy] = useState(false);
+	const [selectedAccount, setSelectedAccount] = useState(null);
+	const [pagesStatus, setPagesStatus] = useState([]);
 
-	const { onClose, open, selectedPages, onAssigned } = props;
+	useEffect(() => {
+		if (selectedPages) {
+			setPagesStatus(selectedPages.map(p => ({ sequenceNumber: p.sequenceNumber, assignStatus: 'pending' })))
+		}
+	}, [selectedPages]);
 
 	const handleClose = (success = false) => {
 		if (success && onAssigned) {
@@ -37,13 +70,31 @@ function SimpleDialog(props) {
 		onClose();
 	};
 
+	const setPageStatus = (page, status) => {
+		var newPages = pagesStatus.map(p => {
+			if (p.sequenceNumber === page.sequenceNumber) {
+				p.assignStatus = status;
+			}
+
+			return p;
+		});
+
+		setPagesStatus(newPages);
+	}
+
 	const handleSubmit = () => {
 		var promises = [];
-
+		setBusy(true);
 		selectedPages.map(page => {
 			if (page !== null && page !== undefined) {
 				if (page.links.assign) {
-					return promises.push(libraryService.post(page.links.assign, { AccountId: selectedAccount.id }));
+					setPageStatus(page, 'processing')
+					return promises.push(libraryService.post(page.links.assign, { AccountId: selectedAccount.id })
+						.then(() => setPageStatus(page, 'complete'))
+						.catch(() => setPageStatus(page, 'error')));
+				}
+				else {
+					setPageStatus(page, 'skipped')
 				}
 			}
 
@@ -51,26 +102,26 @@ function SimpleDialog(props) {
 		});
 
 		Promise.all(promises)
-			.then(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.assigned' }), { variant: 'success' }))
-			.then(() => handleClose(true))
-			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.assigned' }), { variant: 'error' }));
+			.then(() => setBusy(false))
+			.catch(e => console.error(e));
 	};
 
+	const hasProcessablePages = pagesStatus.filter(x => x.assignStatus === 'error' || x.assignStatus === 'pending').length > 0;
+
 	return (
-		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open} maxWidth='sm' fullWidth>
-			<DialogTitle id="simple-dialog-title"><FormattedMessage id="pages.assignToUser" /></DialogTitle>
-			<DialogContent>
-				<WritersDropDown onWriterSelected={(value) => setSelectedAccount(value)} />
-			</DialogContent>
-			<DialogActions>
-				<Button onClick={handleClose} variant="contained" >
-					<FormattedMessage id="action.cancel" />
-				</Button>
-				<Button onClick={handleSubmit} variant="contained" color="primary" disabled={!selectedAccount}>
-					<FormattedMessage id="action.save" />
-				</Button>
-			</DialogActions>
-		</Dialog>
+		<EditorDialog show={open} busy={busy}
+			title={<FormattedMessage id="pages.assignToUser" />}
+			onCancelled={handleClose}  >
+			<WritersDropDown onWriterSelected={(value) => setSelectedAccount(value)} fullWidth />
+			<AssignList pages={pagesStatus} fullWidth />
+			<Button aria-controls="get-text" aria-haspopup="false" onClick={handleSubmit}
+				disabled={!selectedAccount || !hasProcessablePages}
+				startIcon={<PersonAddIcon />} fullWidth
+				variant="contained"
+				color="primary">
+				<FormattedMessage id="pages.assignToUser" />
+			</Button>
+		</EditorDialog >
 	);
 }
 
@@ -80,8 +131,8 @@ SimpleDialog.propTypes = {
 };
 
 const PagePagesAssignButton = ({ selectedPages, onAssigned }) => {
-	const [open, setOpen] = React.useState(false);
-	const [selectedValue, setSelectedValue] = React.useState(emails[1]);
+	const [open, setOpen] = useState(false);
+	const [selectedValue, setSelectedValue] = useState([]);
 
 	const handleClickOpen = () => {
 		setOpen(true);

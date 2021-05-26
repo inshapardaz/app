@@ -8,6 +8,7 @@ import SpellcheckIcon from '@material-ui/icons/Spellcheck';
 import DoneIcon from '@material-ui/icons/Done';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import PhotoFilterIcon from '@material-ui/icons/PhotoFilter';
+import RateReviewIcon from '@material-ui/icons/RateReview';
 
 const PageStatusIcon = ({ status, tooltip = true }) => {
 
@@ -26,12 +27,12 @@ const PageStatusIcon = ({ status, tooltip = true }) => {
 			case "Typed":
 				return (
 					<Tooltip title={<FormattedMessage id="status.Typed" />} >
-						<KeyboardHideIcon />
+						<SpellcheckIcon />
 					</Tooltip>);
 			case "InReview":
 				return (
 					<Tooltip title={<FormattedMessage id="status.InReview" />} >
-						<SpellcheckIcon />
+						<RateReviewIcon />
 					</Tooltip>);
 			case "Completed":
 				return (

@@ -1,11 +1,8 @@
-import React, { useDebugValue, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useIntl } from "react-intl";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { libraryService } from '../../services';
-import { Field } from 'formik';
-import BootstrapInput from '../bootstrapInput';
 
 const WritersDropDown = ({ onWriterSelected, error, value, label, variant }, props) => {
 	const intl = useIntl();

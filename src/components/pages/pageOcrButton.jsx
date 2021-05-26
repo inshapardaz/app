@@ -148,7 +148,8 @@ function SimpleDialog(props) {
 					/>
 				}
 				label={<FormattedMessage id="pages.ocr.storeLocal" />}
-			/><OcrGrid pages={pagesStatus} />
+			/>
+			<OcrGrid pages={pagesStatus} />
 			<Button aria-controls="get-text" aria-haspopup="false" onClick={handleSubmit}
 				disabled={!key || !hasProcessablePages}
 				startIcon={<FindInPageIcon />} fullWidth
