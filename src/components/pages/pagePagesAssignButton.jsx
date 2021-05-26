@@ -2,38 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import WritersDropDown from '../account/writersDropdown';
 import EditorDialog from '../editorDialog';
 import { libraryService } from "../../services";
-import ProcessingStatusIcon, { ProcessingStatus } from '../processingStatusIcon';
-
-const AssignList = ({ pages }) => {
-	return (
-		<TableContainer>
-			<Table >
-				<TableBody>
-					{pages.map((page) => (
-						<TableRow key={page.sequenceNumber}>
-							<TableCell component="th" scope="row">
-								{page.sequenceNumber}
-							</TableCell>
-							<TableCell align="right"><ProcessingStatusIcon status={page.assignStatus} /></TableCell>
-						</TableRow>
-					))}
-				</TableBody>
-			</Table>
-		</TableContainer>
-	);
-}
+import AssignList, { ProcessingStatus } from './processingStatusIcon';
 
 function SimpleDialog({ onClose, open, selectedPages, onAssigned }) {
-	const intl = useIntl();
 	const [busy, setBusy] = useState(false);
 	const [selectedAccount, setSelectedAccount] = useState(null);
 	const [pagesStatus, setPagesStatus] = useState([]);
@@ -45,7 +20,7 @@ function SimpleDialog({ onClose, open, selectedPages, onAssigned }) {
 	}, [selectedPages]);
 
 	const handleClose = (success = false) => {
-		if (success && onAssigned) {
+		if (pagesStatus.filter(x => x.assignStatus === ProcessingStatus.Complete).length > 0 && onAssigned) {
 			onAssigned();
 		}
 		onClose();
