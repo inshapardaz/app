@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const EditorDialog = ({ show, busy, title, onCancelled, children }) => {
+const EditorDialog = ({ show, busy, title, onCancelled, children, submitButton }) => {
 	const classes = useStyles();
 
 	return (

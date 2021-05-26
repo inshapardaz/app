@@ -2,35 +2,16 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
-import { green, red, } from '@material-ui/core/colors';
 import { FormattedMessage, useIntl } from "react-intl";
 import WritersDropDown from '../account/writersDropdown';
 import EditorDialog from '../editorDialog';
 import { libraryService } from "../../services";
-
-const getStatusIcon = (status) => {
-	if (status === 'pending') {
-		return (<ScheduleIcon />);
-	}
-	else if (status === 'processing') {
-		return (<HourglassEmptyIcon />);
-	}
-	else if (status === 'complete') {
-		return (<CheckCircleOutlineIcon style={{ color: green[500] }} />);
-	}
-	else if (status === 'error') {
-		return (<ErrorOutlineIcon style={{ color: red[500] }} />);
-	}
-}
+import ProcessingStatusIcon, { ProcessingStatus } from '../processingStatusIcon';
 
 const AssignList = ({ pages }) => {
 	return (
@@ -42,7 +23,7 @@ const AssignList = ({ pages }) => {
 							<TableCell component="th" scope="row">
 								{page.sequenceNumber}
 							</TableCell>
-							<TableCell align="right">{getStatusIcon(page.assignStatus)}</TableCell>
+							<TableCell align="right"><ProcessingStatusIcon status={page.assignStatus} /></TableCell>
 						</TableRow>
 					))}
 				</TableBody>
@@ -59,7 +40,7 @@ function SimpleDialog({ onClose, open, selectedPages, onAssigned }) {
 
 	useEffect(() => {
 		if (selectedPages) {
-			setPagesStatus(selectedPages.map(p => ({ sequenceNumber: p.sequenceNumber, assignStatus: 'pending' })))
+			setPagesStatus(selectedPages.map(p => ({ sequenceNumber: p.sequenceNumber, assignStatus: ProcessingStatus.Pending })))
 		}
 	}, [selectedPages]);
 
@@ -88,13 +69,13 @@ function SimpleDialog({ onClose, open, selectedPages, onAssigned }) {
 		selectedPages.map(page => {
 			if (page !== null && page !== undefined) {
 				if (page.links.assign) {
-					setPageStatus(page, 'processing')
+					setPageStatus(page, ProcessingStatus.Processing)
 					return promises.push(libraryService.post(page.links.assign, { AccountId: selectedAccount.id })
-						.then(() => setPageStatus(page, 'complete'))
-						.catch(() => setPageStatus(page, 'error')));
+						.then(() => setPageStatus(page, ProcessingStatus.Complete))
+						.catch(() => setPageStatus(page, ProcessingStatus.Error)));
 				}
 				else {
-					setPageStatus(page, 'skipped')
+					setPageStatus(page, ProcessingStatus.Skipped)
 				}
 			}
 
@@ -106,7 +87,7 @@ function SimpleDialog({ onClose, open, selectedPages, onAssigned }) {
 			.catch(e => console.error(e));
 	};
 
-	const hasProcessablePages = pagesStatus.filter(x => x.assignStatus === 'error' || x.assignStatus === 'pending').length > 0;
+	const hasProcessablePages = pagesStatus.filter(x => x.assignStatus === ProcessingStatus.Error || x.assignStatus === ProcessingStatus.Pending).length > 0;
 
 	return (
 		<EditorDialog show={open} busy={busy}

@@ -1,48 +1,92 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useSnackbar } from 'notistack';
+import React, { useState, useEffect } from "react";
 
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+import EditorDialog from '../editorDialog';
 import LinkIcon from '@material-ui/icons/Link';
-import LayersIcon from '@material-ui/icons/Layers';
-import { FormattedMessage, useIntl } from "react-intl";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableRow from '@material-ui/core/TableRow';
+import { FormattedMessage } from "react-intl";
 import { blue } from '@material-ui/core/colors';
 import { libraryService } from "../../services";
+import ProcessingStatusIcon, { ProcessingStatus } from '../processingStatusIcon';
 
-const useStyles = makeStyles({
-	avatar: {
-		backgroundColor: blue[100],
-		color: blue[600],
-	},
-});
-
+const AssignList = ({ pages }) => {
+	return (
+		<TableContainer>
+			<Table >
+				<TableBody>
+					{pages.map((page) => (
+						<TableRow key={page.sequenceNumber}>
+							<TableCell component="th" scope="row">
+								{page.sequenceNumber}
+							</TableCell>
+							<TableCell align="right"><ProcessingStatusIcon status={page.assignStatus} /></TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
+	);
+}
 function SimpleDialog(props) {
-	const classes = useStyles();
-	const intl = useIntl();
-	const { enqueueSnackbar } = useSnackbar();
+	const [busy, setBusy] = useState(false);
 	const { onClose, open, book, selectedPages, onUpdated } = props;
+	const [pagesStatus, setPagesStatus] = useState([]);
 	const [chapters, setChapters] = useState(null);
+	const [selectedChapter, setSelectedChapter] = useState(null);
+
+	useEffect(() => {
+		if (selectedPages) {
+			setPagesStatus(selectedPages.map(p => ({ sequenceNumber: p.sequenceNumber, assignStatus: ProcessingStatus.Pending })))
+		}
+	}, [selectedPages]);
 
 	const handleClose = (success = false) => {
-		if (success && onUpdated) onUpdated();
+		if (success && onUpdated) {
+			onUpdated();
+		}
+
 		onClose();
 	};
 
-	const handleListItemClick = (chapter) => {
+	const setPageStatus = (page, status) => {
+		var newPages = pagesStatus.map(p => {
+			if (p.sequenceNumber === page.sequenceNumber) {
+				p.assignStatus = status;
+			}
+
+			return p;
+		});
+
+		setPagesStatus(newPages);
+	}
+
+	const handleListItemClick = (chapterId) => {
+		setSelectedChapter(chapters.find(c => c.id = chapterId));
+	};
+
+	const handleSubmit = () => {
 		var promises = [];
-		selectedPages.map(p => {
-			if (p !== null && p !== undefined) {
-				if (p.links.update) {
-					p.chapterId = chapter.id;
-					return promises.push(libraryService.put(p.links.update, p));
+		setBusy(true);
+		selectedPages.map(page => {
+			if (page !== null && page !== undefined) {
+				if (page.links.update) {
+					setPageStatus(page, ProcessingStatus.Processing)
+					page.chapterId = selectedChapter.id;
+					return promises.push(libraryService.put(page.links.update, page)
+						.then(() => setPageStatus(page, ProcessingStatus.Complete))
+						.catch(() => setPageStatus(page, ProcessingStatus.Error)));
+				}
+				else {
+					setPageStatus(page, ProcessingStatus.Skipped)
 				}
 			}
 
@@ -50,9 +94,8 @@ function SimpleDialog(props) {
 		});
 
 		Promise.all(promises)
-			.then(() => enqueueSnackbar(intl.formatMessage({ id: 'message.saved' }), { variant: 'success' }))
-			.then(() => handleClose(true))
-			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'message.error.saving' }), { variant: 'error' }));
+			.then(() => setBusy(false))
+			.catch(e => console.error(e));
 	};
 
 	useEffect(() => {
@@ -63,22 +106,34 @@ function SimpleDialog(props) {
 			})
 	}, [open]);
 
+	const hasProcessablePages = pagesStatus.filter(x => x.assignStatus === ProcessingStatus.Error || x.assignStatus === ProcessingStatus.Pending).length > 0;
+
+
 	return (
-		<Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-			<DialogTitle id="simple-dialog-title"><FormattedMessage id="pages.associateWithChapter" /></DialogTitle>
-			<List>
-				{chapters != null && chapters.map((chapter) => (
-					<ListItem button onClick={() => handleListItemClick(chapter)} key={chapter.id}>
-						<ListItemAvatar>
-							<Avatar className={classes.avatar}>
-								<LayersIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary={chapter.title} />
-					</ListItem>
-				))}
-			</List>
-		</Dialog>
+		<EditorDialog show={open} busy={busy}
+			title={<FormattedMessage id="pages.associateWithChapter" />}
+			onCancelled={handleClose} >
+			<FormControl fullWidth>
+				<InputLabel id="chapter-select"><FormattedMessage id="chapter.toolbar.chapters" /></InputLabel>
+				<Select
+					labelId="chapter-select"
+					id="demo-simple-select"
+					value={selectedChapter != null ? selectedChapter.id : ''}
+					onChange={(e) => handleListItemClick(e.target.value)}
+				>
+					{chapters != null && chapters.map((chapter) => (
+						<MenuItem key={chapter.id} value={chapter.id}>{chapter.title}</MenuItem>))}
+				</Select>
+			</FormControl>
+			<AssignList pages={pagesStatus} />
+			<Button aria-controls="get-text" aria-haspopup="false" onClick={handleSubmit}
+				disabled={!selectedChapter || !hasProcessablePages}
+				startIcon={<LinkIcon />} fullWidth
+				variant="contained"
+				color="primary">
+				<FormattedMessage id="pages.associateWithChapter" />
+			</Button>
+		</EditorDialog>
 	);
 }
 
