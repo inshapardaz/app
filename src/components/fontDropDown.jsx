@@ -4,7 +4,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FontDownloadIcon from '@material-ui/icons/FontDownload';
-import { useIntl, FormattedMessage } from "react-intl";
+import { useIntl } from "react-intl";
 
 const getFonts = (intl) => [
 	{
@@ -37,7 +37,7 @@ const getFonts = (intl) => [
 	}
 ];
 
-const FontDropdown = ({ value, onFontSelected, storageKey }) => {
+const FontDropdown = ({ value, onFontSelected, storageKey, variant }) => {
 	const intl = useIntl();
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const fonts = getFonts(intl);
@@ -69,8 +69,8 @@ const FontDropdown = ({ value, onFontSelected, storageKey }) => {
 	};
 
 	return (
-		<div>
-			<Button aria-controls="chapters-menu" aria-haspopup="true" onClick={handleClick} startIcon={<FontDownloadIcon />} endIcon={<ExpandMoreIcon />}>
+		<>
+			<Button variant={variant} aria-controls="font-menu" aria-haspopup="true" onClick={handleClick} startIcon={<FontDownloadIcon />} endIcon={<ExpandMoreIcon />}>
 				{font !== null ? font.value : intl.formatMessage({ id: "font.none" })}
 			</Button>
 			<Menu
@@ -85,7 +85,7 @@ const FontDropdown = ({ value, onFontSelected, storageKey }) => {
 					fonts.map(f => <MenuItem key={f.key} onClick={() => onSelected(f)} value={f.key}>{f.value}</MenuItem>)
 				}
 			</Menu>
-		</div >
+		</ >
 	);
 
 }

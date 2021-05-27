@@ -5,12 +5,13 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
 	editor: {
+		fontFamily: props => `${props.font}`,
 		fontSize: props => `${props.textScale}em`,
 	}
 });
 
-const Editor = ({ data, textScale, onChange, fullScreen }) => {
-	const classes = useStyles({ textScale });
+const Editor = ({ data, textScale, font, onChange, fullScreen }) => {
+	const classes = useStyles({ textScale, font });
 
 	return (<div className={`${classes.editor} ${fullScreen ? 'fullScreen' : ''}`}>
 		<CKEditor

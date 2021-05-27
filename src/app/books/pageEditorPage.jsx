@@ -10,7 +10,7 @@ import ErrorMessage from '../../components/ErrorMessage';
 import Loading from '../../components/Loading';
 import ImageViewer from '../../components/imageViewer';
 import { libraryService } from '../../services';
-import { ButtonGroup, Button, Toolbar, Typography, Divider } from '@material-ui/core';
+import { ButtonGroup, Button, Toolbar, Typography, Divider, Tooltip } from '@material-ui/core';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import SaveIcon from '@material-ui/icons/Save';
@@ -21,6 +21,7 @@ import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import CloseIcon from '@material-ui/icons/Close';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import Editor from '../../components/editor';
+import FontDropdown from '../../components/fontDropDown';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const PageLink = ({ children, bookId, pageId }) => {
+const PageLink = ({ children, bookId, pageId, title }) => {
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(null);
 	const loadData = () => {
@@ -66,9 +67,13 @@ const PageLink = ({ children, bookId, pageId }) => {
 	if (loading) return null;
 	if (page == null) return null;
 
-	return <Button component={Link} to={`/books/${bookId}/pages/${pageId}/editor`} >
-		{children}
-	</Button>
+	return (
+		<Tooltip title={title}>
+			<Button component={Link} to={`/books/${bookId}/pages/${pageId}/editor`} >
+				{children}
+			</Button>
+		</Tooltip >
+	);
 }
 const PageEditorPage = () => {
 	const classes = useStyles();
@@ -78,7 +83,7 @@ const PageEditorPage = () => {
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const [fullScreen, setFullScreen] = useState(false);
-	const [font, setFont] = useState('Dubai');
+	const [font, setFont] = useState(localStorage.getItem('editorFont') || 'Dubai');
 	const [text, setText] = useState("");
 	const [page, setPage] = useState(null);
 	const [scale, setScale] = useState(100);
@@ -161,21 +166,26 @@ const PageEditorPage = () => {
 				<Grid item xs={6} className={classes.pane}>
 					<Toolbar>
 						<Typography ><FormattedMessage id="page.editor.header.edit" values={{ sequenceNumber: pageId }} /></Typography>
-						<Button onClick={saveText}>
-							<SaveIcon /> <FormattedMessage id="action.save" />
-						</Button>
-						{page.links.assign_to_me &&
-							<Button onClick={assignPage}>
-								<AssignmentIndIcon /> <FormattedMessage id="page.assignedToMe.label" />
+						<Tooltip title={<FormattedMessage id="action.save" />}>
+							<Button onClick={saveText}>
+								<SaveIcon />
 							</Button>
+						</Tooltip>
+						{page.links.assign_to_me &&
+							<Tooltip title={<FormattedMessage id="page.assignedToMe.label" />}>
+								<Button onClick={assignPage}>
+									<AssignmentIndIcon />
+								</Button>
+							</Tooltip>
 						}
 						<div className={classes.grow} />
 						<ButtonGroup size="small" aria-label="small outlined button group">
+							<FontDropdown variant="outlined" value={font} onFontSelected={f => setFont(f)} storageKey={"editorFont"} />
 							<Button onClick={onZoomInText} disabled={parseFloat(textScale) >= 3}><ZoomInIcon /></Button>
 							<Button onClick={onZoomOutText} disabled={parseFloat(textScale) <= 1}><ZoomOutIcon /></Button>
 						</ButtonGroup>
 					</Toolbar>
-					<Editor data={text} onChange={content => setText(content)} textScale={textScale} fullScreen={fullScreen} />
+					<Editor data={text} onChange={content => setText(content)} textScale={textScale} fullScreen={fullScreen} font={font} />
 				</Grid>
 				<Grid item xs={6} className={classes.pane}>
 					<Toolbar>
@@ -184,11 +194,13 @@ const PageEditorPage = () => {
 							<Button onClick={onZoomOut}><ZoomOutIcon /></Button>
 						</ButtonGroup>
 						<div className={classes.grow} />
-						<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}>
-							<KeyboardArrowRightIcon /> <FormattedMessage id="page.edit.previous" />
+						<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}
+							title={<FormattedMessage id="page.edit.previous" />}>
+							<KeyboardArrowRightIcon />
 						</PageLink>
-						<PageLink bookId={bookId} pageId={parseInt(pageId) + 1} >
-							<FormattedMessage id="page.edit.next" /> <KeyboardArrowLeftIcon />
+						<PageLink bookId={bookId} pageId={parseInt(pageId) + 1}
+							title={<FormattedMessage id="page.edit.next" />}>
+							<KeyboardArrowLeftIcon />
 						</PageLink>
 						<Button onClick={() => setFullScreen(!fullScreen)}>
 							{fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
