@@ -13,6 +13,7 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import KeyboardHideIcon from '@material-ui/icons/KeyboardHide';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import LayersIcon from '@material-ui/icons/Layers';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import SpellcheckIcon from '@material-ui/icons/Spellcheck';
 import DoneIcon from '@material-ui/icons/Done';
 import PhotoFilterIcon from '@material-ui/icons/PhotoFilter';
@@ -25,6 +26,7 @@ import PageStatus from '../../models/pageStatus';
 import BookPageProgress from '../pages/bookPageProgress';
 import BookEditor from '../books/bookEditor';
 import { Typography } from '@material-ui/core';
+import { libraryService } from "../../services";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -55,6 +57,32 @@ const getPageCountInStatus = (book, status) => {
 		return 0;
 	}
 
+	return null;
+}
+
+const DownloadButton = ({ book }) => {
+	const intl = useIntl();
+
+	const onClick = () => {
+		libraryService.download(book.links.download)
+			.then(blob => {
+				const url = window.URL.createObjectURL(new Blob([blob], { type: 'text/plain', name: `${book.title.txt}` }));
+				const link = document.createElement('a');
+				link.href = url;
+				link.setAttribute('download', `${book.title}.txt`);
+				document.body.appendChild(link);
+				link.click();
+				link.parentNode.removeChild(link);
+			});
+	}
+	if (book && book.links && book.links.download) {
+		return (<ListItem button onClick={onClick}>
+			<ListItemIcon>
+				<GetAppIcon />
+			</ListItemIcon>
+			<ListItemText primary={intl.formatMessage({ id: `action.download` })} />
+		</ListItem>);
+	}
 	return null;
 }
 
@@ -170,6 +198,7 @@ const PagesSidebar = ({ book, filter, onStatusFilter, onUpdated, assignmentFilte
 			<Typography variant="h5">{book != null ? book.title : ''}</Typography>
 			{renderEditLink()}
 			{renderChaptersLink()}
+			<DownloadButton book={book} />
 			<Divider />
 			<List component="nav" aria-label="status filters" dense>
 				<ListSubheader component="div">

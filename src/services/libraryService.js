@@ -23,6 +23,10 @@ const _get = (url, language = "en") => {
 		.then(data => _parseObject(data));
 };
 
+const download = (url) => {
+	return fetchWrapper.downloadFile(url);
+};
+
 const _post = (url, contents, contentType = 'application/json', language = "en") => {
 	if (contents) {
 		delete contents.links;
@@ -130,6 +134,7 @@ export const libraryService =
 	put: _put,
 	delete: _delete,
 	upload: _upload,
+	download: download,
 	postFile: _postFile,
 	postMultipleFile: _postMultipleFile,
 	getEntry: () => _get(`${libraryUrl()}`),

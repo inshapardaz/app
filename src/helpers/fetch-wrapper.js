@@ -7,7 +7,8 @@ export const fetchWrapper = {
     put,
 	delete: _delete,
 	putFile,
-	postFile
+	postFile,
+	downloadFile
 }
 
 function get(url, headers = {}) {
@@ -36,6 +37,16 @@ function put(url, body, headers = {}) {
         body: JSON.stringify(body)
     };
     return fetch(url, requestOptions).then(handleResponse);
+}
+
+function downloadFile(url, headers = {})
+{
+	const requestOptions = {
+        method: 'GET',
+        headers: authHeader(url),
+        ...headers
+    };
+    return fetch(url, requestOptions).then(response => response.blob());
 }
 
 function putFile(url, body, headers = {}) {

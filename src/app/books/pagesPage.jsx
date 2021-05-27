@@ -10,7 +10,6 @@ const PagesPage = () => {
 	const [book, setBook] = useState(null);
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [showEditor, setShowEditor] = useState(false);
 
 	const loadData = () => {
 		libraryService.getBook(bookId)
@@ -23,14 +22,8 @@ const PagesPage = () => {
 		loadData();
 	}, [bookId]);
 
-	const handleClose = () => {
-		setShowEditor(false);
-	};
-
 	const onBookSaved = () => {
 		loadData();
-
-		handleClose();
 	}
 
 	if (loading) return <Loading />
