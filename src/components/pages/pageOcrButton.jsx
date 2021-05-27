@@ -75,7 +75,7 @@ function SimpleDialog(props) {
 
 	const handleClose = () => {
 		if (!storeApiKey) setKey('');
-		onClose();
+		onClose(pagesStatus.filter(p => p.ocrStatus === 'complete').length > 0);
 	};
 
 	const setPageStatus = (page, status) => {
@@ -94,7 +94,7 @@ function SimpleDialog(props) {
 		var promises = [];
 		setBusy(true);
 		selectedPages.map(page => {
-			if (page !== null && page !== undefined && page.ocrStatus !== 'completed') {
+			if (page !== null && page !== undefined && page.ocrStatus !== 'complete') {
 				if (page.links.ocr) {
 					setPageStatus(page, 'processing')
 					return promises.push(libraryService.post(page.links.ocr, key)
@@ -117,6 +117,10 @@ function SimpleDialog(props) {
 				}
 				else {
 					localStorage.removeItem("ocr.key");
+				}
+
+				if (pagesStatus.filter(p => p.ocrStatus === 'error').length === 0) {
+					handleClose();
 				}
 			})
 			.catch(e => console.error(e));
@@ -166,14 +170,18 @@ SimpleDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 };
 
-const PageOcrButton = ({ selectedPages }) => {
+const PageOcrButton = ({ selectedPages, onComplete }) => {
 	const [open, setOpen] = useState(false);
 
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
 
-	const handleClose = () => {
+	const handleClose = (completed = false) => {
+
+		if (completed) {
+			onComplete && onComplete();
+		}
 		setOpen(false);
 	};
 

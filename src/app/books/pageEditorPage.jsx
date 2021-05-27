@@ -16,12 +16,18 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import SaveIcon from '@material-ui/icons/Save';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import SpellcheckIcon from '@material-ui/icons/Spellcheck';
+import DoneIcon from '@material-ui/icons/Done';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import CloseIcon from '@material-ui/icons/Close';
 import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import Editor from '../../components/editor';
 import FontDropdown from '../../components/fontDropDown';
+import PageStatus from '../../models/pageStatus';
+import PageAssignButton from '../../components/pages/pageAssignButton';
+import PageOcrButton from '../../components/pages/pageOcrButton';
+import PageStatusIcon from '../../components/pages/pageStatusIcon';
+import { green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
@@ -45,6 +51,13 @@ const useStyles = makeStyles((theme) => ({
 	grow: {
 		flexGrow: 1
 	},
+	doneButton: {
+		color: theme.palette.getContrastText(green[500]),
+		backgroundColor: green[500],
+		'&:hover': {
+			backgroundColor: green[700],
+		}
+	}
 }));
 
 const PageLink = ({ children, bookId, pageId, title }) => {
@@ -75,6 +88,45 @@ const PageLink = ({ children, bookId, pageId, title }) => {
 		</Tooltip >
 	);
 }
+
+const CompleteButton = ({ page, onUpdated }) => {
+	const classes = useStyles();
+	const [busy, setBusy] = useState(false);
+	const { enqueueSnackbar } = useSnackbar();
+	const intl = useIntl();
+
+	let icon = null;
+	let newStatus = null;
+
+	if (page.status === PageStatus.Typing) {
+		newStatus = PageStatus.Typed;
+		icon = <SpellcheckIcon />;
+	}
+	else if (page.status === PageStatus.InReview) {
+		newStatus = PageStatus.Completed;
+		icon = <DoneIcon />;
+	}
+	else {
+		return null;
+	}
+
+	const onComplete = () => {
+		if (page.links.update && newStatus) {
+			setBusy(true);
+			page.status = newStatus;
+			libraryService.put(page.links.update, page)
+				.then(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.saved' }), { variant: 'success' }))
+				.then(() => onUpdated && onUpdated())
+				.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.error.saving' }), { variant: 'error' }))
+				.finally(() => setBusy(false));
+		}
+	}
+
+	return (<Button startIcon={icon} variant="contained" color="primary" className={classes.doneButton} onClick={onComplete} disabled={busy}>
+		<FormattedMessage id="action.done" />
+	</Button>);
+}
+
 const PageEditorPage = () => {
 	const classes = useStyles();
 	const intl = useIntl();
@@ -122,6 +174,7 @@ const PageEditorPage = () => {
 			setFont('Dubai');
 			localStorage.setItem('editorFont', 'Dubai');
 		}
+
 		libraryService.getPage(bookId, pageId)
 			.then(data => {
 				setPage(data);
@@ -130,14 +183,6 @@ const PageEditorPage = () => {
 			.catch(() => setError(true))
 			.finally(() => setLoading(false));
 	};
-
-	const assignPage = () => {
-		libraryService.post(page.links.assign_to_me)
-			.then(() => {
-				enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.assigned' }), { variant: 'success' })
-			})
-			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.assigned' }), { variant: 'error' }))
-	}
 
 	useEffect(() => {
 		loadData();
@@ -160,24 +205,32 @@ const PageEditorPage = () => {
 
 	if (!loading && page == null) return <ErrorMessage message="Page not found" />;
 
+	var header = '';
+	if (page.status === PageStatus.Typing) {
+		header = (<FormattedMessage id="page.editor.header.edit" values={{ sequenceNumber: pageId }} />);
+	}
+	else if (page.status === PageStatus.InReview) {
+		header = (<FormattedMessage id="page.editor.header.proofread" values={{ sequenceNumber: pageId }} />);
+	}
+	else
+		header = (<FormattedMessage id="page.editor.header" values={{ sequenceNumber: pageId }} />);
+
 	return (
 		<>
 			<Grid alignContent="stretch" alignItems="stretch" direction="row" container className={`${classes.container} ${fullScreen ? classes.fullScreen : ''}`}>
 				<Grid item xs={6} className={classes.pane}>
 					<Toolbar>
-						<Typography ><FormattedMessage id="page.editor.header.edit" values={{ sequenceNumber: pageId }} /></Typography>
+						<PageStatusIcon status={page.status} />
+						<Typography >{header}</Typography>
 						<Tooltip title={<FormattedMessage id="action.save" />}>
 							<Button onClick={saveText}>
 								<SaveIcon />
 							</Button>
 						</Tooltip>
 						{page.links.assign_to_me &&
-							<Tooltip title={<FormattedMessage id="page.assignedToMe.label" />}>
-								<Button onClick={assignPage}>
-									<AssignmentIndIcon />
-								</Button>
-							</Tooltip>
+							<PageAssignButton selectedPages={[page]} />
 						}
+						{page.links.ocr && <PageOcrButton selectedPages={[page]} onComplete={loadData} />}
 						<div className={classes.grow} />
 						<ButtonGroup size="small" aria-label="small outlined button group">
 							<FontDropdown variant="outlined" value={font} onFontSelected={f => setFont(f)} storageKey={"editorFont"} />
@@ -194,6 +247,7 @@ const PageEditorPage = () => {
 							<Button onClick={onZoomOut}><ZoomOutIcon /></Button>
 						</ButtonGroup>
 						<div className={classes.grow} />
+						<CompleteButton page={page} onUpdated={loadData} />
 						<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}
 							title={<FormattedMessage id="page.edit.previous" />}>
 							<KeyboardArrowRightIcon />

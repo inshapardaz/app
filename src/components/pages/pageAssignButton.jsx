@@ -25,7 +25,8 @@ const PageAssignButton = ({ selectedPages, onAssigned }) => {
 
 		Promise.all(promises)
 			.then(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.assigned' }), { variant: 'success' }))
-			.then(() => onAssigned())
+			.then(() => onAssigned && onAssigned())
+			.catch(e => console.error(e))
 			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.assigned' }), { variant: 'error' }));
 	}, [selectedPages]);
 

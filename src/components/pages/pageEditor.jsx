@@ -72,27 +72,6 @@ const PageEditor = ({ show, page, pageNumber, createLink, onSaved, onCancelled }
 		setBusy(false)
 	};
 
-	/*const onImageUpload = (files) => {
-		if (files.length < 1) {
-			return;
-		}
-
-		if (page && page.links.image_upload !== null) {
-			libraryService.upload(page.links.image_upload, files[0])
-				.then(() => {
-					if (newCover) {
-						return uploadImage(page.links.image_upload);
-					}
-					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.saved' }), { variant: 'success' })
-					onSaved();
-				})
-				.catch(() => {
-					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.error.saving' }), { variant: 'error' })
-				})
-				.finally(() => setBusy(false));
-		}
-	};*/
-
 	const handleImageUpload = (file) => {
 		if (file) {
 			setNewCover(file);
