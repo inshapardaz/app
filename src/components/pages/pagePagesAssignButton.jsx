@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { FormattedMessage } from "react-intl";
+import { Tooltip } from '@material-ui/core';
 import WritersDropDown from '../account/writersDropdown';
 import EditorDialog from '../editorDialog';
 import { libraryService } from "../../services";
@@ -86,7 +87,7 @@ SimpleDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 };
 
-const PagePagesAssignButton = ({ selectedPages, onAssigned }) => {
+const PagePagesAssignButton = ({ selectedPages, onAssigned, showText = true }) => {
 	const [open, setOpen] = useState(false);
 	const [selectedValue, setSelectedValue] = useState([]);
 
@@ -99,11 +100,20 @@ const PagePagesAssignButton = ({ selectedPages, onAssigned }) => {
 		setSelectedValue(value);
 	};
 
+	var button = showText ? (<Button disabled={selectedPages.length < 1} onClick={handleClickOpen} startIcon={<PersonAddIcon />}>
+		{showText && <FormattedMessage id="pages.assignToUser" />}
+	</Button>)
+		: (<IconButton disabled={selectedPages.length < 1} onClick={handleClickOpen}>
+			<PersonAddIcon />
+		</IconButton>)
+
 	return (
 		<>
-			<Button disabled={selectedPages.length < 1} onClick={handleClickOpen} startIcon={<PersonAddIcon />}>
-				<FormattedMessage id="pages.assignToUser" />
-			</Button>
+			<Tooltip title={<FormattedMessage id="pages.assignToUser" />} >
+				<span>
+					{button}
+				</span>
+			</Tooltip>
 			<SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} onAssigned={onAssigned} selectedPages={selectedPages} />
 		</>
 	);

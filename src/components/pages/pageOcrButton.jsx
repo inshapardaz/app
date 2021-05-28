@@ -6,7 +6,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { FormattedMessage, useIntl } from "react-intl";
 import { libraryService } from "../../services";
-import { TextField, Typography } from '@material-ui/core';
+import { IconButton, TextField, Tooltip, Typography } from '@material-ui/core';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
@@ -170,7 +170,7 @@ SimpleDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 };
 
-const PageOcrButton = ({ selectedPages, onComplete }) => {
+const PageOcrButton = ({ selectedPages, onComplete, showText = true }) => {
 	const [open, setOpen] = useState(false);
 
 	const handleClickOpen = () => {
@@ -185,11 +185,20 @@ const PageOcrButton = ({ selectedPages, onComplete }) => {
 		setOpen(false);
 	};
 
+	var button = showText ? (<Button disabled={selectedPages.length < 1} onClick={handleClickOpen} startIcon={<FindInPageIcon />}>
+		<FormattedMessage id="pages.ocr" />
+	</Button>)
+		: (<IconButton disabled={selectedPages.length < 1} onClick={handleClickOpen} >
+			<FindInPageIcon />
+		</IconButton>)
+
 	return (
 		<>
-			<Button disabled={selectedPages.length < 1} onClick={handleClickOpen} startIcon={<FindInPageIcon />}>
-				<FormattedMessage id="pages.ocr" />
-			</Button>
+			<Tooltip title={<FormattedMessage id="pages.ocr" />}>
+				<span>
+					{button}
+				</span>
+			</Tooltip>
 			<SimpleDialog open={open} onClose={handleClose} selectedPages={selectedPages} />
 		</>
 	);

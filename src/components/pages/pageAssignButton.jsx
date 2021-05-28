@@ -5,8 +5,9 @@ import Button from '@material-ui/core/Button';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 import { libraryService } from "../../services";
+import { IconButton, Tooltip } from '@material-ui/core';
 
-const PageAssignButton = ({ selectedPages, onAssigned }) => {
+const PageAssignButton = ({ selectedPages, onAssigned, showText = true }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
 
@@ -30,13 +31,20 @@ const PageAssignButton = ({ selectedPages, onAssigned }) => {
 			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.assigned' }), { variant: 'error' }));
 	}, [selectedPages]);
 
+	var button = showText ? (<Button disabled={selectedPages.length <= 0} onClick={onAssignToMe} startIcon={<AssignmentIndIcon />}>
+		<FormattedMessage id="page.assignedToMe.label" />
+	</Button>)
+		: (<IconButton disabled={selectedPages.length <= 0}
+			onClick={onAssignToMe} >
+			<AssignmentIndIcon />
+		</IconButton>)
+
 	return (
-		<Button
-			disabled={selectedPages.length <= 0}
-			onClick={onAssignToMe}
-			startIcon={<AssignmentIndIcon />}>
-			<FormattedMessage id="page.assignedToMe.label" />
-		</Button>
+		<Tooltip title={<FormattedMessage id="page.assignedToMe.label" />}>
+			<span>
+				{button}
+			</span>
+		</Tooltip>
 	);
 };
 

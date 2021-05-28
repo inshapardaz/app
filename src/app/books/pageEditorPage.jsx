@@ -10,7 +10,7 @@ import ErrorMessage from '../../components/ErrorMessage';
 import Loading from '../../components/Loading';
 import ImageViewer from '../../components/imageViewer';
 import { libraryService } from '../../services';
-import { ButtonGroup, Button, Toolbar, Typography, Divider, Tooltip } from '@material-ui/core';
+import { ButtonGroup, Button, Toolbar, Typography, Divider, Tooltip, IconButton } from '@material-ui/core';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import SaveIcon from '@material-ui/icons/Save';
@@ -223,14 +223,14 @@ const PageEditorPage = () => {
 						<PageStatusIcon status={page.status} />
 						<Typography >{header}</Typography>
 						<Tooltip title={<FormattedMessage id="action.save" />}>
-							<Button onClick={saveText}>
+							<IconButton onClick={saveText}>
 								<SaveIcon />
-							</Button>
+							</IconButton>
 						</Tooltip>
 						{page.links.assign_to_me &&
-							<PageAssignButton selectedPages={[page]} />
+							<PageAssignButton selectedPages={[page]} showText={false} />
 						}
-						{page.links.ocr && <PageOcrButton selectedPages={[page]} onComplete={loadData} />}
+						{page.links.ocr && <PageOcrButton selectedPages={[page]} onComplete={loadData} showText={false} />}
 						<div className={classes.grow} />
 						<ButtonGroup size="small" aria-label="small outlined button group">
 							<FontDropdown variant="outlined" value={font} onFontSelected={f => setFont(f)} storageKey={"editorFont"} />
