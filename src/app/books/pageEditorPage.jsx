@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const PageLink = ({ children, bookId, pageId, title }) => {
+const PageLink = ({ icon, bookId, pageId, title }) => {
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(null);
 	const loadData = () => {
@@ -82,9 +82,9 @@ const PageLink = ({ children, bookId, pageId, title }) => {
 
 	return (
 		<Tooltip title={title}>
-			<Button component={Link} to={`/books/${bookId}/pages/${pageId}/editor`} >
-				{children}
-			</Button>
+			<IconButton component={Link} to={`/books/${bookId}/pages/${pageId}/editor`} >
+				{icon}
+			</IconButton>
 		</Tooltip >
 	);
 }
@@ -249,19 +249,19 @@ const PageEditorPage = () => {
 						<div className={classes.grow} />
 						<CompleteButton page={page} onUpdated={loadData} />
 						<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}
-							title={<FormattedMessage id="page.edit.previous" />}>
-							<KeyboardArrowRightIcon />
+							title={<FormattedMessage id="page.edit.previous" />}
+							icon={<KeyboardArrowRightIcon />}>
 						</PageLink>
 						<PageLink bookId={bookId} pageId={parseInt(pageId) + 1}
-							title={<FormattedMessage id="page.edit.next" />}>
-							<KeyboardArrowLeftIcon />
+							title={<FormattedMessage id="page.edit.next" />}
+							icon={<KeyboardArrowLeftIcon />} >
 						</PageLink>
-						<Button onClick={() => setFullScreen(!fullScreen)}>
+						<IconButton onClick={() => setFullScreen(!fullScreen)}>
 							{fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-						</Button>
-						<Button component={Link} to={`/books/${bookId}/pages`}>
+						</IconButton>
+						<IconButton component={Link} to={`/books/${bookId}/pages`}>
 							<CloseIcon />
-						</Button>
+						</IconButton>
 					</Toolbar>
 					<ImageViewer scale={scale}
 						imageUrl={page && page.links && page.links.image ? page.links.image : "/images/no_image.png"}
