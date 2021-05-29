@@ -115,7 +115,7 @@ const PageUploadButton = ({ pages, onAdd, onUploadStarted, onFilesUploaded }) =>
 				onCancelled={() => setShowFilesUpload(false)}  >
 				<DropzoneArea onChange={handleChange}
 					acceptedFiles={acceptFiles}
-					maxFileSize={104857600}
+					maxFileSize={200000000}
 					filesLimit={fileLimit}
 					showAlerts
 					dialogTitle={intl.formatMessage({ id: "page.action.upload" })}

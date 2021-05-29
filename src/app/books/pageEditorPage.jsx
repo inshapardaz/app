@@ -27,6 +27,9 @@ import PageStatus from '../../models/pageStatus';
 import PageAssignButton from '../../components/pages/pageAssignButton';
 import PageOcrButton from '../../components/pages/pageOcrButton';
 import PageStatusIcon from '../../components/pages/pageStatusIcon';
+import CropOriginalIcon from '@material-ui/icons/CropOriginal';
+import ImageIcon from '@material-ui/icons/Image';
+
 import { green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
@@ -134,22 +137,12 @@ const PageEditorPage = () => {
 	const { bookId, pageId } = useParams();
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [showImage, setShowImage] = useState(false);
 	const [fullScreen, setFullScreen] = useState(false);
 	const [font, setFont] = useState(localStorage.getItem('editorFont') || 'Dubai');
 	const [text, setText] = useState("");
 	const [page, setPage] = useState(null);
-	const [scale, setScale] = useState(100);
 	const [textScale, setTextScale] = useState(localStorage.getItem('editor.fontSize') || 1.0);
-
-	const onZoomIn = () => {
-		setScale(scale + 5);
-	};
-
-	const onZoomOut = () => {
-		if (scale > 5) {
-			setScale(scale - 5);
-		}
-	};
 
 	const onZoomInText = () => {
 		if (parseFloat(textScale) < 3.0) {
@@ -167,12 +160,26 @@ const PageEditorPage = () => {
 		}
 	};
 
+	const onShowImageChange = () => {
+		let newValue = !showImage;
+		setShowImage(newValue);
+		localStorage.setItem('editor.showImage', newValue);
+	}
+
 	const loadData = () => {
 		setLoading(true);
 		var editorFont = localStorage.getItem('editorFont');
 		if (editorFont == null) {
 			setFont('Dubai');
 			localStorage.setItem('editorFont', 'Dubai');
+		}
+
+		var shouldShowImage = localStorage.getItem('editor.showImage');
+		if (shouldShowImage != null) {
+			setShowImage(shouldShowImage === 'true');
+		}
+		else {
+			setShowImage(true);
 		}
 
 		libraryService.getPage(bookId, pageId)
@@ -217,57 +224,54 @@ const PageEditorPage = () => {
 
 	return (
 		<>
+			<Toolbar>
+				<PageStatusIcon status={page.status} />
+				<Typography >{header}</Typography>
+				<Tooltip title={<FormattedMessage id="action.save" />}>
+					<IconButton onClick={saveText}>
+						<SaveIcon />
+					</IconButton>
+				</Tooltip>
+				{page.links.assign_to_me &&
+					<PageAssignButton selectedPages={[page]} showText={false} />
+				}
+				{page.links.ocr && <PageOcrButton selectedPages={[page]} onComplete={loadData} showText={false} />}
+				<ButtonGroup size="small" aria-label="small outlined button group">
+					<FontDropdown variant="outlined" value={font} onFontSelected={f => setFont(f)} storageKey={"editorFont"} />
+					<Button onClick={onZoomInText} disabled={parseFloat(textScale) >= 3}><ZoomInIcon /></Button>
+					<Button onClick={onZoomOutText} disabled={parseFloat(textScale) <= 1}><ZoomOutIcon /></Button>
+				</ButtonGroup>
+				<div className={classes.grow} />
+				<CompleteButton page={page} onUpdated={loadData} />
+				<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}
+					title={<FormattedMessage id="page.edit.previous" />}
+					icon={<KeyboardArrowRightIcon />}>
+				</PageLink>
+				<PageLink bookId={bookId} pageId={parseInt(pageId) + 1}
+					title={<FormattedMessage id="page.edit.next" />}
+					icon={<KeyboardArrowLeftIcon />} >
+				</PageLink>
+				<Tooltip title={<FormattedMessage id="action.toggle.image" />}>
+					<IconButton onClick={onShowImageChange}>
+						{showImage ? <ImageIcon /> : <CropOriginalIcon />}
+					</IconButton>
+				</Tooltip>
+				<IconButton onClick={() => setFullScreen(!fullScreen)}>
+					{fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+				</IconButton>
+				<IconButton component={Link} to={`/books/${bookId}/pages`}>
+					<CloseIcon />
+				</IconButton>
+			</Toolbar>
 			<Grid alignContent="stretch" alignItems="stretch" direction="row" container className={`${classes.container} ${fullScreen ? classes.fullScreen : ''}`}>
-				<Grid item xs={6} className={classes.pane}>
-					<Toolbar>
-						<PageStatusIcon status={page.status} />
-						<Typography >{header}</Typography>
-						<Tooltip title={<FormattedMessage id="action.save" />}>
-							<IconButton onClick={saveText}>
-								<SaveIcon />
-							</IconButton>
-						</Tooltip>
-						{page.links.assign_to_me &&
-							<PageAssignButton selectedPages={[page]} showText={false} />
-						}
-						{page.links.ocr && <PageOcrButton selectedPages={[page]} onComplete={loadData} showText={false} />}
-						<div className={classes.grow} />
-						<ButtonGroup size="small" aria-label="small outlined button group">
-							<FontDropdown variant="outlined" value={font} onFontSelected={f => setFont(f)} storageKey={"editorFont"} />
-							<Button onClick={onZoomInText} disabled={parseFloat(textScale) >= 3}><ZoomInIcon /></Button>
-							<Button onClick={onZoomOutText} disabled={parseFloat(textScale) <= 1}><ZoomOutIcon /></Button>
-						</ButtonGroup>
-					</Toolbar>
+				<Grid item xs={showImage ? 6 : 12} className={classes.pane}>
 					<Editor data={text} onChange={content => setText(content)} textScale={textScale} fullScreen={fullScreen} font={font} />
 				</Grid>
-				<Grid item xs={6} className={classes.pane}>
-					<Toolbar>
-						<ButtonGroup size="small" aria-label="small outlined button group">
-							<Button onClick={onZoomIn}><ZoomInIcon /></Button>
-							<Button onClick={onZoomOut}><ZoomOutIcon /></Button>
-						</ButtonGroup>
-						<div className={classes.grow} />
-						<CompleteButton page={page} onUpdated={loadData} />
-						<PageLink bookId={bookId} pageId={parseInt(pageId) - 1}
-							title={<FormattedMessage id="page.edit.previous" />}
-							icon={<KeyboardArrowRightIcon />}>
-						</PageLink>
-						<PageLink bookId={bookId} pageId={parseInt(pageId) + 1}
-							title={<FormattedMessage id="page.edit.next" />}
-							icon={<KeyboardArrowLeftIcon />} >
-						</PageLink>
-						<IconButton onClick={() => setFullScreen(!fullScreen)}>
-							{fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
-						</IconButton>
-						<IconButton component={Link} to={`/books/${bookId}/pages`}>
-							<CloseIcon />
-						</IconButton>
-					</Toolbar>
-					<ImageViewer scale={scale}
-						imageUrl={page && page.links && page.links.image ? page.links.image : "/images/no_image.png"}
+				{showImage && <Grid item xs={6} className={classes.pane}>
+					<ImageViewer imageUrl={page && page.links && page.links.image ? page.links.image : "/images/no_image.png"}
 						fullScreen={fullScreen}
 					/>
-				</Grid>
+				</Grid>}
 			</Grid>
 		</>);
 };
