@@ -18,7 +18,7 @@ import EditorDialog from '../editorDialog';
 const PageUploadButton = ({ pages, onAdd, onUploadStarted, onFilesUploaded }) => {
 	const intl = useIntl();
 	const { enqueueSnackbar } = useSnackbar();
-	const [isLoading, setLoading] = useState(false);
+	const [busy, setBusy] = useState(false);
 	const [showFilesUpload, setShowFilesUpload] = useState(false);
 	const [files, setFiles] = useState([]);
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -45,8 +45,7 @@ const PageUploadButton = ({ pages, onAdd, onUploadStarted, onFilesUploaded }) =>
 			return;
 		}
 
-		handleClose()
-		setLoading(true);
+		setBusy(true);
 		onUploadStarted && onUploadStarted(true);
 		if (pages && pages.links.create_multiple !== null) {
 			libraryService.postMultipleFile(pages.links.create_multiple, files)
@@ -58,7 +57,7 @@ const PageUploadButton = ({ pages, onAdd, onUploadStarted, onFilesUploaded }) =>
 					enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.saving' }), { variant: 'error' })
 				})
 				.finally(() => {
-					setLoading(false);
+					setBusy(false);
 					setShowFilesUpload(false);
 					onUploadStarted && onUploadStarted(false);
 				});
@@ -110,16 +109,18 @@ const PageUploadButton = ({ pages, onAdd, onUploadStarted, onFilesUploaded }) =>
 					<FormattedMessage id="page.action.upload" />
 				</MenuItem>
 			</Menu>
-			<EditorDialog show={showFilesUpload} busy={isLoading}
+			<EditorDialog show={showFilesUpload} loading={busy}
 				title={<FormattedMessage id="page.action.upload" />}
 				onCancelled={() => setShowFilesUpload(false)}  >
-				<DropzoneArea onChange={handleChange}
-					acceptedFiles={acceptFiles}
-					maxFileSize={200000000}
-					filesLimit={fileLimit}
-					showAlerts
-					dialogTitle={intl.formatMessage({ id: "page.action.upload" })}
-					dropzoneText={intl.formatMessage({ id: "page.action.upload.help" })} />
+				{!busy &&
+					<DropzoneArea onChange={handleChange}
+						acceptedFiles={acceptFiles}
+						maxFileSize={200000000}
+						filesLimit={fileLimit}
+						showAlerts
+						dialogTitle={intl.formatMessage({ id: "page.action.upload" })}
+						dropzoneText={intl.formatMessage({ id: "page.action.upload.help" })} />
+				}
 				<Button aria-controls="add-page-menu" aria-haspopup="true" onClick={handleFileUpload}
 					startIcon={<CloudUploadIcon />} fullWidth
 					variant="contained"

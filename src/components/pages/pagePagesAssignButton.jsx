@@ -60,6 +60,11 @@ function SimpleDialog({ onClose, open, selectedPages, onAssigned }) {
 
 		Promise.all(promises)
 			.then(() => setBusy(false))
+			.then(() => {
+				if (pagesStatus.filter(p => p.ocrStatus === 'error').length === 0) {
+					handleClose();
+				}
+			})
 			.catch(e => console.error(e));
 	};
 

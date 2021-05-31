@@ -165,12 +165,11 @@ const PagesList = ({ book, onBookSaved }) => {
 		else {
 			loadData();
 		}
-	}, [location]);
+	}, [location, book]);
 
 	const handleDataChanged = () => {
 		handleClose();
 		onBookSaved();
-		loadData();
 	};
 
 	const handleClose = () => {
@@ -224,13 +223,13 @@ const PagesList = ({ book, onBookSaved }) => {
 		if (!isLoading && pages) {
 			return (
 				<Toolbar >
-					<PageUploadButton onAdd={() => onEditClicked(null)} pages={pages} onFilesUploaded={loadData} />
+					<PageUploadButton onAdd={() => onEditClicked(null)} pages={pages} onFilesUploaded={handleDataChanged} />
 					<Divider />
-					<PageDeleteButton selectedPages={selectedPages} onDeleted={loadData} />
-					<PageAssignButton selectedPages={selectedPages} onAssigned={loadData} />
-					<PagePagesAssignButton selectedPages={selectedPages} onAssigned={loadData} />
-					<PageChapterAssignButton selectedPages={selectedPages} book={book} onUpdated={loadData} />
-					<PageStatusUpdateButton selectedPages={selectedPages} onUpdated={loadData} />
+					<PageDeleteButton selectedPages={selectedPages} onDeleted={handleDataChanged} />
+					<PageAssignButton selectedPages={selectedPages} onAssigned={handleDataChanged} />
+					<PagePagesAssignButton selectedPages={selectedPages} onAssigned={handleDataChanged} />
+					<PageChapterAssignButton selectedPages={selectedPages} book={book} onUpdated={handleDataChanged} />
+					<PageStatusUpdateButton selectedPages={selectedPages} onUpdated={handleDataChanged} />
 					<PageOcrButton selectedPages={selectedPages} />
 					<div className={classes.grow} />
 					<ToggleButtonGroup
