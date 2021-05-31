@@ -34,9 +34,14 @@ import { green } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
 	container: {
-		height: 'calc(100vh - 124px)',
+		height: 'calc(100vh - 188px)',
 		paddingLeft: '4px',
 		overflow: 'hidden'
+	},
+	fullScreenContainer: {
+		height: 'calc(100vh - 64px)',
+		paddingLeft: '4px',
+		overflow: 'hidden',
 	},
 	fullScreen: {
 		backgroundColor: 'white',
@@ -223,7 +228,7 @@ const PageEditorPage = () => {
 		header = (<FormattedMessage id="page.editor.header" values={{ sequenceNumber: pageId }} />);
 
 	return (
-		<>
+		<div className={`${fullScreen ? classes.fullScreen : ''}`}>
 			<Toolbar>
 				<PageStatusIcon status={page.status} />
 				<Typography >{header}</Typography>
@@ -263,7 +268,7 @@ const PageEditorPage = () => {
 					<CloseIcon />
 				</IconButton>
 			</Toolbar>
-			<Grid alignContent="stretch" alignItems="stretch" direction="row" container className={`${classes.container} ${fullScreen ? classes.fullScreen : ''}`}>
+			<Grid alignContent="stretch" alignItems="stretch" direction="row" container className={`${fullScreen ? classes.fullScreenContainer : classes.container}`}>
 				<Grid item xs={showImage ? 6 : 12} className={classes.pane}>
 					<Editor data={text} onChange={content => setText(content)} textScale={textScale} fullScreen={fullScreen} font={font} />
 				</Grid>
@@ -273,7 +278,7 @@ const PageEditorPage = () => {
 					/>
 				</Grid>}
 			</Grid>
-		</>);
+		</div>);
 };
 
 export default PageEditorPage;
