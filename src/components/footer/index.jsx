@@ -1,27 +1,39 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
+import LanguageSelector from '../header/languageSelector';
+import { Grid } from '@material-ui/core';
 
 const useStyles = () => makeStyles((theme) => ({
-	footer : {
-		backgroundColor : theme.palette.background.paper,
-		padding : theme.spacing(6)
+	langaugeSelector: {
+		marginLeft: 8,
+		marginRight: 8,
+	},
+	footer: {
+		backgroundColor: theme.palette.background.paper,
+		padding: theme.spacing(6),
 	}
 }));
 
-const copyright = () =>
-{
+export const Copyright = () => {
+	const classes = useStyles();
+
 	return (
-		<Typography variant="body2" color="textSecondary" align="center">
-            <FormattedMessage id="footer.copyrights" />
-        </Typography>
+		<Grid container component="main" alignItems="center">
+			<Grid item>
+				<Typography variant="body2" color="textSecondary" align="center">
+					<FormattedMessage id="footer.copyrights" />
+				</Typography>
+			</Grid>
+			<Grid item>
+				<LanguageSelector className={classes.langaugeSelector} />
+			</Grid>
+		</Grid>
 	);
 };
 
-const Footer = () =>
-{	
+const Footer = () => {
 	const classes = useStyles();
 	return (
 		<footer className={classes.footer}>
@@ -30,7 +42,7 @@ const Footer = () =>
 			</Typography>
 			<Typography variant="subtitle1" align="center" color="textSecondary" component="p">
 			</Typography>
-			{copyright()}
+			<Copyright />
 		</footer>
 	);
 }

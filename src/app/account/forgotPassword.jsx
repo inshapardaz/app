@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Avatar from '@material-ui/core/Avatar';
@@ -17,12 +16,24 @@ import { useSnackbar } from 'notistack';
 import { accountService } from '../../services';
 import { TextField } from 'formik-material-ui';
 import { useIntl, FormattedMessage } from 'react-intl';
-import LanguageSelector from '../../components/header/languageSelector.jsx';
-import Footer from '../../components/footer';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { Paper } from '@material-ui/core';
+import { Copyright } from '../../components/footer';
 
 const useStyles = makeStyles((theme) => ({
+	root: {
+		height: '100vh',
+	},
+	image: {
+		backgroundImage: 'url(https://source.unsplash.com/random)',
+		backgroundRepeat: 'no-repeat',
+		backgroundColor:
+			theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+		backgroundSize: 'cover',
+		backgroundPosition: 'center',
+	},
 	paper: {
-		marginTop: theme.spacing(8),
+		margin: theme.spacing(8, 4),
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
@@ -69,47 +80,56 @@ function ForgotPassword() {
 	}
 
 	return (
-		<Container component="main" maxWidth="xs">
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					<FormattedMessage id="forgot.password" />
-				</Typography>
-				<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-					{({ errors, touched, isSubmitting }) => (
-						<Form>
+		<Grid container component="main" className={classes.root}>
+			<CssBaseline />
+			<Grid item xs={false} sm={4} md={7} className={classes.image} />
+			<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+				<div className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<LockOutlinedIcon />
+					</Avatar>
+					<Typography component="h1" variant="h5">
+						<FormattedMessage id="forgot.password" />
+					</Typography>
+					<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+						{({ errors, touched, isSubmitting }) => (
+							<Form>
+								<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="login.email.title" />} error={errors.email && touched.email} />
+								<Button
+									type="submit"
+									fullWidth
+									variant="contained"
+									color="primary"
+									className={classes.submit}
+									disabled={isSubmitting}
+								>
+									<FormattedMessage id="forgotPassword.submit" />
+								</Button>
+								{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
 
-							<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth autoFocus
-								label={<FormattedMessage id="login.email.title" />} error={errors.email && touched.email} />
-							<Button
-								type="submit"
-								fullWidth
-								variant="contained"
-								color="primary"
-								className={classes.submit}
-								disabled={isSubmitting}
-							>
-								<FormattedMessage id="forgotPassword.submit" />
-							</Button>
-							{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-							<Grid container>
-								<Grid item xs>
-									<Link href="/account/login" variant="body2"><FormattedMessage id="login" /></Link>
+
+								<Grid container>
+									<Grid item xs>
+										<Link href="account/register" variant="body2">
+											<FormattedMessage id="register" />
+										</Link>
+									</Grid>
+									<Grid item>
+										<Link href="/account/login" variant="body2">
+											<FormattedMessage id="login" />
+										</Link>
+									</Grid>
 								</Grid>
-								<Grid item xs>
-									<LanguageSelector />
-								</Grid>
-							</Grid>
-						</Form>
-					)}
-				</Formik>
-			</div>
-			<Box mt={8}>
-				<Footer />
-			</Box>
-		</Container>
+								<Box mt={5}>
+									<Copyright />
+								</Box>
+							</Form>
+						)}
+					</Formik>
+				</div>
+			</Grid>
+		</Grid>
 	)
 }
 

@@ -3,8 +3,9 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 
 import { makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-import { Container, Typography, Link, Avatar, FormControl } from '@material-ui/core';
+import { Typography, Link, Avatar, FormControl } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Select } from 'formik-material-ui';
@@ -15,17 +16,28 @@ import { useSnackbar } from 'notistack';
 import { accountService } from '../../services';
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 import { useIntl, FormattedMessage } from 'react-intl';
-import LanguageSelector from '../../components/header/languageSelector.jsx';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import Footer from '../../components/footer';
+import { Copyright } from '../../components/footer';
+import { Paper } from '@material-ui/core';
 
 import BootstrapInput from '../../components/bootstrapInput';
 
 
 const useStyles = makeStyles((theme) => ({
+	root: {
+		height: '100vh',
+	},
+	image: {
+		backgroundImage: 'url(https://source.unsplash.com/random)',
+		backgroundRepeat: 'no-repeat',
+		backgroundColor:
+			theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+		backgroundSize: 'cover',
+		backgroundPosition: 'center',
+	},
 	paper: {
-		marginTop: theme.spacing(8),
+		margin: theme.spacing(8, 4),
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
@@ -56,7 +68,6 @@ function Register({ history }) {
 	const { enqueueSnackbar } = useSnackbar();
 	const classes = useStyles();
 	const initialValues = {
-		title: '',
 		firstName: '',
 		lastName: '',
 		email: '',
@@ -66,8 +77,6 @@ function Register({ history }) {
 	};
 
 	const validationSchema = Yup.object().shape({
-		title: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.title.required' })),
 		firstName: Yup.string()
 			.required(intl.formatMessage({ id: 'register.message.firstName.required' })),
 		lastName: Yup.string()
@@ -79,7 +88,7 @@ function Register({ history }) {
 			.min(6, intl.formatMessage({ id: 'register.message.password.error.length' }))
 			.required(intl.formatMessage({ id: 'register.message.password.required' })),
 		confirmPassword: Yup.string()
-			.oneOf([Yup.ref('password'), null], intl.formatMessage({ id: 'egister.message.confirmPassword.error.match' }))
+			.oneOf([Yup.ref('password'), null], intl.formatMessage({ id: 'register.message.confirmPassword.error.match' }))
 			.required(intl.formatMessage({ id: 'register.message.confirmPassword.required' })),
 		acceptTerms: Yup.bool()
 			.oneOf([true], intl.formatMessage({ id: 'register.message.acceptTerms.requires' }))
@@ -99,79 +108,74 @@ function Register({ history }) {
 	}
 
 	return (
-		<Container component="main" maxWidth="xs">
-			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					<FormattedMessage id="register" />
-				</Typography>
-				<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
-					{({ errors, touched, isSubmitting }) => (
-						<Form>
-							<FormControl variant="outlined" margin="normal" fullWidth error={errors.title && touched.title}>
-								<InputLabel ><FormattedMessage id="register.title.label" /></InputLabel>
-								<Field component={Select} name="title" as="select" variant="outlined" margin="normal" fullWidth
-									error={errors.title && touched.title}
-									input={<BootstrapInput />}>
-									<MenuItem value="">{intl.formatMessage({ id: "register.title.none" })}</MenuItem>
-									<MenuItem value="Mr">{intl.formatMessage({ id: "register.title.mr" })}</MenuItem>
-									<MenuItem value="Mrs">{intl.formatMessage({ id: "register.title.mrs" })}</MenuItem>
-									<MenuItem value="Miss">{intl.formatMessage({ id: "register.title.miss" })}</MenuItem>
-								</Field>
-							</FormControl>
+		<Grid container component="main" className={classes.root}>
+			<CssBaseline />
+			<Grid item xs={false} sm={4} md={7} className={classes.image} />
+			<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+				<div className={classes.paper}>
+					<Avatar className={classes.avatar}>
+						<LockOutlinedIcon />
+					</Avatar>
+					<Typography component="h1" variant="h5">
+						<FormattedMessage id="register" />
+					</Typography>
+					<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+						{({ errors, touched, isSubmitting }) => (
+							<Form>
+								<Field component={TextField} name="firstName" type="text" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.firstName.label" />} error={errors.firstName && touched.firstName} />
 
-							<Field component={TextField} name="firstName" type="text" variant="outlined" margin="normal" fullWidth
-								label={<FormattedMessage id="register.firstName.label" />} error={errors.firstName && touched.firstName} />
+								<Field component={TextField} name="lastName" type="text" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.lastName.label" />} error={errors.lastName && touched.lastName} />
 
-							<Field component={TextField} name="lastName" type="text" variant="outlined" margin="normal" fullWidth
-								label={<FormattedMessage id="register.lastName.label" />} error={errors.lastName && touched.lastName} />
+								<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />
 
-							<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth
-								label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />
+								<Field component={TextField} name="password" type="password" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.password.label" />} error={errors.password && touched.password} />
 
-							<Field component={TextField} name="password" type="password" variant="outlined" margin="normal" fullWidth
-								label={<FormattedMessage id="register.password.label" />} error={errors.password && touched.password} />
+								<Field component={TextField} name="confirmPassword" type="password" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.confirmPassword.label" />} error={errors.confirmPassword && touched.confirmPassword} />
 
-							<Field component={TextField} name="confirmPassword" type="password" variant="outlined" margin="normal" fullWidth
-								label={<FormattedMessage id="register.confirmPassword.label" />} error={errors.confirmPassword && touched.confirmPassword} />
-
-							<Field
-								component={CheckboxWithLabel}
-								type="checkbox"
-								id="acceptTerms" name="acceptTerms" margin="normal"
-								fullWidth
-								Label={{ label: intl.formatMessage({ id: "register.acceptTerms.title" }) }}
-								error={errors.acceptTerms && touched.acceptTerms}
-							/>
-							<Button
-								type="submit"
-								fullWidth
-								variant="contained"
-								color="primary"
-								className={classes.submit}
-								disabled={isSubmitting}
-							>
-								<FormattedMessage id="register.action.title" />
-							</Button>
-							{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-							<Grid container>
-								<Grid item xs>
-									<Link href="/account/login" variant="body2"><FormattedMessage id="login" /></Link>
+								<Field
+									component={CheckboxWithLabel}
+									type="checkbox"
+									id="acceptTerms" name="acceptTerms" margin="normal"
+									Label={{ label: intl.formatMessage({ id: "register.acceptTerms.title" }) }}
+									error={errors.acceptTerms && touched.acceptTerms}
+								/>
+								<Button
+									type="submit"
+									fullWidth
+									variant="contained"
+									color="primary"
+									className={classes.submit}
+									disabled={isSubmitting}
+								>
+									<FormattedMessage id="register.action.title" />
+								</Button>
+								{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
+								<Grid container>
+									<Grid item xs>
+										<Link href="/account/login" variant="body2">
+											<FormattedMessage id="login" />
+										</Link>
+									</Grid>
+									<Grid item>
+										<Link href="account/forgot-password" variant="body2">
+											<FormattedMessage id="forgot.password" />
+										</Link>
+									</Grid>
 								</Grid>
-								<Grid item xs>
-									<LanguageSelector />
-								</Grid>
-							</Grid>
-						</Form>
-					)}
-				</Formik>
-			</div>
-			<Box mt={8}>
-				<Footer />
-			</Box>
-		</Container>
+								<Box mt={5}>
+									<Copyright />
+								</Box>
+							</Form>
+						)}
+					</Formik>
+				</div>
+			</Grid>
+		</Grid>
 	)
 }
 

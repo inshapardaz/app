@@ -75,6 +75,7 @@ export default function LanguageSelector() {
 				aria-controls={open ? 'menu-list-grow' : undefined}
 				aria-haspopup="true"
 				color="inherit"
+				size="small"
 				onClick={handleToggle}
 				endIcon={<KeyboardArrowDownIcon />}
 			>
