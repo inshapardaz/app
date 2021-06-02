@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { Link } from "react-router-dom";
 
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -22,11 +21,11 @@ import RateReviewIcon from '@material-ui/icons/RateReview';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import PageStatus from '../../models/pageStatus';
-import BookPageProgress from '../pages/bookPageProgress';
 import BookEditor from '../books/bookEditor';
 import { Typography } from '@material-ui/core';
 import BookDownloadButton from '../books/bookDownloadButton';
 import BookPublishButton from '../books/bookPublishButton';
+import BookProgress from '../books/bookProgress';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -170,15 +169,13 @@ const PagesSidebar = ({ book, filter, onStatusFilter, onUpdated, assignmentFilte
 	return (
 		<div className={classes.root}>
 			<Typography variant="h5">{book != null ? book.title : ''}</Typography>
+			<BookProgress book={book} />
 			{renderEditLink()}
 			{renderChaptersLink()}
 			<BookDownloadButton book={book} />
 			<BookPublishButton book={book} />
 			<Divider />
 			<List component="nav" aria-label="status filters" dense>
-				<ListSubheader component="div">
-					<FormattedMessage id="publishing.books.filter" />
-				</ListSubheader>
 				{renderStatusFilters()}
 			</List>
 			<Divider />
@@ -186,7 +183,6 @@ const PagesSidebar = ({ book, filter, onStatusFilter, onUpdated, assignmentFilte
 				{renderAssignmentFilter()}
 			</List>
 			<Divider />
-			<BookPageProgress book={book} />
 			<BookEditor
 				show={showEditor}
 				book={book}

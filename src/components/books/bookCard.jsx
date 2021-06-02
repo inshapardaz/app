@@ -22,6 +22,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { libraryService } from '../../services';
 import { LinearProgress } from '@material-ui/core';
+import BookProgress from './bookProgress';
 
 const defaultBookImage = '/images/book_placeholder.jpg';
 
@@ -73,74 +74,6 @@ const FavoriteButton = ({ book, onUpdated, onOpen }) => {
 
 	return null;
 }
-
-const BookProgress = ({ book }) => {
-	const classes = useStyles();
-	const intl = useIntl();
-	const [anchorEl, setAnchorEl] = React.useState(null);
-
-	const handleClick = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
-
-	const popOver = () => {
-		if (book.pageStatus) {
-			return (
-				<Box p={2} className={classes.popoverRoot}>
-					{
-						book.pageStatus.map(s => (
-							<div key={s.status}>
-								<Typography variant="caption" display="block" gutterBottom><FormattedMessage id={`status.${s.status}`} /></Typography>
-								<LinearProgress value={s.percentage} variant="determinate" className={classes.progressBar} color={s.status === 'Completed' ? 'primary' : 'secondary'} />
-							</div>
-						))
-					}
-				</Box>);
-		}
-
-		return (<Box p={2} className={classes.popoverRoot}><Typography component="span"><FormattedMessage id="pages.progress.none" /></Typography></Box >);
-	}
-
-	const open = Boolean(anchorEl);
-
-	if (book.status === 'Published') return null;
-
-	return (<CardActions>
-		<Typography variant="body2" color="textSecondary" component="span" onClick={handleClick} className={classes.progress}>
-			{book.pageCount > 0
-				? <>
-					<FormattedMessage id="pages.progress" values={{
-						completed: intl.formatNumber(book.progress, {
-							style: 'percent', minimumFractionDigits: 0, maximumFractionDigits: 0
-						}), count: book.pageCount
-					}} />
-					<LinearProgress value={book.progress} variant="determinate" />
-				</>
-				: <FormattedMessage id="pages.progress.none" />
-			}
-		</Typography>
-		<Popover
-			id={book.id}
-			open={open}
-			anchorEl={anchorEl}
-			onClose={handleClose}
-			anchorOrigin={{
-				vertical: 'bottom',
-				horizontal: 'left',
-			}}
-			transformOrigin={{
-				vertical: 'top',
-				horizontal: 'center',
-			}}
-		>
-			{popOver()}
-		</Popover>
-	</CardActions>);
-};
 
 const BookCell = ({ book, onOpen, onEdit, onDelete, onUpdated, showProgress = false }) => {
 	const intl = useIntl();
@@ -255,7 +188,7 @@ const BookCell = ({ book, onOpen, onEdit, onDelete, onUpdated, showProgress = fa
 				</CardContent>
 			</CardActionArea>
 			{renderBookStatus()}
-			{ showProgress && <BookProgress book={book} />}
+			{ showProgress && <CardActions><BookProgress book={book} /></CardActions>}
 			<CardActions>
 				{renderEditLink()}
 				{renderDeleteLink()}
