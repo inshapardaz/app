@@ -99,7 +99,8 @@ function Login({ history, location }) {
 					<Typography component="h1" variant="h5">
 						<FormattedMessage id="login" />
 					</Typography>
-					<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} >
+					<Formik initialValues={initialValues} validationSchema={validationSchema} validateOnChange={false}
+						validateOnBlur={false} onSubmit={onSubmit} >
 						{({ errors, touched, isSubmitting }) => (
 							<Form>
 								<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth autoFocus
