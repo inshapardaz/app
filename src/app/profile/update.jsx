@@ -71,13 +71,6 @@ function Update({ history }) {
 		email: Yup.string()
 			.email(intl.formatMessage({ id: 'register.message.email.error' }))
 			.required(intl.formatMessage({ id: 'register.message.email.required' })),
-		password: Yup.string()
-			.min(6, intl.formatMessage({ id: 'register.message.password.error.length' })),
-		confirmPassword: Yup.string()
-			.when('password', (password, schema) => {
-				if (password) return schema.required(intl.formatMessage({ id: 'register.message.confirmPassword.required' }));
-			})
-			.oneOf([Yup.ref('password')], intl.formatMessage({ id: 'register.message.confirmPassword.error.match' }))
 	});
 
 	function onSubmit(fields, { setStatus, setSubmitting }) {
@@ -99,17 +92,6 @@ function Update({ history }) {
 				<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
 					{({ errors, touched, isSubmitting }) => (
 						<Form>
-							<FormControl variant="outlined" margin="normal" fullWidth error={errors.title && touched.title}>
-								<InputLabel ><FormattedMessage id="register.title.label" /></InputLabel>
-								<Field component={Select} name="title" as="select" ariant="outlined" margin="normal" fullWidth
-									error={errors.title && touched.title}
-									input={<BootstrapInput />}>
-									<MenuItem value="">{intl.formatMessage({ id: "register.title.none" })}</MenuItem>
-									<MenuItem value="Mr">{intl.formatMessage({ id: "register.title.mr" })}</MenuItem>
-									<MenuItem value="Mrs">{intl.formatMessage({ id: "register.title.mrs" })}</MenuItem>
-									<MenuItem value="Miss">{intl.formatMessage({ id: "register.title.miss" })}</MenuItem>
-								</Field>
-							</FormControl>
 							<Field component={TextField} name="firstName" type="text" variant="outlined" margin="normal" fullWidth
 								label={<FormattedMessage id="register.firstName.label" />} error={errors.firstName && touched.firstName} />
 
@@ -118,16 +100,6 @@ function Update({ history }) {
 
 							<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth
 								label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />
-
-							<Typography component="h1" variant="h5">
-								<FormattedMessage id="changePassword" />
-							</Typography>
-
-							<Field component={TextField} name="password" type="password" variant="outlined" margin="normal" fullWidth
-								label={<FormattedMessage id="register.password.label" />} error={errors.password && touched.password} />
-
-							<Field component={TextField} name="confirmPassword" type="password" variant="outlined" margin="normal" fullWidth
-								label={<FormattedMessage id="register.confirmPassword.label" />} error={errors.confirmPassword && touched.confirmPassword} />
 
 							{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
 							<Grid container spacing={2}>

@@ -48,7 +48,7 @@ const LibrarySelectorPage = () => {
 					<FormattedMessage id="library.select" />
 				</Typography>
 				{libraries && libraries.map(l => (
-					<Card onClick={() => selectLibrary(l)}>
+					<Card key={l.id} onClick={() => selectLibrary(l)}>
 						<CardContent>
 							<Typography variant="h5" component="h2">
 								{l.name}

@@ -21,7 +21,8 @@ export const accountService = {
 	addAccountLibrary,
 	deleteAccountLibrary,
     create,
-    update,
+	update,
+	updatePassword,
     delete: _delete,
     user: userSubject.asObservable(),
     get userValue () { return userSubject.value }
@@ -144,6 +145,19 @@ function deleteAccountLibrary(id, libraryId) {
 
 function update(id, params) {
     return fetchWrapper.put(`${baseUrl}/${id}`, params)
+        .then(user => {
+            // update stored user if the logged in user updated their own record
+            if (user.id === userSubject.value.id) {
+                // publish updated user to subscribers
+                user = { ...userSubject.value, ...user };
+                userSubject.next(user);
+            }
+            return user;
+        });
+}
+
+function updatePassword(id, params) {
+	return fetchWrapper.put(`${baseUrl}/${id}`, params)
         .then(user => {
             // update stored user if the logged in user updated their own record
             if (user.id === userSubject.value.id) {

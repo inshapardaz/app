@@ -33,6 +33,7 @@ import SearchPage from './app/search';
 import LibrarySwitch from './components/library/librarySwitch';
 import ErrorPage from './app/ErrorPage';
 import LibrarySelectorPage from './app/librarySelector';
+import ChangePassword from './app/account/changePassword';
 
 const Routes = () => {
 	const { pathname } = useLocation();
@@ -57,12 +58,13 @@ const Routes = () => {
 			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
 			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
 			<PrivateRoute layout={fullWidthLayout} path="/library/:id" component={LibrarySwitch} />
-			<Route path="/libraries/select" component={LibrarySelectorPage} exact />
+			<PrivateRoute layout={fullWidthLayout} path="/libraries/select" component={LibrarySelectorPage} exact />
 			<Route path="/account/login" component={Login} layout={emptyLayout} />
 			<Route path="/account/register" component={Register} />
 			<Route path="/account/verify-email" component={VerifyEmail} />
 			<Route path="/account/forgot-password" component={ForgotPassword} />
 			<Route path="/account/reset-password" component={ResetPassword} />
+			<PrivateRoute path="/account/change-password" layout={fullWidthLayout} component={ChangePassword} />
 			<Route path="/error" component={ErrorPage} layout={fullWidthLayout} />
 			<Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
 			<Route exact path="/" component={Home} />

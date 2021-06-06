@@ -14,6 +14,11 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuList from '@material-ui/core/MenuList';
 import { Role } from '../../helpers';
 import { accountService } from '../../services';
+import { Divider, ListItemIcon, Typography } from '@material-ui/core';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import FaceIcon from '@material-ui/icons/Face';
 
 const ProfileMenu = () => {
 	let subscription = null;
@@ -100,11 +105,42 @@ const ProfileMenu = () => {
 							<Paper>
 								<ClickAwayListener onClickAway={handleClose}>
 									<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleClose}>
-										<MenuItem component={Link} onClick={handleClose} to='/profile'><FormattedMessage id="header.profile" /></MenuItem>
-										{user.role === Role.Admin &&
-											<MenuItem component={Link} onClick={handleClose} to="/admin" ><FormattedMessage id="header.administration" /></MenuItem>
+										<MenuItem component={Link} onClick={handleClose} to='/profile'>
+											<ListItemIcon>
+												<FaceIcon fontSize="small" />
+											</ListItemIcon>
+											<Typography variant="inherit" noWrap>
+												<FormattedMessage id="header.profile" />
+											</Typography>
+										</MenuItem>
+										<MenuItem component={Link} onClick={handleClose} to='/account/change-password'>
+											<ListItemIcon>
+												<LockOpenIcon fontSize="small" />
+											</ListItemIcon>
+											<Typography variant="inherit" noWrap>
+												<FormattedMessage id="changePassword.title" />
+											</Typography>
+										</MenuItem>
+										{user.role === Role.Admin && (<>
+											<MenuItem component={Link} onClick={handleClose} to="/admin" >
+												<ListItemIcon>
+													<SupervisorAccountIcon fontSize="small" />
+												</ListItemIcon>
+												<Typography variant="inherit" noWrap>
+													<FormattedMessage id="header.administration" />
+												</Typography>
+											</MenuItem>
+										</>)
 										}
-										<MenuItem onClick={accountService.logout}><FormattedMessage id="logout" /></MenuItem>
+										<Divider />
+										<MenuItem onClick={accountService.logout}>
+											<ListItemIcon>
+												<ExitToAppIcon fontSize="small" />
+											</ListItemIcon>
+											<Typography variant="inherit" noWrap>
+												<FormattedMessage id="logout" />
+											</Typography>
+										</MenuItem>
 									</MenuList>
 								</ClickAwayListener>
 							</Paper>

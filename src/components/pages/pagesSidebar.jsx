@@ -39,9 +39,6 @@ const useStyles = makeStyles((theme) => ({
 	},
 	iconButton: {
 		padding: 10
-	},
-	search: {
-		display: 'flex'
 	}
 }));
 

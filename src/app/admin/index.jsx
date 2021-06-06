@@ -1,24 +1,28 @@
-import { Container } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import { Overview } from './overview';
 import { Users } from './users';
 import { Libraries } from './libraries';
+import AdminSidebar from '../../components/admin/adminSideBar';
 
 function Admin({ match }) {
 	const { path } = match;
 
 	return (
-		<div className="p-4">
-			<Container component="main">
+		<Grid container alignItems="stretch">
+			<Grid sm={2} item >
+				<AdminSidebar />
+			</Grid>
+			<Grid sm={10} item>
 				<Switch>
-					<Route exact path={path} component={Overview} />
-					<Route path={`${path}/users`} component={Users} />
-					<Route path={`${path}/libraries`} component={Libraries} />
+					<Route exact path='/admin' component={Overview} />
+					<Route path='/admin/users' component={Users} />
+					<Route path='/admin/libraries' component={Libraries} />
 				</Switch>
-			</Container>
-		</div>
+			</Grid>
+		</Grid>
 	);
 }
 
