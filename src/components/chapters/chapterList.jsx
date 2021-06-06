@@ -143,13 +143,11 @@ const ChapterList = ({ book, allowEdit = true }) => {
 		}
 		return (<List >
 			{chapters.data.map(c => (
-				<ListItem key={c.id}>
+				<ListItem key={c.id} button component={Link} to={`/books/${c.bookId}/chapter/${c.chapterNumber}`} >
 					<ListItemAvatar>
-						<Typography variant="body1" align="center">{c.chapterNumber}</Typography>
+						<Typography variant="body1" align="center">{c.chapterNumber} - </Typography>
 					</ListItemAvatar>
-					<ListItemText
-						primary={<Link to={`/books/${c.bookId}/chapter/${c.chapterNumber}`} color="inherit" variant="body1" >{c.title}</Link>}
-					/>
+					<ListItemText primary={c.title} />
 					{ allowEdit &&
 						<ListItemSecondaryAction>
 							<Tooltip title={<FormattedMessage id="chapter.action.editContent" />} >

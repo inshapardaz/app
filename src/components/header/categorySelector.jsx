@@ -31,7 +31,7 @@ function CategorySelector() {
 	};
 
 	const handleClose = (event) => {
-		if (anchorRef.current && anchorRef.current.contains(event.target)) {
+		if (anchorRef && anchorRef.current && anchorRef.current.contains(event.target)) {
 			return;
 		}
 

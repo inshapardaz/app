@@ -5,18 +5,17 @@ import * as Yup from 'yup';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import { Typography, Link, Avatar } from '@material-ui/core';
+import { Typography, Avatar } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import { useSnackbar } from 'notistack';
 import { accountService } from '../../services';
 import { TextField } from 'formik-material-ui';
 import { useIntl, FormattedMessage } from 'react-intl';
-import { Copyright } from '../../components/footer';
 import { Paper } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -123,7 +122,7 @@ function ChangePassword({ history }) {
 								{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
 								<Grid container>
 									<Grid item xs>
-										<Link href="/account/login" variant="body2">
+										<Link to="/" variant="body2">
 											<FormattedMessage id="action.goto.home" />
 										</Link>
 									</Grid>
