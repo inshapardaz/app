@@ -32,6 +32,7 @@
         "html-react-parser": "^1.2.4",
         "jss": "^10.4.0",
         "jss-rtl": "^0.3.0",
+        "material-ui-color-picker": "^3.5.1",
         "material-ui-confirm": "^2.1.1",
         "material-ui-dropzone": "^3.5.0",
         "notistack": "^1.0.2",

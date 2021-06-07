@@ -129,6 +129,8 @@
 	"library.name.error.required" : "Name is required",
 	"library.language.label" : "Language",
 	"library.language.error.required" : "Language is required",
+	"library.primaryColor.label" : "Primary Color",
+	"library.secondaryColor.label" : "Secondary Color",
 	"library.supportsPeriodical.label" : "Periodicals",
 	"library.editor.header.add" : "Add new library",
 	"library.editor.header.edit" : "Editing {name}",

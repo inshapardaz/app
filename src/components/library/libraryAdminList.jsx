@@ -1,4 +1,4 @@
-import { Button, Container, IconButton, Paper, TableFooter, Typography } from '@material-ui/core';
+import { Button, IconButton, Paper, TableFooter, Toolbar } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useLocation } from 'react-router-dom';
@@ -12,17 +12,18 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import Pagination from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem";
-import LibraryEditor from "../../../components/library/libraryEditor.jsx";
-import DeleteLibrary from "../../../components/library/DeleteLibraryButton.jsx";
-import { libraryService } from '../../../services';
+import DeleteLibraryButton from "./DeleteLibraryButton.jsx";
+import { libraryService } from '../../services';
+import LibraryEditor from './libraryEditor.jsx';
 
 const useStyles = makeStyles((theme) => ({
+	root: {
+		margin: 8
+	},
 	paper: {
 		marginTop: theme.spacing(8),
 		marginBottom: theme.spacing(8),
@@ -53,7 +54,7 @@ const buildLinkToPage = (location, page, query) => {
 };
 
 
-function List({ match }) {
+const LibraryAdminList = () => {
 	const location = useLocation();
 	const classes = useStyles();
 	const [libraries, setLibraries] = useState(null);
@@ -61,7 +62,6 @@ function List({ match }) {
 	const [loading, setLoading] = useState(false);
 	const [, setError] = useState(false);
 	const [showEditor, setShowEditor] = useState(false);
-	const [showDelete, setShowDelete] = useState(false);
 	const [selectedLibrary, setSelectedLibrary] = useState(null);
 	const defaultLibrary = libraryService.getSelectedLibrary();
 
@@ -79,10 +79,12 @@ function List({ match }) {
 			.then((data) => {
 				setQuery(q);
 				setLibraries(data);
+				console.dir(data);
 			})
 			.catch(() => setError(true))
 			.finally(() => setLoading(false));
 	};
+
 	useEffect(() => {
 		loadData();
 	}, [location]);
@@ -95,15 +97,10 @@ function List({ match }) {
 		setSelectedLibrary(library);
 		setShowEditor(true);
 	}
-	function deleteLibrary(library) {
-		setSelectedLibrary(library);
-		setShowDelete(true);
-	}
 
 	const handleClose = () => {
 		setSelectedLibrary(null);
 		setShowEditor(false);
-		setShowDelete(false);
 	};
 
 	const handleDataChanged = () => {
@@ -138,11 +135,12 @@ function List({ match }) {
 	};
 
 	return (
-		<div className={classes.paper}>
-			<Container component="main" maxWidth="md">
-				<Typography variant="h2"><FormattedMessage id="admin.libraries.title" /></Typography>
-				<Button variant="contained" color="primary" onClick={() => createLibrary()}><FormattedMessage id="admin.library.add" /></Button>
-				<TableContainer component={Paper}>
+		<div className={classes.root}>
+			<Paper className={classes.paper}>
+				<Toolbar>
+					<Button variant="contained" color="primary" onClick={() => createLibrary()}><FormattedMessage id="admin.library.add" /></Button>
+				</Toolbar>
+				<TableContainer >
 					<Table className={classes.table}>
 						<TableHead>
 							<TableRow>
@@ -164,11 +162,11 @@ function List({ match }) {
 												<EditIcon />
 											</IconButton>
 										}
-										{library && library.links && library.links.delete &&
-											<IconButton onClick={() => deleteLibrary(library)} disabled={library.isDeleting}>
-												<DeleteIcon />
-											</IconButton>
-										}
+										<DeleteLibraryButton
+											library={library}
+											onDeleted={handleDataChanged}
+											onCancelled={handleClose}
+										/>
 										{defaultLibrary && defaultLibrary.id == library.id &&
 											<IconButton disabled>
 												<CheckBoxIcon />
@@ -206,15 +204,9 @@ function List({ match }) {
 					onSaved={handleDataChanged}
 					onCancelled={handleClose}
 				/>
-				<DeleteLibrary
-					show={showDelete}
-					library={selectedLibrary}
-					onDeleted={handleDataChanged}
-					onCancelled={handleClose}
-				/>
-			</Container>
-		</div >
+			</Paper>
+		</div>
 	);
-}
+};
 
-export { List };
+export default LibraryAdminList;
