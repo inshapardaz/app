@@ -16,7 +16,7 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import Pagination from "@material-ui/lab/Pagination";
 import PaginationItem from "@material-ui/lab/PaginationItem";
-import DeleteLibraryButton from "./DeleteLibraryButton.jsx";
+import DeleteLibraryButton from "./deleteLibraryButton.jsx";
 import { libraryService } from '../../services';
 import LibraryEditor from './libraryEditor.jsx';
 
@@ -79,7 +79,6 @@ const LibraryAdminList = () => {
 			.then((data) => {
 				setQuery(q);
 				setLibraries(data);
-				console.dir(data);
 			})
 			.catch(() => setError(true))
 			.finally(() => setLoading(false));

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import LibraryAdminList from '../../../components/library/libraryAdminList';
 
-import { List } from './list';
 
 function Libraries({ match }) {
 	const { path } = match;
 
 	return (
 		<Switch>
-			<Route exact path={path} component={List} />
+			<Route exact path={path} component={LibraryAdminList} />
 		</Switch>
 	);
 }
