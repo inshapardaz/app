@@ -44,7 +44,7 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/authors" component={AuthorsPage} />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/chapters" component={ChaptersPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/pages/:pageId/editor" component={PageEditorPage} exact />
-			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/pages" component={PagesPage} exact />
+			<PrivateRoute layout={fullWidthLayout} path="/books/:bookId/pages" component={PagesPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/chapter/:chapterNumber/editor" component={ChapterEditorPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:bookId/chapter/:chapterNumber" component={ChapterViewerPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/books/:id/editor" component={BookPageEditor} exact />
@@ -54,7 +54,7 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/series" component={SeriesPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/categories" component={CategoriesPage} exact />
 			<RouteWithLayout layout={fullWidthLayout} path="/search" component={SearchPage} exact />
-			<RouteWithLayout layout={fullWidthLayout} path="/publishing" component={PublishingPage} exact />
+			<PrivateRoute layout={fullWidthLayout} path="/publishing" component={PublishingPage} exact />
 			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
 			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
 			<PrivateRoute layout={fullWidthLayout} path="/library/:id" component={LibrarySwitch} />

@@ -28,7 +28,9 @@ import PageAssignButton from '../../components/pages/pageAssignButton';
 import PageOcrButton from '../../components/pages/pageOcrButton';
 import PageStatusIcon from '../../components/pages/pageStatusIcon';
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
+import FlashAutoIcon from '@material-ui/icons/FlashAuto';
 import ImageIcon from '@material-ui/icons/Image';
+import { languageService } from '../../services/language.service';
 
 import { green } from '@material-ui/core/colors';
 
@@ -211,6 +213,11 @@ const PageEditorPage = () => {
 			.finally(() => setLoading(false));
 	}
 
+	const autoFix = () => {
+		var newText = languageService.fixText(text);
+		setText(newText);
+	};
+
 	if (loading) return <Loading />;
 
 	if (error) return <ErrorMessage message="Error loading page" />;
@@ -240,6 +247,11 @@ const PageEditorPage = () => {
 				{page.links.assign_to_me &&
 					<PageAssignButton selectedPages={[page]} showText={false} />
 				}
+				<Tooltip title={<FormattedMessage id="action.fixCommonIssues" />}>
+					<IconButton onClick={autoFix}>
+						<FlashAutoIcon />
+					</IconButton>
+				</Tooltip>
 				{page.links.ocr && <PageOcrButton selectedPages={[page]} onComplete={loadData} showText={false} />}
 				<ButtonGroup size="small" aria-label="small outlined button group">
 					<FontDropdown variant="outlined" value={font} onFontSelected={f => setFont(f)} storageKey={"editorFont"} />

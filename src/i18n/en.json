@@ -25,6 +25,7 @@
 	"action.preview" : "Preview",
 	"action.zoom.in" : "Zoom In",
 	"action.zoom.out" : "Zoom Out",
+	"action.fixCommonIssues" : "Auto Correct",
 	"action.toggle.image" : "Toggle Image",
 	"action.editContent" : "Edit contents",
     "action.changeImage" : "Change Image",
