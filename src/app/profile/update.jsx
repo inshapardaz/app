@@ -62,15 +62,10 @@ function Update({ history }) {
 	};
 
 	const validationSchema = Yup.object().shape({
-		title: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.title.required' })),
 		firstName: Yup.string()
 			.required(intl.formatMessage({ id: 'register.message.firstName.required' })),
 		lastName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.lastName.required' })),
-		email: Yup.string()
-			.email(intl.formatMessage({ id: 'register.message.email.error' }))
-			.required(intl.formatMessage({ id: 'register.message.email.required' })),
+			.required(intl.formatMessage({ id: 'register.message.lastName.required' }))
 	});
 
 	function onSubmit(fields, { setStatus, setSubmitting }) {
@@ -97,9 +92,6 @@ function Update({ history }) {
 
 							<Field component={TextField} name="lastName" type="text" variant="outlined" margin="normal" fullWidth
 								label={<FormattedMessage id="register.lastName.label" />} error={errors.lastName && touched.lastName} />
-
-							<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth
-								label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />
 
 							{isSubmitting && <CircularProgress size={24} className={classes.buttonProgress} />}
 							<Grid container spacing={2}>
