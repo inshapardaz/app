@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
+import { useConfirm } from 'material-ui-confirm';
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
@@ -140,6 +141,7 @@ const CompleteButton = ({ page, onUpdated }) => {
 const PageEditorPage = () => {
 	const classes = useStyles();
 	const intl = useIntl();
+	const confirm = useConfirm();
 	const { enqueueSnackbar } = useSnackbar();
 	const { bookId, pageId } = useParams();
 	const [error, setError] = useState(false);
@@ -194,6 +196,15 @@ const PageEditorPage = () => {
 				setPage(data);
 				setText(data.text);
 			})
+			.then(() => {
+				var cachedText = localStorage.getItem(`text_${bookId}_${pageId}`);
+				if (cachedText) {
+					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.unsavedText.loaded' }), { variant: 'info' });
+					setText(cachedText);
+				}
+
+				return Promise.resolve();
+			})
 			.catch(() => setError(true))
 			.finally(() => setLoading(false));
 	};
@@ -202,12 +213,38 @@ const PageEditorPage = () => {
 		loadData();
 	}, [pageId]);
 
+	const confirmLoadingUnsavedText = (unsavedText) => {
+		return confirm({
+			title: intl.formatMessage({ id: "page.messages.unsavedText.title" }),
+			description: intl.formatMessage({ id: "page.messages.unsavedText.question" }, { title: book.title }),
+			confirmationText: intl.formatMessage({ id: "page.messages.unsavedText.use" }),
+			cancellationText: intl.formatMessage({ id: "page.messages.unsavedText.discard" }),
+			confirmationButtonProps: { variant: "contained", color: "primary" },
+			cancellationButtonProps: { color: "primary" }
+		})
+			.then(() => {
+				enqueueSnackbar(intl.formatMessage({ id: 'page.messages.unsavedText.loaded' }), { variant: 'info' });
+				setText(unsavedText);
+			})
+			.catch(() => {
+				localStorage.removeItem(`text_${bookId}_${pageId}`);
+			})
+	}
+
+	const onContentChanges = (newContent) => {
+		newContent => setText(newContent);
+		localStorage.setItem(`text_${bookId}_${pageId}`, newContent);
+	}
+
 	const saveText = () => {
 		page.text = text;
 		libraryService.put(page.links.update, page)
 			.then(data => {
 				setPage(data);
 				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
+			})
+			.then(() => {
+				localStorage.removeItem(`text_${bookId}_${pageId}`);
 			})
 			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' }))
 			.finally(() => setLoading(false));
@@ -282,7 +319,7 @@ const PageEditorPage = () => {
 			</Toolbar>
 			<Grid alignContent="stretch" alignItems="stretch" direction="row" container className={`${fullScreen ? classes.fullScreenContainer : classes.container}`}>
 				<Grid item xs={showImage ? 6 : 12} className={classes.pane}>
-					<Editor data={text} onChange={content => setText(content)} textScale={textScale} fullScreen={fullScreen} font={font} />
+					<Editor data={text} onChange={onContentChanges} textScale={textScale} fullScreen={fullScreen} font={font} />
 				</Grid>
 				{showImage && <Grid item xs={6} className={classes.pane}>
 					<ImageViewer imageUrl={page && page.links && page.links.image ? page.links.image : "/images/no_image.png"}

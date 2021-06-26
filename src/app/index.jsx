@@ -109,7 +109,10 @@ function App() {
 				<ThemeProvider theme={theme}>
 					<ConfirmProvider>
 						<Helmet titleTemplate={`${library != null ? library.name : 'Nawishta'} - %s`} />
-						<SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'center', preventDuplicate: true, autoHideDuration: 3000 }}>
+						<SnackbarProvider maxSnack={3}
+							anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+							preventDuplicate={true}
+							autoHideDuration={3000}>
 							<Routes />
 						</SnackbarProvider>
 					</ConfirmProvider>
