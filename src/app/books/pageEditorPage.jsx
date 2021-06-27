@@ -202,7 +202,7 @@ const PageEditorPage = () => {
 				if (cachedText) {
 					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.unsavedText.loaded' }), {
 						variant: 'info',
-						action: key => (<Button color="primary" className={classes.doneButton}
+						action: key => (<Button color="primary" className={classes.whiteButton}
 							startIcon={<UndoIcon fontSize="small" />}
 							onClick={() => {
 								setText(data.text);
