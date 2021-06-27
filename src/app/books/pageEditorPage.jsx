@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { FormattedMessage, useIntl } from "react-intl";
-import { useConfirm } from 'material-ui-confirm';
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,6 +13,7 @@ import { libraryService } from '../../services';
 import { ButtonGroup, Button, Toolbar, Typography, Divider, Tooltip, IconButton } from '@material-ui/core';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import UndoIcon from '@material-ui/icons/Undo';
 import SaveIcon from '@material-ui/icons/Save';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -68,6 +68,10 @@ const useStyles = makeStyles((theme) => ({
 		'&:hover': {
 			backgroundColor: green[700],
 		}
+	},
+	whiteButton: {
+		color: theme.palette.getContrastText(green[500]),
+		fontWeight: 'bold'
 	}
 }));
 
@@ -141,8 +145,7 @@ const CompleteButton = ({ page, onUpdated }) => {
 const PageEditorPage = () => {
 	const classes = useStyles();
 	const intl = useIntl();
-	const confirm = useConfirm();
-	const { enqueueSnackbar } = useSnackbar();
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const { bookId, pageId } = useParams();
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -195,15 +198,22 @@ const PageEditorPage = () => {
 			.then(data => {
 				setPage(data);
 				setText(data.text);
-			})
-			.then(() => {
 				var cachedText = localStorage.getItem(`text_${bookId}_${pageId}`);
 				if (cachedText) {
-					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.unsavedText.loaded' }), { variant: 'info' });
+					enqueueSnackbar(intl.formatMessage({ id: 'page.messages.unsavedText.loaded' }), {
+						variant: 'info',
+						action: key => (<Button color="primary" className={classes.doneButton}
+							startIcon={<UndoIcon fontSize="small" />}
+							onClick={() => {
+								setText(data.text);
+								localStorage.removeItem(`text_${bookId}_${pageId}`);
+								closeSnackbar(key);
+							}}>
+							<FormattedMessage id="page.messages.unsavedText.discardUnsavedChanges" />
+						</Button>)
+					});
 					setText(cachedText);
 				}
-
-				return Promise.resolve();
 			})
 			.catch(() => setError(true))
 			.finally(() => setLoading(false));
@@ -213,26 +223,8 @@ const PageEditorPage = () => {
 		loadData();
 	}, [pageId]);
 
-	const confirmLoadingUnsavedText = (unsavedText) => {
-		return confirm({
-			title: intl.formatMessage({ id: "page.messages.unsavedText.title" }),
-			description: intl.formatMessage({ id: "page.messages.unsavedText.question" }, { title: book.title }),
-			confirmationText: intl.formatMessage({ id: "page.messages.unsavedText.use" }),
-			cancellationText: intl.formatMessage({ id: "page.messages.unsavedText.discard" }),
-			confirmationButtonProps: { variant: "contained", color: "primary" },
-			cancellationButtonProps: { color: "primary" }
-		})
-			.then(() => {
-				enqueueSnackbar(intl.formatMessage({ id: 'page.messages.unsavedText.loaded' }), { variant: 'info' });
-				setText(unsavedText);
-			})
-			.catch(() => {
-				localStorage.removeItem(`text_${bookId}_${pageId}`);
-			})
-	}
-
 	const onContentChanges = (newContent) => {
-		newContent => setText(newContent);
+		setText(newContent);
 		localStorage.setItem(`text_${bookId}_${pageId}`, newContent);
 	}
 
@@ -241,12 +233,13 @@ const PageEditorPage = () => {
 		libraryService.put(page.links.update, page)
 			.then(data => {
 				setPage(data);
-				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' })
-			})
-			.then(() => {
+				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.saved' }), { variant: 'success' });
 				localStorage.removeItem(`text_${bookId}_${pageId}`);
 			})
-			.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' }))
+			.catch((e) => {
+				console.error(e);
+				enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.saving' }), { variant: 'error' });
+			})
 			.finally(() => setLoading(false));
 	}
 
