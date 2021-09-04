@@ -73,6 +73,7 @@ function login(email, password) {
     return fetchWrapper.post(`${baseUrl}/authenticate`, { email, password })
         .then(user => {
             // publish user to subscribers and start timer to refresh token
+			localStorage.setItem('user', JSON.stringify(user));
             userSubject.next(user);
             startRefreshTokenTimer();
             return user;
@@ -80,17 +81,22 @@ function login(email, password) {
 }
 
 function logout() {
+	var user = getUserFromStorage();
+
     // revoke token, stop refresh timer, publish null to user subscribers and redirect to login page
-    fetchWrapper.post(`${baseUrl}/revoke-token`, {});
+    fetchWrapper.post(`${baseUrl}/revoke-token`, { token : (user != null ? user.refreshToken: null)});
     stopRefreshTokenTimer();
+	localStorage.removeItem('user');
     userSubject.next(null);
     history.push('/account/login');
 }
 
 function refreshToken() {
-    return fetchWrapper.post(`${baseUrl}/refresh-token`, {})
+	var user = getUserFromStorage();
+    return fetchWrapper.post(`${baseUrl}/refresh-token`, { refreshToken : (user != null ? user.refreshToken: null) })
         .then(user => {
             // publish user to subscribers and start timer to refresh token
+			localStorage.setItem('user', JSON.stringify(user));
             userSubject.next(user);
             startRefreshTokenTimer();
             return user;
@@ -197,4 +203,14 @@ function startRefreshTokenTimer() {
 
 function stopRefreshTokenTimer() {
     clearTimeout(refreshTokenTimeout);
+}
+
+function getUserFromStorage() {
+	var userJson = localStorage.getItem('user');
+	if (userJson)
+	{
+		return JSON.parse(userJson);
+	}
+
+	return null;
 }

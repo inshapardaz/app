@@ -121,7 +121,7 @@ const ProfileMenu = () => {
 												<FormattedMessage id="changePassword.title" />
 											</Typography>
 										</MenuItem>
-										{user.role === Role.Admin &&
+										{user.isSuperAdmin &&
 											<MenuItem component={Link} onClick={handleClose} to="/admin" >
 												<ListItemIcon>
 													<SupervisorAccountIcon fontSize="small" />

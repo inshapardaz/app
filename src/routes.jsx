@@ -56,7 +56,7 @@ const Routes = () => {
 			<RouteWithLayout layout={fullWidthLayout} path="/search" component={SearchPage} exact />
 			<PrivateRoute layout={fullWidthLayout} path="/publishing" component={PublishingPage} exact />
 			<PrivateRoute layout={fullWidthLayout} path="/profile" component={Profile} />
-			<PrivateRoute layout={fullWidthLayout} path="/admin" roles={[Role.Admin]} component={Admin} />
+			<PrivateRoute layout={fullWidthLayout} path="/admin" adminOnly={true} component={Admin} />
 			<PrivateRoute layout={fullWidthLayout} path="/library/:id" component={LibrarySwitch} />
 			<PrivateRoute layout={fullWidthLayout} path="/libraries/select" component={LibrarySelectorPage} exact />
 			<Route path="/account/login" component={Login} layout={emptyLayout} />

@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 
 import { accountService } from '../../services';
 
-function PrivateRoute({ layout, component, roles, ...rest }) {
+function PrivateRoute({ layout, component, adminOnly, ...rest }) {
 	return (
 		<Route {...rest} render={props => {
 			const user = accountService.userValue;
@@ -12,8 +12,7 @@ function PrivateRoute({ layout, component, roles, ...rest }) {
 				return <Redirect to={{ pathname: '/account/login', state: { from: props.location } }} />
 			}
 
-			// check if route is restricted by role
-			if (roles && roles.indexOf(user.role) === -1) {
+			if (adminOnly && !user.isSuperAdmin) {
 				// role not authorized so redirect to home page
 				return <Redirect to={{ pathname: '/' }} />
 			}
