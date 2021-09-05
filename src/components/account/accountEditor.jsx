@@ -48,9 +48,7 @@ const AccountEditor = ({ show, account, createLink, onSaved, onCancelled }) => {
 	const isAddMode = savedAccount === null;
 
 	const initialValues = {
-		title: '',
-		firstName: '',
-		lastName: '',
+		name: '',
 		email: '',
 		role: '',
 		password: '',
@@ -62,12 +60,8 @@ const AccountEditor = ({ show, account, createLink, onSaved, onCancelled }) => {
 	}, [account]);
 
 	const validationSchema = Yup.object().shape({
-		title: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.title.required' })),
-		firstName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.firstName.required' })),
-		lastName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.lastName.required' })),
+		name: Yup.string()
+			.required(intl.formatMessage({ id: 'register.message.name.required' })),
 		email: Yup.string()
 			.email(intl.formatMessage({ id: 'register.message.email.error' }))
 			.required(intl.formatMessage({ id: 'register.message.email.required' })),
@@ -127,22 +121,9 @@ const AccountEditor = ({ show, account, createLink, onSaved, onCancelled }) => {
 				{({ errors, touched, isSubmitting }) => (
 					<Form>
 						<Typography variant="h3">{intl.formatMessage({ id: isAddMode ? 'user.add' : 'user.edit' })}</Typography>
-						<FormControl variant="outlined" margin="normal" fullWidth error={errors.title && touched.title}>
-							<InputLabel ><FormattedMessage id="register.title.label" /></InputLabel>
-							<Field component={Select} name="title" as="select" ariant="outlined" fullWidth
-								error={errors.title && touched.title}
-								input={<BootstrapInput />}>
-								<MenuItem value="">{intl.formatMessage({ id: "register.title.none" })}</MenuItem>
-								<MenuItem value="Mr">{intl.formatMessage({ id: "register.title.mr" })}</MenuItem>
-								<MenuItem value="Mrs">{intl.formatMessage({ id: "register.title.mrs" })}</MenuItem>
-								<MenuItem value="Miss">{intl.formatMessage({ id: "register.title.miss" })}</MenuItem>
-							</Field>
-						</FormControl>
-						<Field component={TextField} name="firstName" margin="normal" type="text" variant="outlined" fullWidth
-							label={<FormattedMessage id="register.firstName.label" />} error={errors.firstName && touched.firstName} />
 
-						<Field component={TextField} name="lastName" margin="normal" type="text" variant="outlined" fullWidth
-							label={<FormattedMessage id="register.lastName.label" />} error={errors.lastName && touched.lastName} />
+						<Field component={TextField} name="name" margin="normal" type="text" variant="outlined" fullWidth
+							label={<FormattedMessage id="register.name.label" />} error={errors.name && touched.name} />
 
 						<Field component={TextField} name="email" margin="normal" type="email" variant="outlined" fullWidth
 							label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />

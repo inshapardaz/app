@@ -29,7 +29,7 @@ function DeleteAccount({ show, account, onDeleted, onCancelled }) {
 		setBusy(true);
 		libraryService.delete(account.links.delete)
 			.then(() => {
-				enqueueSnackbar(intl.formatMessage({ id: 'account.delete.success' }, { name: `${account.firstName} ${account.lastName}` }), { variant: 'success' })
+				enqueueSnackbar(intl.formatMessage({ id: 'account.delete.success' }, { name: account.name }), { variant: 'success' })
 				onDeleted();
 			})
 			.catch(() => {
@@ -60,7 +60,7 @@ function DeleteAccount({ show, account, onDeleted, onCancelled }) {
 				<DialogTitle id="alert-dialog-slide-title"><FormattedMessage id="action.delete" /></DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
-						<FormattedMessage id="account.delete.confirm" values={{ name: `${account.firstName} ${account.lastName}` }} />
+						<FormattedMessage id="account.delete.confirm" values={{ name: `${account.name}` }} />
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>

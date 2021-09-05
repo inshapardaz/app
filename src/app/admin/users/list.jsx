@@ -161,7 +161,6 @@ function List({ match }) {
 	return (
 		<div className={classes.paper}>
 			<Container component="main" maxWidth="md">
-				<Typography variant="h2"><FormattedMessage id="admin.users.title" /></Typography>
 				<Button variant="contained" color="primary" onClick={() => createAccount()}><FormattedMessage id="admin.users.add" /></Button>
 				<TableContainer component={Paper}>
 					<Table className={classes.table}>
@@ -176,7 +175,7 @@ function List({ match }) {
 						<TableBody>
 							{users && users.data && users.data.map(user =>
 								<TableRow key={user.id}>
-									<TableCell>{user.title} {user.firstName} {user.lastName}</TableCell>
+									<TableCell>{user.name}</TableCell>
 									<TableCell>{user.email}</TableCell>
 									<TableCell>{roleMapper(user.role)}</TableCell>
 									<TableCell style={{ whiteSpace: 'nowrap' }}>

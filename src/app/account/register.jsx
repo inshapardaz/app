@@ -68,8 +68,7 @@ function Register({ history }) {
 	const { enqueueSnackbar } = useSnackbar();
 	const classes = useStyles();
 	const initialValues = {
-		firstName: '',
-		lastName: '',
+		name: '',
 		email: '',
 		password: '',
 		confirmPassword: '',
@@ -77,10 +76,8 @@ function Register({ history }) {
 	};
 
 	const validationSchema = Yup.object().shape({
-		firstName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.firstName.required' })),
-		lastName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.lastName.required' })),
+		name: Yup.string()
+			.required(intl.formatMessage({ id: 'register.message.name.required' })),
 		email: Yup.string()
 			.email(intl.formatMessage({ id: 'register.message.email.error' }))
 			.required(intl.formatMessage({ id: 'register.message.email.required' })),
@@ -122,11 +119,8 @@ function Register({ history }) {
 					<Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
 						{({ errors, touched, isSubmitting }) => (
 							<Form>
-								<Field component={TextField} name="firstName" type="text" variant="outlined" margin="normal" fullWidth
-									label={<FormattedMessage id="register.firstName.label" />} error={errors.firstName && touched.firstName} />
-
-								<Field component={TextField} name="lastName" type="text" variant="outlined" margin="normal" fullWidth
-									label={<FormattedMessage id="register.lastName.label" />} error={errors.lastName && touched.lastName} />
+								<Field component={TextField} name="name" type="text" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.name.label" />} error={errors.name && touched.name} />
 
 								<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth
 									label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />

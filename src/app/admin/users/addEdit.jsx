@@ -53,9 +53,7 @@ function AddEdit({ history, match }) {
 	const isAddMode = !id;
 
 	const initialValues = {
-		title: '',
-		firstName: '',
-		lastName: '',
+		name: '',
 		email: '',
 		role: '',
 		password: '',
@@ -63,12 +61,8 @@ function AddEdit({ history, match }) {
 	};
 
 	const validationSchema = Yup.object().shape({
-		title: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.title.required' })),
-		firstName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.firstName.required' })),
-		lastName: Yup.string()
-			.required(intl.formatMessage({ id: 'register.message.lastName.required' })),
+		name: Yup.string()
+			.required(intl.formatMessage({ id: 'register.message.name.required' })),
 		email: Yup.string()
 			.email(intl.formatMessage({ id: 'register.message.email.error' }))
 			.required(intl.formatMessage({ id: 'register.message.email.required' })),
@@ -126,7 +120,7 @@ function AddEdit({ history, match }) {
 							if (!isAddMode) {
 								// get user and set form fields
 								accountService.getById(id).then(user => {
-									const fields = ['title', 'firstName', 'lastName', 'email', 'role'];
+									const fields = ['name', 'email', 'role'];
 									fields.forEach(field => setFieldValue(field, user[field], false));
 								});
 							}
@@ -135,22 +129,8 @@ function AddEdit({ history, match }) {
 						return (
 							<Form>
 								<Typography variant="h3">{intl.formatMessage({ id: isAddMode ? 'user.add' : 'user.edit' })}</Typography>
-								<FormControl variant="outlined" margin="normal" fullWidth error={errors.title && touched.title}>
-									<InputLabel ><FormattedMessage id="register.title.label" /></InputLabel>
-									<Field component={Select} name="title" as="select" ariant="outlined" margin="normal" fullWidth
-										error={errors.title && touched.title}
-										input={<BootstrapInput />}>
-										<MenuItem value="">{intl.formatMessage({ id: "register.title.none" })}</MenuItem>
-										<MenuItem value="Mr">{intl.formatMessage({ id: "register.title.mr" })}</MenuItem>
-										<MenuItem value="Mrs">{intl.formatMessage({ id: "register.title.mrs" })}</MenuItem>
-										<MenuItem value="Miss">{intl.formatMessage({ id: "register.title.miss" })}</MenuItem>
-									</Field>
-								</FormControl>
-								<Field component={TextField} name="firstName" type="text" variant="outlined" margin="normal" fullWidth
-									label={<FormattedMessage id="register.firstName.label" />} error={errors.firstName && touched.firstName} />
-
-								<Field component={TextField} name="lastName" type="text" variant="outlined" margin="normal" fullWidth
-									label={<FormattedMessage id="register.lastName.label" />} error={errors.lastName && touched.lastName} />
+								<Field component={TextField} name="name" type="text" variant="outlined" margin="normal" fullWidth
+									label={<FormattedMessage id="register.name.label" />} error={errors.name && touched.name} />
 
 								<Field component={TextField} name="email" type="email" variant="outlined" margin="normal" fullWidth
 									label={<FormattedMessage id="register.email.label" />} error={errors.email && touched.email} />

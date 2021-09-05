@@ -96,7 +96,7 @@ const AccountLibraryEditor = ({ show, account, onCancelled }) => {
 
 	if (account === null) return (<></>);
 
-	const dialogTitle = intl.formatMessage({ id: "account.library.editor" }, { name: account !== null ? `${account.firstName} ${account.lastName}` : '' });
+	const dialogTitle = intl.formatMessage({ id: "account.library.editor" }, { name: account !== null ? account.name : '' });
 
 	return (
 		<EditorDialog show={show} busy={loading} title={dialogTitle} onCancelled={() => onCancelled()} >

@@ -60,7 +60,7 @@ function DeleteAccountLibrary({ show, account, library, onDeleted, onCancelled }
 				<DialogTitle id="alert-dialog-slide-title"><FormattedMessage id="action.delete" /></DialogTitle>
 				<DialogContent>
 					<DialogContentText id="alert-dialog-slide-description">
-						<FormattedMessage id="account.library.delete.confirm" values={{ name: `${account.firstName} ${account.lastName}`, library: library.name }} />
+						<FormattedMessage id="account.library.delete.confirm" values={{ name: account.name, library: library.name }} />
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>

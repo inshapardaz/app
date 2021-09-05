@@ -31,7 +31,7 @@ const Profile = ({ match }) => {
 				/>
 				<CardContent>
 					<Typography gutterBottom variant="h4" component="div" align="center">
-						{user.firstName} {user.lastName}
+						{user.name}
 					</Typography>
 				</CardContent>
 				<CardActions>

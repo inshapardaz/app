@@ -29,7 +29,7 @@ function Details({ match }) {
 						<Typography variant="h6"><FormattedMessage id="profile.name.title" /></Typography>
 					</Grid>
 					<Grid item xs={12} >
-						{user.title} {user.firstName} {user.lastName}
+						{user.name}
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6" ><FormattedMessage id="profile.email.title" /></Typography>
