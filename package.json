@@ -11,7 +11,7 @@
   "scripts": {
     "start": "webpack-dev-server --hot --mode development",
     "start:test": "webpack-dev-server --hot --mode development --env TARGET_ENV=test",
-    "build": "webpack --mode production",
+    "build": "webpack --mode production --env production",
     "lint": "eslint --fix",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",

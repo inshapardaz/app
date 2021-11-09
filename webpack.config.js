@@ -4,8 +4,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env) => {
-  const isProduction = env === 'production';
+  const isProduction = env.production;
   const configTarget = isProduction ? 'prod' : env.TARGET_ENV || 'dev';
+  
+  console.log(`Building with configuration target ${configTarget}`);
 
   return ({
     entry: './src/index.jsx',
