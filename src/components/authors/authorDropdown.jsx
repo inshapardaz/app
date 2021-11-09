@@ -17,7 +17,6 @@ const AuthorDropDown = ({
   const [options, setOptions] = React.useState([]);
   const [text, setText] = React.useState('');
   const [loading, setLoading] = React.useState(false);
-  const [loadingError, setLoadingError] = React.useState(false);
   const library = useSelector((state) => state.libraryReducer.library);
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const AuthorDropDown = ({
       setLoading(true);
       libraryService.getAuthors(library.links.authors, text, 1, 10)
         .then((response) => setOptions(response.data))
-        .catch(() => setLoadingError(true))
+        .catch((e) => console.error(e))
         .finally(() => setLoading(false));
     }
   }, [library, text]);
@@ -45,7 +44,7 @@ const AuthorDropDown = ({
       isOptionEqualToValue={getOptionSelected}
       getOptionLabel={getOptionLabel}
       noOptionsText={intl.formatMessage({ id: 'authors.messages.empty' })}
-      onInputChange={(e, value) => setText(value)}
+      onInputChange={(e, val) => setText(val)}
       renderInput={(params) => (
         <TextField {...params} label={label} error={error} variant={variant} />)}
     />

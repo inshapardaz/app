@@ -33,3 +33,4 @@ cypress/**/*
 
 
 .vscode/**/*
+dist
