@@ -1,245 +1,291 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useSnackbar } from 'notistack';
-import { FormattedMessage, useIntl } from "react-intl";
-import { useConfirm } from 'material-ui-confirm';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Link, useLocation, useHistory } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+import queryString from 'query-string';
 
-import Container from "@material-ui/core/Container";
-import Toolbar from "@material-ui/core/Toolbar";
-import Grid from "@material-ui/core/Grid";
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Pagination from "@material-ui/lab/Pagination";
-import PaginationItem from "@material-ui/lab/PaginationItem";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+// MUI
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-import { libraryService } from "../../services";
-import BookCard from "./bookCard.jsx";
-import BookEditor from "./bookEditor.jsx";
-import BookPopup from "./bookPopup";
-import { Button } from "@material-ui/core";
+import ReorderRoundedIcon from '@mui/icons-material/ReorderRounded';
+import CalendarViewMonthRoundedIcon from '@mui/icons-material/CalendarViewMonthRounded';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-const useStyles = () =>
-	makeStyles((theme) => ({
-		cardGrid: {
-			paddingTop: theme.spacing(8),
-			paddingBottom: theme.spacing(8),
-		},
-	}));
-const classes = useStyles();
+// Local Import
+import { libraryService } from '@/services';
+import BookListItem from '@/components/books/bookListItem';
+import BookCard from '@/components/books/bookCard';
+import helpers from '@/helpers';
+import Busy from '@/components/busy';
+import Empty from '@/components/empty';
+import Error from '@/components/error';
+import BookFilterButton from '@/components/books/bookFilterButton';
+import BookSortButton from '@/components/books/bookSortButton';
+import SearchBox from '@/components/searchBox';
 
-// eslint-disable-next-line max-params
-const buildLinkToPage = (page, authorId, categoryId, seriesId, query, appendExtraParams = false) => {
-	const location = useLocation();
+const BookList = ({
+  library, series, author, showFilters,
+}) => {
+  const location = useLocation();
+  const history = useHistory();
 
-	let querystring = "";
-	querystring += page ? `page=${page}&` : "";
-	querystring += query ? `query=${query}&` : "";
-	if (appendExtraParams) {
-		querystring += authorId ? `author=${authorId}` : "";
-		querystring += categoryId ? `category=${categoryId}` : "";
-		querystring += seriesId ? `series=${seriesId}` : "";
-		queryString += sortBy ? `sortBy=${sortBy}&` : "";
-	}
-	if (querystring !== "") {
-		querystring = `?${querystring}`.slice(0, -1);
-	}
-	return `${location.pathname}${querystring}`;
+  const [busy, setBusy] = useState(true);
+  const [error, setError] = useState(false);
+  const [books, setBooks] = useState(null);
+  const [query, setQuery] = useState(null);
+  const [categoryId, setCategoryId] = useState(null);
+  const [favoriteFilter, setFavoriteFilter] = useState(null);
+  const [readFilter, setReadFilter] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(null);
+  const [sortBy, setSortBy] = useState(null);
+  const [sortDirection, setSortDirection] = useState(null);
+  const [page, setPage] = useState(null);
+  const [showCards, setShowCards] = useState(localStorage.getItem('booksCardView') === 'true');
+
+  const updateQuery = (newQuery) => {
+    history.push(
+      helpers.buildLinkToBooksPage(
+        location,
+        page,
+        newQuery,
+        author,
+        categoryId,
+        series,
+        sortBy,
+        sortDirection,
+        favoriteFilter,
+        readFilter,
+        statusFilter,
+      ),
+    );
+  };
+
+  const onFilterUpdated = (newFavoriteFilter, newReadFilter, newStatusFilter) => {
+    history.push(
+      helpers.buildLinkToBooksPage(
+        location,
+        page,
+        query,
+        author,
+        categoryId,
+        series,
+        sortBy,
+        sortDirection,
+        newFavoriteFilter,
+        newReadFilter,
+        newStatusFilter,
+      ),
+    );
+  };
+
+  const onSortUpdated = (newSortBy, newSortDirection) => {
+    history.push(
+      helpers.buildLinkToBooksPage(
+        location,
+        page,
+        query,
+        author,
+        categoryId,
+        series,
+        newSortBy,
+        newSortDirection,
+        favoriteFilter,
+        readFilter,
+        statusFilter,
+      ),
+    );
+  };
+
+  const loadData = () => {
+    if (library != null) {
+      setBusy(true);
+      setError(false);
+      const values = queryString.parse(location.search);
+
+      libraryService.getBooks(library.links.books,
+        query,
+        author,
+        values.category,
+        series,
+        values.sortBy,
+        values.sortDirection,
+        values.favorite,
+        values.read,
+        values.status,
+        values.page)
+        .then((res) => {
+          setBooks(res);
+          setQuery(values.query);
+          setCategoryId(values.category);
+          setSortBy(values.sortBy);
+          setFavoriteFilter(values.favorite === 'true');
+          setReadFilter(helpers.parseNullableBool(values.read));
+          setStatusFilter(values.status);
+          setSortDirection(values.sortDirection);
+          setPage(parseInt(values.page, 10));
+        })
+        .then(() => setBusy(false))
+        .catch(() => {
+          setBusy(false);
+          setError(true);
+        });
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [library, location]);
+
+  const renderPagination = () => {
+    if (!busy && books) {
+      return (
+        <Pagination
+          sx={{ my: (theme) => theme.spacing(2) }}
+          page={books.currentPageIndex}
+          count={books.pageCount}
+          renderItem={(item) => (
+            <PaginationItem
+              component={Link}
+              to={helpers.buildLinkToBooksPage(
+                location,
+                item.page,
+                query,
+                author,
+                categoryId,
+                series,
+                sortBy,
+                sortDirection,
+              )}
+              {...item}
+            />
+          )}
+        />
+      );
+    }
+
+    return null;
+  };
+
+  const toggleView = () => {
+    localStorage.setItem('booksCardView', !showCards);
+    setShowCards(!showCards);
+  };
+
+  const renderList = () => (
+    <List component="nav" aria-label="books">
+      {books && books.data.map((b) => (
+        <BookListItem key={b.id} book={b} onUpdated={loadData} />
+      ))}
+    </List>
+  );
+
+  const renderCards = () => (
+    <Grid container spacing={3}>
+      {books && books.data.map((b) => (
+        <Grid item key={b.id} xs={12} sm={6} md={4} alignItems="stretch">
+          <BookCard book={b} key={b.id} onUpdated={loadData} />
+        </Grid>
+      ))}
+    </Grid>
+  );
+
+  const renderFilters = () => {
+    if (showFilters) {
+      return (
+        <>
+          <SearchBox value={query} onChange={updateQuery} />
+          <BookFilterButton
+            favorite={favoriteFilter}
+            read={readFilter}
+            statusFilter={statusFilter}
+            showStatusFilter={books != null && books.links.create != null}
+            onChange={onFilterUpdated}
+          />
+          <BookSortButton
+            sortBy={sortBy}
+            sortDirection={sortDirection}
+            onChange={onSortUpdated}
+          />
+        </>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <>
+      <Error
+        error={error}
+        message={<FormattedMessage id="books.messages.error.loading" />}
+        actionText={<FormattedMessage id="action.retry" />}
+        onAction={loadData}
+      >
+        <Busy busy={busy}>
+          <Toolbar>
+            {books && books.links.create && (
+            <Tooltip title={<FormattedMessage id="books.action.create" />}>
+              <IconButton
+                data-ft="create-book-button"
+                variant="contained"
+                color="primary"
+                component={Link}
+                to="/books/create"
+              >
+                <AddCircleOutlineIcon />
+              </IconButton>
+            </Tooltip>
+            )}
+            <div style={{ flexGrow: 1 }} />
+            {renderFilters()}
+            <ToggleButtonGroup
+              value={showCards}
+              exclusive
+              size="small"
+              onChange={toggleView}
+              aria-label="view"
+            >
+              <ToggleButton value aria-label="show cards">
+                <CalendarViewMonthRoundedIcon />
+              </ToggleButton>
+              <ToggleButton value={false} aria-label="show list">
+                <ReorderRoundedIcon />
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Toolbar>
+          <Empty items={books && books.data} message={<FormattedMessage id="books.messages.empty" />}>
+            {showCards ? renderCards() : renderList()}
+            {renderPagination()}
+          </Empty>
+        </Busy>
+      </Error>
+    </>
+  );
 };
 
-const BookList = ({ page, query, categoryId, authorId, seriesId, sortBy = null }) => {
-	const confirm = useConfirm();
-	const intl = useIntl();
-	const { enqueueSnackbar } = useSnackbar();
-	const [showPopup, setShowPopup] = useState(false);
-	const [showEditor, setShowEditor] = useState(false);
-	const [selectedBook, setSelectedBook] = useState(null);
-	const [books, setBooks] = useState(null);
-	const [isLoading, setLoading] = useState(true);
-	const [isError, setError] = useState(false);
+BookList.defaultProps = {
+  series: null,
+  author: null,
+  showFilters: true,
+  library: null,
+};
 
-	const loadData = () => {
-		setLoading(true);
-		libraryService
-			.getBooks(
-				authorId ? authorId : null,
-				categoryId ? categoryId : null,
-				seriesId ? seriesId : null,
-				query ? query : null,
-				page,
-				sortBy ? sortBy : null,
-			)
-			.then((data) => {
-				setBooks(data);
-			})
-			.catch((e) => setError(true))
-			.finally(() => setLoading(false));
-	};
-
-	useEffect(() => {
-		loadData();
-	}, [page, query, categoryId, authorId, seriesId]);
-
-	const handleClose = () => {
-		setSelectedBook(null);
-		setShowPopup(false);
-		setShowEditor(false);
-	};
-
-	const onDeleteClicked = useCallback(
-		(book) => {
-			confirm({
-				title: intl.formatMessage({ id: "action.delete" }),
-				description: intl.formatMessage({ id: "books.action.confirmDelete" }, { title: book.title }),
-				confirmationText: intl.formatMessage({ id: "action.yes" }),
-				cancellationText: intl.formatMessage({ id: "action.no" }),
-				confirmationButtonProps: { variant: "contained", color: "secondary" },
-				cancellationButtonProps: { color: "secondary" }
-			})
-				.then(() => {
-					return libraryService.delete(book.links.delete)
-						.then(() => enqueueSnackbar(intl.formatMessage({ id: 'books.messages.deleted' }), { variant: 'success' }))
-						.then(() => loadData())
-						.catch(() => enqueueSnackbar(intl.formatMessage({ id: 'books.messages.error.delete' }), { variant: 'error' }));
-				}).catch(() => { })
-
-		},
-		[books]
-	);
-
-
-	const onOpenBook = useCallback(
-		(book) => {
-			setSelectedBook(book);
-			setShowPopup(true);
-		},
-		[books]
-	);
-
-	const onEditClicked = useCallback(
-		(book) => {
-			setSelectedBook(book);
-			setShowEditor(true);
-		},
-		[books]
-	);
-
-	const handleDataChanged = () => {
-		handleClose();
-		loadData();
-	};
-
-	const renderBooks = () => {
-		if (isLoading) {
-			return <CircularProgress />;
-		}
-
-		if (isError) {
-			return (
-				<Typography variant="h6" component="h6" align="center">
-					<FormattedMessage id="books.messages.error.loading" />
-				</Typography>
-			);
-		}
-
-		if (books === null || books.data === null || books.data.length < 1) {
-			return (
-				<Typography variant="h6" component="h6" align="center">
-					<FormattedMessage id="books.messages.empty" />
-				</Typography>
-			);
-		}
-
-		return (
-			<Grid container spacing={4}>
-				{books.data.map((b) => (
-					<Grid item key={b.id} xs={12} sm={6} md={4}>
-						<BookCard
-							book={b}
-							key={b.id}
-							onOpen={onOpenBook}
-							onEdit={onEditClicked}
-							onDelete={onDeleteClicked}
-							onUpdated={handleDataChanged}
-						/>
-					</Grid>
-				))}
-			</Grid>
-		);
-	};
-
-	const renderPagination = () => {
-		if (!isLoading && books) {
-			return (
-				<Box mt={8} mb={8}>
-					<Pagination
-						page={books.currentPageIndex}
-						count={books.pageCount}
-						variant="outlined"
-						shape="rounded"
-						renderItem={(item) => (
-							<PaginationItem
-								component={Link}
-								to={buildLinkToPage(
-									item.page,
-									authorId,
-									categoryId,
-									seriesId,
-									query
-								)}
-								{...item}
-							/>
-						)}
-					/>
-				</Box>
-			);
-		}
-
-		return null;
-	};
-
-	const renderToolBar = () => {
-		if (books && books.links.create) {
-			return (
-				<Toolbar>
-					<Button
-						variant="contained"
-						color="primary"
-						aria-label="menu"
-						onClick={() => onEditClicked(null)}
-						startIcon={<AddCircleIcon />}
-					>
-						<FormattedMessage id="books.action.create" />
-					</Button>
-				</Toolbar>
-			);
-		}
-
-		return null;
-	};
-
-	return (
-		<Container className={classes.cardGrid} maxWidth="md">
-			{renderToolBar()}
-			{renderBooks()}
-			{renderPagination()}
-			<BookPopup
-				show={showPopup}
-				book={selectedBook}
-				createLink={books && books.links.create}
-				onClosed={handleClose}
-			/>
-			<BookEditor
-				show={showEditor}
-				book={selectedBook}
-				createLink={books && books.links.create}
-				onSaved={handleDataChanged}
-				onCancelled={handleClose}
-			/>
-		</Container>
-	);
+BookList.propTypes = {
+  library: PropTypes.shape({
+    links: PropTypes.shape({
+      books: PropTypes.string,
+    }),
+  }),
+  series: PropTypes.number,
+  author: PropTypes.number,
+  showFilters: PropTypes.bool,
 };
 
 export default BookList;

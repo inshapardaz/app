@@ -1,0 +1,11 @@
+{
+	"retries": 1,
+	"baseUrl": "http://localhost:8080",
+  	"projectId": "nawishta",
+	"integrationFolder": "tests/specs/",
+	"fixturesFolder" : "tests/fixtures/",
+	"supportFile": "tests/index.js",
+	"video": false,
+	"browser" : ["Electron"],
+	"chromeWebSecurity": false
+}

@@ -1,57 +1,68 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Dialog, DialogContent, AppBar, Slide, Toolbar, IconButton, Typography, Container } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />;
-});
+// MUI
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import AppBar from '@mui/material/AppBar';
+import Slide from '@mui/material/Slide';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 
-const useStyles = makeStyles((theme) => ({
-	appBar: {
-		position: "relative",
-	},
-	title: {
-		marginLeft: theme.spacing(2),
-		flex: 1,
-	}
-}));
+import CloseIcon from '@mui/icons-material/Close';
 
-const EditorDialog = ({ show, busy, title, onCancelled, children, submitButton }) => {
-	const classes = useStyles();
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-	return (
-		<Dialog
-			fullScreen
-			open={show}
-			onClose={() => onCancelled()}
-			TransitionComponent={Transition}
-			disableEscapeKeyDown={busy}
-			disableBackdropClick={busy}
-		>
-			<AppBar className={classes.appBar}>
-				<Toolbar>
-					<IconButton
-						edge="start"
-						color="inherit"
-						onClick={() => onCancelled()}
-						disabled={busy}
-						aria-label="close"
-					>
-						<CloseIcon />
-					</IconButton>
-					<Typography variant="h6" className={classes.title}>
-						{title}
-					</Typography>
-				</Toolbar>
-			</AppBar>
-			<DialogContent>
-				<Container maxWidth="lg">
-					{children}
-				</Container>
-			</DialogContent>
-		</Dialog >
-	);
+const EditorDialog = ({
+  show, busy, title, onCancelled, children,
+}) => (
+  <Dialog
+    fullScreen
+    open={show}
+    onClose={() => onCancelled()}
+    TransitionComponent={Transition}
+    disableEscapeKeyDown={busy}
+  >
+    <AppBar sx={{ position: 'relative' }}>
+      <Toolbar>
+        <IconButton
+          edge="start"
+          color="inherit"
+          onClick={() => onCancelled()}
+          disabled={busy}
+          aria-label="close"
+        >
+          <CloseIcon />
+        </IconButton>
+        <Typography variant="h6" sx={{ marginLeft: (theme) => theme.spacing(2), flex: 1 }}>
+          {title}
+        </Typography>
+      </Toolbar>
+    </AppBar>
+    <DialogContent>
+      <Container maxWidth="lg">
+        {children}
+      </Container>
+    </DialogContent>
+  </Dialog>
+);
+
+EditorDialog.defaultProps = {
+  show: false,
+  busy: false,
+  title: null,
+  onCancelled: () => {},
+  children: null,
+};
+
+EditorDialog.propTypes = {
+  show: PropTypes.bool,
+  busy: PropTypes.bool,
+  title: PropTypes.node,
+  onCancelled: PropTypes.func,
+  children: PropTypes.node,
 };
 
 export default EditorDialog;

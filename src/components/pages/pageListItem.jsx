@@ -1,62 +1,105 @@
-import React, { } from "react";
-import { Link } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import Tooltip from '@material-ui/core/Tooltip';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import DescriptionIcon from '@material-ui/icons/Description';
+import { useHistory } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
-import PageStatusIcon from './pageStatusIcon';
+// MUI
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Checkbox from '@mui/material/Checkbox';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import EditIcon from '@mui/icons-material/Edit';
+import Typography from '@mui/material/Typography';
 
-const PageListItem = ({ page, onCheckChanged, checked, onEdit, onDelete }) => {
-	return (
-		<ListItem key={page.sequenceNumber}>
-			<ListItemIcon>
-				<Checkbox
-					edge="start"
-					checked={checked}
-					onClick={onCheckChanged}
-					tabIndex={-1}
-					disableRipple
-				/>
-				<PageStatusIcon status={page.status} />
-			</ListItemIcon>
-			<ListItemAvatar>
-				<Typography variant="body1" align="center">{page.sequenceNumber}
-				</Typography>
-			</ListItemAvatar>
-			<ListItemText
-				primary={page.accountId && (<FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
-			/>
-			<ListItemSecondaryAction>
-				<Tooltip title={<FormattedMessage id="action.editContent" />} >
-					<IconButton component={Link} edge="end" aria-label="edit" to={`/books/${page.bookId}/pages/${page.sequenceNumber}/editor`}>
-						<DescriptionIcon />
-					</IconButton>
-				</Tooltip>
-				<Tooltip title={<FormattedMessage id="action.edit" />} >
-					<IconButton edge="end" aria-label="edit" onClick={onEdit}>
-						<EditIcon />
-					</IconButton>
-				</Tooltip>
-				<Tooltip title={<FormattedMessage id="action.delete" />} >
-					<IconButton edge="end" aria-label="delete" onClick={onDelete}>
-						<DeleteIcon />
-					</IconButton>
-				</Tooltip>
-			</ListItemSecondaryAction>
-		</ListItem>
-	);
+// Local imports
+import PageDeleteButton from '@/components/pages/deletePageButton';
+import PageStatusIcon from '@/components/pages/pageStatusIcon';
+
+const PageListItem = ({
+  page, onUpdated, onCheckChanged, checked,
+}) => {
+  const history = useHistory();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const pageClicked = () => history.push(`/books/${page.bookId}/pages/${page.sequenceNumber}/edit`);
+
+  return (
+    <ListItem
+      divider
+      disablePadding
+      secondaryAction={(
+        <>
+          <Tooltip title={<FormattedMessage id="action.edit" />}>
+            <IconButton onClick={pageClicked}><EditIcon /></IconButton>
+          </Tooltip>
+          <PageDeleteButton page={page} onDeleted={onUpdated} />
+        </>
+)}
+    >
+      <ListItemButton>
+        <Checkbox
+          edge="start"
+          checked={checked}
+          onClick={() => onCheckChanged(page.sequenceNumber, !checked)}
+          tabIndex={-1}
+          disableRipple
+        />
+        {matches && (
+        <ListItemIcon onClick={pageClicked} sx={{ mr: theme.spacing(1) }}>
+          <PageStatusIcon status={page.status} />
+        </ListItemIcon>
+        )}
+        <ListItemText
+          onClick={pageClicked}
+          primary={<FormattedMessage id="page.editor.header" values={{ sequenceNumber: page.sequenceNumber }} />}
+          secondary={(
+            <>
+              {page.chapterId
+            && (
+            <Typography component="span">
+              {page.chapterTitle}
+            </Typography>
+            )}
+              {page.chapterId && page.accountId && <span style={{ padding: '0 10px' }}>•</span>}
+              {page.accountId
+            && <FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />}
+            </>
+        )}
+        />
+      </ListItemButton>
+    </ListItem>
+  );
 };
 
+PageListItem.defaultProps = {
+  checked: false,
+  onUpdated: () => {},
+  onCheckChanged: () => {},
+};
+PageListItem.propTypes = {
+  page: PropTypes.shape({
+    id: PropTypes.number,
+    bookId: PropTypes.number,
+    sequenceNumber: PropTypes.number,
+    accountId: PropTypes.number,
+    accountName: PropTypes.string,
+    status: PropTypes.string,
+    chapterId: PropTypes.number,
+    chapterTitle: PropTypes.string,
+    links: PropTypes.shape({
+      image: PropTypes.string,
+      update: PropTypes.string,
+    }),
+  }).isRequired,
+  checked: PropTypes.bool,
+  onCheckChanged: PropTypes.func,
+  onUpdated: PropTypes.func,
+};
 
 export default PageListItem;

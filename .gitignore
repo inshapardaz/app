@@ -26,7 +26,10 @@ node_modules
 
 # Functional Tests
 # -----------------
-
+cypress/**/*
 /tests/functional/**/*.js
 /tests/functional/**/*.map
 /tests/functional/logs
+
+
+.vscode/**/*

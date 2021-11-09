@@ -1,208 +1,147 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import LayersIcon from '@material-ui/icons/Layers';
-import { makeStyles } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
-
-import Tooltip from '@material-ui/core/Tooltip';
+import PropTypes from 'prop-types';
+import { Link, useHistory } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { libraryService } from '../../services';
-import { LinearProgress } from '@material-ui/core';
-import BookProgress from './bookProgress';
 
-const defaultBookImage = '/images/book_placeholder.jpg';
+// MUI
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
-const useStyles = makeStyles((theme) => ({
-	progress: {
-		cursor: 'pointer'
-	},
-	popoverRoot: {
-		minWidth: 200
-	},
-	progressBar: {
-		marginTop: '2px',
-		marginBottom: '2px',
-	}
-}));
+// Local imports
+import FavoriteButton from '@/components/books/favoriteButton';
+import PagesLink from '@/components/books/pagesLink';
+import BookProgress from '@/components/books/bookProgress';
+import BookSeriesLabel from '@/components/books/bookSeriesLabel';
+import BookCategoriesLabel from '@/components/books/bookCategoriesLabel';
+import DeleteBookButton from '@/components/books/deleteBookButton';
+import AuthorsGroup from '@/components/authors/authorsGroup';
+import helpers from '@/helpers';
 
-const FavoriteButton = ({ book, onUpdated, onOpen }) => {
-	const changeFavorite = () => {
-		try {
-			if (book && book.links && book.links.create_favorite) {
-				libraryService.post(book.links.create_favorite, {});
-			}
-			else if (book && book.links && book.links.remove_favorite) {
-				libraryService.delete(book.links.remove_favorite, {});
-			}
+const BookCard = ({ book, onUpdated, showProgress = false }) => {
+  const intl = useIntl();
+  const history = useHistory();
 
-			onUpdated();
-		}
-		catch (e) {
-			console.dir(e);
-		}
-	};
+  const renderEditLink = () => {
+    if (book && book.links && book.links.update) {
+      return (
+        <Tooltip title={<FormattedMessage id="action.edit" />}>
+          <IconButton component={Link} to={`/books/${book.id}/edit`}>
+            <EditOutlinedIcon />
+          </IconButton>
+        </Tooltip>
+      );
+    }
+    return null;
+  };
 
-	if (book && book.links && book.links.create_favorite) {
-		return (<Tooltip title={<FormattedMessage id="books.action.favorite.add" />} >
-			<IconButton aria-label="add to favorites" onClick={() => changeFavorite()}>
-				<FavoriteBorderIcon />
-			</IconButton>
-		</Tooltip>);
-	}
-	else if (book && book.links && book.links.remove_favorite) {
+  const renderBookStatus = () => {
+    if (book.status === 'Published') return null;
 
-		return (<Tooltip title={<FormattedMessage id="books.action.favorite.remove" />} >
-			<IconButton aria-label="remove from favorites" onClick={() => changeFavorite()}>
-				<FavoriteIcon />
-			</IconButton>
-		</Tooltip>);
-	}
+    const statuses = [{
+      key: 'AvailableForTyping',
+      name: intl.formatMessage({ id: 'book.status.AvailableForTyping' }),
+    }, {
+      key: 'BeingTyped',
+      name: intl.formatMessage({ id: 'book.status.BeingTyped' }),
+    }, {
+      key: 'ReadyForProofRead',
+      name: intl.formatMessage({ id: 'book.status.ReadyForProofRead' }),
+    }, {
+      key: 'ProofRead',
+      name: intl.formatMessage({ id: 'book.status.ProofRead' }),
+    }];
 
-	return null;
-}
+    return (
+      <CardActions>
+        <Typography variant="body2" color="textSecondary" component="span">
+          {statuses.find((x) => x.key === book.status).name}
+        </Typography>
+      </CardActions>
+    );
+  };
 
-const BookCell = ({ book, onOpen, onEdit, onDelete, onUpdated, showProgress = false }) => {
-	const intl = useIntl();
-	const classes = makeStyles(() => ({
-		root: {
-			maxWidth: 345
-		},
-		cardProgress: {
-			paddingTop: '2px',
-			paddingBottom: '2px',
-		}
-	}));
+  const onOpen = () => history.push(`/books/${book.id}`);
 
-	const renderEditLink = () => {
-		if (book && book.links && book.links.update) {
-			return (<Tooltip title={<FormattedMessage id="action.edit" />} >
-				<IconButton onClick={() => onEdit(book)}>
-					<EditOutlinedIcon />
-				</IconButton>
-			</Tooltip>);
-		}
-		return null;
-	};
+  return (
+    <Card sx={{
+      maxWidth: '345px',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+    >
+      <CardMedia
+        component="img"
+        alt={book.title}
+        width="282"
+        height="400"
+        image={(book.links ? book.links.image : null) || helpers.defaultBookImage}
+        title={book.title}
+        onError={helpers.setDefaultBookImage}
+        onClick={() => onOpen()}
+      />
+      <CardContent>
+        <Grid container justifyContent="stretch">
+          <Grid item container justifyContent="space-between">
+            <AuthorsGroup authors={book.authors} showText={false} />
+            <Grid item sm={4}>
+              <BookCategoriesLabel book={book} alignPills="right" />
+            </Grid>
+          </Grid>
+          <Grid item>
+            <Tooltip title={book.title} aria-label={book.title}>
+              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/books/${book.id}`} sx={{ width: '100%' }}>
+                {book.title}
+              </Typography>
+            </Tooltip>
+            <BookSeriesLabel book={book} />
+            <Typography variant="body2" color="textSecondary" component="p">
+              {helpers.truncateWithEllipses(book.description, 45)}
+            </Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+      {renderBookStatus()}
+      { showProgress && <CardActions><BookProgress book={book} /></CardActions>}
+      <CardActions sx={{ flex: '1', alignItems: 'flex-end' }}>
+        {renderEditLink()}
+        <DeleteBookButton book={book} onDeleted={onUpdated} />
+        <PagesLink book={book} />
+        <FavoriteButton book={book} onUpdated={onUpdated} />
+      </CardActions>
+    </Card>
+  );
+};
 
-	const renderChaptersLink = () => {
-		if (book && book.links && book.links.update) {
-			return (<Tooltip title={<FormattedMessage id="chapter.toolbar.chapters" />} >
-				<IconButton component={Link} to={`/books/${book.id}/chapters`}>
-					<LayersIcon />
-				</IconButton>
-			</Tooltip>);
-		}
-		return null;
-	}
+BookCard.defaultProps = {
+  showProgress: false,
+  onUpdated: () => {},
+};
+BookCard.propTypes = {
+  book: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    authors: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    })),
+    status: PropTypes.string,
+    links: PropTypes.shape({
+      image: PropTypes.string,
+      update: PropTypes.string,
+      delete: PropTypes.string,
+    }),
+  }).isRequired,
+  showProgress: PropTypes.bool,
+  onUpdated: PropTypes.func,
+};
 
-	const renderPagesLink = () => {
-		if (book && book.links && book.links.update) {
-			return (<Tooltip title={<FormattedMessage id="pages.label" />} >
-				<IconButton component={Link} to={`/books/${book.id}/pages`}>
-					<FileCopyIcon />
-				</IconButton>
-			</Tooltip>);
-		}
-		return null;
-	}
-
-	const renderDeleteLink = () => {
-		if (book && book.links && book.links.delete) {
-			return (<Tooltip title={<FormattedMessage id="action.delete" />} >
-				<IconButton onClick={() => onDelete(book)}>
-					<DeleteForeverOutlinedIcon />
-				</IconButton>
-			</Tooltip>);
-		}
-		return null;
-	};
-
-	const setDefaultBookImage = (ev) => {
-		ev.target.src = defaultBookImage;
-	};
-
-	const renderBookStatus = () => {
-		const statuses = [{
-			key: 'Published',
-			name: intl.formatMessage({ id: 'book.status.Published' })
-		}, {
-			key: 'AvailableForTyping',
-			name: intl.formatMessage({ id: 'book.status.AvailableForTyping' })
-		}, {
-			key: 'BeingTyped',
-			name: intl.formatMessage({ id: 'book.status.BeingTyped' })
-		}, {
-			key: 'ReadyForProofRead',
-			name: intl.formatMessage({ id: 'book.status.ReadyForProofRead' })
-		}, {
-			key: 'ProofRead',
-			name: intl.formatMessage({ id: 'book.status.ProofRead' })
-		}];
-
-		if (!showProgress) return null;
-
-		return (
-			<CardActions>
-				<Typography variant="body2" color="textSecondary" component="span">
-					{statuses.find(x => x.key === book.status).name}
-				</Typography>
-			</CardActions>);
-	}
-
-	return (
-		<Card className={classes.root}>
-			<CardActionArea>
-				<CardMedia
-					component="img"
-					alt={book.title}
-					width="282"
-					height="400"
-					image={(book.links ? book.links.image : null) || defaultBookImage}
-					title={book.title}
-					onError={setDefaultBookImage}
-					onClick={() => onOpen(book)}
-				/>
-				<CardContent>
-					<Tooltip title={book.title} aria-label={book.title}>
-						<Typography gutterBottom variant="h5" component="h2" noWrap onClick={() => onOpen(book)}>
-							{book.title}
-						</Typography>
-					</Tooltip>
-					<Typography variant="body2" color="textSecondary" component="p">
-						{book.authorName}
-					</Typography>
-				</CardContent>
-			</CardActionArea>
-			{renderBookStatus()}
-			{ showProgress && <CardActions><BookProgress book={book} /></CardActions>}
-			<CardActions>
-				{renderEditLink()}
-				{renderDeleteLink()}
-				{renderChaptersLink()}
-				{renderPagesLink()}
-				<Tooltip title={<FormattedMessage id="action.read" />} >
-					<IconButton component={Link} to={`/books/${book.id}`}>
-						<MenuBookIcon />
-					</IconButton>
-				</Tooltip>
-				<FavoriteButton book={book} onUpdated={() => onUpdated()} />
-			</CardActions>
-		</Card>
-	);
-}
-
-export default BookCell;
+export default BookCard;

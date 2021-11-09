@@ -1,4 +1,5 @@
-export * from './account.service';
-export * from './alert.service';
-export * from './localeService';
-export * from './libraryService';
+import localeService from './locale.service';
+import accountService from './account.service';
+import libraryService from './library.service';
+
+export { localeService, accountService, libraryService };

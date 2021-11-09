@@ -1,83 +1,81 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import { makeStyles } from '@material-ui/core/styles';
-import { Tooltip } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
-const defaultAuthorImage = '/images/author_placeholder.jpg';
+// MUI
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import CardActionArea from '@mui/material/CardActionArea';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import EditIcon from '@mui/icons-material/Edit';
 
-function AuthorCard({ author, onEdit, onDelete }) {
-	const classes = makeStyles(() => ({
-		root: {
-			maxWidth: 345
-		}
-	}));
+// Local import
+import AuthorDeleteButton from '@/components/authors/deleteAuthorButton';
+import helpers from '@/helpers';
 
-	const renderEditLink = () => {
-		if (author && author.links && author.links.update) {
-			return (
-				<IconButton onClick={() => onEdit(author)}>
-					<EditOutlinedIcon />
-				</IconButton>);
-		}
-		return null;
-	};
+const AuthorCard = ({ author, onDeleted }) => {
+  const history = useHistory();
 
-	const renderDeleteLink = () => {
-		if (author && author.links && author.links.delete) {
-			return (
-				<IconButton onClick={() => onDelete(author)}>
-					<DeleteForeverOutlinedIcon />
-				</IconButton>
-			);
-		}
-		return null;
-	};
+  return (
+    <Card sx={{ maxWidth: 345 }}>
+      <CardActionArea component={Link} to={`/authors/${author.id}`}>
+        <CardMedia
+          component="img"
+          alt={author.name}
+          height="360"
+          image={(author.links ? author.links.image : null) || helpers.defaultAuthorImage}
+          onError={helpers.setDefaultAuthorImage}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="h2" noWrap>
+            {author.name}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            <FormattedMessage id="authors.item.book.count" values={{ count: author.bookCount }} />
+          </Typography>
+          <Tooltip title={author.description || ''}>
+            { author.description ? (
+              <Typography variant="body2" color="textSecondary" component="span">
+                {helpers.truncateWithEllipses(author.description, 30)}
+              </Typography>
+            ) : (<span style={{ opacity: 0 }}>No description</span>)}
+          </Tooltip>
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+        {author && author.links && author.links.update && (
+        <Tooltip title={<FormattedMessage id="action.edit" />}>
+          <IconButton onClick={() => history.push(`/authors/${author.id}/edit`)}><EditIcon /></IconButton>
+        </Tooltip>
+        )}
+        <AuthorDeleteButton author={author} onDeleted={onDeleted} />
+        <IconButton component={Link} to={`/books?author=${author.id}`}>
+          <MenuBookIcon />
+        </IconButton>
+      </CardActions>
+    </Card>
+  );
+};
 
-	const setDefaultAuthorImage = (ev) => {
-		ev.target.src = defaultAuthorImage;
-	};
+AuthorCard.propTypes = {
+  author: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    description: PropTypes.string,
+    bookCount: PropTypes.number,
+    links: PropTypes.shape({
+      image: PropTypes.string,
+      update: PropTypes.string,
+    }),
+  }).isRequired,
 
-	return (
-		<Card className={classes.root}>
-			<CardActionArea component={Link} to={`/authors/${author.id}`}>
-				<CardMedia
-					component="img"
-					alt={author.name}
-					height="240"
-					image={(author.links ? author.links.image : null) || defaultAuthorImage}
-					onError={setDefaultAuthorImage}
-				/>
-				<CardContent>
-					<Tooltip title={author.name} aria-label="add">
-						<Typography gutterBottom variant="h5" component="h2" noWrap>
-							{author.name}
-						</Typography>
-					</Tooltip>
-					<Typography variant="body2" color="textSecondary" component="p">
-						<FormattedMessage id="authors.item.book.count" values={{ count: author.bookCount }} />
-					</Typography>
-				</CardContent>
-			</CardActionArea>
-			<CardActions>
-				{renderEditLink()}
-				{renderDeleteLink()}
-				<IconButton component={Link} to={`/books?author=${author.id}`}>
-					<MenuBookIcon />
-				</IconButton>
-			</CardActions>
-		</Card>
-	);
-}
+  onDeleted: PropTypes.func.isRequired,
+};
 
 export default AuthorCard;

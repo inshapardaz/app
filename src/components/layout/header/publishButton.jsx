@@ -1,0 +1,44 @@
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
+
+// MUI
+import CreateIcon from '@mui/icons-material/Create';
+import Button from '@mui/material/Button';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+
+const PublishingButton = ({ onClick, onKeyDown, mobile = false }) => {
+  const library = useSelector((state) => state.libraryReducer.library);
+
+  if (library && library.links.create_book) {
+    if (mobile) {
+      return (
+        <ListItem button key="publishing" component={Link} to="/publishing" data-ft="publishing-link" onClick={onClick} onKeyDown={onKeyDown}>
+          <ListItemIcon>
+            <CreateIcon />
+          </ListItemIcon>
+          <ListItemText primary={<FormattedMessage id="header.publishing" />} />
+        </ListItem>
+      );
+    }
+    return (
+      <Button
+        aria-label="publishing"
+        component={Link}
+        color="inherit"
+        variant="outlined"
+        to="/publishing"
+        startIcon={<CreateIcon />}
+      >
+        <FormattedMessage id="header.publishing" />
+      </Button>
+    );
+  }
+
+  return null;
+};
+
+export default PublishingButton;

@@ -1,0 +1,12 @@
+{
+	"id": 1,
+	"name": "john doe",
+	"email": "john.doe@gmail.com",
+	"isSuperAdmin": true,
+	"created": "2050-01-01T00:00:00.0000000",
+	"updated": "2021-06-08T17:14:51.8238407",
+	"isVerified": true,
+	"jwtToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MzM2NzI0NDMsImV4cCI6MTYzMzY3MzM0MywiaWF0IjoxNjMzNjcyNDQzfQ.ilgOktnpvvJDpj-5Q-aNiMW99wIlFDZe82J-tUKQ6Yk",
+	"refreshToken":"3005E83132F7DC46479818B7A999FE5DD950B6A1E218078F60C3FF8966CD09EEC12A604A3DECD51F"
+}
+

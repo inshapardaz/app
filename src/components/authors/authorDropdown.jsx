@@ -1,41 +1,73 @@
-import React, { useDebugValue, useEffect, useState, label } from 'react';
-import { useIntl } from "react-intl";
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { libraryService } from '../../services';
-import { Field } from 'formik';
-import BootstrapInput from '../bootstrapInput';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
+import { useSelector } from 'react-redux';
 
-const AuthorDropDown = ({ onAuthorSelected, error, value, label, variant }, props) => {
-	const intl = useIntl();
-	const [options, setOptions] = React.useState([]);
-	const [text, setText] = React.useState('');
-	const [loading, setLoading] = React.useState(false);
-	const [loadingError, setLoadingError] = React.useState(false);
+// MUI
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
-	useEffect(() => {
-		(() => {
-			setLoading(true);
-			libraryService.getAuthors(text, 1, 10)
-				.then(response => setOptions(response.data))
-				.catch(() => setLoadingError(true))
-				.finally(() => setLoading(false));
-		})();
-	}, [text]);
+// Local import
+import { libraryService } from '@/services';
 
-	return (<Autocomplete
-		{...props}
-		options={options}
-		loading={loading}
-		value={value}
-		onChange={(event, newValue) => onAuthorSelected(newValue)}
-		getOptionSelected={(option, value) => option.id === value.id}
-		getOptionLabel={(option) => option ? option.name : ''}
-		noOptionsText={intl.formatMessage({ id: "authors.messages.empty" })}
-		onInputChange={(e, value) => setText(value)}
-		renderInput={(params) => <TextField {...params} label={label} error={error} variant={variant} />}
-	/>);
+const AuthorDropDown = ({
+  onAuthorSelected, error, value, label, variant,
+}, props) => {
+  const intl = useIntl();
+  const [options, setOptions] = React.useState([]);
+  const [text, setText] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [loadingError, setLoadingError] = React.useState(false);
+  const library = useSelector((state) => state.libraryReducer.library);
+
+  useEffect(() => {
+    if (library != null) {
+      setLoading(true);
+      libraryService.getAuthors(library.links.authors, text, 1, 10)
+        .then((response) => setOptions(response.data))
+        .catch(() => setLoadingError(true))
+        .finally(() => setLoading(false));
+    }
+  }, [library, text]);
+
+  const getOptionLabel = (option) => (option ? option.name : '');
+  const getOptionSelected = (option, val) => option.id === val.id;
+
+  return (
+    <Autocomplete
+      {...props}
+      multiple
+      filterSelectedOptions
+      options={options}
+      loading={loading}
+      value={value}
+      onChange={(event, newValue) => onAuthorSelected(newValue)}
+      isOptionEqualToValue={getOptionSelected}
+      getOptionLabel={getOptionLabel}
+      noOptionsText={intl.formatMessage({ id: 'authors.messages.empty' })}
+      onInputChange={(e, value) => setText(value)}
+      renderInput={(params) => (
+        <TextField {...params} label={label} error={error} variant={variant} />)}
+    />
+  );
 };
 
+AuthorDropDown.defaultProps = {
+  value: null,
+  label: null,
+  error: null,
+  variant: '',
+  props: null,
+};
+AuthorDropDown.propTypes = {
+  value: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+  })),
+  label: PropTypes.node,
+  error: PropTypes.node,
+  variant: PropTypes.string,
+  props: PropTypes.string,
+  onAuthorSelected: PropTypes.func.isRequired,
+};
 export default AuthorDropDown;
