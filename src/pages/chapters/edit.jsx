@@ -34,6 +34,7 @@ const ChapterContentEditor = () => {
         setDirty(false);
       })
       .catch((e) => {
+        console.error(e);
         if (e.status === 404) {
           setContent(null);
         } else {
@@ -44,10 +45,11 @@ const ChapterContentEditor = () => {
   };
 
   const loadChapter = () => {
-    libraryService.getChaptersById(library.id, bookId, chapterNumber)
+    libraryService.getChapterById(library.id, bookId, chapterNumber)
       .then((res) => setChapter(res))
       .then(() => loadChapterContent())
-      .catch(() => {
+      .catch((e) => {
+        console.error(e);
         setBusy(false);
         setError(true);
       })
@@ -60,7 +62,8 @@ const ChapterContentEditor = () => {
     libraryService.getBookById(library.id, bookId)
       .then((res) => setBook(res))
       .then(() => loadChapter())
-      .catch(() => {
+      .catch((e) => {
+        console.error(e);
         setError(true);
       })
       .finally(() => setBusy(false));

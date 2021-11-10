@@ -117,7 +117,7 @@ const Editor = ({
         {allowFullScreen && (
         <>
           <Divider orientation="vertical" />
-          <ButtonWithTooltip title={<FormattedMessage id={fullScreen ? 'chapter.toolbar.exitFullScreen' : 'chapter.toolbar.fullScreen'} />} onClick={onFullScreenToggle} variant="outlined">
+          <ButtonWithTooltip tooltip={<FormattedMessage id={fullScreen ? 'chapter.toolbar.exitFullScreen' : 'chapter.toolbar.fullScreen'} />} onClick={onFullScreenToggle} variant="outlined">
             {fullScreen ? <FullscreenExitIcon />
               : <FullscreenIcon /> }
           </ButtonWithTooltip>
