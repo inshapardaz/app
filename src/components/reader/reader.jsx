@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 import ReactMarkdown from 'react-markdown';
@@ -29,9 +29,15 @@ const Reader = ({
     columnGap: '50px',
     padding: '10px 0',
     position: 'relative',
+    minWidth: `${pageWidth - 50}px`,
     height,
     left: pageLeft,
   };
+
+  useEffect(() => {
+    setPage(1);
+    setPageLeft(0);
+  }, [data]);
 
   const renderContents = () => {
     if (format === 'html') {
@@ -67,6 +73,8 @@ const Reader = ({
       <ChevronLeftIcon />
     </IconButton>
   );
+
+  if (!data) return null;
 
   return (
     <Grid container justifyContent="center" alignItems="center">

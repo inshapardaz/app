@@ -186,7 +186,7 @@ const ReaderView = ({
     }}
     >
       <AppBar position="static" color="transparent" elevation={0} variant="outlined">
-        <Toolbar>
+        <Toolbar variant="dense">
           <BookTitle book={book} />
           <BreadcrumbSeparator />
           <ChaptersSelector book={book} selectedChapter={selectedChapter} />
@@ -208,7 +208,7 @@ const ReaderView = ({
           </ButtonWithTooltip>
         </Toolbar>
       </AppBar>
-      <Reader data={data} format={format} font={font} fontScale={fontScale} height={fullScreen ? 'calc(100vh - 65px)' : 'calc(100vh - 200px)'} />
+      <Reader data={data} format={format} font={font} fontScale={fontScale} height={fullScreen ? 'calc(100vh - 65px)' : 'calc(100vh - 113px)'} />
     </Box>
   );
 };
