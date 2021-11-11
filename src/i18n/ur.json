@@ -180,6 +180,7 @@
 	"user.add.title" : "نئے صارف کا اضافہ",
 	"user.edit.title" : "صارف کی تدوین",
 	"user.role.title" : "کردار",
+	"users.messages.empty" : "صارف موجود نہیں۔",
 	"user.message.role.required" : "کردار ضروری ہے",
 	"user.messages.added.success" : "صارف کا اندراج ہو چکا ہے",
 	"user.messages.added.error" : "صارف کا اندراج نہیں کیا جا سکا",

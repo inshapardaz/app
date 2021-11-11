@@ -176,6 +176,7 @@
 	"user.edit.title" : "Editing user",
 	"user.role.title" : "Role",
 	"user.message.role.required" : "Role is required",
+	"users.messages.empty" : "No user found.",
 	"user.messages.added.success" : "User added successfully",
 	"user.messages.added.error" : "User cannot be added",
 	"user.messages.updated.success" : "User saved successfully",

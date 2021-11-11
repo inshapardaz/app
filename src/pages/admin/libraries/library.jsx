@@ -23,6 +23,7 @@ const LibraryPage = () => {
   const [users, setUsers] = useState(null);
 
   const handlerApiError = (e) => {
+    console.error(e);
     setBusy(false);
     if (e.status) {
       history.push(`/error/${e.status}`);
