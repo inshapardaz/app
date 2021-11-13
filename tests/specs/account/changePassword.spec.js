@@ -15,6 +15,8 @@ describe('When I visit change password page ', () => {
   });
 
   it('I should see the empty register form', () => {
+    changePasswordPage.oldPasswordField.should('be.visible');
+    changePasswordPage.oldPasswordField.should('have.value', '');
     changePasswordPage.passwordField.should('be.visible');
     changePasswordPage.passwordField.should('have.value', '');
     changePasswordPage.confirmPasswordField.should('be.visible');
@@ -39,6 +41,29 @@ describe('When I visit change password page without logging in', () => {
 
   it('I should be see login page', () => {
     loginPage.page.should('exist');
+  });
+});
+
+describe('When I try to change password without new password', () => {
+  before(() => {
+    logIn();
+    cy.visit('account/change-password');
+    changePasswordPage.passwordField.type('sometext');
+    changePasswordPage.confirmPasswordField.type('sometext');
+    changePasswordPage.submitButton.click();
+  });
+
+  it('I should still be on change password page', () => {
+    changePasswordPage.page.should('exist');
+  });
+
+  it('I should see old password validation error', () => {
+    changePasswordPage.oldPasswordValidation.should('be.visible');
+    changePasswordPage.oldPasswordValidation.shouldHaveText('Old Password is required');
+  });
+
+  it('I should not see confirm password validation error', () => {
+    changePasswordPage.confirmPasswordValidation.should('not.exist');
   });
 });
 
@@ -68,6 +93,7 @@ describe('When I try to change password with different password and confirm pass
   before(() => {
     logIn();
     cy.visit('account/change-password');
+    changePasswordPage.oldPasswordField.type('someoldtext');
     changePasswordPage.passwordField.type('sometext');
     changePasswordPage.confirmPasswordField.type('some other text');
     changePasswordPage.submitButton.click();
@@ -88,6 +114,7 @@ describe('When I try to change password and there is error', () => {
     logIn();
     authenticationMock.mockChangePasswordResetFailure();
     cy.visit('account/change-password');
+    changePasswordPage.oldPasswordField.type('sometext');
     changePasswordPage.passwordField.type('sometext');
     changePasswordPage.confirmPasswordField.type('sometext');
     changePasswordPage.submitButton.click();
@@ -107,13 +134,14 @@ describe('When I change password successfully', () => {
     logIn();
     authenticationMock.mockChangePasswordReset();
     cy.visit('account/change-password');
+    changePasswordPage.oldPasswordField.type('sometext');
     changePasswordPage.passwordField.type('sometext');
     changePasswordPage.confirmPasswordField.type('sometext');
     changePasswordPage.submitButton.click();
   });
 
-  it('I should be on home page', () => {
-    homePage.page.should('exist');
+  it('I should be redirected out of change password', () => {
+    cy.url().should('not.eq', 'account/change-password');
   });
 
   it('I should see success message', () => {

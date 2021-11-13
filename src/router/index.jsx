@@ -11,9 +11,7 @@ import RouteWithLayout from './routeWith.layout';
 import EmptyLayout from './empty.layout';
 
 // Pages
-import AboutPage from '@/pages/about';
 import HomePage from '@/pages/home';
-import DataPage from '@/pages/data';
 import LoginPage from '@/pages/account/login';
 import RegistrationPage from '@/pages/account/register';
 import ForgetPasswordPage from '@/pages/account/forgetPassword';
@@ -78,8 +76,6 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/pages" component={BookPages} exact />
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/chapters/:chapterNumber" component={ChapterViewer} exact />
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/chapters/:chapterNumber/edit" component={ChapterContentEditor} exact />
-      <RouteWithLayout layout={FullWidthLayout} path="/about" component={AboutPage} />
-      <PrivateRoute layout={FullWidthLayout} path="/data" component={DataPage} />
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       <Route path="/error/403"><Error403 /></Route>
       <Route path="/error/404"><Error404 /></Route>

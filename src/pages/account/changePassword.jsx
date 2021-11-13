@@ -30,11 +30,14 @@ const ChangePasswordPage = () => {
   const [busy, setBusy] = useState(false);
 
   const initialValues = {
+    oldPassword: '',
     password: '',
     confirmPassword: '',
   };
 
   const validationSchema = Yup.object().shape({
+    oldPassword: Yup.string()
+      .required(intl.formatMessage({ id: 'changePassword.message.oldPassword.required' })),
     password: Yup.string()
       .min(6, intl.formatMessage({ id: 'changePassword.message.password.error.length' }))
       .required(intl.formatMessage({ id: 'changePassword.message.password.required' })),
@@ -87,6 +90,16 @@ const ChangePasswordPage = () => {
             >
               {({ errors, touched, isSubmitting }) => (
                 <Form noValidate>
+                  <Field
+                    component={TextField}
+                    name="oldPassword"
+                    type="password"
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label={<FormattedMessage id="changePassword.oldPassword.label" />}
+                    error={errors.oldPassword && touched.oldPassword}
+                  />
                   <Field
                     component={TextField}
                     name="password"

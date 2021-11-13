@@ -124,7 +124,7 @@ describe('and I try to login providing username and password', () => {
     loginPage.loginButton.click();
   });
 
-  it('I should be on home page', () => {
-    homePage.page.should('exist');
+  it('I should be redirected out of login page', () => {
+    cy.url().should('not.eq', 'account/login');
   });
 });

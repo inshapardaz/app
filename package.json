@@ -86,7 +86,7 @@
     "redux-thunk": "^2.4.0",
     "stylis": "^4.0.10",
     "stylis-plugin-rtl": "^2.1.1",
-    "urdu-editor": "^1.0.3",
+    "urdu-editor": "1.0.0",
     "yup": "^0.32.11"
   }
 }

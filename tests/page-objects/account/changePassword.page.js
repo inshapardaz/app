@@ -3,6 +3,14 @@ export default {
     return cy.get('[data-ft="change-password-page"]');
   },
 
+  get oldPasswordField() {
+    return cy.get('[name="oldPassword"]');
+  },
+
+  get oldPasswordValidation() {
+    return cy.get('[name="oldPassword"]').parent().parent().find('.MuiFormHelperText-root');
+  },
+
   get passwordField() {
     return cy.get('[name="password"]');
   },

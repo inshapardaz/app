@@ -33,6 +33,7 @@ const HomePage = () => {
         minHeight: '613px',
         display: 'grid',
       }}
+      data-ft="home-page"
       >
         <Box sx={{
           padding: '68px 0 28px 0',
