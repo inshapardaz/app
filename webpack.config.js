@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = (env) => {
   const isProduction = env.production;
   const configTarget = isProduction ? 'prod' : env.TARGET_ENV || 'dev';
-  
+
   console.log(`Building with configuration target ${configTarget}`);
 
   return ({
@@ -43,29 +43,7 @@ module.exports = (env) => {
         },
         {
           test: /\.css$/,
-          exclude: /node_modules/,
-          use: [
-            { loader: 'style-loader' },
-            {
-              loader: 'css-loader',
-              options: {
-                modules: {
-                  localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
-                },
-                sourceMap: true,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: [
-                    ['autoprefixer', {}],
-                  ],
-                },
-              },
-            },
-          ],
+          use: ['style-loader', 'css-loader'],
         },
         {
           test: /\.(png|jpe?g|gif)$/,

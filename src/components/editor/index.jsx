@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import MarkdownEditor from '@jdinabox/ckeditor5-build-markdown';
+import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
+import MUIEditor, { MUIEditorState } from 'urdu-editor';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 
 // MUI
 import Box from '@mui/material/Box';
@@ -35,23 +36,37 @@ const Editor = ({
   const [loadedSavedData, setLoadedSavedData] = useState(false);
   const [data, setData] = useState(content);
   const [fullScreen, setFullScreen] = useState(false);
+  const [editorState, setEditorState] = React.useState(MUIEditorState.createEmpty());
 
   useEffect(() => {
     const savedData = localStorage.getItem(`contents-${identifier}`);
+    let finalData = null;
     if (savedData) {
-      setData(savedData);
+      finalData = savedData;
       setLoadedSavedData(true);
     } else {
-      setData(content);
+      finalData = content;
       setLoadedSavedData(false);
     }
+
+    setData(finalData);
+
+    const rawData = markdownToDraft(finalData);
+    const contentState = convertFromRaw(rawData);
+    const newEditorState = EditorState.createWithContent(contentState);
+    setEditorState(newEditorState);
   }, [identifier, content]);
 
-  const onChanged = (event, editor) => {
-    const newData = editor.getData();
-    setData(newData);
-    localStorage.setItem(`contents-${identifier}`, newData);
-    onDirty(newData !== content);
+  const onChange = (newState) => {
+    setEditorState(newState);
+
+    const currentContent = editorState.getCurrentContent();
+    const rawObject = convertToRaw(currentContent);
+    const markdownString = draftToMarkdown(rawObject);
+
+    setData(markdownString);
+    localStorage.setItem(`contents-${identifier}`, markdownString);
+    onDirty(markdownString !== content);
   };
 
   const onZoomInText = () => {
@@ -152,19 +167,7 @@ const Editor = ({
           <FormattedMessage id="page.messages.unsavedText.loaded" />
         </Alert>
         )}
-        <CKEditor
-          editor={MarkdownEditor}
-          data={data || ''}
-          onChange={onChanged}
-          config={{
-            language: {
-              ui: 'en',
-              content: 'ar',
-            },
-            height: editorHeight,
-            backgroundColor: 'green',
-          }}
-        />
+        <MUIEditor editorState={editorState} onChange={onChange} />
       </Box>
     </Box>
   );
