@@ -117,7 +117,7 @@ const BookPages = () => {
   const [sortDirection, setSortDirection] = useState('ascending');
   const [assignmentFilter, setAssignmentFilter] = useState('assignedToMe');
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState();
+  const [pageSize, setPageSize] = useState(12);
   const selectedPages = getSelectedPages(pages, checked);
 
   const loadPages = (b) => {
@@ -129,7 +129,7 @@ const BookPages = () => {
         setStatusFilter(values.filter);
         setAssignmentFilter(values.assignmentFilter);
         setPage(values.page);
-        setPageSize(values.pageSize);
+        setPageSize(values.pageSize || 12);
       })
       .catch(() => {
         setError(true);
