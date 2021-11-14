@@ -11,6 +11,7 @@ import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
 import Alert from '@mui/material/Alert';
@@ -29,7 +30,7 @@ import ButtonWithTooltip from '@/components/buttonWithTooltip';
 
 const Editor = ({
   identifier, content, label, onSave, onDirty,
-  startToolbarButtons, message,
+  startToolbar, endToolbar, secondaryView, message,
   allowFullScreen,
 }) => {
   const [font, setFont] = useState(localStorage.getItem('editor-font') || null);
@@ -145,12 +146,33 @@ const Editor = ({
       zIndex: (theme) => (fullScreen ? theme.zIndex.appBar + 10 : 'inherit'),
     }}
     >
+      {loadedSavedData && (
+      <Alert
+        severity="info"
+        action={(
+          <Button
+            color="inherit"
+            size="small"
+            variant="outlined"
+            onClick={() => {
+              localStorage.removeItem(`contents-${identifier}`);
+              setData(content);
+              setLoadedSavedData(false);
+            }}
+          >
+            <FormattedMessage id="page.messages.unsavedText.discardUnsavedChanges" />
+          </Button>
+  )}
+      >
+        <FormattedMessage id="page.messages.unsavedText.loaded" />
+      </Alert>
+      )}
       {message}
       <Toolbar>
         {label}
         <Divider orientation="vertical" sx={{ paddingLeft: (theme) => theme.spacing(1) }} />
+        {startToolbar}
         <ButtonGroup>
-          {startToolbarButtons}
           <ButtonWithTooltip tooltip={<FormattedMessage id="action.save" />} onClick={save}>
             <SaveIcon />
           </ButtonWithTooltip>
@@ -169,6 +191,7 @@ const Editor = ({
           </ButtonWithTooltip>
         </ButtonGroup>
         <Divider orientation="vertical" sx={{ flex: 1 }} />
+        {endToolbar}
         {allowFullScreen && (
         <>
           <Divider orientation="vertical" />
@@ -180,38 +203,38 @@ const Editor = ({
         )}
       </Toolbar>
 
-      <Box sx={{
-        fontFamily: font,
-        fontSize: `${textScale}em`,
-        mx: (theme) => theme.spacing(3),
-        height: `calc(100vh - ${fullScreen ? '64px' : '181px'})`,
-        display: 'flex',
-        flexDirection: 'column',
-      }}
+      <Grid
+        container
+        alignItems="stretch"
+        direction="row"
+        wrap="nowrap"
+        sx={{
+          mt: '1px',
+          mx: 0,
+          height: fullScreen ? 'calc(100vh - 49px)' : 'calc(100vh - 182px)',
+          justifyItems: 'stretch',
+        }}
       >
-        {loadedSavedData && (
-        <Alert
-          severity="info"
-          action={(
-            <Button
-              color="inherit"
-              size="small"
-              variant="outlined"
-              onClick={() => {
-                localStorage.removeItem(`contents-${identifier}`);
-                setData(content);
-                setLoadedSavedData(false);
-              }}
-            >
-              <FormattedMessage id="page.messages.unsavedText.discardUnsavedChanges" />
-            </Button>
-  )}
-        >
-          <FormattedMessage id="page.messages.unsavedText.loaded" />
-        </Alert>
-        )}
-        <MUIEditor editorState={editorState} onChange={onChange} config={config} />
-      </Box>
+        <Grid item md={secondaryView === null ? 12 : 6}>
+          <Box sx={{
+            fontFamily: font,
+            fontSize: `${textScale}em`,
+            mx: (theme) => theme.spacing(3),
+            height: `calc(100vh - ${fullScreen ? '64px' : '181px'})`,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+          >
+            <MUIEditor editorState={editorState} onChange={onChange} config={config} />
+          </Box>
+        </Grid>
+        {secondaryView !== null
+          && (
+          <Grid item sx={{ overflow: 'auto', flex: 1 }}>
+            { secondaryView }
+          </Grid>
+          )}
+      </Grid>
     </Box>
   );
 };
@@ -219,9 +242,11 @@ const Editor = ({
 Editor.defaultProps = {
   label: '',
   content: '',
-  startToolbarButtons: null,
+  startToolbar: null,
+  endToolbar: null,
   message: null,
   allowFullScreen: true,
+  secondaryView: null,
   onSave: () => {},
   onDirty: () => {},
 };
@@ -230,9 +255,11 @@ Editor.propTypes = {
   identifier: PropTypes.string.isRequired,
   label: PropTypes.node,
   content: PropTypes.string,
-  startToolbarButtons: PropTypes.node,
+  startToolbar: PropTypes.node,
+  endToolbar: PropTypes.node,
   message: PropTypes.node,
   allowFullScreen: PropTypes.bool,
+  secondaryView: PropTypes.node,
   onSave: PropTypes.func,
   onDirty: PropTypes.func,
 };

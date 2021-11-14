@@ -6,19 +6,15 @@ import { useSnackbar } from 'notistack';
 import { Helmet } from 'react-helmet';
 
 // MUI
-import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
-import Grid from '@mui/material/Grid';
 import ImageIcon from '@mui/icons-material/Image';
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
-import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 // Local Imports
@@ -39,7 +35,6 @@ const PageEditorPage = () => {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   const [book, setBook] = useState(null);
-  const [fullScreen, setFullScreen] = useState(false);
   const [page, setPage] = useState(null);
   const [newCover, setNewCover] = useState(null);
   const [hideImage, setHideImage] = useState(localStorage.getItem('page.editor.hideImage') === 'true');
@@ -84,10 +79,6 @@ const PageEditorPage = () => {
       return libraryService.upload(res.links.image_upload, newCover);
     }
     return Promise.resolve();
-  };
-
-  const onFullScreenToggle = () => {
-    setFullScreen(!fullScreen);
   };
 
   const showError = () => {
@@ -162,19 +153,13 @@ const PageEditorPage = () => {
             { hideImage ? <ImageIcon /> : <ImageNotSupportedIcon />}
           </Button>
         </Tooltip>
-        <Tooltip title={<FormattedMessage id={fullScreen ? 'chapter.toolbar.exitFullScreen' : 'chapter.toolbar.fullScreen'} />}>
-          <Button onClick={onFullScreenToggle}>
-            {fullScreen ? <FullscreenExitIcon />
-              : <FullscreenIcon /> }
+        <Tooltip title={<FormattedMessage id="action.close" />}>
+          <Button variant="outlined" component={Link} to={page ? `/books/${page.bookId}/pages` : ''}>
+            <HighlightOffIcon />
           </Button>
         </Tooltip>
       </ButtonGroup>
 
-      <Tooltip title={<FormattedMessage id="action.close" />}>
-        <Button variant="outlined" component={Link} to={page ? `/books/${page.bookId}/pages` : ''}>
-          <HighlightOffIcon />
-        </Button>
-      </Tooltip>
     </>
   );
 
@@ -189,56 +174,27 @@ const PageEditorPage = () => {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        position: (fullScreen ? 'absolute' : 'relative'),
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
         overflow: 'hidden',
-        zIndex: (theme) => (fullScreen ? theme.zIndex.appBar + 10 : 'inherit'),
       }}
     >
       <Helmet title={title} />
       <Busy busy={busy} />
       <Error error={error} message={<FormattedMessage id="page.messages.error.loading" />}>
-        <Toolbar>
-          <PageBreadcrumb book={book} chapter={null} page={page} />
-          <div style={{ flex: 1 }} />
-          {pageToolbar()}
-        </Toolbar>
-        <Grid
-          container
-          alignItems="stretch"
-          direction="row"
-          wrap="nowrap"
-          sx={{
-            mt: '1px',
-            mx: 0,
-            height: fullScreen ? 'calc(100vh - 49px)' : 'calc(100vh - 182px)',
-            justifyItems: 'stretch',
-          }}
-        >
-          <Grid item md={hideImage ? 12 : 6}>
-            <Editor
-              content={page ? page.text : ''}
-              identifier={`${bookId}-${page ? page.sequenceNumber : -1}`}
-              onSave={onSave}
-              allowFullScreen={false}
-              height={fullScreen ? 'calc(100vh - 345px)' : 'calc(100vh - 345px)'}
-            />
-          </Grid>
-          {!hideImage
-          && (
-          <Grid item sx={{ overflow: 'auto', flex: 1 }}>
+        <Editor
+          content={page ? page.text : ''}
+          identifier={`${bookId}-${page ? page.sequenceNumber : -1}`}
+          onSave={onSave}
+          label={<PageBreadcrumb book={book} chapter={null} page={page} showPage />}
+          endToolbar={pageToolbar()}
+          secondaryView={hideImage ? null : (
             <ImageViewer
               page={page}
               createLink={book && book.links.add_pages}
               onImageChanged={handleImageUpload}
             />
-          </Grid>
           )}
-        </Grid>
-
+          fullScreen
+        />
       </Error>
     </Box>
   );
