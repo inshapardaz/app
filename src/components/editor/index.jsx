@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import { draftToMarkdown, markdownToDraft } from 'markdown-draft-js';
-import MUIEditor, { MUIEditorState } from 'urdu-editor';
+import MUIEditor, { MUIEditorState, toolbarControlTypes, fileToBase64 } from 'urdu-editor';
 import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 
 // MUI
@@ -29,7 +30,7 @@ import ButtonWithTooltip from '@/components/buttonWithTooltip';
 const Editor = ({
   identifier, content, label, onSave, onDirty,
   startToolbarButtons, message,
-  allowFullScreen, editorHeight = '100%',
+  allowFullScreen,
 }) => {
   const [font, setFont] = useState(localStorage.getItem('editor-font') || null);
   const [textScale, setTextScale] = useState(localStorage.getItem('editor.fontSize') || 1.0);
@@ -37,6 +38,45 @@ const Editor = ({
   const [data, setData] = useState(content);
   const [fullScreen, setFullScreen] = useState(false);
   const [editorState, setEditorState] = React.useState(MUIEditorState.createEmpty());
+  const language = useSelector((state) => state.localeReducer.language);
+
+  const config = {
+    lang: language,
+    editor: {
+      style: {
+        flexGrow: 1,
+        overflowX: 'auto',
+      },
+    },
+    toolbar: {
+      className: '',
+      style: {},
+      visible: true,
+      position: 'top',
+      controls: [
+        toolbarControlTypes.undo,
+        toolbarControlTypes.redo,
+        toolbarControlTypes.divider,
+        toolbarControlTypes.bold,
+        toolbarControlTypes.italic,
+        toolbarControlTypes.underline,
+        toolbarControlTypes.strikethrough,
+        toolbarControlTypes.divider,
+        toolbarControlTypes.linkAdd,
+        toolbarControlTypes.linkRemove,
+        toolbarControlTypes.image,
+        toolbarControlTypes.divider,
+        toolbarControlTypes.blockType,
+        toolbarControlTypes.unorderedList,
+        toolbarControlTypes.orderedList,
+      ],
+      controlsConfig: {
+        image: {
+          uploadCallback: fileToBase64,
+        },
+      },
+    },
+  };
 
   useEffect(() => {
     const savedData = localStorage.getItem(`contents-${identifier}`);
@@ -144,6 +184,9 @@ const Editor = ({
         fontFamily: font,
         fontSize: `${textScale}em`,
         mx: (theme) => theme.spacing(3),
+        height: `calc(100vh - ${fullScreen ? '64px' : '181px'})`,
+        display: 'flex',
+        flexDirection: 'column',
       }}
       >
         {loadedSavedData && (
@@ -167,7 +210,7 @@ const Editor = ({
           <FormattedMessage id="page.messages.unsavedText.loaded" />
         </Alert>
         )}
-        <MUIEditor editorState={editorState} onChange={onChange} />
+        <MUIEditor editorState={editorState} onChange={onChange} config={config} />
       </Box>
     </Box>
   );
@@ -181,7 +224,6 @@ Editor.defaultProps = {
   allowFullScreen: true,
   onSave: () => {},
   onDirty: () => {},
-  editorHeight: '100%',
 };
 
 Editor.propTypes = {
@@ -193,7 +235,6 @@ Editor.propTypes = {
   allowFullScreen: PropTypes.bool,
   onSave: PropTypes.func,
   onDirty: PropTypes.func,
-  editorHeight: PropTypes.string,
 };
 
 export default Editor;

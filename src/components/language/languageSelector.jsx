@@ -29,7 +29,7 @@ export default function LanguageSelector() {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = (event) => {
+  const handleClose = () => {
     setOpen(false);
   };
 
