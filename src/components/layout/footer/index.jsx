@@ -14,6 +14,7 @@ const Footer = () => (
       variant="body2"
       color="textSecondary"
       align="center"
+      data-ft="copyrights"
       sx={{
         margin: (theme) => theme.spacing(2),
       }}

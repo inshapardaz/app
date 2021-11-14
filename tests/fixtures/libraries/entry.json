@@ -4,7 +4,7 @@
 	"currentPageIndex":1,
 	"totalCount":2,
 	"data":[{
-		"id":36102,
+		"id":1,
 		"ownerEmail":"aa@bb.cc",
 		"name":"Test",
 		"language":"en",
@@ -13,44 +13,44 @@
 		"secondaryColor":
 		"#848484",
 		"links":[
-			{"href":"http://localhost:4000/libraries/36102","rel":"self","method":"Get"},
-			{"href":"http://localhost:4000/libraries/36102/authors","rel":"authors","method":"Get"},
-			{"href":"http://localhost:4000/libraries/36102/categories","rel":"categories","method":"Get"},
-			{"href":"http://localhost:4000/libraries/36102/series","rel":"series","method":"Get"},
-			{"href":"http://localhost:4000/libraries/36102/books","rel":"books","method":"Get"},
-			{"href":"http://localhost:4000/libraries/36102/books?read=True","rel":"recents","method":"Get"},
-			{"href":"http://localhost:4000/libraries/36102/books","rel":"create-book","method":"Post"},
-			{"href":"http://localhost:4000/libraries/36102/authors","rel":"create-author","method":"Post"},
-			{"href":"http://localhost:4000/libraries/36102/series","rel":"create-series","method":"Post"},
-			{"href":"http://localhost:4000/libraries/36102","rel":"update","method":"Put"},
-			{"href":"http://localhost:4000/libraries/36102/categories","rel":"create-category","method":"Post"},
-			{"href":"http://localhost:4000/libraries/36102","rel":"delete","method":"Delete"}
+			{"href":"http://localhost:8080/api/libraries/1","rel":"self","method":"Get"},
+			{"href":"http://localhost:8080/api/libraries/1/authors","rel":"authors","method":"Get"},
+			{"href":"http://localhost:8080/api/libraries/1/categories","rel":"categories","method":"Get"},
+			{"href":"http://localhost:8080/api/libraries/1/series","rel":"series","method":"Get"},
+			{"href":"http://localhost:8080/api/libraries/1/books","rel":"books","method":"Get"},
+			{"href":"http://localhost:8080/api/libraries/1/books?read=True","rel":"recents","method":"Get"},
+			{"href":"http://localhost:8080/api/libraries/1/books","rel":"create-book","method":"Post"},
+			{"href":"http://localhost:8080/api/libraries/1/authors","rel":"create-author","method":"Post"},
+			{"href":"http://localhost:8080/api/libraries/1/series","rel":"create-series","method":"Post"},
+			{"href":"http://localhost:8080/api/libraries/1","rel":"update","method":"Put"},
+			{"href":"http://localhost:8080/api/libraries/1/categories","rel":"create-category","method":"Post"},
+			{"href":"http://localhost:8080/api/libraries/1","rel":"delete","method":"Delete"}
 		]},
 		{
-			"id":32874,
+			"id":2,
 			"name":"بچوں کی دنیا",
 			"language":"ur",
 			"supportsPeriodicals":true,
 			"primaryColor":"#0E371A",
 			"secondaryColor":"#465056",
 			"links":[
-				{"href":"http://localhost:4000/libraries/32874","rel":"self","method":"Get"},
-				{"href":"http://localhost:4000/libraries/32874/authors","rel":"authors","method":"Get"},
-				{"href":"http://localhost:4000/libraries/32874/categories","rel":"categories","method":"Get"},
-				{"href":"http://localhost:4000/libraries/32874/series","rel":"series","method":"Get"},
-				{"href":"http://localhost:4000/libraries/32874/books","rel":"books","method":"Get"},
-				{"href":"http://localhost:4000/libraries/32874/periodicals","rel":"periodicals","method":"Get"},
-				{"href":"http://localhost:4000/libraries/32874/books?read=True","rel":"recents","method":"Get"},
-				{"href":"http://localhost:4000/libraries/32874/books","rel":"create-book","method":"Post"},
-				{"href":"http://localhost:4000/libraries/32874/authors","rel":"create-author","method":"Post"},
-				{"href":"http://localhost:4000/libraries/32874/series","rel":"create-series","method":"Post"},
-				{"href":"http://localhost:4000/libraries/32874","rel":"update","method":"Put"},
-				{"href":"http://localhost:4000/libraries/32874/categories","rel":"create-category","method":"Post"},
-				{"href":"http://localhost:4000/libraries/32874","rel":"delete","method":"Delete"}
+				{"href":"http://localhost:8080/api/libraries/2","rel":"self","method":"Get"},
+				{"href":"http://localhost:8080/api/libraries/2/authors","rel":"authors","method":"Get"},
+				{"href":"http://localhost:8080/api/libraries/2/categories","rel":"categories","method":"Get"},
+				{"href":"http://localhost:8080/api/libraries/2/series","rel":"series","method":"Get"},
+				{"href":"http://localhost:8080/api/libraries/2/books","rel":"books","method":"Get"},
+				{"href":"http://localhost:8080/api/libraries/2/periodicals","rel":"periodicals","method":"Get"},
+				{"href":"http://localhost:8080/api/libraries/2/books?read=True","rel":"recents","method":"Get"},
+				{"href":"http://localhost:8080/api/libraries/2/books","rel":"create-book","method":"Post"},
+				{"href":"http://localhost:8080/api/libraries/2/authors","rel":"create-author","method":"Post"},
+				{"href":"http://localhost:8080/api/libraries/2/series","rel":"create-series","method":"Post"},
+				{"href":"http://localhost:8080/api/libraries/2","rel":"update","method":"Put"},
+				{"href":"http://localhost:8080/api/libraries/2/categories","rel":"create-category","method":"Post"},
+				{"href":"http://localhost:8080/api/libraries/2","rel":"delete","method":"Delete"}
 			]
 		}
 	],
 	"links":[{
-		"href":"http://localhost:4000/libraries?pageNumber=1&pageSize=12&query=","rel":"self","method":"Get"}
+		"href":"http://localhost:8080/api/libraries?pageNumber=1&pageSize=12&query=","rel":"self","method":"Get"}
 	]
 }

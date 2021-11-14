@@ -1,7 +1,7 @@
 import { libraryEditorPage, adminLibrariesPage } from '../../../page-objects';
 import { loginAsAdmin } from '../../../helpers';
 
-describe.only('When I go to create library page', () => {
+describe('When I go to create library page', () => {
   before(() => {
     loginAsAdmin();
 

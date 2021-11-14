@@ -2,12 +2,12 @@ import { homePage, loginPage } from '../../page-objects';
 import { logIn } from '../../helpers';
 import { authenticationMock } from '../../mock';
 
-describe.only('When user is signed in as administrator on mobile phone', () => {
+describe('When user is signed in as administrator on mobile phone', () => {
   before(() => {
     logIn();
     cy.visit('/');
 
-    cy.get('[data-ft="page-loading"]').should('not.be.visible', { timeout: 60000 });
+    cy.get('[data-ft="page-loading"]').should('not.exist', { timeout: 60000 });
   });
 
   beforeEach(() => {
@@ -26,10 +26,6 @@ describe.only('When user is signed in as administrator on mobile phone', () => {
     homePage.header.title.should('not.be.visible');
   });
 
-  it('Search box should be visible and enabled', () => {
-    homePage.header.search.should('be.visible');
-  });
-
   it('I should see the language menu', () => {
     homePage.header.languageMenu.should('be.visible');
   });
@@ -38,9 +34,13 @@ describe.only('When user is signed in as administrator on mobile phone', () => {
     homePage.header.darkModeToggle.should('be.visible');
   });
 
-  describe('and I switch language', () => {
+  describe('and I click on language menu', () => {
     before(() => {
-      homePage.header.languageMenu.click({ multiple: true });
+      homePage.header.languageMenu.click();
+    });
+
+    after(() => {
+      homePage.header.languageDropDown.enLanguage.click();
     });
 
     it('I should see language list', () => {
@@ -48,26 +48,6 @@ describe.only('When user is signed in as administrator on mobile phone', () => {
       homePage.header.languageDropDown.urLanguage.should('be.visible');
       homePage.header.languageDropDown.hiLanguage.should('be.visible');
       homePage.header.languageDropDown.pnLanguage.should('be.visible');
-    });
-
-    describe('and I switch to urdu', () => {
-      before(() => {
-        homePage.header.languageDropDown.urLanguage.click();
-      });
-
-      it('I should see page in right-to-left', () => {
-        cy.get('body').should('have.attr', 'dir', 'rtl');
-      });
-
-      describe('and I switch back to english', () => {
-        before(() => {
-          homePage.header.languageDropDown.enLanguage.click();
-        });
-
-        it('I should see page in left-to-right', () => {
-          cy.get('body').should('have.attr', 'dir', 'ltr');
-        });
-      });
     });
   });
 
@@ -121,9 +101,9 @@ describe.only('When user is signed in as administrator on mobile phone', () => {
       homePage.header.seriesLink.shouldHaveLink('/series');
     });
 
-    // it('I should see the categories menu', () => {
-  	//   homePage.header.categoriesMenu.should('be.visible');
-  	// });
+    it('I should see the categories menu', () => {
+      homePage.header.categoriesMenu.should('be.visible');
+    });
 
     it('I should see profile link', () => {
       homePage.header.profileLink.should('be.visible');
@@ -152,6 +132,20 @@ describe.only('When user is signed in as administrator on mobile phone', () => {
       it('I should be navigated to login page', () => {
         loginPage.page.should('be.visible');
       });
+    });
+  });
+
+  describe('and I switch to urdu', () => {
+    before(() => {
+      logIn();
+      cy.visit('/');
+      cy.viewport('iphone-6');
+      homePage.header.languageMenu.click();
+      homePage.header.languageDropDown.urLanguage.click();
+    });
+
+    it('I should see page in right-to-left', () => {
+      cy.get('body').should('have.attr', 'dir', 'rtl');
     });
   });
 });

@@ -4,22 +4,37 @@ import PropTypes from 'prop-types';
 // MUI
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-const LoadingPlaceHolder = ({ title }) => (
-  <Box sx={{ height: 300 }}>
-    <Backdrop open>
+const LoadingPlaceHolder = ({ busy, title, children }) => {
+  if (!busy) {
+    return children;
+  }
+  return (
+    <Box sx={{
+      position: 'relative',
+      top: '50%',
+      left: '50%',
+    }}
+    >
       <CircularProgress color="inherit" />
       <Typography variant="h4">
-        { title }
+        {title}
       </Typography>
-    </Backdrop>
-  </Box>
-);
+    </Box>
+  );
+};
+
+LoadingPlaceHolder.defaultProps = {
+  busy: false,
+  title: '',
+  children: null,
+};
 
 LoadingPlaceHolder.propTypes = {
-  title: PropTypes.node.isRequired,
+  busy: PropTypes.bool,
+  title: PropTypes.node,
+  children: PropTypes.node,
 };
 
 export default LoadingPlaceHolder;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -61,7 +62,10 @@ const CategoriesMobileMenu = ({ onClick, onKeyDown }) => {
 
   return (
     <>
-      <ListItemButton onClick={handleClick}>
+      <ListItemButton
+        onClick={handleClick}
+        data-ft="categories-menu"
+      >
         <ListItemIcon>
           <CategoryIcon />
         </ListItemIcon>
@@ -77,4 +81,13 @@ const CategoriesMobileMenu = ({ onClick, onKeyDown }) => {
   );
 };
 
+CategoriesMobileMenu.defaultProps = {
+  onClick: () => {},
+  onKeyDown: () => {},
+};
+
+CategoriesMobileMenu.propTypes = {
+  onClick: PropTypes.func,
+  onKeyDown: PropTypes.func,
+};
 export default CategoriesMobileMenu;

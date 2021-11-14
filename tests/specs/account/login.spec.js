@@ -1,4 +1,4 @@
-import { loginPage, homePage, notifications } from '../../page-objects';
+import { loginPage, notifications } from '../../page-objects';
 
 import { libraryMock, authenticationMock } from '../../mock';
 

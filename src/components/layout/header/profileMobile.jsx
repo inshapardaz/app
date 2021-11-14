@@ -1,6 +1,7 @@
 /* eslint-disable no-script-url */
 /* eslint-disable no-mixed-spaces-and-tabs */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -10,6 +11,7 @@ import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
 
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import LoginIcon from '@mui/icons-material/Login';
@@ -69,14 +71,24 @@ const ProfileMobileMenu = ({ onClick, onKeyDown }) => {
       </ListItem>
       )}
       <Divider />
-      <ListItem button key="logout" onClick={() => dispatch(actions.logoutAction())} data-ft="logout-link" onClick={onClick} onKeyDown={onKeyDown}>
+      <ListItemButton key="logout" onClick={() => { dispatch(actions.logoutAction()); onClick(); }} data-ft="logout-link" onKeyDown={onKeyDown}>
         <ListItemIcon>
           <ExitToAppIcon />
         </ListItemIcon>
         <ListItemText primary={<FormattedMessage id="logout" />} />
-      </ListItem>
+      </ListItemButton>
     </>
   );
+};
+
+ProfileMobileMenu.defaultProps = {
+  onClick: () => {},
+  onKeyDown: () => {},
+};
+
+ProfileMobileMenu.propTypes = {
+  onClick: PropTypes.func,
+  onKeyDown: PropTypes.func,
 };
 
 export default ProfileMobileMenu;

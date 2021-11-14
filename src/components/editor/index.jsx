@@ -28,6 +28,41 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import FontMenu from '@/components/fontMenu';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
 
+const convertToMarkdown = (editorState) => {
+  const currentContent = editorState.getCurrentContent();
+  const rawObject = convertToRaw(currentContent);
+  return draftToMarkdown(rawObject, {
+    entityItems: {
+      image: {
+        open() {
+          return '';
+        },
+        close(entity) {
+          return `![${entity.data.alt}](${entity.data.src})`;
+        },
+      },
+    },
+  });
+};
+const convertToDraftJs = (mardownData) => {
+  const rawData = markdownToDraft(mardownData, {
+    blockEntities: {
+      image(item) {
+        return {
+          type: 'atomic',
+          mutability: 'IMMUTABLE',
+          data: {
+            src: item.src,
+            alt: item.alt,
+          },
+        };
+      },
+    },
+  });
+  const contentState = convertFromRaw(rawData);
+  return EditorState.createWithContent(contentState);
+};
+
 const Editor = ({
   identifier, content, label, onSave, onDirty,
   startToolbar, endToolbar, secondaryView, message,
@@ -92,19 +127,12 @@ const Editor = ({
 
     setData(finalData);
 
-    const rawData = markdownToDraft(finalData);
-    const contentState = convertFromRaw(rawData);
-    const newEditorState = EditorState.createWithContent(contentState);
-    setEditorState(newEditorState);
+    setEditorState(convertToDraftJs(finalData));
   }, [identifier, content]);
 
   const onChange = (newState) => {
     setEditorState(newState);
-
-    const currentContent = editorState.getCurrentContent();
-    const rawObject = convertToRaw(currentContent);
-    const markdownString = draftToMarkdown(rawObject);
-
+    const markdownString = convertToMarkdown(editorState);
     setData(markdownString);
     localStorage.setItem(`contents-${identifier}`, markdownString);
     onDirty(markdownString !== content);

@@ -14,7 +14,7 @@ import {
 // Local Import
 import LatestBooks from '@/components/books/latestBooks';
 
-const useStaticImage = false;
+const useStaticImage = localStorage.getItem('useStaticImage') === 'true' || false;
 
 const HomePage = () => {
   const intl = useIntl();
@@ -25,15 +25,16 @@ const HomePage = () => {
   return (
     <>
       <Helmet title={library.name} />
-      <Box sx={{
-        backgroundImage: (useStaticImage ? 'url(/images/home_background.jpg)' : 'url(https://source.unsplash.com/1600x900/?library,books)'),
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center center',
-        minHeight: '613px',
-        display: 'grid',
-      }}
-      data-ft="home-page"
+      <Box
+        sx={{
+          backgroundImage: (useStaticImage ? 'url(/images/home_background.jpg)' : 'url(https://source.unsplash.com/1600x900/?library,books)'),
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          minHeight: '613px',
+          display: 'grid',
+        }}
+        data-ft="home-page"
       >
         <Box sx={{
           padding: '68px 0 28px 0',

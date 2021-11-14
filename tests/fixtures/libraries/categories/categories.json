@@ -1,0 +1,421 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "افسانہ",
+            "bookCount": 31,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/1",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=1",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/1",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/1",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "تاریخ",
+            "bookCount": 0,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/2",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=2",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/2",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/2",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "تصور",
+            "bookCount": 0,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/3",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=3",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/3",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/3",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "سفر نامے",
+            "bookCount": 1,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/4",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=4",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/4",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/4",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "رومانوی",
+            "bookCount": 0,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/5",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=5",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/5",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/5",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "ہم عصر",
+            "bookCount": 0,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/6",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=6",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/6",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/6",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "جاسوسی",
+            "bookCount": 0,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/7",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=7",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/7",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/7",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "پراسرار",
+            "bookCount": 0,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/8",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=8",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/8",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/8",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "name": "خوفناک",
+            "bookCount": 0,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/9",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=9",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/9",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/9",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "name": "سنسنی خیز",
+            "bookCount": 0,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/10",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=10",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/10",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/10",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "name": "طنز و مزاح",
+            "bookCount": 8,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/11",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=11",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/11",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/11",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "name": "آپ بیتی",
+            "bookCount": 4,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/20",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=20",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/20",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/20",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 21,
+            "name": "داستان",
+            "bookCount": 3,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/21",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=21",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/21",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/21",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 22,
+            "name": "شکاریات",
+            "bookCount": 5,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/22",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=22",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/22",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/22",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        },
+        {
+            "id": 23,
+            "name": "تراجم",
+            "bookCount": 1,
+            "links": [
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/23",
+                    "rel": "self",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/books?categoryid=23",
+                    "rel": "books",
+                    "method": "Get"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/23",
+                    "rel": "update",
+                    "method": "Put"
+                },
+                {
+                    "href": "http://localhost:8080/api/libraries/1/categories/23",
+                    "rel": "delete",
+                    "method": "Delete"
+                }
+            ]
+        }
+    ],
+    "links": [
+        {
+            "href": "http://localhost:8080/api/libraries/1/categories",
+            "rel": "self",
+            "method": "Get"
+        },
+        {
+            "href": "http://localhost:8080/api/libraries/1/categories",
+            "rel": "create",
+            "method": "Post"
+        }
+    ]
+}

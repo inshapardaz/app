@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 
 // Local Imports
 import { libraryService } from '@/services';
-import Busy from '@/components/busy';
+import LoadingPlaceHolder from '@/components/loadingPlaceHolder';
 import Empty from '@/components/empty';
 import Error from '@/components/error';
 import BookCard from '@/components/books/bookCard';
@@ -24,8 +24,8 @@ const LatestBooks = () => {
     setError(false);
     libraryService.getLatestBooks(library)
       .then((b) => setBooks(b))
-      .then(() => setBusy(false))
-      .catch(() => setError(true));
+      .catch(() => setError(true))
+      .finally(() => setBusy(false));
   };
   useEffect(() => {
     if (library) {
@@ -34,8 +34,8 @@ const LatestBooks = () => {
   }, [library]);
 
   return (
-    <Busy busy={busy}>
-      <Container sx={{ py: (theme) => theme.spacing(8) }} maxWidth="md">
+    <Container sx={{ py: (theme) => theme.spacing(8) }} maxWidth="md">
+      <LoadingPlaceHolder busy={busy}>
         <Grid container spacing={4}>
           <Error
             error={error}
@@ -55,8 +55,8 @@ const LatestBooks = () => {
             </Empty>
           </Error>
         </Grid>
-      </Container>
-    </Busy>
+      </LoadingPlaceHolder>
+    </Container>
   );
 };
 

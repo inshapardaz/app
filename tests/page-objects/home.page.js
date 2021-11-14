@@ -12,10 +12,6 @@ export default {
       return cy.get('[data-ft="app-name"]');
     },
 
-    get search() {
-      return cy.get('[data-ft="app-search"]');
-    },
-
     get booksLink() {
       return cy.get('[data-ft="books-link"]').filter(':visible');
     },
@@ -81,6 +77,12 @@ export default {
 
     get logoutLink() {
       return cy.get('[data-ft="logout-link"]').filter(':visible');
+    },
+  },
+
+  footer: {
+    get copyrights() {
+      return cy.get('[data-ft="copyrights"]');
     },
   },
 };

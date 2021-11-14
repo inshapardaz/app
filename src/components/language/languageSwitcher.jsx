@@ -28,9 +28,9 @@ const LanguageSwitcher = () => {
     setAnchorEl(null);
   };
 
-  const setLanguage = (language) => {
+  const setLanguage = (lang) => {
     handleClose();
-    dispatch(actions.setLanguageAction(language));
+    dispatch(actions.setLanguageAction(lang));
   };
 
   return (
@@ -53,7 +53,7 @@ const LanguageSwitcher = () => {
         open={open}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'left',
         }}
         transformOrigin={{

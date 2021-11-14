@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
@@ -10,8 +11,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 // Local Imports
-import Nav from './nav';
-import SearchBox from './searchBox';
+import Nav from '@/components/layout/header/nav';
 
 const Library = styled('div')(({ theme }) => ({
   display: 'none',
@@ -25,9 +25,7 @@ const Logo = styled('img')(({ theme }) => ({
 }));
 
 const Header = () => {
-  const selectedLibrary = null;
-  // const classes = useStyles();
-  // let selectedLibrary = libraryService.getSelectedLibrary();
+  const selectedLibrary = useSelector((state) => state.libraryReducer.library);
 
   return (
     <AppBar position="sticky">
@@ -40,7 +38,6 @@ const Header = () => {
             {selectedLibrary != null ? selectedLibrary.name : <FormattedMessage id="app" />}
           </Typography>
         </Library>
-        <SearchBox />
         <Box sx={{ flexGrow: 1 }} />
         <Nav />
       </Toolbar>

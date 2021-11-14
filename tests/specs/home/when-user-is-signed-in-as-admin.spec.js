@@ -2,12 +2,12 @@ import { homePage, loginPage } from '../../page-objects';
 import { loginAsAdmin } from '../../helpers';
 import { authenticationMock } from '../../mock';
 
-describe.only('When user is signed in as administrator', () => {
+describe('When user is signed in as administrator', () => {
   before(() => {
     loginAsAdmin();
     cy.visit('/');
 
-    cy.get('[data-ft="page-loading"]').should('not.be.visible', { timeout: 60000 });
+    cy.get('[data-ft="page-loading"]').should('not.exist', { timeout: 60000 });
   });
 
   it('I should see home page', () => {
@@ -20,11 +20,7 @@ describe.only('When user is signed in as administrator', () => {
 
   it('I should see the Application title', () => {
     homePage.header.title.should('be.visible');
-    homePage.header.title.shouldHaveText('Nawishta');
-  });
-
-  it('Search box should be visible and enabled', () => {
-    homePage.header.search.should('be.visible');
+    homePage.header.title.shouldHaveText('Test');
   });
 
   it('I should see the books link', () => {
@@ -42,9 +38,9 @@ describe.only('When user is signed in as administrator', () => {
     homePage.header.seriesLink.shouldHaveLink('/series');
   });
 
-  // it('I should see the categories menu', () => {
-  //   homePage.header.categoriesMenu.should('be.visible');
-  // });
+  it('I should see the categories menu', () => {
+    homePage.header.categoriesMenu.should('be.visible');
+  });
 
   it('I should see the language menu', () => {
     homePage.header.languageMenu.should('be.visible');
@@ -84,67 +80,6 @@ describe.only('When user is signed in as administrator', () => {
 
     it('I should see logout link', () => {
       homePage.header.logoutLink.should('be.visible');
-    });
-  });
-
-  describe('and I switch language', () => {
-    before(() => {
-      homePage.header.languageMenu.click({ multiple: true });
-    });
-
-    it('I should see language list', () => {
-      homePage.header.languageDropDown.enLanguage.should('be.visible');
-      homePage.header.languageDropDown.urLanguage.should('be.visible');
-      homePage.header.languageDropDown.hiLanguage.should('be.visible');
-      homePage.header.languageDropDown.pnLanguage.should('be.visible');
-    });
-
-    describe('and I switch to urdu', () => {
-      before(() => {
-        homePage.header.languageDropDown.urLanguage.click();
-      });
-
-      it('I should see the Application title in urdu', () => {
-        homePage.header.title.shouldHaveText('نوشتہ');
-      });
-
-      it('I should see page in right-to-left', () => {
-        cy.get('body').should('have.attr', 'dir', 'rtl');
-      });
-
-      describe('and I switch back to english', () => {
-        before(() => {
-          homePage.header.languageDropDown.enLanguage.click();
-        });
-
-        it('I should see the Application title in urdu', () => {
-          homePage.header.title.shouldHaveText('Nawishta');
-        });
-
-        it('I should see page in left-to-right', () => {
-          cy.get('body').should('have.attr', 'dir', 'ltr');
-        });
-      });
-    });
-  });
-
-  describe('and I switch to dark mode', () => {
-    before(() => {
-      homePage.header.darkModeToggle.click();
-    });
-
-    it('I should see dark mode', () => {
-      cy.get('body').should('have.css', 'background-color', 'rgb(18, 18, 18)');
-    });
-
-    describe('and I switch to back to bright mode', () => {
-      before(() => {
-        homePage.header.darkModeToggle.click();
-      });
-
-      it('I should see dark mode', () => {
-        cy.get('body').should('have.css', 'background-color', 'rgb(255, 255, 255)');
-      });
     });
   });
 

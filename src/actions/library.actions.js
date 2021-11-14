@@ -97,7 +97,7 @@ export default {
       });
       dispatch(notificationActions.showSuccess(localeService.formatMessage({ id: 'library.message.delete.success' }, { name: library.name })));
     })
-    .catch((e) => {
+    .catch(() => {
       dispatch(notificationActions.showError(localeService.formatMessage({ id: 'library.message.delete.error' })));
     }),
 };

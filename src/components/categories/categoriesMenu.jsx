@@ -103,6 +103,7 @@ const CategoriesMenu = () => {
         aria-controls="categories-menu"
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
+        data-ft="categories-menu"
         color="inherit"
         onClick={handleClick}
         startIcon={<CategoryIcon />}
