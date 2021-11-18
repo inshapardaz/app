@@ -276,6 +276,7 @@
     "book.public" : "Public Book",
     "book.private" : "Private Book",
     "book.publish": "Published in {year}",
+    "book.seriesAndIndex": "Book {index} of series {name}",
     "book.series": "Book {index} of series {name}",
     "book.editor.header.add": "Adding book",
     "book.editor.header.edit" : "Editing book {title}",

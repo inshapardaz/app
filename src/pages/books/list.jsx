@@ -28,14 +28,12 @@ const BooksPage = () => {
   const [author, setAuthor] = useState(null);
 
   useEffect(() => {
-    console.log(`location changed to ${location}`);
     const values = queryString.parse(location.search);
     if (values.series) { setSeries(parseInt(values.series, 10)); } else { setSeries(null); }
     if (values.author) { setAuthor(parseInt(values.author, 10)); } else { setAuthor(null); }
     if (values.category) { setCategory(parseInt(values.category, 10)); } else { setCategory(null); }
   }, [location]);
 
-  console.log(`Page >> series :${series} author :${author} category :${category}`);
   return (
     <div data-ft="books-page">
       <Helmet title={intl.formatMessage({ id: 'header.books' })} />

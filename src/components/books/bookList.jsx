@@ -108,7 +108,7 @@ const BookList = ({
       setBusy(true);
       setError(false);
       const values = queryString.parse(location.search);
-      console.log(`List >> series :${series} author :${author} category :${category}`);
+
       libraryService.getBooks(library.links.books,
         query,
         author,
