@@ -1,5 +1,7 @@
 export { default as notifications } from './controls/notifications';
 export { default as homePage } from './home.page';
+export { default as userLibrariesPage } from './account/userLibraries.page';
+
 export { default as loginPage } from './account/login.page';
 export { default as forgetPasswordPage } from './account/forgetPassword.page';
 export { default as resetPasswordPage } from './account/resetPassword.page';

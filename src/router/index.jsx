@@ -22,6 +22,7 @@ import LibraryEditPage from '@/pages/admin/libraries/edit';
 import LibraryUserPage from '@/pages/admin/libraries/libraryUser';
 import LibraryPage from '@/pages/admin/libraries/library';
 import CategoriesPage from '@/pages/categories/list';
+import UserLibrariesPage from '@/pages/account/libraries';
 import CategoryEditPage from '@/pages/categories/edit';
 import SeriesPage from '@/pages/series/list';
 import SeriesEditPage from '@/pages/series/edit';
@@ -51,6 +52,7 @@ const Routes = () => {
       <Route path="/account/forgot-password"><ForgetPasswordPage /></Route>
       <Route path="/account/reset-password"><ResetPasswordPage /></Route>
       <PrivateRoute layout={EmptyLayout} path="/account/change-password" component={ChangePasswordPage} />
+      <PrivateRoute layout={EmptyLayout} path="/account/libraries" component={UserLibrariesPage} />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/:libraryId/edit" component={LibraryEditPage} adminOnly exact />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/create" component={LibraryEditPage} adminOnly exact />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/:libraryId/users/add" component={LibraryUserPage} adminOnly exact />

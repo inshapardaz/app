@@ -2,16 +2,15 @@ import { homePage, loginPage } from '../../page-objects';
 import { logIn } from '../../helpers';
 import { authenticationMock } from '../../mock';
 
-describe('When user is signed in as administrator on mobile phone', () => {
+describe('When user is signed in as administrator on mobile phone', {
+  viewportHeight: 667,
+  viewportWidth: 375,
+}, () => {
   before(() => {
     logIn();
     cy.visit('/');
 
     cy.get('[data-ft="page-loading"]').should('not.exist', { timeout: 60000 });
-  });
-
-  beforeEach(() => {
-    cy.viewport('iphone-6');
   });
 
   it('I should see home page', () => {
@@ -77,8 +76,6 @@ describe('When user is signed in as administrator on mobile phone', () => {
 
   describe('And I open mobile menu', () => {
     before(() => {
-      cy.viewport('iphone-6');
-
       homePage.header.mobileMenu.click();
     });
 
@@ -139,7 +136,6 @@ describe('When user is signed in as administrator on mobile phone', () => {
     before(() => {
       logIn();
       cy.visit('/');
-      cy.viewport('iphone-6');
       homePage.header.languageMenu.click();
       homePage.header.languageDropDown.urLanguage.click();
     });

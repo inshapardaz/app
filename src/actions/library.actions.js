@@ -47,6 +47,8 @@ export default {
             });
             dispatch(getCategories());
           }
+        } else {
+          browserHistory.replace('/account/libraries');
         }
       }, () => {
         dispatch({

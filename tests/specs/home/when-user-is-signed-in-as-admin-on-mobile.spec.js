@@ -2,7 +2,10 @@ import { homePage, loginPage } from '../../page-objects';
 import { loginAsAdmin } from '../../helpers';
 import { libraryMock, authenticationMock } from '../../mock';
 
-describe('When user is signed in as administrator on mobile phone', () => {
+describe('When user is signed in as administrator on mobile phone', {
+  viewportHeight: 667,
+  viewportWidth: 375,
+}, () => {
   before(() => {
     libraryMock.mockEntry();
 
@@ -10,10 +13,6 @@ describe('When user is signed in as administrator on mobile phone', () => {
     cy.visit('/');
 
     cy.get('[data-ft="page-loading"]').should('not.exist', { timeout: 60000 });
-  });
-
-  beforeEach(() => {
-    cy.viewport('iphone-6');
   });
 
   it('I should see home page', () => {
@@ -62,8 +61,6 @@ describe('When user is signed in as administrator on mobile phone', () => {
 
   describe('And I open mobile menu', () => {
     before(() => {
-      cy.viewport('iphone-6');
-
       homePage.header.mobileMenu.click();
     });
 
@@ -127,7 +124,6 @@ describe('When user is signed in as administrator on mobile phone', () => {
 
       loginAsAdmin();
       cy.visit('/');
-      cy.viewport('iphone-6');
 
       homePage.header.languageMenu.click();
     });
