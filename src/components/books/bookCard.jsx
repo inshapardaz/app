@@ -5,6 +5,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 // MUI
 import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -16,7 +17,6 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 // Local imports
 import FavoriteButton from '@/components/books/favoriteButton';
-import PagesLink from '@/components/books/pagesLink';
 import BookProgress from '@/components/books/bookProgress';
 import BookSeriesLabel from '@/components/books/bookSeriesLabel';
 import BookCategoriesLabel from '@/components/books/bookCategoriesLabel';
@@ -77,16 +77,18 @@ const BookCard = ({ book, onUpdated, showProgress = false }) => {
       flexDirection: 'column',
     }}
     >
-      <CardMedia
-        component="img"
-        alt={book.title}
-        width="282"
-        height="400"
-        image={(book.links ? book.links.image : null) || helpers.defaultBookImage}
-        title={book.title}
-        onError={helpers.setDefaultBookImage}
-        onClick={() => onOpen()}
-      />
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          alt={book.title}
+          width="282"
+          height="400"
+          image={(book.links ? book.links.image : null) || helpers.defaultBookImage}
+          title={book.title}
+          onError={helpers.setDefaultBookImage}
+          onClick={() => onOpen()}
+        />
+      </CardActionArea>
       <CardContent>
         <Grid container justifyContent="stretch">
           <Grid item container justifyContent="space-between">
@@ -113,7 +115,6 @@ const BookCard = ({ book, onUpdated, showProgress = false }) => {
       <CardActions sx={{ flex: '1', alignItems: 'flex-end' }}>
         {renderEditLink()}
         <DeleteBookButton book={book} onDeleted={onUpdated} />
-        <PagesLink book={book} />
         <FavoriteButton book={book} onUpdated={onUpdated} />
       </CardActions>
     </Card>

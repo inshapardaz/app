@@ -32,7 +32,7 @@ import BookSortButton from '@/components/books/bookSortButton';
 import SearchBox from '@/components/searchBox';
 
 const BookList = ({
-  library, series, author, showFilters,
+  library, series, author, category, showFilters,
 }) => {
   const location = useLocation();
   const history = useHistory();
@@ -41,7 +41,6 @@ const BookList = ({
   const [error, setError] = useState(false);
   const [books, setBooks] = useState(null);
   const [query, setQuery] = useState(null);
-  const [categoryId, setCategoryId] = useState(null);
   const [favoriteFilter, setFavoriteFilter] = useState(null);
   const [readFilter, setReadFilter] = useState(null);
   const [statusFilter, setStatusFilter] = useState(null);
@@ -57,7 +56,7 @@ const BookList = ({
         page,
         newQuery,
         author,
-        categoryId,
+        category,
         series,
         sortBy,
         sortDirection,
@@ -75,7 +74,7 @@ const BookList = ({
         page,
         query,
         author,
-        categoryId,
+        category,
         series,
         sortBy,
         sortDirection,
@@ -93,7 +92,7 @@ const BookList = ({
         page,
         query,
         author,
-        categoryId,
+        category,
         series,
         newSortBy,
         newSortDirection,
@@ -109,11 +108,11 @@ const BookList = ({
       setBusy(true);
       setError(false);
       const values = queryString.parse(location.search);
-
+      console.log(`List >> series :${series} author :${author} category :${category}`);
       libraryService.getBooks(library.links.books,
         query,
         author,
-        values.category,
+        category,
         series,
         values.sortBy,
         values.sortDirection,
@@ -124,7 +123,6 @@ const BookList = ({
         .then((res) => {
           setBooks(res);
           setQuery(values.query);
-          setCategoryId(values.category);
           setSortBy(values.sortBy);
           setFavoriteFilter(values.favorite === 'true');
           setReadFilter(helpers.parseNullableBool(values.read));
@@ -142,7 +140,7 @@ const BookList = ({
 
   useEffect(() => {
     loadData();
-  }, [library, location]);
+  }, [library, author, series, category, location]);
 
   const renderPagination = () => {
     if (!busy && books) {
@@ -159,7 +157,7 @@ const BookList = ({
                 item.page,
                 query,
                 author,
-                categoryId,
+                category,
                 series,
                 sortBy,
                 sortDirection,
@@ -273,6 +271,7 @@ const BookList = ({
 BookList.defaultProps = {
   series: null,
   author: null,
+  category: null,
   showFilters: true,
   library: null,
 };
@@ -285,6 +284,7 @@ BookList.propTypes = {
   }),
   series: PropTypes.number,
   author: PropTypes.number,
+  category: PropTypes.number,
   showFilters: PropTypes.bool,
 };
 

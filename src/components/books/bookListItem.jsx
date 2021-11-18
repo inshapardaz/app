@@ -24,7 +24,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import BookDeleteButton from '@/components/books/deleteBookButton';
 import AuthorsGroup from '@/components/authors/authorsGroup';
 import FavoriteButton from '@/components/books/favoriteButton';
-import PagesLink from '@/components/books/pagesLink';
 import BookSeriesLabel from '@/components/books/bookSeriesLabel';
 import BookCategoriesLabel from '@/components/books/bookCategoriesLabel';
 import helpers from '@/helpers';
@@ -66,7 +65,6 @@ const BookMenu = ({ book, onUpdated }) => {
             <IconButton onClick={() => history.push(`/books/${book.id}/edit`)}><EditIcon /></IconButton>
           </Tooltip>
           <BookDeleteButton book={book} onDeleted={onUpdated} onClick={handleClose} />
-          <PagesLink book={book} onClick={handleClose} />
           <FavoriteButton book={book} onUpdated={onUpdated} />
         </Menu>
       </>
@@ -79,7 +77,6 @@ const BookMenu = ({ book, onUpdated }) => {
         <IconButton onClick={() => history.push(`/books/${book.id}/edit`)}><EditIcon /></IconButton>
       </Tooltip>
       <BookDeleteButton book={book} onDeleted={onUpdated} />
-      <PagesLink book={book} />
       <FavoriteButton book={book} onUpdated={onUpdated} />
     </>
   );

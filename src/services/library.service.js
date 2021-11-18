@@ -191,6 +191,7 @@ export default {
     if (sortDirection) {
       queryVal += `&sortDirection=${sortDirection}`;
     }
+
     if (queryVal) {
       return get(`${url}?pageNumber=${pageNumber}&pageSize=${pageSize}${queryVal}`);
     }

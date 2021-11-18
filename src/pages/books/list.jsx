@@ -23,12 +23,19 @@ const BooksPage = () => {
   const theme = useTheme();
   const isAboveSmall = useMediaQuery(theme.breakpoints.up('md'));
 
-  const [categoryId, setCategoryId] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [series, setSeries] = useState(null);
+  const [author, setAuthor] = useState(null);
+
   useEffect(() => {
+    console.log(`location changed to ${location}`);
     const values = queryString.parse(location.search);
-    setCategoryId(parseInt(values.category, 10));
+    if (values.series) { setSeries(parseInt(values.series, 10)); } else { setSeries(null); }
+    if (values.author) { setAuthor(parseInt(values.author, 10)); } else { setAuthor(null); }
+    if (values.category) { setCategory(parseInt(values.category, 10)); } else { setCategory(null); }
   }, [location]);
 
+  console.log(`Page >> series :${series} author :${author} category :${category}`);
   return (
     <div data-ft="books-page">
       <Helmet title={intl.formatMessage({ id: 'header.books' })} />
@@ -36,10 +43,10 @@ const BooksPage = () => {
       <CenteredContent>
         <Grid container spacing={2} direction={isAboveSmall ? 'row' : 'column-reverse'}>
           <Grid item md={2}>
-            <CategoriesSideBar selectedCategoryId={categoryId} />
+            <CategoriesSideBar selectedCategoryId={category} />
           </Grid>
           <Grid item md={10}>
-            <BookList library={library} />
+            <BookList library={library} series={series} author={author} category={category} />
           </Grid>
         </Grid>
       </CenteredContent>

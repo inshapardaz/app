@@ -72,10 +72,6 @@ class LocaleService {
         displayName: intl.formatMessage({ id: 'font.FajerNooriNastalique' }),
       },
       {
-        key: 'DehalviKhushKhat',
-        displayName: intl.formatMessage({ id: 'font.DehalviKhushKhat' }),
-      },
-      {
         key: 'NafeesWebNaskh',
         displayName: intl.formatMessage({ id: 'font.NafeesWebNaskh' }),
       },
