@@ -76,7 +76,7 @@ const StatusButton = ({
 
     Promise.all(promises)
       .then(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.saved' }), { variant: 'success' }))
-      .then(() => onBusy(true))
+      .then(() => onBusy(false))
       .then(() => onStatusChanges())
       .catch(() => enqueueSnackbar(intl.formatMessage({ id: 'page.messages.error.saving' }), { variant: 'error' }));
   };

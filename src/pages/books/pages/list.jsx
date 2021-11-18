@@ -44,6 +44,7 @@ import PageSizeSelector from '@/components/pageSizeSelector';
 import OcrButton from '@/components/pages/ocrButton';
 
 // Local Import
+import BookStatus from '@/models/bookStatus';
 import PageStatus from '@/models/pageStatus';
 import PageBreadcrumb from '@/components/pages/pageBreadcrumb';
 
@@ -101,6 +102,19 @@ SelectionButton.propTypes = {
 
 // ---------------------------------------------------------------------
 
+const getFilterFromBookStatus = (book) => {
+  switch (book.status) {
+    case BookStatus.AvailableForTyping: return PageStatus.AvailableForTyping;
+    case BookStatus.BeingTyped: return PageStatus.Typing;
+    case BookStatus.ReadyForProofRead: return PageStatus.Typed;
+    case BookStatus.ProofRead: return PageStatus.InReview;
+    case BookStatus.Published: return PageStatus.Completed;
+    default: return PageStatus.All;
+  }
+};
+
+// ---------------------------------------------------------------------
+
 const BookPages = () => {
   const history = useHistory();
   const location = useLocation();
@@ -119,19 +133,21 @@ const BookPages = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
   const selectedPages = getSelectedPages(pages, checked);
-
   const loadPages = (b) => {
     setError(false);
     const values = queryString.parse(location.search);
-    libraryService.getBookPages(b.links.pages, values.filter, values.assignmentFilter, values.page, values.pageSize)
+    const assignmentFilterValue = values.assignmentFilter ? values.assignmentFilter : 'assignedToMe';
+    const filter = values.filter ? values.filter : getFilterFromBookStatus(b);
+    libraryService.getBookPages(b.links.pages, filter, assignmentFilterValue, values.page, values.pageSize)
       .then((res) => {
         setPages(res);
-        setStatusFilter(values.filter);
-        setAssignmentFilter(values.assignmentFilter);
+        setStatusFilter(filter);
+        setAssignmentFilter(assignmentFilterValue);
         setPage(values.page);
         setPageSize(values.pageSize || 12);
       })
-      .catch(() => {
+      .catch((e) => {
+        console.error(e);
         setError(true);
       })
       .finally(() => setBusy(false));
@@ -147,7 +163,8 @@ const BookPages = () => {
         setBook(res);
         loadPages(res);
       })
-      .catch(() => {
+      .catch((e) => {
+        console.error(e);
         setError(true);
       })
       .finally(() => setBusy(false));
@@ -238,7 +255,7 @@ const BookPages = () => {
         <AssignToMeButton pages={selectedPages} onAssigned={loadData} onAssigning={setBusy} />
         <AssignToUserButton pages={selectedPages} onAssigned={loadData} />
         <ChaptersAssignButton book={book} pages={selectedPages} onStatusChanges={loadData} />
-        <StatusButton pages={selectedPages} onStatusChanges={loadData} />
+        <StatusButton pages={selectedPages} onStatusChanges={loadData} onBusy={setBusy} />
         <OcrButton pages={selectedPages} onUpdated={loadData} />
       </ButtonGroup>
       <div style={{ flexGrow: 1 }} />

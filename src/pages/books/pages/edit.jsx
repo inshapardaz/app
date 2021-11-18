@@ -15,10 +15,9 @@ import ImageIcon from '@mui/icons-material/Image';
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 // Local Imports
-import { libraryService } from '@/services';
+import { libraryService, localeService } from '@/services';
 import Editor from '@/components/editor';
 import PageBreadcrumb from '@/components/pages/pageBreadcrumb';
 import Error from '@/components/error';
@@ -138,12 +137,12 @@ const PageEditorPage = () => {
         <CompleteButton page={page} onUpdating={setBusy} onUpdated={loadData} />
         <Tooltip title={<FormattedMessage id="page.edit.previous" />}>
           <Button disabled={!hasPreviousLink()} component={Link} to={page ? `/books/${page.bookId}/pages/${page.sequenceNumber - 1}/edit` : ''}>
-            <ChevronRightIcon />
+            { localeService.isRtl() ? <ChevronRightIcon /> : <ChevronLeftIcon /> }
           </Button>
         </Tooltip>
         <Tooltip title={<FormattedMessage id="page.edit.next" />}>
           <Button disabled={!hasNextLink()} component={Link} to={page ? `/books/${page.bookId}/pages/${page.sequenceNumber + 1}/edit` : ''}>
-            <ChevronLeftIcon />
+            { localeService.isRtl() ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
           </Button>
         </Tooltip>
       </ButtonGroup>
@@ -151,11 +150,6 @@ const PageEditorPage = () => {
         <Tooltip title={<FormattedMessage id="action.toggle.image" />}>
           <Button onClick={toggleImage} variant="outlined">
             { hideImage ? <ImageIcon /> : <ImageNotSupportedIcon />}
-          </Button>
-        </Tooltip>
-        <Tooltip title={<FormattedMessage id="action.close" />}>
-          <Button variant="outlined" component={Link} to={page ? `/books/${page.bookId}/pages` : ''}>
-            <HighlightOffIcon />
           </Button>
         </Tooltip>
       </ButtonGroup>
