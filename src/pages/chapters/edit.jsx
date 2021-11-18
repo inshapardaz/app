@@ -81,8 +81,8 @@ const ChapterContentEditor = () => {
       //  Adding new content
       return libraryService.addChapterContents(chapter.links.add_content,
         library.language, newContent)
-        .then((data) => {
-          setContent(data);
+        .then(() => {
+          setContent(newContent);
           enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' });
         })
         .catch(() => enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.saving' }), { variant: 'error' }))

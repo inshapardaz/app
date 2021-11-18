@@ -72,7 +72,6 @@ const Editor = ({
   const [font, setFont] = useState(localStorage.getItem('editor-font') || null);
   const [textScale, setTextScale] = useState(localStorage.getItem('editor.fontSize') || 1.0);
   const [loadedSavedData, setLoadedSavedData] = useState(false);
-  const [data, setData] = useState(content);
   const [showControls, setShowControls] = useState((localStorage.getItem('editor.showToolbar') || true) === true);
   const [fullScreen, setFullScreen] = useState(false);
   const [editorState, setEditorState] = React.useState(MUIEditorState.createEmpty());
@@ -117,26 +116,19 @@ const Editor = ({
 
   useEffect(() => {
     const savedData = localStorage.getItem(`contents-${identifier}`);
-    let finalData = null;
     if (savedData) {
-      finalData = savedData;
+      setEditorState(savedData);
       setLoadedSavedData(true);
     } else {
-      finalData = content;
+      setEditorState(convertToDraftJs(content));
       setLoadedSavedData(false);
     }
-
-    setData(finalData);
-
-    setEditorState(convertToDraftJs(finalData));
   }, [identifier, content]);
 
   const onChange = (newState) => {
+    onDirty(true);
     setEditorState(newState);
-    const markdownString = convertToMarkdown(editorState);
-    setData(markdownString);
-    localStorage.setItem(`contents-${identifier}`, markdownString);
-    onDirty(markdownString !== content);
+    localStorage.setItem(`contents-${identifier}`, newState);
   };
 
   const onZoomInText = () => {
@@ -165,8 +157,10 @@ const Editor = ({
   };
 
   const save = () => {
-    onSave(data)
-      .then(() => localStorage.removeItem(`contents-${identifier}`));
+    const markDown = convertToMarkdown(editorState);
+    onSave(markDown)
+      .then(() => localStorage.removeItem(`contents-${identifier}`))
+      .then(() => onDirty(false));
   };
 
   return (
@@ -190,7 +184,7 @@ const Editor = ({
             variant="outlined"
             onClick={() => {
               localStorage.removeItem(`contents-${identifier}`);
-              setData(content);
+              setEditorState(convertToDraftJs(content));
               setLoadedSavedData(false);
             }}
           >

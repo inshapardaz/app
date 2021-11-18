@@ -210,7 +210,7 @@ export default {
   updateChapter: (url, chapter) => put(url, chapter),
   deleteChapter: (chapter) => _delete(chapter.links.delete),
   getChapterContents: (libraryId, bookId, chapterNumber, language) => get(`${librariesUrl()}/${libraryId}/books/${bookId}/chapters/${chapterNumber}/contents?language=${language}`),
-  addChapterContents: (url, newContent) => post(url, newContent),
+  addChapterContents: (url, language, newContent) => post(`${url}?language=${language}`, newContent),
   updateChapterContents: (url, language, newContent) => put(`${url}?language=${language}`, newContent),
 
   // Pages
