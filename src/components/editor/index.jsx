@@ -23,6 +23,7 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import BuildIcon from '@mui/icons-material/Build';
 
 // Local Imports
 import FontMenu from '@/components/fontMenu';
@@ -72,6 +73,7 @@ const Editor = ({
   const [textScale, setTextScale] = useState(localStorage.getItem('editor.fontSize') || 1.0);
   const [loadedSavedData, setLoadedSavedData] = useState(false);
   const [data, setData] = useState(content);
+  const [showControls, setShowControls] = useState((localStorage.getItem('editor.showToolbar') || true) === true);
   const [fullScreen, setFullScreen] = useState(false);
   const [editorState, setEditorState] = React.useState(MUIEditorState.createEmpty());
   const language = useSelector((state) => state.localeReducer.language);
@@ -87,8 +89,7 @@ const Editor = ({
     toolbar: {
       className: '',
       style: {},
-      visible: true,
-      position: 'top',
+      visible: showControls,
       controls: [
         toolbarControlTypes.undo,
         toolbarControlTypes.redo,
@@ -158,6 +159,11 @@ const Editor = ({
     setFullScreen(!fullScreen);
   };
 
+  const onControlsToggle = () => {
+    localStorage.setItem('editor.showToolbar', !showControls);
+    setShowControls(!showControls);
+  };
+
   const save = () => {
     onSave(data)
       .then(() => localStorage.removeItem(`contents-${identifier}`));
@@ -216,6 +222,12 @@ const Editor = ({
           </ButtonWithTooltip>
           <ButtonWithTooltip tooltip={<FormattedMessage id="action.zoom.out" />} onClick={onZoomOutText} disabled={parseFloat(textScale) <= 1}>
             <ZoomOutIcon />
+          </ButtonWithTooltip>
+          <ButtonWithTooltip
+            tooltip={<FormattedMessage id={showControls ? 'textEditor.actions.hideEditControls' : 'textEditor.actions.showEditControls'} />}
+            onClick={onControlsToggle}
+          >
+            <BuildIcon color={showControls ? '' : 'disabled'} />
           </ButtonWithTooltip>
         </ButtonGroup>
         <Divider orientation="vertical" sx={{ flex: 1 }} />

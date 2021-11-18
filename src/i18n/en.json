@@ -439,5 +439,7 @@
 	"books.pagination.size" : "Showing {pageSize} books",
 	"authors.pagination.size" : "Showing {pageSize} authors",
 	"series.pagination.size" : "Showing {pageSize} Series",
-	"page.pagination.size" : "Showing {pageSize} pages"
+	"page.pagination.size" : "Showing {pageSize} pages",
+	"textEditor.actions.showEditControls" : "Show Edit Controls",
+	"textEditor.actions.hideEditControls" : "Hide Edit Controls"
 }

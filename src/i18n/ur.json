@@ -436,5 +436,7 @@
 	"books.pagination.size" : "{pageSize} کتب",
 	"authors.pagination.size" : "{pageSize} مصنّف",
 	"series.pagination.size" : "{pageSize} سلسلہ جات",
-	"page.pagination.size" : "{pageSize} صفحات"
+	"page.pagination.size" : "{pageSize} صفحات",
+	"textEditor.actions.showEditControls" : "آلاتِ تدوین کی نمائش",
+	"textEditor.actions.hideEditControls" : "آلاتِ تدوین مخفی کریں"
 }
