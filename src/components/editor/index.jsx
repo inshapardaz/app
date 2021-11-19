@@ -117,18 +117,34 @@ const Editor = ({
   useEffect(() => {
     const savedData = localStorage.getItem(`contents-${identifier}`);
     if (savedData) {
-      setEditorState(savedData);
+      const rawContentFromStore = convertFromRaw(JSON.parse(savedData));
+      setEditorState(EditorState.createWithContent(rawContentFromStore));
       setLoadedSavedData(true);
     } else {
-      setEditorState(convertToDraftJs(content));
+      const newState = convertToDraftJs(content);
+      setEditorState(newState);
       setLoadedSavedData(false);
     }
   }, [identifier, content]);
 
   const onChange = (newState) => {
-    onDirty(true);
+    const currentContent = newState.getCurrentContent();
+    const oldContent = editorState.getCurrentContent();
+
+    if (oldContent !== currentContent) {
+      const contentRaw = convertToRaw(currentContent);
+      localStorage.setItem(`contents-${identifier}`, JSON.stringify(contentRaw));
+      onDirty(true);
+    }
+
     setEditorState(newState);
-    localStorage.setItem(`contents-${identifier}`, newState);
+  };
+
+  const save = () => {
+    const markDown = convertToMarkdown(editorState);
+    onSave(markDown)
+      .then(() => localStorage.removeItem(`contents-${identifier}`))
+      .then(() => onDirty(false));
   };
 
   const onZoomInText = () => {
@@ -154,13 +170,6 @@ const Editor = ({
   const onControlsToggle = () => {
     localStorage.setItem('editor.showToolbar', !showControls);
     setShowControls(!showControls);
-  };
-
-  const save = () => {
-    const markDown = convertToMarkdown(editorState);
-    onSave(markDown)
-      .then(() => localStorage.removeItem(`contents-${identifier}`))
-      .then(() => onDirty(false));
   };
 
   return (
