@@ -67,13 +67,14 @@ const convertToDraftJs = (mardownData) => {
 const Editor = ({
   identifier, content, label, onSave, onDirty,
   startToolbar, endToolbar, secondaryView, message,
-  allowFullScreen,
+  allowFullScreen, allowOcr,
 }) => {
   const [font, setFont] = useState(localStorage.getItem('editor-font') || null);
   const [textScale, setTextScale] = useState(localStorage.getItem('editor.fontSize') || 1.0);
   const [loadedSavedData, setLoadedSavedData] = useState(false);
   const [showControls, setShowControls] = useState((localStorage.getItem('editor.showToolbar') || true) === true);
   const [fullScreen, setFullScreen] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [editorState, setEditorState] = React.useState(MUIEditorState.createEmpty());
   const language = useSelector((state) => state.localeReducer.language);
 
@@ -115,7 +116,8 @@ const Editor = ({
   };
 
   useEffect(() => {
-    const savedData = localStorage.getItem(`contents-${identifier}`);
+    if (saving) return;
+    const savedData = window.localStorage.getItem(`contents-${identifier}`);
     if (savedData) {
       const rawContentFromStore = convertFromRaw(JSON.parse(savedData));
       setEditorState(EditorState.createWithContent(rawContentFromStore));
@@ -142,9 +144,12 @@ const Editor = ({
 
   const save = () => {
     const markDown = convertToMarkdown(editorState);
+    setSaving(true);
     onSave(markDown)
       .then(() => localStorage.removeItem(`contents-${identifier}`))
-      .then(() => onDirty(false));
+      .then(() => setLoadedSavedData(false))
+      .then(() => onDirty(false))
+      .finally(() => setSaving(false));
   };
 
   const onZoomInText = () => {
@@ -214,9 +219,11 @@ const Editor = ({
             <SaveIcon />
           </ButtonWithTooltip>
           <FontMenu value={font} onFontSelected={setFont} storageKey="editor-font" />
+          {allowOcr && (
           <ButtonWithTooltip tooltip="ocr">
             <FindInPageIcon />
           </ButtonWithTooltip>
+          )}
           <ButtonWithTooltip tooltip="auto correct">
             <AutoAwesomeIcon />
           </ButtonWithTooltip>
@@ -292,6 +299,7 @@ Editor.defaultProps = {
   secondaryView: null,
   onSave: () => {},
   onDirty: () => {},
+  allowOcr: true,
 };
 
 Editor.propTypes = {
@@ -305,6 +313,7 @@ Editor.propTypes = {
   secondaryView: PropTypes.node,
   onSave: PropTypes.func,
   onDirty: PropTypes.func,
+  allowOcr: PropTypes.bool,
 };
 
 export default Editor;

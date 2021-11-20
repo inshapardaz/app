@@ -42,7 +42,7 @@ const PageListItem = ({
         </>
 )}
     >
-      <ListItemButton>
+      <ListItemButton onClick={pageClicked}>
         <Checkbox
           edge="start"
           checked={checked}

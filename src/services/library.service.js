@@ -148,7 +148,7 @@ export default {
 
   /* Books */
 
-  getLatestBooks: (library) => get(`${libraryUrl(library)}/books?pageNumber=1&pageSize=12&sortby=DateCreated`),
+  getLatestBooks: (library) => get(`${libraryUrl(library)}/books?pageNumber=1&pageSize=12&sortby=DateCreated&sortDirection=descending`),
 
   createBook: (url, book) => post(url, book),
 

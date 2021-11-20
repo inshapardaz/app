@@ -123,6 +123,7 @@ const ChapterContentEditor = () => {
         </Alert>
         )}
         identifier={`${book.id}-${chapter.id}-${library.language}`}
+        allowOcr={false}
         onSave={saveContents}
         onDirty={onChanged}
       />
