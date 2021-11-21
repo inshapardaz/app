@@ -8,11 +8,15 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 
 // Local Imports
 import Reader from '@/components/reader/reader';
@@ -25,6 +29,7 @@ import LineHeightSelector from '@/components/reader/lineHeightSelector';
 
 const ReaderFontSizeStorageKey = 'reader.fontSize';
 const ReaderFontStorageKey = 'reader.font';
+const ReaderViewTypeStorageKey = 'reader.viewType';
 const MinimumFontScale = 0;
 const MaximumFontScale = 5;
 
@@ -62,6 +67,7 @@ const ReaderView = ({
   const history = useHistory();
   const [font, setFont] = useState(localStorage.getItem(ReaderFontStorageKey) || 'MehrNastaleeq');
   const [fontScale, setFontScale] = useState(parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0', 10));
+  const [view, setView] = useState(localStorage.getItem(ReaderViewTypeStorageKey) || 'single');
   const [fullScreen, setFullScreen] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState(null);
   const [selectedLineHeight, setSelectedLineHeight] = useState(1.0);
@@ -86,6 +92,11 @@ const ReaderView = ({
     setFullScreen(!fullScreen);
   };
 
+  const onViewTypeChanged = (e, newViewType) => {
+    localStorage.setItem(ReaderViewTypeStorageKey, newViewType);
+    setView(newViewType);
+  };
+
   return (
     <Box sx={{
       backgroundColor: (theme) => (selectedTheme ? selectedTheme.backgroundColor : theme.palette.background.paper),
@@ -103,9 +114,23 @@ const ReaderView = ({
           <BreadcrumbSeparator />
           <ChaptersSelector book={book} selectedChapter={selectedChapter} />
           <Divider orientation="vertical" sx={{ flex: 1 }} />
+
           <ThemeSelector onThemeChanged={setSelectedTheme} />
           <LineHeightSelector onValueChanged={setSelectedLineHeight} />
           <FontMenu size="small" variant="text" value={font} onFontSelected={setFont} storageKey={ReaderFontStorageKey} />
+          <ToggleButtonGroup
+            size="small"
+            value={view}
+            exclusive
+            onChange={onViewTypeChanged}
+          >
+            <ToggleButton value="single">
+              <ArticleOutlinedIcon fontSize="small" />
+            </ToggleButton>
+            <ToggleButton value="two">
+              <ImportContactsIcon fontSize="small" />
+            </ToggleButton>
+          </ToggleButtonGroup>
           <ButtonWithTooltip size="small" variant="text" tooltip={<FormattedMessage id="action.zoom.in" />} onClick={onZoomInText} disabled={parseFloat(fontScale) >= MaximumFontScale}>
             <ZoomInIcon fontSize="small" />
           </ButtonWithTooltip>
@@ -129,6 +154,7 @@ const ReaderView = ({
         font={font}
         fontScale={fontScale}
         theme={selectedTheme}
+        view={view}
         lineHeight={selectedLineHeight}
         height={fullScreen ? 'calc(100vh - 65px)' : 'calc(100vh - 113px)'}
         canGoBack={Boolean(selectedChapter && selectedChapter.links.previous)}

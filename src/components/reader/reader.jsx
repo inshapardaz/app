@@ -13,14 +13,15 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const Reader = ({
   data, format = 'text', font, fontScale, height,
-  canGoBack, onBack, canGoForward, onForward, theme, lineHeight,
+  canGoBack, onBack, canGoForward, onForward, theme, lineHeight, view,
 }) => {
   const anchorRef = useRef(null);
   const [pageLeft, setPageLeft] = useState(0);
 
-  const isSinglePage = useMediaQuery('(max-width:1300px)');
+  const isNarrowScreen = useMediaQuery('(max-width:1300px)');
   const [page, setPage] = useState(1);
 
+  const isSinglePage = view === 'single' || isNarrowScreen;
   const pageWidth = isSinglePage ? 601 : 1202;
   const style = {
     fontFamily: font,
@@ -125,6 +126,7 @@ Reader.defaultProps = {
   font: 'MehrNastaleeq',
   fontScale: null,
   lineHeight: 1.0,
+  view: 'two',
   theme: {},
   canGoBack: false,
   onBack: () => {},
@@ -139,6 +141,7 @@ Reader.propTypes = {
   fontScale: PropTypes.number,
   theme: PropTypes.object,
   lineHeight: PropTypes.number,
+  view: PropTypes.string,
   height: PropTypes.string.isRequired,
   canGoBack: PropTypes.bool,
   onBack: PropTypes.func,

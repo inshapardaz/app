@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 // Local Imports
 import Header from '@/components/layout/header';
 
-const FullWidthLayout = (props) => {
+const NoFooterLayout = (props) => {
   const { children } = props;
   return (
     <>
@@ -21,4 +21,4 @@ const FullWidthLayout = (props) => {
   );
 };
 
-export default FullWidthLayout;
+export default NoFooterLayout;
