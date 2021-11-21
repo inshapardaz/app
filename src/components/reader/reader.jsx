@@ -13,6 +13,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const Reader = ({
   data, format = 'text', font, fontScale, height,
+  canGoBack, onBack, canGoForward, onForward,
 }) => {
   const anchorRef = useRef(null);
   const [pageLeft, setPageLeft] = useState(0);
@@ -39,6 +40,33 @@ const Reader = ({
     setPageLeft(0);
   }, [data]);
 
+  // ----- Previous Page Links ---------------
+  const isOnFistPage = () => pageLeft <= 0;
+  const onPrevious = () => {
+    if (!isOnFistPage()) {
+      setPageLeft(pageLeft - pageWidth);
+      setPage(page - 1);
+    } else if (canGoBack) {
+      onBack();
+    }
+  };
+
+  const canGoPrevious = () => !isOnFistPage() || canGoBack;
+
+  // ----- Next Page Links ---------------
+  const isOnLastPage = () => (anchorRef && anchorRef.current && pageLeft >= anchorRef.current.scrollWidth - pageWidth);
+
+  const onNext = () => {
+    if (!isOnLastPage()) {
+      setPageLeft(pageLeft + pageWidth);
+      setPage(page + 1);
+    } else if (canGoForward) {
+      onForward();
+    }
+  };
+
+  const canGoNext = () => !isOnLastPage() || canGoForward;
+
   const renderContents = () => {
     if (format === 'html') {
       return parse(data);
@@ -50,25 +78,19 @@ const Reader = ({
     return data;
   };
 
-  const renderLeft = () => (
+  const renderPrevious = () => (
     <IconButton
-      disabled={pageLeft <= 0}
-      onClick={() => {
-        setPageLeft(pageLeft - pageWidth);
-        setPage(page - 1);
-      }}
+      disabled={!canGoPrevious()}
+      onClick={onPrevious}
     >
       <ChevronRightIcon />
     </IconButton>
   );
 
-  const renderRight = () => (
+  const renderNext = () => (
     <IconButton
-      disabled={anchorRef && anchorRef.current && pageLeft >= anchorRef.current.scrollWidth - pageWidth}
-      onClick={() => {
-        setPageLeft(pageLeft + pageWidth);
-        setPage(page + 1);
-      }}
+      disabled={!canGoNext()}
+      onClick={onNext}
     >
       <ChevronLeftIcon />
     </IconButton>
@@ -79,7 +101,7 @@ const Reader = ({
   return (
     <Grid container justifyContent="center" alignItems="center">
       <Grid item>
-        {renderLeft()}
+        {renderPrevious()}
       </Grid>
       <Grid item>
         <Container maxWidth={isSinglePage ? 'sm' : 'lg'} sx={{ overflow: 'hidden' }}>
@@ -89,7 +111,7 @@ const Reader = ({
         </Container>
       </Grid>
       <Grid item>
-        {renderRight()}
+        {renderNext()}
       </Grid>
     </Grid>
   );
@@ -100,6 +122,10 @@ Reader.defaultProps = {
   format: 'text',
   font: 'MehrNastaleeq',
   fontScale: null,
+  canGoBack: false,
+  onBack: () => {},
+  canGoForward: false,
+  onForward: () => {},
 };
 
 Reader.propTypes = {
@@ -108,6 +134,10 @@ Reader.propTypes = {
   font: PropTypes.string,
   fontScale: PropTypes.number,
   height: PropTypes.string.isRequired,
+  canGoBack: PropTypes.bool,
+  onBack: PropTypes.func,
+  canGoForward: PropTypes.bool,
+  onForward: PropTypes.func,
 };
 
 export default Reader;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 // MUI
 import AppBar from '@mui/material/AppBar';
@@ -55,6 +55,8 @@ BookTitle.propTypes = {
     title: PropTypes.string,
   }),
 };
+
+// ----------------------------------------------------------
 
 const ChaptersSelector = ({ book, selectedChapter }) => {
   const [chapters, setChapters] = useState(null);
@@ -150,6 +152,7 @@ ChaptersSelector.propTypes = {
 const ReaderView = ({
   book, selectedChapter, data, format = 'text',
 }) => {
+  const history = useHistory();
   const [font, setFont] = useState(localStorage.getItem(ReaderFontStorageKey) || 'MehrNastaleeq');
   const [fontScale, setFontScale] = useState(parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0', 10));
   const [fullScreen, setFullScreen] = useState(false);
@@ -208,7 +211,17 @@ const ReaderView = ({
           </ButtonWithTooltip>
         </Toolbar>
       </AppBar>
-      <Reader data={data} format={format} font={font} fontScale={fontScale} height={fullScreen ? 'calc(100vh - 65px)' : 'calc(100vh - 113px)'} />
+      <Reader
+        data={data}
+        format={format}
+        font={font}
+        fontScale={fontScale}
+        height={fullScreen ? 'calc(100vh - 65px)' : 'calc(100vh - 113px)'}
+        canGoBack={Boolean(selectedChapter && selectedChapter.links.previous)}
+        onBack={() => history.push(`/books/${book.id}/chapters/${selectedChapter.chapterNumber - 1}`)}
+        canGoForward={Boolean(selectedChapter && selectedChapter.links.next)}
+        onForward={() => history.push(`/books/${book.id}/chapters/${selectedChapter.chapterNumber + 1}`)}
+      />
     </Box>
   );
 };
@@ -231,6 +244,11 @@ ReaderView.propTypes = {
   selectedChapter: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
+    chapterNumber: PropTypes.number,
+    links: PropTypes.shape({
+      previous: PropTypes.string,
+      next: PropTypes.string,
+    }),
   }),
   data: PropTypes.string,
   format: PropTypes.string,
