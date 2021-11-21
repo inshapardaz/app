@@ -452,5 +452,7 @@
 	"lineHeight.normal" : "Normal",
 	"lineHeight.wide" : "Wide",
 	"lineHeight.wider" : "Wider",
-	"lineHeight.widest" : "Widest"
+	"lineHeight.widest" : "Widest",
+	"reader.singlePage" : "Single Page",
+	"reader.twoPages" : "Two Pages"
 }

@@ -2,6 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 // MUI
+import Collapse from '@mui/material/Collapse';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -23,15 +30,10 @@ const themes = [{
 }];
 
 const ThemeSelector = ({ onThemeChanged }) => {
+  const [open, setOpen] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem('reader.theme') || themes[0].name);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleClick = () => {
+    setOpen(!open);
   };
 
   useEffect(() => {
@@ -42,40 +44,28 @@ const ThemeSelector = ({ onThemeChanged }) => {
   const onChange = (newTheme) => {
     localStorage.setItem('reader.theme', newTheme.name);
     setTheme(newTheme.name);
-    handleClose();
   };
+
   return (
     <>
-      <Button
-        id="theme-button"
-        aria-controls={open ? 'theme-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        size="small"
-        onClick={handleClick}
-        startIcon={<ColorLensIcon fontSize="small" />}
-        endIcon={<KeyboardArrowDownIcon />}
-      >
-        <FormattedMessage id={`theme.${theme}`} />
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-      >
+      <ListItemButton onClick={handleClick}>
+        <ListItemIcon>
+          <ColorLensIcon />
+        </ListItemIcon>
+        <ListItemText primary={<FormattedMessage id="theme" />} />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open} timeout="auto" unmountOnExit>
         {themes.map((t) => (
-          <MenuItem
+          <ListItemButton
             key={t.name}
-            value={t.name}
             selected={t.name === theme}
             onClick={() => onChange(t)}
           >
-            <FormattedMessage id={`theme.${t.name}`} />
-          </MenuItem>
+            <ListItemText primary={<FormattedMessage id={`theme.${t.name}`} />} />
+          </ListItemButton>
         ))}
-      </Menu>
+      </Collapse>
     </>
   );
 };

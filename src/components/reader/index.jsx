@@ -4,12 +4,14 @@ import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 // MUI
-import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
@@ -17,10 +19,11 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 // Local Imports
 import Reader from '@/components/reader/reader';
-import FontMenu from '@/components/fontMenu';
+import FontList from '@/components/fontList';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
 import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
 import ChaptersSelector from '@/components/reader/chaptersSelector';
@@ -66,14 +69,14 @@ const ReaderView = ({
 }) => {
   const history = useHistory();
   const [font, setFont] = useState(localStorage.getItem(ReaderFontStorageKey) || 'MehrNastaleeq');
-  const [fontScale, setFontScale] = useState(parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0', 10));
+  const [fontScale, setFontScale] = useState(parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0'));
   const [view, setView] = useState(localStorage.getItem(ReaderViewTypeStorageKey) || 'single');
   const [fullScreen, setFullScreen] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState(null);
   const [selectedLineHeight, setSelectedLineHeight] = useState(1.0);
-
+  const [showDrawer, setShowDrawer] = useState(false);
   const onZoomInText = () => {
-    if (parseFloat(fontScale) < MaximumFontScale) {
+    if (fontScale < MaximumFontScale) {
       const newScale = (parseFloat(fontScale) + 0.1).toFixed(2);
       setFontScale(newScale);
       localStorage.setItem(ReaderFontSizeStorageKey, newScale);
@@ -81,7 +84,7 @@ const ReaderView = ({
   };
 
   const onZoomOutText = () => {
-    if (parseFloat(fontScale) > MinimumFontScale) {
+    if (fontScale > MinimumFontScale) {
       const newScale = (parseFloat(fontScale) - 0.1).toFixed(2);
       setFontScale(newScale);
       localStorage.setItem(ReaderFontSizeStorageKey, newScale);
@@ -92,7 +95,7 @@ const ReaderView = ({
     setFullScreen(!fullScreen);
   };
 
-  const onViewTypeChanged = (e, newViewType) => {
+  const onViewTypeChanged = (newViewType) => {
     localStorage.setItem(ReaderViewTypeStorageKey, newViewType);
     setView(newViewType);
   };
@@ -108,46 +111,60 @@ const ReaderView = ({
       zIndex: (theme) => (fullScreen ? theme.zIndex.appBar + 10 : 'inherit'),
     }}
     >
-      <AppBar position="static" color="transparent" elevation={0} variant="outlined">
-        <Toolbar variant="dense">
-          <BookTitle book={book} />
-          <BreadcrumbSeparator />
-          <ChaptersSelector book={book} selectedChapter={selectedChapter} />
-          <Divider orientation="vertical" sx={{ flex: 1 }} />
+      <Toolbar variant="dense">
+        <BookTitle book={book} />
+        <BreadcrumbSeparator />
+        <ChaptersSelector book={book} selectedChapter={selectedChapter} />
+        <Divider orientation="vertical" sx={{ flex: 1 }} />
+        <ButtonWithTooltip tooltip="settings" onClick={() => setShowDrawer(true)}><SettingsIcon /></ButtonWithTooltip>
+      </Toolbar>
 
+      <Drawer anchor="right" open={showDrawer} onClose={() => setShowDrawer(false)}>
+        <List>
           <ThemeSelector onThemeChanged={setSelectedTheme} />
           <LineHeightSelector onValueChanged={setSelectedLineHeight} />
-          <FontMenu size="small" variant="text" value={font} onFontSelected={setFont} storageKey={ReaderFontStorageKey} />
-          <ToggleButtonGroup
-            size="small"
-            value={view}
-            exclusive
-            onChange={onViewTypeChanged}
-          >
-            <ToggleButton value="single">
-              <ArticleOutlinedIcon fontSize="small" />
-            </ToggleButton>
-            <ToggleButton value="two">
-              <ImportContactsIcon fontSize="small" />
-            </ToggleButton>
-          </ToggleButtonGroup>
-          <ButtonWithTooltip size="small" variant="text" tooltip={<FormattedMessage id="action.zoom.in" />} onClick={onZoomInText} disabled={parseFloat(fontScale) >= MaximumFontScale}>
-            <ZoomInIcon fontSize="small" />
-          </ButtonWithTooltip>
-          <ButtonWithTooltip size="small" variant="text" tooltip={<FormattedMessage id="action.zoom.out" />} onClick={onZoomOutText} disabled={parseFloat(fontScale) <= MinimumFontScale}>
-            <ZoomOutIcon fontSize="small" />
-          </ButtonWithTooltip>
-          <ButtonWithTooltip
-            tooltip={<FormattedMessage id={fullScreen ? 'chapter.toolbar.exitFullScreen' : 'chapter.toolbar.fullScreen'} />}
-            onClick={onFullScreenToggle}
-            variant="text"
-            size="small"
-          >
-            {fullScreen ? <FullscreenExitIcon />
-              : <FullscreenIcon fontSize="small" /> }
-          </ButtonWithTooltip>
-        </Toolbar>
-      </AppBar>
+          <FontList value={font} onFontSelected={setFont} storageKey={ReaderFontStorageKey} />
+          <Divider />
+
+          <ListItemButton onClick={() => onViewTypeChanged('single')} selected={view === 'single'}>
+            <ListItemIcon>
+              <ArticleOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary={<FormattedMessage id="reader.singlePage" />} />
+          </ListItemButton>
+
+          <ListItemButton onClick={() => onViewTypeChanged('two')} selected={view === 'two'}>
+            <ListItemIcon>
+              <ImportContactsIcon />
+            </ListItemIcon>
+            <ListItemText primary={<FormattedMessage id="reader.twoPages" />} />
+          </ListItemButton>
+          <Divider />
+
+          <ListItemButton onClick={onZoomInText} disabled={fontScale >= MaximumFontScale}>
+            <ListItemIcon>
+              <ZoomInIcon />
+            </ListItemIcon>
+            <ListItemText primary={<FormattedMessage id="action.zoom.in" />} />
+          </ListItemButton>
+
+          <ListItemButton onClick={onZoomOutText} disabled={fontScale <= MinimumFontScale}>
+            <ListItemIcon>
+              <ZoomOutIcon />
+            </ListItemIcon>
+            <ListItemText primary={<FormattedMessage id="action.zoom.out" />} />
+          </ListItemButton>
+
+          <Divider />
+
+          <ListItemButton onClick={onFullScreenToggle} selected={fullScreen}>
+            <ListItemIcon>
+              {fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon /> }
+            </ListItemIcon>
+            <ListItemText primary={<FormattedMessage id={fullScreen ? 'chapter.toolbar.exitFullScreen' : 'chapter.toolbar.fullScreen'} />} />
+          </ListItemButton>
+        </List>
+      </Drawer>
       <Reader
         data={data}
         format={format}

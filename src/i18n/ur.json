@@ -449,5 +449,7 @@
 	"lineHeight.normal" : "عمومی",
 	"lineHeight.wide" : "کھلا",
 	"lineHeight.wider" : "مزید کھلا",
-	"lineHeight.widest" : "دوھرا"
+	"lineHeight.widest" : "دوھرا",
+	"reader.singlePage" : "ایک صفحہ",
+	"reader.twoPages" : "دو صفحات"
 }

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+
 // MUI
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import Collapse from '@mui/material/Collapse';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
 
 const lineWidths = [{
@@ -26,17 +29,9 @@ const lineWidths = [{
 }];
 
 const LineHeightSelector = ({ onValueChanged }) => {
+  const [open, setOpen] = useState(false);
   const [value, setValue] = useState(parseFloat(localStorage.getItem('reader.lineHeight') || '1.0'));
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
   const selectedLineHeight = lineWidths.find((t) => t.value === value);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   useEffect(() => {
     onValueChanged(selectedLineHeight.value);
@@ -45,40 +40,32 @@ const LineHeightSelector = ({ onValueChanged }) => {
   const onChange = (newLineHeight) => {
     localStorage.setItem('reader.lineHeight', newLineHeight.value);
     setValue(newLineHeight.value);
-    handleClose();
   };
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
     <>
-      <Button
-        id="lineHeight-button"
-        aria-controls={open ? 'lineHeight-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        size="small"
-        onClick={handleClick}
-        startIcon={<FormatLineSpacingIcon fontSize="small" />}
-        endIcon={<KeyboardArrowDownIcon />}
-      >
-        <FormattedMessage id={`lineHeight.${selectedLineHeight.name}`} />
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-      >
+      <ListItemButton onClick={handleClick}>
+        <ListItemIcon>
+          <FormatLineSpacingIcon />
+        </ListItemIcon>
+        <ListItemText primary={<FormattedMessage id="lineHeight" />} />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open} timeout="auto" unmountOnExit>
         {lineWidths.map((w) => (
-          <MenuItem
+          <ListItemButton
             key={w.name}
-            value={w.name}
             selected={w.value === value}
             onClick={() => onChange(w)}
           >
-            <FormattedMessage id={`lineHeight.${w.name}`} />
-          </MenuItem>
+            <ListItemText primary={<FormattedMessage id={`lineHeight.${w.name}`} />} />
+          </ListItemButton>
         ))}
-      </Menu>
+      </Collapse>
     </>
   );
 };
