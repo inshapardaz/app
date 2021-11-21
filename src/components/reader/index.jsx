@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
@@ -6,12 +6,8 @@ import { Link, useHistory } from 'react-router-dom';
 // MUI
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
@@ -19,11 +15,13 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 // Local Imports
-import { libraryService } from '@/services/';
 import Reader from '@/components/reader/reader';
 import FontMenu from '@/components/fontMenu';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
 import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
+import ChaptersSelector from '@/components/reader/chaptersSelector';
+import ThemeSelector from '@/components/reader/themeSelector';
+import LineHeightSelector from '@/components/reader/lineHeightSelector';
 
 const ReaderFontSizeStorageKey = 'reader.fontSize';
 const ReaderFontStorageKey = 'reader.font';
@@ -58,97 +56,6 @@ BookTitle.propTypes = {
 
 // ----------------------------------------------------------
 
-const ChaptersSelector = ({ book, selectedChapter }) => {
-  const [chapters, setChapters] = useState(null);
-  const [busy, setBusy] = useState(true);
-  const [error, setError] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const loadData = () => {
-    setBusy(true);
-    setError(false);
-
-    libraryService.getBookChapters(book.links.chapters)
-      .then((res) => setChapters(res))
-      .then(() => setBusy(false))
-      .catch(() => {
-        setBusy(false);
-        setError(true);
-      });
-  };
-
-  useEffect(() => {
-    if (book) {
-      loadData();
-    }
-  }, [book]);
-
-  if (!book || !selectedChapter || !chapters) return null;
-
-  return (
-    <>
-      <Button
-        id="chapter-button"
-        aria-controls={open ? 'chapter-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-        endIcon={<KeyboardArrowDownIcon />}
-      >
-        {selectedChapter.title}
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-      >
-        {!busy && !error && chapters.data.map((c) => (
-          <MenuItem
-            key={c.id}
-            component={Link}
-            to={`/books/${book.id}/chapters/${c.chapterNumber}`}
-            value={c.key}
-            selected={selectedChapter.id === c.id}
-            onClick={handleClose}
-          >
-            {c.title}
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
-  );
-};
-
-ChaptersSelector.defaultProps = {
-  book: null,
-  selectedChapter: null,
-};
-
-ChaptersSelector.propTypes = {
-  book: PropTypes.shape({
-    id: PropTypes.number,
-    links: PropTypes.shape({
-      chapters: PropTypes.string,
-    }),
-  }),
-  selectedChapter: PropTypes.shape({
-    id: PropTypes.number,
-    chapterNumber: PropTypes.number,
-    title: PropTypes.string,
-  }),
-};
-
-// -------------------------------------------------------------
 const ReaderView = ({
   book, selectedChapter, data, format = 'text',
 }) => {
@@ -156,6 +63,8 @@ const ReaderView = ({
   const [font, setFont] = useState(localStorage.getItem(ReaderFontStorageKey) || 'MehrNastaleeq');
   const [fontScale, setFontScale] = useState(parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0', 10));
   const [fullScreen, setFullScreen] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState(null);
+  const [selectedLineHeight, setSelectedLineHeight] = useState(1.0);
 
   const onZoomInText = () => {
     if (parseFloat(fontScale) < MaximumFontScale) {
@@ -179,7 +88,7 @@ const ReaderView = ({
 
   return (
     <Box sx={{
-      backgroundColor: (theme) => theme.palette.background.paper,
+      backgroundColor: (theme) => (selectedTheme ? selectedTheme.backgroundColor : theme.palette.background.paper),
       position: (fullScreen ? 'absolute' : 'block'),
       top: 0,
       left: 0,
@@ -194,20 +103,23 @@ const ReaderView = ({
           <BreadcrumbSeparator />
           <ChaptersSelector book={book} selectedChapter={selectedChapter} />
           <Divider orientation="vertical" sx={{ flex: 1 }} />
-          <FontMenu value={font} onFontSelected={setFont} storageKey={ReaderFontStorageKey} />
-          <ButtonWithTooltip variant="outlined" tooltip={<FormattedMessage id="action.zoom.in" />} onClick={onZoomInText} disabled={parseFloat(fontScale) >= MaximumFontScale}>
-            <ZoomInIcon />
+          <ThemeSelector onThemeChanged={setSelectedTheme} />
+          <LineHeightSelector onValueChanged={setSelectedLineHeight} />
+          <FontMenu size="small" variant="text" value={font} onFontSelected={setFont} storageKey={ReaderFontStorageKey} />
+          <ButtonWithTooltip size="small" variant="text" tooltip={<FormattedMessage id="action.zoom.in" />} onClick={onZoomInText} disabled={parseFloat(fontScale) >= MaximumFontScale}>
+            <ZoomInIcon fontSize="small" />
           </ButtonWithTooltip>
-          <ButtonWithTooltip variant="outlined" tooltip={<FormattedMessage id="action.zoom.out" />} onClick={onZoomOutText} disabled={parseFloat(fontScale) <= MinimumFontScale}>
-            <ZoomOutIcon />
+          <ButtonWithTooltip size="small" variant="text" tooltip={<FormattedMessage id="action.zoom.out" />} onClick={onZoomOutText} disabled={parseFloat(fontScale) <= MinimumFontScale}>
+            <ZoomOutIcon fontSize="small" />
           </ButtonWithTooltip>
           <ButtonWithTooltip
             tooltip={<FormattedMessage id={fullScreen ? 'chapter.toolbar.exitFullScreen' : 'chapter.toolbar.fullScreen'} />}
             onClick={onFullScreenToggle}
-            variant="outlined"
+            variant="text"
+            size="small"
           >
             {fullScreen ? <FullscreenExitIcon />
-              : <FullscreenIcon /> }
+              : <FullscreenIcon fontSize="small" /> }
           </ButtonWithTooltip>
         </Toolbar>
       </AppBar>
@@ -216,6 +128,8 @@ const ReaderView = ({
         format={format}
         font={font}
         fontScale={fontScale}
+        theme={selectedTheme}
+        lineHeight={selectedLineHeight}
         height={fullScreen ? 'calc(100vh - 65px)' : 'calc(100vh - 113px)'}
         canGoBack={Boolean(selectedChapter && selectedChapter.links.previous)}
         onBack={() => history.push(`/books/${book.id}/chapters/${selectedChapter.chapterNumber - 1}`)}

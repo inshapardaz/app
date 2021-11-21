@@ -11,7 +11,9 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // Local Imports
 import { localeService } from '@/services/';
 
-const FontMenu = ({ value, onFontSelected, storageKey }) => {
+const FontMenu = ({
+  value, onFontSelected, storageKey, variant, size,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const fonts = localeService.getSupportedFonts();
@@ -47,10 +49,11 @@ const FontMenu = ({ value, onFontSelected, storageKey }) => {
         aria-controls="basic-menu"
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        variant="outlined"
+        variant={variant}
+        size={size}
         disableElevation
         onClick={handleClick}
-        startIcon={<KeyboardArrowDownIcon />}
+        endIcon={<KeyboardArrowDownIcon />}
       >
         {font ? font.displayName : <FormattedMessage id="chapter.toolbar.font" /> }
       </Button>
@@ -79,6 +82,8 @@ const FontMenu = ({ value, onFontSelected, storageKey }) => {
 FontMenu.defaultProps = {
   value: '',
   storageKey: '',
+  variant: 'outlined',
+  size: 'medium',
   onFontSelected: () => {},
 };
 
@@ -86,6 +91,8 @@ FontMenu.propTypes = {
   value: PropTypes.string,
   storageKey: PropTypes.string,
   onFontSelected: PropTypes.func,
+  variant: PropTypes.string,
+  size: PropTypes.string,
 };
 
 export default FontMenu;

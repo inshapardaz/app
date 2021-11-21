@@ -439,5 +439,15 @@
 	"series.pagination.size" : "{pageSize} سلسلہ جات",
 	"page.pagination.size" : "{pageSize} صفحات",
 	"textEditor.actions.showEditControls" : "آلاتِ تدوین کی نمائش",
-	"textEditor.actions.hideEditControls" : "آلاتِ تدوین مخفی کریں"
+	"textEditor.actions.hideEditControls" : "آلاتِ تدوین مخفی کریں",
+	"theme": "تھیم",
+	"theme.default" : "عام",
+	"theme.sepia" : "سیپیا",
+	"theme.dark" : "سیاہ",
+	"lineHeight" : "سطری فاصلہ",
+	"lineHeight.narrow" : "تنگ",
+	"lineHeight.normal" : "عمومی",
+	"lineHeight.wide" : "کھلا",
+	"lineHeight.wider" : "مزید کھلا",
+	"lineHeight.widest" : "دوھرا"
 }

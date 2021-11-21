@@ -13,7 +13,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const Reader = ({
   data, format = 'text', font, fontScale, height,
-  canGoBack, onBack, canGoForward, onForward,
+  canGoBack, onBack, canGoForward, onForward, theme, lineHeight,
 }) => {
   const anchorRef = useRef(null);
   const [pageLeft, setPageLeft] = useState(0);
@@ -31,8 +31,10 @@ const Reader = ({
     padding: '10px 0',
     position: 'relative',
     minWidth: `${pageWidth - 50}px`,
+    lineHeight,
     height,
     left: pageLeft,
+    ...theme,
   };
 
   useEffect(() => {
@@ -99,7 +101,7 @@ const Reader = ({
   if (!data) return null;
 
   return (
-    <Grid container justifyContent="center" alignItems="center">
+    <Grid container justifyContent="center" alignItems="center" wrap="nowrap" sx={theme}>
       <Grid item>
         {renderPrevious()}
       </Grid>
@@ -122,6 +124,8 @@ Reader.defaultProps = {
   format: 'text',
   font: 'MehrNastaleeq',
   fontScale: null,
+  lineHeight: 1.0,
+  theme: {},
   canGoBack: false,
   onBack: () => {},
   canGoForward: false,
@@ -133,6 +137,8 @@ Reader.propTypes = {
   format: PropTypes.string,
   font: PropTypes.string,
   fontScale: PropTypes.number,
+  theme: PropTypes.object,
+  lineHeight: PropTypes.number,
   height: PropTypes.string.isRequired,
   canGoBack: PropTypes.bool,
   onBack: PropTypes.func,

@@ -7,7 +7,7 @@ import {
 import PrivateRoute from './privateRoute';
 import FullWidthLayout from './fullWidth.layout';
 import NoScrollLayout from './noScroll.layout';
-import RouteWithLayout from './routeWith.layout';
+import NoFooterLayout from './noFooter.layout';
 import EmptyLayout from './empty.layout';
 
 // Pages
@@ -76,7 +76,7 @@ const Routes = () => {
       <PrivateRoute layout={NoScrollLayout} path="/books/:bookId/pages/:pageNumber/edit" component={PageEditorPage} exact />
       <PrivateRoute layout={NoScrollLayout} path="/books/:bookId/pages/create" component={PageEditorPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/pages" component={BookPages} exact />
-      <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/chapters/:chapterNumber" component={ChapterViewer} exact />
+      <PrivateRoute layout={NoFooterLayout} path="/books/:bookId/chapters/:chapterNumber" component={ChapterViewer} exact />
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/chapters/:chapterNumber/edit" component={ChapterContentEditor} exact />
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       <Route path="/error/403"><Error403 /></Route>

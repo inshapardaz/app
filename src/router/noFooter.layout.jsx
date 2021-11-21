@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 
 // Local Imports
 import Header from '@/components/layout/header';
-import Footer from '@/components/layout/footer';
 
 const FullWidthLayout = (props) => {
   const { children } = props;
@@ -18,7 +17,6 @@ const FullWidthLayout = (props) => {
       >
         {children}
       </Box>
-      <Footer />
     </>
   );
 };

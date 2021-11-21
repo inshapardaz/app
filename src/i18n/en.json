@@ -442,5 +442,15 @@
 	"series.pagination.size" : "Showing {pageSize} Series",
 	"page.pagination.size" : "Showing {pageSize} pages",
 	"textEditor.actions.showEditControls" : "Show Edit Controls",
-	"textEditor.actions.hideEditControls" : "Hide Edit Controls"
+	"textEditor.actions.hideEditControls" : "Hide Edit Controls",
+	"theme": "Theme",
+	"theme.default" : "Default",
+	"theme.sepia" : "Sepia",
+	"theme.dark" : "Dark",
+	"lineHeight" : "Line Height",
+	"lineHeight.narrow" : "Narrow",
+	"lineHeight.normal" : "Normal",
+	"lineHeight.wide" : "Wide",
+	"lineHeight.wider" : "Wider",
+	"lineHeight.widest" : "Widest"
 }
