@@ -29,6 +29,7 @@ const Reader = ({
     textAlign: 'justify',
     columnCount: isSinglePage ? '1' : '2',
     columnGap: '50px',
+    columnFill: 'auto',
     padding: '10px 0',
     position: 'relative',
     minWidth: `${pageWidth - 50}px`,
@@ -112,6 +113,7 @@ const Reader = ({
           <div style={style} ref={anchorRef}>
             {renderContents()}
           </div>
+
         </Container>
       </Grid>
       <Grid item>
