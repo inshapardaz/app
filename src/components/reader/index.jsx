@@ -27,7 +27,7 @@ import FontList from '@/components/fontList';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
 import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
 import ChaptersSelector from '@/components/reader/chaptersSelector';
-import ThemeSelector from '@/components/reader/themeSelector';
+import ThemeSelector, { getSelectedTheme } from '@/components/reader/themeSelector';
 import LineHeightSelector from '@/components/reader/lineHeightSelector';
 
 const ReaderFontSizeStorageKey = 'reader.fontSize';
@@ -72,8 +72,8 @@ const ReaderView = ({
   const [fontScale, setFontScale] = useState(parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0'));
   const [view, setView] = useState(localStorage.getItem(ReaderViewTypeStorageKey) || 'single');
   const [fullScreen, setFullScreen] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState(null);
-  const [selectedLineHeight, setSelectedLineHeight] = useState(1.0);
+  const [selectedTheme, setSelectedTheme] = useState(getSelectedTheme());
+  const [selectedLineHeight, setSelectedLineHeight] = useState(parseFloat(localStorage.getItem('reader.lineHeight') || '1.0'));
   const [showDrawer, setShowDrawer] = useState(false);
   const onZoomInText = () => {
     if (fontScale < MaximumFontScale) {
