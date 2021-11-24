@@ -199,6 +199,15 @@ export default {
     return get(`${url}?pageNumber=${pageNumber}&pageSize=${pageSize}${getQueryParameter(query)}`);
   },
 
+  getBooksByAuthor: (url, pageNumber = 1,
+    pageSize = 12) => {
+    if (url.includes('?')) {
+      return get(`${url}&pageNumber=${pageNumber}&pageSize=${pageSize}`);
+    }
+
+    return get(`${url}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+  },
+
   getBookById: (libraryId, bookId) => get(`${librariesUrl()}/${libraryId}/books/${bookId}`),
 
   deleteBook: (book) => _delete(book.links.delete),

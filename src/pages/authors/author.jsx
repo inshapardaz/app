@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Helmet } from 'react-helmet';
+import queryString from 'query-string';
 
 // MUI
 import Typography from '@mui/material/Typography';
@@ -64,6 +65,7 @@ function a11yProps(index) {
 
 const AuthorPage = () => {
   const intl = useIntl();
+  const location = useLocation();
   const { authorId } = useParams();
   const library = useSelector((state) => state.libraryReducer.library);
   const [busy, setBusy] = useState(false);
@@ -71,18 +73,45 @@ const AuthorPage = () => {
   const [author, setAuthor] = useState(null);
   const [value, setValue] = React.useState(0);
 
+  const [books, setBooks] = useState(null);
+  const [page, setPage] = useState(null);
+
+  const loadBooks = (a) => {
+    const values = queryString.parse(location.search);
+    const pageValue = values.page ? parseInt(values.page, 10) : 1;
+
+    libraryService.getBooksByAuthor(a.links.books, pageValue)
+      .then((res) => setBooks(res))
+      .then(() => {
+        setPage(pageValue);
+      })
+      .catch((e) => {
+        console.error(e);
+        setError(true);
+      })
+      .finally(() => setBusy(false));
+  };
+
   useEffect(() => {
     if (authorId && library) {
       setBusy(true);
-      libraryService.getAuthorById(library.id, authorId)
-        .then((res) => setAuthor(res))
-        .then(() => setBusy(false))
-        .catch(() => {
-          setBusy(false);
-          setError(true);
-        });
+      if (author === null) {
+        libraryService.getAuthorById(library.id, authorId)
+          .then((res) => {
+            setAuthor(res);
+            return res;
+          })
+          .then((res) => loadBooks(res))
+          .catch((e) => {
+            console.error(e);
+            setError(true);
+          })
+          .finally(() => setBusy(false));
+      } else {
+        loadBooks(author);
+      }
     }
-  }, [authorId, library]);
+  }, [authorId, library, location]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -121,7 +150,7 @@ const AuthorPage = () => {
           </Typography>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <BookList library={library} author={author.id} showFilters={false} />
+          <BookList error={error} busy={busy} author={author.id} books={books} page={page} showFilters={false} />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <Empty empty message={<FormattedMessage id="authors.messages.articles" />} />

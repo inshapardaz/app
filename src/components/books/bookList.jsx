@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import queryString from 'query-string';
 
 // MUI
 import Grid from '@mui/material/Grid';
@@ -20,7 +19,6 @@ import CalendarViewMonthRoundedIcon from '@mui/icons-material/CalendarViewMonthR
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 // Local Import
-import { libraryService } from '@/services';
 import BookListItem from '@/components/books/bookListItem';
 import BookCard from '@/components/books/bookCard';
 import helpers from '@/helpers';
@@ -32,21 +30,15 @@ import BookSortButton from '@/components/books/bookSortButton';
 import SearchBox from '@/components/searchBox';
 
 const BookList = ({
-  library, series, author, category, showFilters,
+  series, author, category, books, page,
+  query, sortBy,
+  sortDirection,
+  favoriteFilter,
+  readFilter,
+  statusFilter, showFilters, error, busy, onUpdated,
 }) => {
   const location = useLocation();
   const history = useHistory();
-
-  const [busy, setBusy] = useState(true);
-  const [error, setError] = useState(false);
-  const [books, setBooks] = useState(null);
-  const [query, setQuery] = useState(null);
-  const [favoriteFilter, setFavoriteFilter] = useState(null);
-  const [readFilter, setReadFilter] = useState(null);
-  const [statusFilter, setStatusFilter] = useState(null);
-  const [sortBy, setSortBy] = useState(null);
-  const [sortDirection, setSortDirection] = useState(null);
-  const [page, setPage] = useState(null);
   const [showCards, setShowCards] = useState(localStorage.getItem('booksCardView') === 'true');
 
   const updateQuery = (newQuery) => {
@@ -103,45 +95,6 @@ const BookList = ({
     );
   };
 
-  const loadData = () => {
-    if (library != null) {
-      setBusy(true);
-      setError(false);
-      const values = queryString.parse(location.search);
-
-      libraryService.getBooks(library.links.books,
-        query,
-        author,
-        category,
-        series,
-        values.sortBy,
-        values.sortDirection,
-        values.favorite,
-        values.read,
-        values.status,
-        values.page)
-        .then((res) => {
-          setBooks(res);
-          setQuery(values.query);
-          setSortBy(values.sortBy);
-          setFavoriteFilter(values.favorite === 'true');
-          setReadFilter(helpers.parseNullableBool(values.read));
-          setStatusFilter(values.status);
-          setSortDirection(values.sortDirection);
-          setPage(parseInt(values.page, 10));
-        })
-        .then(() => setBusy(false))
-        .catch(() => {
-          setBusy(false);
-          setError(true);
-        });
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, [library, author, series, category, location]);
-
   const renderPagination = () => {
     if (!busy && books) {
       return (
@@ -180,7 +133,7 @@ const BookList = ({
   const renderList = () => (
     <List component="nav" aria-label="books">
       {books && books.data.map((b) => (
-        <BookListItem key={b.id} book={b} onUpdated={loadData} />
+        <BookListItem key={b.id} book={b} onUpdated={onUpdated} />
       ))}
     </List>
   );
@@ -189,7 +142,7 @@ const BookList = ({
     <Grid container spacing={3}>
       {books && books.data.map((b) => (
         <Grid item key={b.id} xs={12} sm={6} md={4} alignItems="stretch">
-          <BookCard book={b} key={b.id} onUpdated={loadData} />
+          <BookCard book={b} key={b.id} onUpdated={onUpdated} />
         </Grid>
       ))}
     </Grid>
@@ -224,7 +177,7 @@ const BookList = ({
         error={error}
         message={<FormattedMessage id="books.messages.error.loading" />}
         actionText={<FormattedMessage id="action.retry" />}
-        onAction={loadData}
+        onAction={onUpdated}
       >
         <Busy busy={busy}>
           <Toolbar>
@@ -273,19 +226,44 @@ BookList.defaultProps = {
   author: null,
   category: null,
   showFilters: true,
-  library: null,
+  books: null,
+  page: 1,
+  query: null,
+  sortBy: null,
+  sortDirection: 'ascending',
+  favoriteFilter: false,
+  readFilter: false,
+  statusFilter: 'published',
+  error: false,
+  busy: false,
+  onUpdated: () => {},
 };
 
 BookList.propTypes = {
-  library: PropTypes.shape({
-    links: PropTypes.shape({
-      books: PropTypes.string,
-    }),
-  }),
   series: PropTypes.number,
   author: PropTypes.number,
   category: PropTypes.number,
   showFilters: PropTypes.bool,
+  books: PropTypes.shape({
+    currentPageIndex: PropTypes.number,
+    pageCount: PropTypes.number,
+    data: PropTypes.arrayOf(PropTypes.shape({
+
+    })),
+    links: PropTypes.shape({
+      create: PropTypes.string,
+    }),
+  }),
+  page: PropTypes.number,
+  query: PropTypes.string,
+  sortBy: PropTypes.string,
+  sortDirection: PropTypes.string,
+  favoriteFilter: PropTypes.bool,
+  readFilter: PropTypes.bool,
+  statusFilter: PropTypes.string,
+  error: PropTypes.bool,
+  busy: PropTypes.bool,
+  onUpdated: PropTypes.func,
 };
 
 export default BookList;

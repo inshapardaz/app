@@ -58,9 +58,7 @@ const SearchBox = ({ value, onChange }) => {
 
   const keyPress = (e) => {
     if (e.keyCode === 13) {
-      if (query && query.trim() !== '') {
-        onChange(query);
-      }
+      onChange(query);
     }
   };
 
