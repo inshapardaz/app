@@ -31,11 +31,11 @@ const startRefreshTokenTimer = (refreshTokenHandler) => {
   // set a timeout to refresh the token a minute before it expires
   const expires = new Date(jwtToken.exp * 1000);
   const timeout = expires.getTime() - Date.now() - (60 * 1000);
-  refreshTokenTimeout = setTimeout(refreshTokenHandler, timeout);
+  refreshTokenTimeout = setInterval(refreshTokenHandler, timeout);
 };
 
 const stopRefreshTokenTimer = () => {
-  clearTimeout(refreshTokenTimeout);
+  clearInterval(refreshTokenTimeout);
 };
 
 class AccountService {
