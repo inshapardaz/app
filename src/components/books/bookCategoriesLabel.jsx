@@ -13,6 +13,7 @@ const CategoryPill = ({ category }) => {
   const history = useHistory();
   return (
     <Chip
+      size="small"
       variant="outlined"
       label={category.name}
       sx={{ cursor: 'pointer' }}

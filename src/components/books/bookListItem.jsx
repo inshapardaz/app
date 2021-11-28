@@ -116,13 +116,14 @@ const BookListItem = ({ book, onUpdated }) => {
       </ListItemIcon>
       )}
       <ListItemText
+        sx={{ width: '100%' }}
         primary={(
           <Grid container justifyContent="space-between" sx={{ backgroundColor: 'grey' }}>
             <Grid item sm={6}>
               <Link to={`/books/${book.id}`}>{book.title}</Link>
             </Grid>
             <Grid item>
-              <AuthorsGroup authors={book.authors} />
+              <AuthorsGroup authors={book.authors} showText={matches} />
             </Grid>
           </Grid>
 )}
@@ -132,13 +133,13 @@ const BookListItem = ({ book, onUpdated }) => {
             {matches && (
             <Typography
               sx={{
-                pt: theme.spacing(1), mr: theme.spacing(8), mb: theme.spacing(2), display: 'block',
+                pt: theme.spacing(1), mr: theme.spacing(1), mb: theme.spacing(2), display: 'block',
               }}
               variant="body2"
               color="textSecondary"
               component="span"
             >
-              {book.description}
+              {helpers.truncateWithEllipses(book.description, 500)}
             </Typography>
             )}
             <BookSeriesLabel book={book} />

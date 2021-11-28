@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
@@ -16,7 +17,7 @@ const PublishingButton = ({ onClick, onKeyDown, mobile = false }) => {
   if (library && library.links.create_book) {
     if (mobile) {
       return (
-        <ListItem button key="publishing" component={Link} to="/publishing" data-ft="publishing-link" onClick={onClick} onKeyDown={onKeyDown}>
+        <ListItem button key="publishing" component={Link} to="/books?page=1&status=beingTyped" data-ft="publishing-link" onClick={onClick} onKeyDown={onKeyDown}>
           <ListItemIcon>
             <CreateIcon />
           </ListItemIcon>
@@ -30,7 +31,7 @@ const PublishingButton = ({ onClick, onKeyDown, mobile = false }) => {
         component={Link}
         color="inherit"
         variant="outlined"
-        to="/publishing"
+        to="/books?page=1&status=beingTyped"
         startIcon={<CreateIcon />}
       >
         <FormattedMessage id="header.publishing" />
@@ -39,6 +40,18 @@ const PublishingButton = ({ onClick, onKeyDown, mobile = false }) => {
   }
 
   return null;
+};
+
+PublishingButton.defaultProps = {
+  mobile: false,
+  onClick: () => { },
+  onKeyDown: () => { },
+};
+
+PublishingButton.propTypes = {
+  mobile: PropTypes.bool,
+  onClick: PropTypes.func,
+  onKeyDown: PropTypes.func,
 };
 
 export default PublishingButton;
