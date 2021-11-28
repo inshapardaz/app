@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Link, useHistory } from 'react-router-dom';
 
 // MUI
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
@@ -75,6 +76,8 @@ const ReaderView = ({
   const [selectedTheme, setSelectedTheme] = useState(getSelectedTheme());
   const [selectedLineHeight, setSelectedLineHeight] = useState(parseFloat(localStorage.getItem('reader.lineHeight') || '1.0'));
   const [showDrawer, setShowDrawer] = useState(false);
+  const isNarrowScreen = useMediaQuery('(max-width:1300px)');
+
   const onZoomInText = () => {
     if (fontScale < MaximumFontScale) {
       const newScale = (parseFloat(fontScale) + 0.1).toFixed(2);
@@ -100,6 +103,27 @@ const ReaderView = ({
     setView(newViewType);
   };
 
+  const renderColumnLayout = () => {
+    if (isNarrowScreen) return null;
+    return (
+      <>
+        <ListItemButton onClick={() => onViewTypeChanged('single')} selected={view === 'single'}>
+          <ListItemIcon>
+            <ArticleOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary={<FormattedMessage id="reader.singlePage" />} />
+        </ListItemButton>
+
+        <ListItemButton onClick={() => onViewTypeChanged('two')} selected={view === 'two'}>
+          <ListItemIcon>
+            <ImportContactsIcon />
+          </ListItemIcon>
+          <ListItemText primary={<FormattedMessage id="reader.twoPages" />} />
+        </ListItemButton>
+        <Divider />
+      </>
+    );
+  };
   return (
     <Box sx={{
       backgroundColor: (theme) => (selectedTheme ? selectedTheme.backgroundColor : theme.palette.background.paper),
@@ -126,21 +150,6 @@ const ReaderView = ({
           <FontList value={font} onFontSelected={setFont} storageKey={ReaderFontStorageKey} />
           <Divider />
 
-          <ListItemButton onClick={() => onViewTypeChanged('single')} selected={view === 'single'}>
-            <ListItemIcon>
-              <ArticleOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary={<FormattedMessage id="reader.singlePage" />} />
-          </ListItemButton>
-
-          <ListItemButton onClick={() => onViewTypeChanged('two')} selected={view === 'two'}>
-            <ListItemIcon>
-              <ImportContactsIcon />
-            </ListItemIcon>
-            <ListItemText primary={<FormattedMessage id="reader.twoPages" />} />
-          </ListItemButton>
-          <Divider />
-
           <ListItemButton onClick={onZoomInText} disabled={fontScale >= MaximumFontScale}>
             <ListItemIcon>
               <ZoomInIcon />
@@ -157,6 +166,7 @@ const ReaderView = ({
 
           <Divider />
 
+          {renderColumnLayout()}
           <ListItemButton onClick={onFullScreenToggle} selected={fullScreen}>
             <ListItemIcon>
               {fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon /> }

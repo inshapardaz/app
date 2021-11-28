@@ -17,12 +17,15 @@ const Reader = ({
 }) => {
   const anchorRef = useRef(null);
   const [pageLeft, setPageLeft] = useState(0);
+  const [touchStart, setTouchStart] = React.useState(0);
+  const [touchEnd, setTouchEnd] = React.useState(0);
 
   const isNarrowScreen = useMediaQuery('(max-width:1300px)');
+  const isMobile = useMediaQuery('(max-width:430px)');
   const [page, setPage] = useState(1);
 
   const isSinglePage = view === 'single' || isNarrowScreen;
-  const pageWidth = isSinglePage ? 601 : 1202;
+  const pageWidth = isMobile ? 340 : isSinglePage ? 601 : 1202;
   const style = {
     fontFamily: font,
     fontSize: `${fontScale}em`,
@@ -83,23 +86,49 @@ const Reader = ({
     return data;
   };
 
-  const renderPrevious = () => (
-    <IconButton
-      disabled={!canGoPrevious()}
-      onClick={onPrevious}
-    >
-      <ChevronRightIcon />
-    </IconButton>
-  );
+  const renderPrevious = () => {
+    if (isMobile) return null;
 
-  const renderNext = () => (
-    <IconButton
-      disabled={!canGoNext()}
-      onClick={onNext}
-    >
-      <ChevronLeftIcon />
-    </IconButton>
-  );
+    return (
+      <IconButton
+        disabled={!canGoPrevious()}
+        onClick={onPrevious}
+      >
+        <ChevronRightIcon />
+      </IconButton>
+    );
+  };
+
+  const renderNext = () => {
+    if (isMobile) return null;
+
+    return (
+      <IconButton
+        disabled={!canGoNext()}
+        onClick={onNext}
+      >
+        <ChevronLeftIcon />
+      </IconButton>
+    );
+  };
+
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 100 && canGoPrevious()) {
+      onPrevious();
+    }
+
+    if (touchStart - touchEnd < -100 && canGoNext()) {
+      onNext();
+    }
+  };
 
   if (!data) return null;
 
@@ -110,7 +139,7 @@ const Reader = ({
       </Grid>
       <Grid item>
         <Container maxWidth={isSinglePage ? 'sm' : 'lg'} sx={{ overflow: 'hidden' }}>
-          <div style={style} ref={anchorRef}>
+          <div style={style} ref={anchorRef} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
             {renderContents()}
           </div>
 
