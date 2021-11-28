@@ -35,7 +35,7 @@ const Reader = ({
     columnFill: 'auto',
     padding: '10px 0',
     position: 'relative',
-    minWidth: `${pageWidth - 50}px`,
+    width: `${pageWidth - 50}px`,
     transition: 'left .25s',
     lineHeight,
     height,
