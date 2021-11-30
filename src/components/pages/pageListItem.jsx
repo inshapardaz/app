@@ -11,7 +11,6 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import EditIcon from '@mui/icons-material/Edit';
@@ -42,37 +41,36 @@ const PageListItem = ({
         </>
 )}
     >
-      <ListItemButton onClick={pageClicked}>
-        <Checkbox
-          edge="start"
-          checked={checked}
-          onClick={() => onCheckChanged(page.sequenceNumber, !checked)}
-          tabIndex={-1}
-          disableRipple
-        />
-        {matches && (
+      <Checkbox
+        edge="start"
+        checked={checked}
+        onClick={() => onCheckChanged(page.sequenceNumber, !checked)}
+        tabIndex={-1}
+        disableRipple
+      />
+      {matches && (
         <ListItemIcon onClick={pageClicked} sx={{ mr: theme.spacing(1) }}>
           <PageStatusIcon status={page.status} />
         </ListItemIcon>
-        )}
-        <ListItemText
-          onClick={pageClicked}
-          primary={<FormattedMessage id="page.editor.header" values={{ sequenceNumber: page.sequenceNumber }} />}
-          secondary={(
-            <>
-              {page.chapterId
+      )}
+      <ListItemText
+        onClick={pageClicked}
+        sx={{ cursor: 'pointer' }}
+        primary={<FormattedMessage id="page.editor.header" values={{ sequenceNumber: page.sequenceNumber }} />}
+        secondary={(
+          <>
+            {page.chapterId
             && (
             <Typography component="span">
               {page.chapterTitle}
             </Typography>
             )}
-              {page.chapterId && page.accountId && <span style={{ padding: '0 10px' }}>•</span>}
-              {page.accountId
+            {page.chapterId && page.accountId && <span style={{ padding: '0 10px' }}>•</span>}
+            {page.accountId
             && <FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />}
-            </>
+          </>
         )}
-        />
-      </ListItemButton>
+      />
     </ListItem>
   );
 };

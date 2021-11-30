@@ -68,7 +68,7 @@ const ChapterViewer = () => {
   }, [bookId, chapterNumber, library]);
 
   return (
-    <div data-ft="edit-book-page">
+    <div data-ft="view-chapter-page">
       <Helmet title={chapter ? chapter.title : ''} />
       <Error
         error={error}

@@ -17,7 +17,7 @@ const PageList = ({
   return (
 
     <Empty items={pages.data} message={<FormattedMessage id="pages.messages.empty" />}>
-      <List component="nav" aria-label="authors">
+      <List component="nav" aria-label="authors" sx={{ mx: (theme) => theme.spacing(2) }}>
         {pages.data.map((p) => (
           <PageListItem
             key={p.sequenceNumber}
