@@ -16,7 +16,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Box from '@mui/material/Box';
 
 import MenuIcon from '@mui/icons-material/Menu';
-import { LibraryBooks, Person, CollectionsBookmark } from '@mui/icons-material';
+import { AutoStories, Person, CollectionsBookmark } from '@mui/icons-material';
 
 // Local Import
 import ProfileMobileMenu from './profileMobile';
@@ -61,7 +61,7 @@ const MobileNav = () => {
           onKeyDown={toggleDrawer(false)}
         >
           <ListItemIcon>
-            <LibraryBooks />
+            <AutoStories />
           </ListItemIcon>
           <ListItemText primary={<FormattedMessage id="header.books" />} />
         </ListItem>

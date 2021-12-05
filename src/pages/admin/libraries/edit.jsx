@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as Yup from 'yup';
@@ -10,17 +11,19 @@ import { Helmet } from 'react-helmet';
 import { Formik, Field, Form } from 'formik';
 import {
   Button, Box, Grid,
-  FormControl, InputLabel, InputAdornment,
+  FormControl, InputAdornment,
 } from '@mui/material';
 import { TextField, CheckboxWithLabel } from 'formik-material-ui';
 import ColorPicker from 'material-ui-color-picker';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
 
 // Local Imports
 import { libraryService } from '@/services';
-import PageHeader from '@/components/pageHeader';
 import Busy from '@/components/busy';
 import LanguageDropDown from '@/components/language/languageDropDown';
 import CenteredContent from '@/components/layout/centeredContent';
+import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
 
 const ColorBox = ({ color }) => (
   <Box sx={{
@@ -28,6 +31,10 @@ const ColorBox = ({ color }) => (
   }}
   />
 );
+
+ColorBox.propTypes = {
+  color: PropTypes.string.isRequired,
+};
 
 const LibraryEditPage = () => {
   const { libraryId } = useParams();
@@ -108,9 +115,22 @@ const LibraryEditPage = () => {
   return (
     <div data-ft="edit-library-page">
       <Helmet title={title} />
-      <PageHeader title={title} />
       <Busy busy={busy} />
       <CenteredContent>
+        <Breadcrumbs aria-label="breadcrumb" separator={<BreadcrumbSeparator />}>
+          <Typography color="text.primary"><FormattedMessage id="header.administration" /></Typography>
+          <Link underline="hover" color="inherit" to="/admin/libraries">
+            <FormattedMessage id="admin.libraries.title" />
+          </Link>
+          {library
+          && (
+          <Link underline="hover" color="inherit" to={`/admin/libraries/${library.id}`}>
+            {title}
+          </Link>
+          )}
+          {!library
+             && <Typography color="text.primary"><FormattedMessage id="library.editor.header.add" /></Typography>}
+        </Breadcrumbs>
         <Formik
           initialValues={library || initialValues}
           validationSchema={validationSchema}

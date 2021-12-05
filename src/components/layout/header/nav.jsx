@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import PersonIcon from '@mui/icons-material/Person';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 
@@ -36,7 +36,7 @@ const Nav = () => (
         component={Link}
         to="/books"
         xs={{ margin: (theme) => theme.spacing(1) }}
-        startIcon={<LibraryBooksIcon />}
+        startIcon={<AutoStoriesIcon />}
       >
         <FormattedMessage id="header.books" />
       </Button>

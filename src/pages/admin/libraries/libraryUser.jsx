@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack';
@@ -10,13 +9,15 @@ import { Helmet } from 'react-helmet';
 import { Formik, Field, Form } from 'formik';
 import { Button, Grid } from '@mui/material';
 import { TextField } from 'formik-material-ui';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
 
 // Local Imports
 import { libraryService } from '@/services';
-import PageHeader from '@/components/pageHeader';
 import Busy from '@/components/busy';
 import CenteredContent from '@/components/layout/centeredContent';
 import RoleDropDown from '@/components/roleDropDown';
+import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
 
 const LibraryUserPage = () => {
   const { libraryId, userId } = useParams();
@@ -100,9 +101,25 @@ const LibraryUserPage = () => {
   return (
     <div data-ft="edit-library-user-page">
       <Helmet title={title} />
-      <PageHeader title={title} />
       <Busy busy={busy} />
       <CenteredContent>
+        <Breadcrumbs aria-label="breadcrumb" separator={<BreadcrumbSeparator />}>
+          <Typography color="text.primary"><FormattedMessage id="header.administration" /></Typography>
+          <Link underline="hover" color="inherit" to="/admin/libraries">
+            <FormattedMessage id="admin.libraries.title" />
+          </Link>
+          {library && (
+          <Link underline="hover" color="inherit" to={`/admin/libraries/${library.id}`}>
+            {library.name}
+          </Link>
+          )}
+          {user
+             && <Typography color="text.primary"><FormattedMessage id="admin.users.title" /></Typography>}
+          {user
+             && <Typography color="text.primary">{user.name}</Typography>}
+          {!user
+             && <Typography color="text.primary"><FormattedMessage id="user.add.title" /></Typography>}
+        </Breadcrumbs>
         <Formik
           initialValues={user || initialValues}
           validationSchema={validationSchema}

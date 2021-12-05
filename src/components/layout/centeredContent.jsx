@@ -5,6 +5,7 @@ const CenteredContent = ({ children }) => (
   <Container
     maxWidth="lg"
     sx={{
+      mt: (theme) => theme.spacing(1),
       minHeight: 'calc(100vh - 133px)',
     }}
   >

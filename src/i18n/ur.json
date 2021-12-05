@@ -95,6 +95,7 @@
     "verify.message.verifying": "تصدیق ہو رہی ہے۔۔۔",
     "verify.message.success": "تصدیق کامیاب رہی۔ آپ لاگ ان کر سکتے ہیں",
     "verify.message.failure": "تصدیق کامیاب نہ ہو سکی۔ برائے مہربانی {link} کے صفحے سے دوبارہ کوشش کیجیے۔",
+	"invite.action" : "نئے صارف کو دعوت دیں ",
 	"invitation.message.expired": "دعوت نامہ اب قابلِ قبول نہیں۔ نئی دعوت کے لیے ہم سے رابطہ کیجیے",
 	"invitation.message.notFound": "دعوت نامہ درست نہیں",
 	"resetPassword.title": "پاس ورڈ کی تجدید",

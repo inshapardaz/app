@@ -97,6 +97,7 @@
     "verify.message.verifying": "Verifying...",
     "verify.message.success": "Verification successful, you can now login",
     "verify.message.failure": "Verification failed, you can also verify your account using the {link} page.",
+	"invite.action" : "Invite user",
 	"invitation.message.expired": "Invitation link has expired. Please contact us to resend a new invitation code.",
 	"invitation.message.notFound": "Invitation link is not valid.",
     "resetPassword.title": "Reset Password",

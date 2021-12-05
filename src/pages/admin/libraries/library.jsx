@@ -3,22 +3,27 @@ import {
   Link, useParams, useLocation, useHistory,
 } from 'react-router-dom';
 import queryString from 'query-string';
+import { FormattedMessage } from 'react-intl';
 
 // MUI
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 // 3rd Party imports
 import { Helmet } from 'react-helmet';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
 
 // Local Imports
 import { libraryService } from '@/services';
 import Busy from '@/components/busy';
-import PageHeader from '@/components/pageHeader';
 import UserList from '@/components/users/userList';
 import CenteredContent from '@/components/layout/centeredContent';
 import SearchBox from '@/components/searchBox';
 import helpers from '@/helpers';
+import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
 
 const LibraryPage = () => {
   const location = useLocation();
@@ -93,15 +98,32 @@ const LibraryPage = () => {
     <>
       <Helmet title={title} />
       <Busy busy={busy}>
-        <PageHeader title={title} />
         <CenteredContent>
-
-          <Button component={Link} to="/admin/libraries">Back to Libraries</Button>
-          <Button component={Link} variant="primary" to={`/admin/libraries/${library ? library.id : 0}/users/add`}>Invite new User</Button>
-          <SearchBox value={query} onChange={updateQuery} />
-          <Box>
-            <UserList libraryId={library ? library.id : null} query={query} users={users} onUpdated={loadData} />
-          </Box>
+          <Breadcrumbs aria-label="breadcrumb" separator={<BreadcrumbSeparator />}>
+            <Typography color="text.primary"><FormattedMessage id="header.administration" /></Typography>
+            <Link underline="hover" color="inherit" to="/admin/libraries">
+              <FormattedMessage id="admin.libraries.title" />
+            </Link>
+            <Typography color="text.primary">{library && library.name}</Typography>
+            <Typography color="text.primary"><FormattedMessage id="admin.users.title" /></Typography>
+          </Breadcrumbs>
+          <Toolbar>
+            {library && library.links.add_user && (
+            <Tooltip title={<FormattedMessage id="invite.action" />}>
+              <IconButton
+                data-ft="add-library-user-button"
+                variant="contained"
+                color="primary"
+                component={Link}
+                to={`/admin/libraries/${library ? library.id : 0}/users/add`}
+              >
+                <AddCircleOutlineIcon />
+              </IconButton>
+            </Tooltip>
+            )}
+            <SearchBox value={query} onChange={updateQuery} />
+          </Toolbar>
+          <UserList libraryId={library ? library.id : null} query={query} users={users} onUpdated={loadData} />
         </CenteredContent>
 
       </Busy>

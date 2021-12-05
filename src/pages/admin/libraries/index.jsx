@@ -5,16 +5,20 @@ import queryString from 'query-string';
 import { Helmet } from 'react-helmet';
 
 // MUI
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 // Local Imports
 import { libraryService } from '@/services';
-import LibrariesGrid from '@/components/library/librariesGrid';
-import PageHeader from '@/components/pageHeader';
+import LibrariesList from '@/components/library/librariesList';
+import CenteredContent from '@/components/layout/centeredContent';
 import SearchBox from '@/components/searchBox';
 import helpers from '@/helpers';
+import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
 
 const LibrariesPage = () => {
   const location = useLocation();
@@ -59,14 +63,29 @@ const LibrariesPage = () => {
   return (
     <div data-ft="admin-libraries-page">
       <Helmet title={intl.formatMessage({ id: 'libraries.header' })} />
-      <PageHeader title={<FormattedMessage id="libraries.header" />} />
-      <Box sx={{ mt: 2 }}>
+      <CenteredContent>
+        <Breadcrumbs aria-label="breadcrumb" separator={<BreadcrumbSeparator />}>
+          <Typography color="text.primary"><FormattedMessage id="header.administration" /></Typography>
+          <Typography color="text.primary"><FormattedMessage id="admin.libraries.title" /></Typography>
+        </Breadcrumbs>
         <Toolbar>
-          <Button data-ft="create-library-button" variant="contained" color="primary" component={Link} to="/admin/libraries/create"><FormattedMessage id="admin.library.add" /></Button>
+          {libraries && libraries.links.create && (
+          <Tooltip title={<FormattedMessage id="admin.library.add" />}>
+            <IconButton
+              data-ft="create-library-button"
+              variant="contained"
+              color="primary"
+              component={Link}
+              to="/admin/libraries/create"
+            >
+              <AddCircleOutlineIcon />
+            </IconButton>
+          </Tooltip>
+          )}
           <SearchBox value={query} onChange={updateQuery} />
         </Toolbar>
-        <LibrariesGrid libraries={libraries} query={query} loading={busy} loadData={loadData} />
-      </Box>
+        <LibrariesList libraries={libraries} query={query} loading={busy} loadData={loadData} />
+      </CenteredContent>
     </div>
   );
 };
