@@ -140,6 +140,7 @@
 	"user.name.label" : "Name",
 	"user.email.label" : "Email",
 	"user.role.label" : "Role",
+	"user.name.required" : "Name is required",
 	"role.reader" : "Reader",
 	"role.writer" : "Writer",
 	"role.libraryAdmin" : "Library Admin",

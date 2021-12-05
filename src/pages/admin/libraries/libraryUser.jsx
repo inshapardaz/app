@@ -8,9 +8,7 @@ import { Helmet } from 'react-helmet';
 
 // Formik
 import { Formik, Field, Form } from 'formik';
-import {
-  Button, Grid, FormControl, InputLabel,
-} from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { TextField } from 'formik-material-ui';
 
 // Local Imports
@@ -18,19 +16,20 @@ import { libraryService } from '@/services';
 import PageHeader from '@/components/pageHeader';
 import Busy from '@/components/busy';
 import CenteredContent from '@/components/layout/centeredContent';
-import LanguageDropDown from '@/components/language/languageDropDown';
+import RoleDropDown from '@/components/roleDropDown';
 
 const LibraryUserPage = () => {
-  const { libraryId } = useParams();
+  const { libraryId, userId } = useParams();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const intl = useIntl();
   const [busy, setBusy] = useState(false);
   const [library, setLibrary] = useState(null);
-  const entry = useSelector((state) => state.libraryReducer.entry);
+  const [user, setUser] = useState(null);
 
   const initialValues = {
     email: '',
+    name: '',
     role: 'reader',
   };
 
@@ -38,51 +37,62 @@ const LibraryUserPage = () => {
     email: Yup.string()
       .email(intl.formatMessage({ id: 'library.email.error.format' }))
       .required(intl.formatMessage({ id: 'library.email.error.required' })),
+    name: Yup.string()
+      .required(intl.formatMessage({ id: 'user.name.required' })),
     role: Yup.string()
       .required(intl.formatMessage({ id: 'user.message.role.required' })),
   });
+
+  const loadUser = () => {
+    if (userId) {
+      return libraryService.getUser(libraryId, userId)
+        .then((u) => setUser(u));
+    }
+
+    return Promise.resolve();
+  };
 
   useEffect(() => {
     if (libraryId) {
       setBusy(true);
       libraryService.getLibrary(libraryId)
-        .then((lib) => setLibrary(lib))
-        .then(() => setBusy(false))
+        .then((lib) => {
+          setLibrary(lib);
+        })
+        .then(() => loadUser())
         .catch(() => {
-          setBusy(false);
           enqueueSnackbar(intl.formatMessage({ id: 'library.messages.error.loading' }), { variant: 'error' });
           history.push('/error/500');
-        });
+        })
+        .finally(() => setBusy(false));
     }
   }, [libraryId]);
 
   const onSubmit = (fields) => {
     setBusy(true);
-    const createLink = entry && entry.links && entry.links.create;
-    if (!library && createLink !== null) {
+    if (!user && library.links.add_user) {
       libraryService
-        .createLibrary(createLink, fields)
+        .addUser(library.links.add_user, fields)
         .then(() => {
-          enqueueSnackbar(intl.formatMessage({ id: 'library.messages.saving.success' }), { variant: 'success' });
+          enqueueSnackbar(intl.formatMessage({ id: 'user.messages.added.success' }), { variant: 'success' });
           history.goBack();
         })
         .catch(() => {
-          enqueueSnackbar(intl.formatMessage({ id: 'library.messages.error.saving' }), { variant: 'error' });
+          enqueueSnackbar(intl.formatMessage({ id: 'user.messages.added.error' }), { variant: 'error' });
         })
         .finally(() => setBusy(false));
     } else if (library !== null) {
       libraryService
-        .updateLibrary(library.links.update, fields)
+        .updateUser(user.links.update, fields)
         .then(() => {
-          enqueueSnackbar(intl.formatMessage({ id: 'library.messages.saving.success' }), { variant: 'success' });
+          enqueueSnackbar(intl.formatMessage({ id: 'user.messages.updated.success' }), { variant: 'success' });
           history.goBack();
         })
         .catch(() => {
-          enqueueSnackbar(intl.formatMessage({ id: 'library.messages.error.saving' }), { variant: 'error' });
+          enqueueSnackbar(intl.formatMessage({ id: 'user.messages.updated.error' }), { variant: 'error' });
         })
         .finally(() => setBusy(false));
     }
-    setBusy(false);
   };
 
   const title = intl.formatMessage({ id: library ? 'user.add.title' : 'user.edit.title' });
@@ -94,7 +104,7 @@ const LibraryUserPage = () => {
       <Busy busy={busy} />
       <CenteredContent>
         <Formik
-          initialValues={library || initialValues}
+          initialValues={user || initialValues}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
           enableReinitialize
@@ -106,35 +116,35 @@ const LibraryUserPage = () => {
               <Field
                 component={TextField}
                 autoFocus
-                disabled={library !== null}
+                disabled={!library}
                 name="email"
                 type="email"
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                label={<FormattedMessage id="library.email.label" />}
+                label={<FormattedMessage id="user.email.label" />}
                 error={errors.email && touched.email}
               />
               <Field
                 component={TextField}
                 name="name"
                 type="text"
-                disabled={library !== null}
+                disabled={!library}
                 variant="outlined"
                 margin="normal"
                 fullWidth
-                label={<FormattedMessage id="library.name.label" />}
+                label={<FormattedMessage id="user.name.label" />}
                 error={errors.name && touched.name}
               />
-              <FormControl variant="outlined" margin="normal" fullWidth>
-                <InputLabel id="user_role"><FormattedMessage id="user.role.title" /></InputLabel>
-                <LanguageDropDown
-                  data-ft="language"
-                  name="language"
-                  label={intl.formatMessage({ id: 'user.role.title' })}
-                  error={errors.language && touched.language}
-                />
-              </FormControl>
+              <RoleDropDown
+                data-ft="role"
+                name="role"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={intl.formatMessage({ id: 'user.role.label' })}
+                error={errors.role && touched.role}
+              />
               <Grid container spacing={2} sx={{ my: (theme) => theme.spacing(2) }}>
                 <Grid item md={6} xs={12}>
                   <Button

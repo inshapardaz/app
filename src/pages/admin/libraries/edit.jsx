@@ -101,7 +101,6 @@ const LibraryEditPage = () => {
         })
         .finally(() => setBusy(false));
     }
-    setBusy(false);
   };
 
   const title = library ? library.name : intl.formatMessage({ id: 'library.createNew' });
@@ -138,22 +137,21 @@ const LibraryEditPage = () => {
                 component={TextField}
                 name="name"
                 type="text"
-                disabled={library !== null}
                 variant="outlined"
                 margin="normal"
                 fullWidth
                 label={<FormattedMessage id="library.name.label" />}
                 error={errors.name && touched.name}
               />
-              <FormControl variant="outlined" margin="normal" fullWidth>
-                <InputLabel id="library_lang"><FormattedMessage id="library.language.label" /></InputLabel>
-                <LanguageDropDown
-                  data-ft="language"
-                  name="language"
-                  label={intl.formatMessage({ id: 'library.language.label' })}
-                  error={errors.language && touched.language}
-                />
-              </FormControl>
+              <LanguageDropDown
+                data-ft="language"
+                name="language"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                label={intl.formatMessage({ id: 'library.language.label' })}
+                error={errors.language && touched.language}
+              />
               <FormControl variant="outlined" margin="normal" fullWidth>
                 <Field
                   data-ft="primary-color"

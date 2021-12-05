@@ -115,6 +115,16 @@ export default {
 
   getLibraryUsers: (library) => get(library.links.users),
 
+  /* Users */
+
+  getUser: (libraryId, userId) => get(`${librariesUrl()}/${libraryId}/users/${userId}`),
+
+  addUser: (url, user) => post(url, user),
+
+  updateUser: (url, user) => put(url, user),
+
+  deleteUser: (user) => _delete(user.links.delete),
+
   /* Category */
   createCategory: (url, category) => post(url, category),
 

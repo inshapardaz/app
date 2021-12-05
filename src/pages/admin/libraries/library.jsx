@@ -30,20 +30,26 @@ const LibraryPage = () => {
     } else { history.goBack(); }
   };
 
+  const loadData = () => {
+    setBusy(true);
+    libraryService.getLibrary(libraryId)
+      .then((lib) => {
+        setLibrary(lib);
+        return lib;
+      })
+      .then((lib) => {
+        libraryService.getLibraryUsers(lib)
+          .then((u) => setUsers(u))
+          .then(() => setBusy(false))
+          .catch((e) => handlerApiError(e));
+      })
+      .catch((e) => handlerApiError(e))
+      .finally(() => setBusy(false));
+  };
+
   useEffect(() => {
     if (libraryId) {
-      libraryService.getLibrary(libraryId)
-        .then((lib) => {
-          setLibrary(lib);
-          return lib;
-        })
-        .then((lib) => {
-          libraryService.getLibraryUsers(lib)
-            .then((u) => setUsers(u))
-            .then(() => setBusy(false))
-            .catch((e) => handlerApiError(e));
-        })
-        .catch((e) => handlerApiError(e));
+      loadData();
     } else {
       history.push('/error/404');
     }
@@ -61,7 +67,7 @@ const LibraryPage = () => {
           <Button component={Link} to="/admin/libraries">Back to Libraries</Button>
           <Button component={Link} variant="primary" to={`/admin/libraries/${library ? library.id : 0}/users/add`}>Invite new User</Button>
           <Box>
-            <UserList users={users} />
+            <UserList libraryId={library ? library.id : null} users={users} onUpdated={loadData} />
           </Box>
         </CenteredContent>
 

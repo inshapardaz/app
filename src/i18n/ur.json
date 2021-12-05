@@ -142,6 +142,7 @@
 	"user.edit" : "صارف میں تدوین",
 	"user.role.label" : "اختیارات",
 	"user.role.required" : "اختیارات ضروری ہیں",
+	"user.name.required" : "نام لازم ہے",
 	"user.name.label" : "نام",
 	"user.email.label" : "ای میل",
 	"role.reader" : "قاری",
