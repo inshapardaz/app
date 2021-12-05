@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 
@@ -66,6 +66,10 @@ const SearchBox = ({ value, onChange }) => {
     setQuery('');
     onChange('');
   };
+
+  useEffect(() => {
+    setQuery(value);
+  }, [value]);
 
   return (
     <Search>

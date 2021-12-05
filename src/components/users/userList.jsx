@@ -16,6 +16,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 // Local Imports
 import Empty from '@/components/empty';
 import UserDeleteButton from '@/components/users/deleteUserButton';
+import DataPagination from '@/components/dataPagination';
 
 const RoleIcon = ({ role }) => {
   switch (role) {
@@ -38,34 +39,40 @@ RoleIcon.propTypes = {
   role: PropTypes.string,
 };
 
-const UserList = ({ libraryId, users, onUpdated }) => (
-  <Empty items={users && users.data} message={<FormattedMessage id="users.messages.empty" />}>
-    <List>
-      {users && users.data.map((user) => (
-        <ListItem
-          key={user.id}
-          disablePadding
-          secondaryAction={(
-            <>
-              <UserDeleteButton user={user} onDeleted={onUpdated} />
-            </>
+const UserList = ({
+  libraryId, users, query, onUpdated,
+}) => (
+  <>
+    <Empty items={users && users.data} message={<FormattedMessage id="users.messages.empty" />}>
+      <List>
+        {users && users.data.map((user) => (
+          <ListItem
+            key={user.id}
+            disablePadding
+            secondaryAction={(
+              <>
+                <UserDeleteButton user={user} onDeleted={onUpdated} />
+              </>
 )}
-        >
-          <ListItemButton component={Link} to={`/admin/libraries/${libraryId}/users/${user.id}/edit`}>
-            <ListItemIcon>
-              <RoleIcon role={user.role} />
-            </ListItemIcon>
-            <ListItemText primary={user.name} secondary={user.email} />
-          </ListItemButton>
-        </ListItem>
-      ))}
-    </List>
-  </Empty>
+          >
+            <ListItemButton component={Link} to={`/admin/libraries/${libraryId}/users/${user.id}/edit`}>
+              <ListItemIcon>
+                <RoleIcon role={user.role} />
+              </ListItemIcon>
+              <ListItemText primary={user.name} secondary={user.email} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Empty>
+    <DataPagination data={users} query={query} />
+  </>
 );
 
 UserList.defaultProps = {
   users: [],
   libraryId: null,
+  query: null,
   onUpdated: () => {},
 };
 UserList.propTypes = {
@@ -77,6 +84,7 @@ UserList.propTypes = {
     })),
   }),
   libraryId: PropTypes.number,
+  query: PropTypes.string,
   onUpdated: PropTypes.func,
 };
 

@@ -95,4 +95,42 @@ export default {
 
     return location.pathname;
   },
+  buildLinkToLibrariesPage: (location,
+    page,
+    query,
+    pageSize = 12) => {
+    let querystring = '';
+    querystring += page ? `page=${page}&` : '';
+    querystring += query ? `q=${query}&` : '';
+    querystring += pageSize && pageSize !== 12 ? `pageSize=${pageSize}&` : '';
+
+    if (querystring !== '') {
+      if (querystring.substr(querystring.length - 1) === '&') {
+        querystring = querystring.slice(0, -1);
+      }
+
+      return `${location.pathname}?${querystring}`;
+    }
+
+    return location.pathname;
+  },
+  buildLinkToLibraryUsersPage: (location,
+    page,
+    query,
+    pageSize = 12) => {
+    let querystring = '';
+    querystring += page ? `page=${page}&` : '';
+    querystring += query ? `q=${query}&` : '';
+    querystring += pageSize && pageSize !== 12 ? `pageSize=${pageSize}&` : '';
+
+    if (querystring !== '') {
+      if (querystring.substr(querystring.length - 1) === '&') {
+        querystring = querystring.slice(0, -1);
+      }
+
+      return `${location.pathname}?${querystring}`;
+    }
+
+    return location.pathname;
+  },
 };

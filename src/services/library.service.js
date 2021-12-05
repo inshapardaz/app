@@ -113,7 +113,7 @@ export default {
 
   deleteLibrary: (library) => _delete(library.links.delete),
 
-  getLibraryUsers: (library) => get(library.links.users),
+  getLibraryUsers: (library, query = null, page = 1, pageSize = 12) => get(`${library.links.users}?pageNumber=${page}&pageSize=${pageSize}${getQueryParameter(query)}`),
 
   /* Users */
 

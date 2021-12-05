@@ -13,6 +13,8 @@ import Toolbar from '@mui/material/Toolbar';
 import { libraryService } from '@/services';
 import LibrariesGrid from '@/components/library/librariesGrid';
 import PageHeader from '@/components/pageHeader';
+import SearchBox from '@/components/searchBox';
+import helpers from '@/helpers';
 
 const LibrariesPage = () => {
   const location = useLocation();
@@ -21,6 +23,18 @@ const LibrariesPage = () => {
   const [query, setQuery] = useState(null);
   const [libraries, setLibraries] = useState();
   const [busy, setBusy] = useState(true);
+
+  const updateQuery = (newQuery) => {
+    const values = queryString.parse(location.search);
+    const { page } = values;
+    history.push(
+      helpers.buildLinkToLibrariesPage(
+        location,
+        page,
+        newQuery,
+      ),
+    );
+  };
 
   const loadData = () => {
     const values = queryString.parse(location.search);
@@ -49,6 +63,7 @@ const LibrariesPage = () => {
       <Box sx={{ mt: 2 }}>
         <Toolbar>
           <Button data-ft="create-library-button" variant="contained" color="primary" component={Link} to="/admin/libraries/create"><FormattedMessage id="admin.library.add" /></Button>
+          <SearchBox value={query} onChange={updateQuery} />
         </Toolbar>
         <LibrariesGrid libraries={libraries} query={query} loading={busy} loadData={loadData} />
       </Box>

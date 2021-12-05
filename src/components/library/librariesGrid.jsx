@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // MUI
@@ -11,8 +11,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableFooter from '@mui/material/TableFooter';
-import Pagination from '@mui/material/Pagination';
-import PaginationItem from '@mui/material/PaginationItem';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
 import EditIcon from '@mui/icons-material/Edit';
@@ -21,61 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteLibraryButton from '@/components/library/deleteLibraryButton';
 import EmptyPlaceholder from '@/components/emptyPlaceHolder';
 import Busy from '@/components/busy';
-
-const LibrariesPagination = ({
-  libraries, query, loading,
-}) => {
-  const location = useLocation();
-
-  const buildLinkToPage = (l, p, q) => {
-    let querystring = '';
-    querystring += p ? `page=${p}` : '';
-    querystring += query ? `query=${q}` : '';
-    if (querystring !== '') {
-      querystring = `?${querystring}`;
-    }
-    return `${l.pathname}${querystring}`;
-  };
-
-  if (!loading && libraries) {
-    return (
-      <Pagination
-        page={libraries.currentPageIndex}
-        count={libraries.pageCount}
-        variant="outlined"
-        shape="rounded"
-        renderItem={(item) => (
-          <PaginationItem
-            component={Link}
-            to={buildLinkToPage(location, item.page, query)}
-            {...item}
-          />
-        )}
-      />
-    );
-  }
-
-  return null;
-};
-
-LibrariesPagination.defaultProps = {
-  libraries: null,
-  query: null,
-  loading: false,
-  location: null,
-};
-
-LibrariesPagination.propTypes = {
-  libraries: PropTypes.shape({
-    currentPageIndex: PropTypes.number,
-    pageCount: PropTypes.number,
-    pageSize: PropTypes.number,
-    totalCount: PropTypes.number,
-  }),
-  query: PropTypes.string,
-  loading: PropTypes.bool,
-  location: PropTypes.string,
-};
+import DataPagination from '@/components/dataPagination';
 
 const LibrariesGrid = ({
   libraries, query, loading, loadData,
@@ -124,7 +68,7 @@ const LibrariesGrid = ({
           <TableFooter>
             <TableRow>
               <TableCell colSpan={4}>
-                <LibrariesPagination libraries={libraries} query={query} loading={loading} />
+                <DataPagination data={libraries} query={query} />
               </TableCell>
             </TableRow>
           </TableFooter>
