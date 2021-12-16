@@ -307,6 +307,7 @@
     "book.messages.published" : "کتاب  کامیابی سے شایع کر دی گئی ہے۔",
     "book.messages.error.publishing" : "کتاب  شائع نہیں ہو سکی۔ برائے مہربانی دوبارہ کوشش کریں",
 	"book.action.publish" : "شائع کریں",
+	"book.publishing.status" : "صفحات کی کیفیت",
 	"chapter.action.create" : "نئے باب کا اضافہ کریں",
     "chapter.messages.saved" : "باب محفوظ کر دیا گیا ہے",
     "chapters.messages.deleted" : "باب ہٹا دیا گیا ہے",

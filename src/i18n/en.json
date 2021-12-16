@@ -308,6 +308,7 @@
 	"book.messages.published" : "Book published successfully",
     "book.messages.error.publishing" : "Error publishing book. Please try again.",
 	"book.action.publish" : "Publish",
+	"book.publishing.status" : "Page status",
     "books.item.book.count" : "{count} Books",
     "chapter.action.create" : "Create new chapter",
     "chapters.action.create" : "Create new chapter",

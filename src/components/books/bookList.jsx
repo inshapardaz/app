@@ -114,6 +114,9 @@ const BookList = ({
                 series,
                 sortBy,
                 sortDirection,
+                favoriteFilter,
+                readFilter,
+                statusFilter,
               )}
               {...item}
             />
@@ -213,8 +216,8 @@ const BookList = ({
           </Toolbar>
           <Empty items={books && books.data} message={<FormattedMessage id="books.messages.empty" />}>
             {showCards ? renderCards() : renderList()}
-            {renderPagination()}
           </Empty>
+          {renderPagination()}
         </Busy>
       </Error>
     </>
