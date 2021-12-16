@@ -6,7 +6,7 @@ import { Doughnut } from 'react-chartjs-2';
 
 const BookPublishingStatus = ({ book }) => {
   const intl = useIntl();
-  if (!book || book.status === 'Published' || !book.links.update) {
+  if (!book || book.status === 'Published' || !book.links.update || !book.pageStatus) {
     return null;
   }
 
