@@ -28,6 +28,7 @@ import DeleteBookButton from '@/components/books/deleteBookButton';
 import FavoriteButton from '@/components/books/favoriteButton';
 import ChaptersList from '@/components/chapters/chaptersList';
 import BookPublishingStatus from '@/components/books/bookPublishingStatus';
+import BookPublishButton from '@/components/books/bookPublishButton';
 import Busy from '@/components/busy';
 import Error from '@/components/error';
 import helpers from '@/helpers';
@@ -112,6 +113,7 @@ const BookPage = () => {
               />
               {renderEditLink()}
               <DeleteBookButton button book={book} onDeleted={() => history.back()} />
+              <BookPublishButton book={book} />
               <Button component={Link} to={`/books/${book.id}/pages`} startIcon={<FileCopyIcon />}>
                 <FormattedMessage id="pages.label" />
                 <Typography variant="caption">
