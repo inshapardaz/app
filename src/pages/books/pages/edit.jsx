@@ -82,12 +82,12 @@ const PageEditorPage = () => {
 
   const showError = () => {
     setBusy(false);
-    enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.error.saving' }), { variant: 'error' });
+    enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.error.saving' }), { variant: 'error' });
   };
 
   const showSuccess = () => {
     setBusy(false);
-    enqueueSnackbar(intl.formatMessage({ id: 'authors.messages.saved' }), { variant: 'success' });
+    enqueueSnackbar(intl.formatMessage({ id: 'pages.messages.saved' }), { variant: 'success' });
     if (page === null) {
       history.goBack();
     }
@@ -162,7 +162,7 @@ const PageEditorPage = () => {
 
   return (
     <Box
-      data-ft="edit-author-page"
+      data-ft="edit-page-page"
       sx={{
         backgroundColor: (theme) => theme.palette.background.paper,
         flex: 1,
