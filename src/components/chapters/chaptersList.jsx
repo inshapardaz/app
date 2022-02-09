@@ -136,8 +136,11 @@ const ChapterListItem = ({
 
   const onSave = () => {
     setBusy(true);
-    const obj = { ...chapter };
-    obj.title = value;
+    const obj = {
+      title: value,
+      bookId: chapter.bookId,
+      chapterNumber: chapter.chapterNumber,
+    };
     libraryService.updateChapter(chapter.links.update, obj)
       .then(() => enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' }))
       .then(() => onUpdated && onUpdated())
