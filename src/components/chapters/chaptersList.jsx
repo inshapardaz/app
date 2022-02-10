@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 // MUI
 import Input from '@mui/material/Input';
@@ -20,6 +21,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ClearIcon from '@mui/icons-material/Clear';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 // Local import
 import { libraryService } from '@/services/';
@@ -235,20 +237,32 @@ const ChapterListItem = ({
   };
 
   return (
-    <ListItem
-      key={chapter.id}
-      disableRipple
-      button
-      divider
-      secondaryAction={renderActions()}
-    >
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText
-        primary={renderPrimary()}
-      />
-    </ListItem>
+    <Draggable isDragDisabled={!canEdit} draggableId={`draggable-${chapter.id}`} index={chapter.chapterNumber}>
+      {(provided) => (
+        <ListItem
+          key={chapter.id}
+          disableRipple
+          button
+          divider
+          secondaryAction={renderActions()}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          {canEdit && (
+          <ListItemIcon>
+            <DragHandleIcon />
+          </ListItemIcon>
+          )}
+          <ListItemIcon>
+            <LayersIcon />
+          </ListItemIcon>
+          <ListItemText
+            primary={renderPrimary()}
+          />
+        </ListItem>
+      )}
+    </Draggable>
   );
 };
 ChapterListItem.defaultProps = {
@@ -301,31 +315,64 @@ const ChaptersList = ({ book }) => {
     }
   }, [book]);
 
+  const onDragDrop = (result) => {
+    const fromIndex = result.source.index;
+    const toIndex = result.destination.index;
+    if (fromIndex !== toIndex) {
+      const element = chapters.data[fromIndex];
+      chapters.data.splice(fromIndex, 1);
+      chapters.data.splice(toIndex, 0, element);
+
+      chapters.data = chapters.data.map((item, index) => {
+        item.chapterNumber = index;
+        return item;
+      });
+
+      setBusy(true);
+      libraryService.setChapterSequence(chapters)
+        .then((res) => setChapters(res))
+        .then(() => setBusy(false))
+        .catch(() => {
+          setError(true);
+        })
+        .finally(() => setBusy(false));
+    }
+  };
+
   const renderChapters = () => (
-    <List component="nav" aria-label="main categories">
-      <Empty
-        items={chapters ? chapters.data : []}
-        message={<FormattedMessage id="chapters.messages.empty" />}
-      >
-        {chapters.data.map((c) => (
-          <ChapterListItem
-            key={c.id}
-            chapter={c}
-            onUpdated={loadData}
-            canEdit={!editing}
-            onStartEditing={() => setEditing(true)}
-            onEndEditing={() => setEditing(false)}
-          />
-        ))}
-      </Empty>
+    <DragDropContext onDragEnd={onDragDrop}>
+      <Droppable droppableId={`Droppable_${book.id}`}>
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            <List component="nav" aria-label="main categories">
+              <Empty
+                items={chapters ? chapters.data : []}
+                message={<FormattedMessage id="chapters.messages.empty" />}
+              >
+                { chapters.data.map((c) => (
+                  <ChapterListItem
+                    key={c.id}
+                    chapter={c}
+                    onUpdated={loadData}
+                    canEdit={!editing}
+                    onStartEditing={() => setEditing(true)}
+                    onEndEditing={() => setEditing(false)}
+                  />
+                ))}
+              </Empty>
+              {provided.placeholder}
+            </List>
+          </div>
+        )}
+      </Droppable>
       {chapters.links.create && (
       <ChapterEditor
         createLink={chapters.links.create}
         onUpdated={loadData}
         newChapterIndex={chapters.data.length + 1}
       />
-      ) }
-    </List>
+      )}
+    </DragDropContext>
   );
 
   return (
