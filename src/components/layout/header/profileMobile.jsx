@@ -31,12 +31,6 @@ const ProfileMobileMenu = ({ onClick, onKeyDown }) => {
   if (!user) {
     return (
       <>
-        <ListItem button key="register" component={Link} to="/account/register" onClick={onClick} onKeyDown={onKeyDown}>
-          <ListItemIcon>
-            <VpnKeyIcon />
-          </ListItemIcon>
-          <ListItemText primary={<FormattedMessage id="register" />} />
-        </ListItem>
         <ListItem button key="login" component={Link} to="/account/login">
           <ListItemIcon>
             <LoginIcon />

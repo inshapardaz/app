@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useIntl, FormattedMessage } from 'react-intl';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
@@ -106,13 +106,8 @@ const LoginPage = () => {
                   <FormattedMessage id="login" />
                 </Button>
                 <Grid container>
-                  <Grid item xs>
-                    <Link href="account/register" variant="body2" data-ft="register-link">
-                      <FormattedMessage id="register" />
-                    </Link>
-                  </Grid>
                   <Grid item>
-                    <Link href="account/forgot-password" variant="body2" data-ft="forget-password-link">
+                    <Link href="/account/forgot-password" variant="body2" data-ft="forget-password-link">
                       <FormattedMessage id="forgot.password" />
                     </Link>
                   </Grid>

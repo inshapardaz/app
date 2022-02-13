@@ -7,11 +7,12 @@ import { FormattedMessage, useIntl } from 'react-intl';
 // MUI
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import List from '@mui/material/List';
 
 // Local Imports
-import PageHeader from '@/components/pageHeader';
+import { Typography } from '@mui/material';
 import CategoryListItem from '@/components/categories/categoryListItem';
 import Empty from '@/components/empty';
 import CenteredContent from '@/components/layout/centeredContent';
@@ -23,22 +24,30 @@ const CategoriesPage = () => {
   return (
     <div data-ft="categories-page">
       <Helmet title={intl.formatMessage({ id: 'header.categories' })} />
-      <PageHeader title={intl.formatMessage({ id: 'header.categories' })} />
       <CenteredContent>
-        {categories && categories.links.create
-      && (
-      <Toolbar>
-        <Button
-          data-ft="create-category-button"
-          variant="contained"
-          color="primary"
-          component={Link}
-          to="/categories/create"
-        >
-          <FormattedMessage id="categories.action.create" />
-        </Button>
-      </Toolbar>
-      )}
+        <Toolbar>
+          <Typography
+            variant="h5"
+            noWrap
+            component="div"
+            sx={{ pr: 2 }}
+          >
+            <FormattedMessage id="header.categories" />
+          </Typography>
+          {categories && categories.links.create && (
+          <Button
+            data-ft="create-category-button"
+            variant="outlined"
+            color="primary"
+            component={Link}
+            to="/categories/create"
+            startIcon={<AddCircleOutlineIcon />}
+          >
+            <FormattedMessage id="categories.action.create" />
+          </Button>
+          )}
+
+        </Toolbar>
         <Empty items={categories && categories.data} message={<FormattedMessage id="categories.messages.empty" />}>
           <List component="nav" aria-label="main categories">
             {categories && categories.data.map((c) => (

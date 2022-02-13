@@ -6,9 +6,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import queryString from 'query-string';
 
 // MUI
-import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import Grid from '@mui/material/Grid';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -21,7 +21,6 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 // Local Imports
 import { libraryService } from '@/services';
-import PageHeader from '@/components/pageHeader';
 import Busy from '@/components/busy';
 import Empty from '@/components/empty';
 import Error from '@/components/error';
@@ -126,21 +125,27 @@ const AuthorsPage = () => {
   return (
     <div data-ft="authors-page">
       <Helmet title={intl.formatMessage({ id: 'header.authors' })} />
-      <PageHeader title={intl.formatMessage({ id: 'header.authors' })} />
       <CenteredContent>
         <Toolbar>
+          <Typography
+            variant="h5"
+            noWrap
+            component="div"
+            sx={{ pr: 2 }}
+          >
+            <FormattedMessage id="header.authors" />
+          </Typography>
           {authors && authors.links.create && (
-          <Tooltip title={<FormattedMessage id="authors.action.create" />}>
-            <IconButton
+            <Button
               data-ft="create-authors-button"
-              variant="contained"
+              variant="outlined"
               color="primary"
               component={Link}
               to="/authors/create"
+              startIcon={<AddCircleOutlineIcon />}
             >
-              <AddCircleOutlineIcon />
-            </IconButton>
-          </Tooltip>
+              <FormattedMessage id="authors.action.create" />
+            </Button>
           )}
           <div style={{ flexGrow: 1 }} />
           <SearchBox value={query} onChange={updateQuery} />

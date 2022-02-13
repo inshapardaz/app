@@ -13,7 +13,6 @@ import Grid from '@mui/material/Grid';
 // Local Imports
 import { libraryService } from '@/services';
 import helpers from '@/helpers';
-import PageHeader from '@/components/pageHeader';
 import CenteredContent from '@/components/layout/centeredContent';
 import CategoriesSideBar from '@/components/categories/categoriesSidebar';
 import BookList from '@/components/books/bookList';
@@ -88,7 +87,6 @@ const BooksPage = () => {
   return (
     <div data-ft="books-page">
       <Helmet title={intl.formatMessage({ id: 'header.books' })} />
-      <PageHeader title={intl.formatMessage({ id: 'header.books' })} />
       <CenteredContent>
         <Grid container spacing={2} direction={isAboveSmall ? 'row' : 'column-reverse'}>
           <Grid item md={2}>

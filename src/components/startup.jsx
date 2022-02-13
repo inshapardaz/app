@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+
 import { useSelector, useDispatch } from 'react-redux';
 
 // MUI
@@ -19,7 +21,8 @@ const Startup = ({ children }) => {
     dispatch(actions.initializeAuth())
       .then(() => {
         dispatch(actions.getEntry());
-      });
+      })
+      .catch(() => {});
   }, []);
 
   if (init && (!user || entryFetched)) {
@@ -34,6 +37,13 @@ const Startup = ({ children }) => {
       <CircularProgress color="inherit" />
     </Backdrop>
   );
+};
+
+Startup.defaultProps = {
+  children: null,
+};
+Startup.propTypes = {
+  children: PropTypes.node,
 };
 
 export default Startup;

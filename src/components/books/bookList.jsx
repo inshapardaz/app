@@ -9,8 +9,7 @@ import List from '@mui/material/List';
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 import Toolbar from '@mui/material/Toolbar';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
@@ -185,17 +184,16 @@ const BookList = ({
         <Busy busy={busy}>
           <Toolbar>
             {books && books.links.create && (
-            <Tooltip title={<FormattedMessage id="books.action.create" />}>
-              <IconButton
+              <Button
                 data-ft="create-book-button"
-                variant="contained"
+                variant="outlined"
                 color="primary"
                 component={Link}
                 to="/books/create"
+                startIcon={<AddCircleOutlineIcon />}
               >
-                <AddCircleOutlineIcon />
-              </IconButton>
-            </Tooltip>
+                <FormattedMessage id="books.action.create" />
+              </Button>
             )}
             <div style={{ flexGrow: 1 }} />
             {renderFilters()}

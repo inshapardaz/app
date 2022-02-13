@@ -72,7 +72,7 @@ const ForgetPasswordPage = () => {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              <FormattedMessage id="forgotPassword.title" />
+              <FormattedMessage id="forgot.password" />
             </Typography>
             <Formik
               initialValues={initialValues}
