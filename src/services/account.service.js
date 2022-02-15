@@ -98,7 +98,7 @@ class AccountService {
   }
 
   resetPassword({ code, password, confirmPassword }) {
-    return fetchWrapper.post(`${baseUrl}/reset-password`, { code, password, confirmPassword });
+    return fetchWrapper.post(`${baseUrl}/reset-password`, { token: code, password, confirmPassword });
   }
 
   changePassword({ oldPassword, password }) {
