@@ -188,7 +188,7 @@ const RegistrationPage = () => {
                       </Link>
                     </Grid>
                     <Grid item>
-                      <Link href="account/forgot-password" variant="body2" data-ft="forget-password-link">
+                      <Link href="/account/forgot-password" variant="body2" data-ft="forget-password-link">
                         <FormattedMessage id="forgot.password" />
                       </Link>
                     </Grid>

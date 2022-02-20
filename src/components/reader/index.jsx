@@ -30,6 +30,7 @@ import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
 import ChaptersSelector from '@/components/reader/chaptersSelector';
 import ThemeSelector, { getSelectedTheme } from '@/components/reader/themeSelector';
 import LineHeightSelector from '@/components/reader/lineHeightSelector';
+import { localeService } from '@/services/';
 
 const ReaderFontSizeStorageKey = 'reader.fontSize';
 const ReaderFontStorageKey = 'reader.font';
@@ -132,6 +133,7 @@ const ReaderView = ({
       left: 0,
       right: 0,
       bottom: 0,
+      direction: book && localeService.isRtl(book.language) ? 'rtl' : 'ltr',
       zIndex: (theme) => (fullScreen ? theme.zIndex.appBar + 10 : 'inherit'),
     }}
     >
@@ -204,6 +206,7 @@ ReaderView.propTypes = {
   book: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
+    language: PropTypes.string,
     links: PropTypes.shape({
       chapters: PropTypes.string,
     }),
