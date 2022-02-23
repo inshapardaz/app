@@ -84,7 +84,7 @@ const LibraryUserPage = () => {
         .finally(() => setBusy(false));
     } else if (library !== null) {
       libraryService
-        .updateUser(user.links.update, fields)
+        .updateUser(user.links.update_user, fields)
         .then(() => {
           enqueueSnackbar(intl.formatMessage({ id: 'user.messages.updated.success' }), { variant: 'success' });
           history.goBack();
@@ -181,8 +181,7 @@ const LibraryUserPage = () => {
                     variant="outlined"
                     onClick={() => history.goBack()}
                   >
-                    Cancel
-
+                    <FormattedMessage id="action.cancel" />
                   </Button>
                 </Grid>
               </Grid>
