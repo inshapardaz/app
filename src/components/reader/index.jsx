@@ -181,6 +181,7 @@ const ReaderView = ({
         data={data}
         format={format}
         font={font}
+        isRtlBook={book && localeService.isRtl(book.language)}
         fontScale={fontScale}
         theme={selectedTheme}
         view={view}

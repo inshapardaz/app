@@ -454,6 +454,8 @@
 	"lineHeight.wide" : "کھلا",
 	"lineHeight.wider" : "مزید کھلا",
 	"lineHeight.widest" : "دوھرا",
+	"reader.previous" : "پچھلا صفحہ",
+	"reader.next" : "اگلا صفحہ",
 	"reader.singlePage" : "ایک صفحہ",
 	"reader.twoPages" : "دو صفحات"
 }

@@ -2,17 +2,20 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 import ReactMarkdown from 'react-markdown';
+import { FormattedMessage } from 'react-intl';
 
 // MUI
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
+// Local Import
+import ButtonWithTooltip from '@/components/buttonWithTooltip';
+
 const Reader = ({
-  data, format = 'text', font, fontScale, height,
+  data, format = 'text', font, fontScale, height, isRtlBook,
   canGoBack, onBack, canGoForward, onForward, theme, lineHeight, view,
 }) => {
   const anchorRef = useRef(null);
@@ -90,12 +93,13 @@ const Reader = ({
     if (isMobile) return null;
 
     return (
-      <IconButton
+      <ButtonWithTooltip
         disabled={!canGoPrevious()}
         onClick={onPrevious}
+        tooltip={<FormattedMessage id="reader.previous" />}
       >
-        <ChevronRightIcon />
-      </IconButton>
+        {isRtlBook ? <ChevronRightIcon /> : <ChevronLeftIcon /> }
+      </ButtonWithTooltip>
     );
   };
 
@@ -103,12 +107,13 @@ const Reader = ({
     if (isMobile) return null;
 
     return (
-      <IconButton
+      <ButtonWithTooltip
         disabled={!canGoNext()}
         onClick={onNext}
+        tooltip={<FormattedMessage id="reader.next" />}
       >
-        <ChevronLeftIcon />
-      </IconButton>
+        {isRtlBook ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
+      </ButtonWithTooltip>
     );
   };
 
@@ -133,22 +138,24 @@ const Reader = ({
   if (!data) return null;
 
   return (
-    <Grid container justifyContent="center" alignItems="center" wrap="nowrap" sx={theme}>
-      <Grid item>
-        {renderPrevious()}
-      </Grid>
-      <Grid item>
-        <Container maxWidth={isSinglePage ? 'sm' : 'lg'} sx={{ overflow: 'hidden' }}>
-          <div style={style} ref={anchorRef} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
-            {renderContents()}
-          </div>
+    <div dir={isRtlBook ? 'rtl' : 'ltr'}>
+      <Grid container justifyContent="center" alignItems="center" wrap="nowrap" sx={{ ...theme }}>
+        <Grid item>
+          {renderPrevious()}
+        </Grid>
+        <Grid item>
+          <Container maxWidth={isSinglePage ? 'sm' : 'lg'} sx={{ overflow: 'hidden' }}>
+            <div style={style} ref={anchorRef} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+              {renderContents()}
+            </div>
 
-        </Container>
+          </Container>
+        </Grid>
+        <Grid item>
+          {renderNext()}
+        </Grid>
       </Grid>
-      <Grid item>
-        {renderNext()}
-      </Grid>
-    </Grid>
+    </div>
   );
 };
 
@@ -159,6 +166,7 @@ Reader.defaultProps = {
   fontScale: null,
   lineHeight: 1.0,
   view: 'two',
+  isRtlBook: 'false',
   theme: {},
   canGoBack: false,
   onBack: () => {},
@@ -178,6 +186,7 @@ Reader.propTypes = {
   })),
   lineHeight: PropTypes.number,
   view: PropTypes.string,
+  isRtlBook: PropTypes.bool,
   height: PropTypes.string.isRequired,
   canGoBack: PropTypes.bool,
   onBack: PropTypes.func,

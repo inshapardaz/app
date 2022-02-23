@@ -456,6 +456,8 @@
 	"lineHeight.wide" : "Wide",
 	"lineHeight.wider" : "Wider",
 	"lineHeight.widest" : "Widest",
+	"reader.previous" : "Previous Page",
+	"reader.next" : "Next Page",
 	"reader.singlePage" : "Single Page",
 	"reader.twoPages" : "Two Pages"
 }

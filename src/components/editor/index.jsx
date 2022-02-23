@@ -30,6 +30,8 @@ import BuildIcon from '@mui/icons-material/Build';
 // Local Imports
 import FontMenu from '@/components/fontMenu';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
+import replaceList from './replaceList.json';
+import autoFixList from './autoFixList.json';
 
 const convertToMarkdown = (editorState) => stateToMarkdown(editorState.getCurrentContent());
 const convertToDraftJs = (markdownData) => {
@@ -150,6 +152,23 @@ const Editor = ({
     setShowControls(!showControls);
   };
 
+  const onCorrect = () => {
+    let markDown = convertToMarkdown(editorState);
+    markDown = markDown.replace(/  +/g, ' ');
+
+    for (const [key, value] of Object.entries(replaceList)) {
+      markDown = markDown.replaceAll(key, value);
+    }
+
+    for (const [key, value] of Object.entries(autoFixList)) {
+      const regex = new RegExp(`\\b${key}\\b`, 'gi');
+      markDown = markDown.replace(regex, value);
+    }
+
+    const draftJs = convertToDraftJs(markDown);
+    setEditorState(draftJs);
+  };
+
   return (
     <Box sx={{
       backgroundColor: (theme) => theme.palette.background.paper,
@@ -197,7 +216,7 @@ const Editor = ({
             <FindInPageIcon />
           </ButtonWithTooltip>
           )}
-          <ButtonWithTooltip tooltip="auto correct">
+          <ButtonWithTooltip tooltip="auto correct" onClick={onCorrect}>
             <AutoAwesomeIcon />
           </ButtonWithTooltip>
           <ButtonWithTooltip tooltip={<FormattedMessage id="action.zoom.in" />} onClick={onZoomInText} disabled={parseFloat(textScale) >= 3}>
