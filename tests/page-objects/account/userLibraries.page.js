@@ -26,7 +26,6 @@ export default {
     cy.get('[data-ft="user-libraries-page"]')
       .find('[data-ft="libraries-cell"]')
       .each(($el) => {
-        console.dir($el);
         cells.push(new LibraryCell($el));
       });
     return cells;

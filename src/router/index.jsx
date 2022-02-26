@@ -17,6 +17,7 @@ import RegistrationPage from '@/pages/account/register';
 import ForgetPasswordPage from '@/pages/account/forgetPassword';
 import ResetPasswordPage from '@/pages/account/resetPassword';
 import ChangePasswordPage from '@/pages/account/changePassword';
+import ProfilePage from '@/pages/account/profile';
 import LibrariesPage from '@/pages/admin/libraries';
 import LibraryEditPage from '@/pages/admin/libraries/edit';
 import LibraryUserPage from '@/pages/admin/libraries/libraryUser';
@@ -37,6 +38,8 @@ import PageEditorPage from '@/pages/books/pages/edit';
 import ChapterContentEditor from '@/pages/chapters/edit';
 import ChapterViewer from '@/pages/chapters/view';
 import SeriePage from '@/pages/series/serie';
+import PeriodicalsPage from '../pages/periodicals';
+import PeriodicalEditPage from '../pages/periodicals/edit';
 
 import Error403 from '@/pages/error/403';
 import Error404 from '@/pages/error/404';
@@ -53,6 +56,7 @@ const Routes = () => {
       <Route path="/account/reset-password"><ResetPasswordPage /></Route>
       <PrivateRoute layout={EmptyLayout} path="/account/change-password" component={ChangePasswordPage} />
       <PrivateRoute layout={EmptyLayout} path="/account/libraries" component={UserLibrariesPage} />
+      <PrivateRoute layout={FullWidthLayout} path="/profile" component={ProfilePage} />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/:libraryId/edit" component={LibraryEditPage} adminOnly exact />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/create" component={LibraryEditPage} adminOnly exact />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/:libraryId/users/:userId/edit" component={LibraryUserPage} adminOnly exact />
@@ -79,6 +83,9 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/pages" component={BookPages} exact />
       <PrivateRoute layout={NoFooterLayout} path="/books/:bookId/chapters/:chapterNumber" component={ChapterViewer} exact />
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/chapters/:chapterNumber/edit" component={ChapterContentEditor} exact />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/create" component={PeriodicalEditPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/edit" component={PeriodicalEditPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals" component={PeriodicalsPage} exact libraryWithPeriodicals />
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       <Route path="/error/403"><Error403 /></Route>
       <Route path="/error/404"><Error404 /></Route>

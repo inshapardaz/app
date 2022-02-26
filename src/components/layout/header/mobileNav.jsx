@@ -17,6 +17,7 @@ import Box from '@mui/material/Box';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import { AutoStories, Person, CollectionsBookmark } from '@mui/icons-material';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 
 // Local Import
 import ProfileMobileMenu from './profileMobile';
@@ -35,13 +36,14 @@ const MobileNavWrapper = styled('div')(({ theme }) => ({
 
 const MobileNav = () => {
   const [open, setOpen] = useState(false);
+  const library = useSelector((state) => state.libraryReducer.library);
 
-  const toggleDrawer = (open) => (event) => {
+  const toggleDrawer = (o) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
 
-    setOpen(open);
+    setOpen(o);
   };
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -96,6 +98,23 @@ const MobileNav = () => {
           <ListItemText primary={<FormattedMessage id="header.series" />} />
         </ListItem>
 
+        { library && library.supportsPeriodicals
+        && (
+        <ListItem
+          button
+          key="periodicals"
+          component={Link}
+          to="/periodicals"
+          data-ft="periodicals-link"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+        >
+          <ListItemIcon>
+            <NewspaperIcon />
+          </ListItemIcon>
+          <ListItemText primary={<FormattedMessage id="header.periodicals" />} />
+        </ListItem>
+        )}
         <CategoriesMobileMenu onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)} />
         <PublishingButton mobile onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)} />
         <Divider />

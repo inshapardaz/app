@@ -13,8 +13,6 @@ describe('When user has no library selected', () => {
   });
 
   it('I should see the list of libraries', () => {
-	  console.dir(userLibrariesPage.libraries);
-
     userLibrariesPage.libraries[0].name.shouldHaveText('Test');
     userLibrariesPage.libraries[0].language.shouldHaveText('English');
 

@@ -1,13 +1,14 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Route, Redirect } from 'react-router-dom';
 
 import Startup from '@/components/startup';
 
 const PrivateRoute = ({
-  layout, component, adminOnly, ...rest
+  layout, component, adminOnly, libraryWithPeriodicals, ...rest
 }) => {
   const user = useSelector((state) => state.accountReducer.user);
+  const library = useSelector((state) => state.libraryReducer.library);
 
   return (
     <Startup>
@@ -22,6 +23,10 @@ const PrivateRoute = ({
           if (adminOnly && !user.isSuperAdmin) {
             // role not authorized so redirect to home page
             return <Redirect to={{ pathname: '/error/403' }} />;
+          }
+
+          if (libraryWithPeriodicals && (library === null || !library.supportsPeriodicals)) {
+            return <Redirect to={{ pathname: '/' }} />;
           }
 
           // authorized so return component

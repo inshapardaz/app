@@ -28,8 +28,14 @@ export default {
   },
   defaultPageImage: '/images/page_placeholder.jpg',
   setDefaultPageImage: (ev) => {
-    ev.target.src = this.defaultBookImage;
+    ev.target.src = this.defaultPageImage;
   },
+
+  defaultPeriodicalImage: '/images/periodical_placeholder.png',
+  setDefaultPeriodicalImage: (ev) => {
+    ev.target.src = this.defaultPeriodicalImage;
+  },
+
   parseNullableBool: (val) => {
     if (val === 'true') {
       return true;
@@ -122,6 +128,31 @@ export default {
     querystring += page ? `page=${page}&` : '';
     querystring += query ? `q=${query}&` : '';
     querystring += pageSize && pageSize !== 12 ? `pageSize=${pageSize}&` : '';
+
+    if (querystring !== '') {
+      if (querystring.substr(querystring.length - 1) === '&') {
+        querystring = querystring.slice(0, -1);
+      }
+
+      return `${location.pathname}?${querystring}`;
+    }
+
+    return location.pathname;
+  },
+  buildLinkToPeriodicalsPage: (
+    location,
+    page,
+    query,
+    categoryId,
+    sortBy,
+    sortDirection,
+  ) => {
+    let querystring = '';
+    querystring += page ? `page=${page}&` : '';
+    querystring += query ? `query=${query}&` : '';
+    querystring += categoryId ? `category=${categoryId}&` : '';
+    querystring += sortBy && sortBy !== 'title' ? `sortBy=${sortBy}&` : '';
+    querystring += sortDirection && sortDirection !== 'ascending' ? `sortDirection=${sortDirection}&` : '';
 
     if (querystring !== '') {
       if (querystring.substr(querystring.length - 1) === '&') {
