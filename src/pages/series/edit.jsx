@@ -11,7 +11,7 @@ import {
   Formik, Field, Form,
 } from 'formik';
 import { Button, Grid, FormControl } from '@mui/material';
-import { TextField } from 'formik-material-ui';
+import { TextField } from 'formik-mui';
 
 // Local Imports
 import ImageUpload from '@/components/imageUpload';

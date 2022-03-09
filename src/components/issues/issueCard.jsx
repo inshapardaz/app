@@ -16,17 +16,17 @@ import IconButton from '@mui/material/IconButton';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 // Local imports
-import PeriodicalDeleteButton from '@/components/periodicals/periodicalDeleteButton';
+import IssueDeleteButton from '@/components/issues/issueDeleteButton';
 import helpers from '@/helpers';
 
-const PeriodicalCard = ({ periodical, onUpdated }) => {
+const IssueCard = ({ issue, onUpdated }) => {
   const history = useHistory();
 
   const renderEditLink = () => {
-    if (periodical && periodical.links && periodical.links.update) {
+    if (issue && issue.links && issue.links.update) {
       return (
         <Tooltip title={<FormattedMessage id="action.edit" />}>
-          <IconButton component={Link} to={`/periodicals/${periodical.id}/edit`}>
+          <IconButton component={Link} to={`/periodicals/${issue.periodicalId}/issues/${issue.id}/edit`}>
             <EditOutlinedIcon />
           </IconButton>
         </Tooltip>
@@ -35,7 +35,7 @@ const PeriodicalCard = ({ periodical, onUpdated }) => {
     return null;
   };
 
-  const onOpen = () => history.push(`/periodicals/${periodical.id}/issues`);
+  const onOpen = () => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.id}/articles`);
 
   return (
     <Card sx={{
@@ -48,11 +48,11 @@ const PeriodicalCard = ({ periodical, onUpdated }) => {
       <CardActionArea>
         <CardMedia
           component="img"
-          alt={periodical.title}
+          alt={issue.issueNumber}
           width="282"
           height="350"
-          image={(periodical.links ? periodical.links.image : null) || helpers.defaultPeriodicalImage}
-          title={periodical.title}
+          image={(issue.links ? issue.links.image : null) || helpers.defaultPeriodicalImage}
+          title={issue.issueNumber}
           onError={helpers.setDefaultPeriodicalImage}
           onClick={() => onOpen()}
         />
@@ -60,38 +60,36 @@ const PeriodicalCard = ({ periodical, onUpdated }) => {
       <CardContent>
         <Grid container justifyContent="stretch">
           <Grid item>
-            <Tooltip title={periodical.title} aria-label={periodical.title}>
-              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${periodical.id}/issues`} sx={{ width: '100%' }}>
-                {periodical.title}
+            <Tooltip title={issue.issueNumber} aria-label={issue.issueNumber}>
+              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${issue.periodicalId}/issues/${issue.id}/articles`} sx={{ width: '100%' }}>
+                {issue.issueNumber}
               </Typography>
             </Tooltip>
             <Typography variant="body2" color="textSecondary" component="p">
-              {helpers.truncateWithEllipses(periodical.description, 45)}
+              {issue.volumeNumber}
             </Typography>
           </Grid>
         </Grid>
       </CardContent>
       <CardActions sx={{ flex: '1', alignItems: 'flex-end' }}>
         {renderEditLink()}
-        <PeriodicalDeleteButton periodical={periodical} onDeleted={onUpdated} />
+        <IssueDeleteButton issue={issue} onDeleted={onUpdated} />
       </CardActions>
     </Card>
   );
 };
 
-PeriodicalCard.defaultProps = {
+IssueCard.defaultProps = {
   onUpdated: () => {},
 };
-PeriodicalCard.propTypes = {
-  periodical: PropTypes.shape({
+IssueCard.propTypes = {
+  issue: PropTypes.shape({
     id: PropTypes.number,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    authors: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-    })),
-    status: PropTypes.string,
+    issueNumber: PropTypes.number,
+    volumeNumber: PropTypes.number,
+    articleCount: PropTypes.number,
+    periodicalId: PropTypes.number,
+    issueDate: PropTypes.string,
     links: PropTypes.shape({
       image: PropTypes.string,
       update: PropTypes.string,
@@ -101,4 +99,4 @@ PeriodicalCard.propTypes = {
   onUpdated: PropTypes.func,
 };
 
-export default PeriodicalCard;
+export default IssueCard;

@@ -13,7 +13,7 @@ import { Button, Grid, FormControl } from '@mui/material';
 import {
   Formik, Field, Form,
 } from 'formik';
-import { TextField, CheckboxWithLabel } from 'formik-material-ui';
+import { TextField, CheckboxWithLabel } from 'formik-mui';
 
 // Local Imports
 import { libraryService } from '@/services/';

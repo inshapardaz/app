@@ -25,7 +25,7 @@ const PrivateRoute = ({
             return <Redirect to={{ pathname: '/error/403' }} />;
           }
 
-          if (libraryWithPeriodicals && (library === null || !library.supportsPeriodicals)) {
+          if (libraryWithPeriodicals && library !== null && !library.supportsPeriodicals) {
             return <Redirect to={{ pathname: '/' }} />;
           }
 

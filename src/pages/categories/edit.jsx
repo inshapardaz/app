@@ -9,7 +9,7 @@ import { Helmet } from 'react-helmet';
 // Formik
 import { Formik, Field, Form } from 'formik';
 import { Button, Grid } from '@mui/material';
-import { TextField } from 'formik-material-ui';
+import { TextField } from 'formik-mui';
 
 // Local Imports
 import actions from '@/actions';

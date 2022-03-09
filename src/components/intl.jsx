@@ -2,6 +2,8 @@ import React, { useEffect, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 import { Helmet } from 'react-helmet';
+import DateAdapter from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 // Local Imports
 import localeService from '@/services/locale.service';
@@ -18,7 +20,9 @@ const Intl = (props) => {
   return (
     <IntlProvider locale={locale} messages={messages} textComponent={Fragment} onError={() => null}>
       <Helmet titleTemplate={`${messages.app} - %s`} />
-      {props.children}
+      <LocalizationProvider dateAdapter={DateAdapter}>
+        {props.children}
+      </LocalizationProvider>
     </IntlProvider>
   );
 };

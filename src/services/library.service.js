@@ -276,9 +276,32 @@ export default {
 
   updatePeriodical: (url, periodical) => put(url, periodical),
 
-  getPeriodicalById: (libraryId, periodical) => get(`${librariesUrl()}/${libraryId}/periodicals/${periodical}`),
+  getPeriodicalById: (libraryId, periodicalId) => get(`${librariesUrl()}/${libraryId}/periodicals/${periodicalId}`),
 
   deletePeriodical: (periodical) => _delete(periodical.links.delete),
+
+  getIssuesByPeriodicalsId: (libraryId,
+    periodicalId,
+    sortDirection = null,
+    pageNumber = 1,
+    pageSize = 12) => {
+    let queryVal = '';
+
+    if (sortDirection) {
+      queryVal += `&sortDirection=${sortDirection}`;
+    }
+
+    const url = `${librariesUrl()}/${libraryId}/periodicals/${periodicalId}/issues`;
+    return get(`${url}?pageNumber=${pageNumber}&pageSize=${pageSize}${queryVal}`);
+  },
+
+  createIssue: (url, issue) => post(url, issue),
+
+  updateIssue: (url, issue) => put(url, issue),
+
+  getIssueById: (libraryId, periodicalId, issueId) => get(`${librariesUrl()}/${libraryId}/periodicals/${periodicalId}/issues/${issueId}`),
+
+  deleteIssue: (issue) => _delete(issue.links.delete),
 
   // Accounts
   getWriters: (libraryId, query) => get(`${librariesUrl()}/${libraryId}/writers${query ? `?query=${query}` : ''}`),

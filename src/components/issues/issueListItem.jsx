@@ -21,12 +21,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 // Local import
-import PeriodicalDeleteButton from '@/components/periodicals/periodicalDeleteButton';
+import IssueDeleteButton from '@/components/issues/issueDeleteButton';
 import helpers from '@/helpers';
 
 // ----------------------------------------------------------
 
-const PeriodicalMenu = ({ periodical, onUpdated }) => {
+const IssueMenu = ({ issue, onUpdated }) => {
   const history = useHistory();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -58,9 +58,9 @@ const PeriodicalMenu = ({ periodical, onUpdated }) => {
           onClose={handleClose}
         >
           <Tooltip title={<FormattedMessage id="action.edit" />}>
-            <IconButton onClick={() => history.push(`/periodicals/${periodical.id}/edit`)}><EditIcon /></IconButton>
+            <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.id}/edit`)}><EditIcon /></IconButton>
           </Tooltip>
-          <PeriodicalDeleteButton periodical={periodical} onDeleted={onUpdated} onClick={handleClose} />
+          <IssueDeleteButton issue={issue} onDeleted={onUpdated} onClick={handleClose} />
         </Menu>
       </>
     );
@@ -69,16 +69,18 @@ const PeriodicalMenu = ({ periodical, onUpdated }) => {
   return (
     <>
       <Tooltip title={<FormattedMessage id="action.edit" />}>
-        <IconButton onClick={() => history.push(`/periodicals/${periodical.id}/edit`)}><EditIcon /></IconButton>
+        <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.id}/edit`)}><EditIcon /></IconButton>
       </Tooltip>
-      <PeriodicalDeleteButton periodical={periodical} onDeleted={onUpdated} />
+      <IssueDeleteButton issue={issue} onDeleted={onUpdated} />
     </>
   );
 };
 
-PeriodicalMenu.propTypes = {
-  periodical: PropTypes.shape({
+IssueMenu.propTypes = {
+  issue: PropTypes.shape({
     id: PropTypes.number,
+    periodicalId: PropTypes.number,
+    issueDate: PropTypes.string,
   }).isRequired,
 
   onUpdated: PropTypes.func.isRequired,
@@ -86,24 +88,24 @@ PeriodicalMenu.propTypes = {
 
 // --------------------------------------------------------
 
-const PeriodicalListItem = ({ periodical, onUpdated }) => {
+const IssueListItem = ({ issue, onUpdated }) => {
   const history = useHistory();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
     <ListItem
-      key={periodical.id}
+      key={issue.id}
       disableRipple
       button
       divider
       sx={{ cursor: 'default' }}
     >
       {matches && (
-      <ListItemIcon onClick={() => history.push(`/periodicals/${periodical.id}/issues`)} sx={{ mr: theme.spacing(1) }}>
+      <ListItemIcon onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.id}/articles`)} sx={{ mr: theme.spacing(1) }}>
         <Avatar
           variant="square"
-          src={(periodical.links ? periodical.links.image : null) || helpers.defaultPeriodicalImage}
+          src={(issue.links ? issue.links.image : null) || helpers.defaultPeriodicalImage}
           imgProps={{ onError: helpers.setDefaultPeriodicalImage }}
           sx={{ cursor: 'pointer', width: 120, height: 150 }}
         />
@@ -114,7 +116,7 @@ const PeriodicalListItem = ({ periodical, onUpdated }) => {
         primary={(
           <Grid container justifyContent="space-between" sx={{ backgroundColor: 'grey' }}>
             <Grid item sm={6}>
-              <Link to={`/periodicals/${periodical.id}/issues`}>{periodical.title}</Link>
+              <Link to={`/periodicals/${issue.periodicalId}/issues/${issue.id}/articles`}>{issue.issueNumber}</Link>
             </Grid>
           </Grid>
 )}
@@ -130,7 +132,7 @@ const PeriodicalListItem = ({ periodical, onUpdated }) => {
               color="textSecondary"
               component="span"
             >
-              {helpers.truncateWithEllipses(periodical.description, 500)}
+              {issue.volumeNumber}
             </Typography>
             )}
           </>
@@ -138,22 +140,20 @@ const PeriodicalListItem = ({ periodical, onUpdated }) => {
       />
       <ListItemText />
       <ListItemSecondaryAction sx={{ top: 'auto', bottom: 0 }}>
-        <PeriodicalMenu periodical={periodical} onUpdated={onUpdated} />
+        <IssueMenu issue={issue} onUpdated={onUpdated} />
       </ListItemSecondaryAction>
     </ListItem>
   );
 };
 
-PeriodicalListItem.propTypes = {
-  periodical: PropTypes.shape({
+IssueListItem.propTypes = {
+  issue: PropTypes.shape({
     id: PropTypes.number,
-    title: PropTypes.string,
-    description: PropTypes.string,
-    issuesCount: PropTypes.number,
-    categories: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-    })),
+    issueNumber: PropTypes.number,
+    volumeNumber: PropTypes.number,
+    articleCount: PropTypes.number,
+    periodicalId: PropTypes.number,
+    issueDate: PropTypes.string,
     links: PropTypes.shape({
       image: PropTypes.string,
       update: PropTypes.string,
@@ -163,4 +163,4 @@ PeriodicalListItem.propTypes = {
   onUpdated: PropTypes.func.isRequired,
 };
 
-export default PeriodicalListItem;
+export default IssueListItem;

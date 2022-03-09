@@ -164,4 +164,23 @@ export default {
 
     return location.pathname;
   },
+  buildLinkToIssuesPage: (
+    location,
+    page,
+    sortDirection,
+  ) => {
+    let querystring = '';
+    querystring += page ? `page=${page}&` : '';
+    querystring += sortDirection && sortDirection !== 'ascending' ? `sortDirection=${sortDirection}&` : '';
+
+    if (querystring !== '') {
+      if (querystring.substr(querystring.length - 1) === '&') {
+        querystring = querystring.slice(0, -1);
+      }
+
+      return `${location.pathname}?${querystring}`;
+    }
+
+    return location.pathname;
+  },
 };

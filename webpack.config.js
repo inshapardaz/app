@@ -21,17 +21,6 @@ module.exports = (env) => {
       extensions: ['.js', '.jsx'],
       alias: {
         '@': path.resolve(__dirname, 'src'),
-        '@material-ui/core/Checkbox': path.resolve(__dirname, 'node_modules/@mui/material/Checkbox'),
-        '@material-ui/core/FormControlLabel': path.resolve(__dirname, 'node_modules/@mui/material/FormControlLabel'),
-        '@material-ui/core/InputBase': path.resolve(__dirname, 'node_modules/@mui/material/InputBase'),
-        '@material-ui/core/RadioGroup': path.resolve(__dirname, 'node_modules/@mui/material/RadioGroup'),
-        '@material-ui/core/Select': path.resolve(__dirname, 'node_modules/@mui/material/Select'),
-        '@material-ui/core/FormControl': path.resolve(__dirname, 'node_modules/@mui/material/FormControl'),
-        '@material-ui/core/InputLabel': path.resolve(__dirname, 'node_modules/@mui/material/InputLabel'),
-        '@material-ui/core/Input': path.resolve(__dirname, 'node_modules/@mui/material/Input'),
-        '@material-ui/core/FormHelperText': path.resolve(__dirname, 'node_modules/@mui/material/FormHelperText'),
-        '@material-ui/core/Switch': path.resolve(__dirname, 'node_modules/@mui/material/Switch'),
-        '@material-ui/core/TextField': path.resolve(__dirname, 'node_modules/@mui/material/TextField'),
       },
     },
     module: {

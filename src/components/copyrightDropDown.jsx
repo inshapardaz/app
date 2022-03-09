@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 
 // Formik
 import { Field } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { TextField } from 'formik-mui';
 
 // MUI
 import MenuItem from '@mui/material/MenuItem';

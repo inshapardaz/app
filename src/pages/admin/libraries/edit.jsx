@@ -13,7 +13,7 @@ import {
   Button, Box, Grid,
   FormControl, InputAdornment,
 } from '@mui/material';
-import { TextField, CheckboxWithLabel } from 'formik-material-ui';
+import { TextField, CheckboxWithLabel } from 'formik-mui';
 import ColorPicker from 'material-ui-color-picker';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';

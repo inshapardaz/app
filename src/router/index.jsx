@@ -40,6 +40,8 @@ import ChapterViewer from '@/pages/chapters/view';
 import SeriePage from '@/pages/series/serie';
 import PeriodicalsPage from '../pages/periodicals';
 import PeriodicalEditPage from '../pages/periodicals/edit';
+import IssuesPage from '../pages/periodicals/issues';
+import IssuesEditPage from '../pages/periodicals/issues/edit';
 
 import Error403 from '@/pages/error/403';
 import Error404 from '@/pages/error/404';
@@ -85,6 +87,9 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/chapters/:chapterNumber/edit" component={ChapterContentEditor} exact />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/create" component={PeriodicalEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/edit" component={PeriodicalEditPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/:issueId/edit" component={IssuesEditPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/create" component={IssuesEditPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/issues" component={IssuesPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals" component={PeriodicalsPage} exact libraryWithPeriodicals />
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       <Route path="/error/403"><Error403 /></Route>
