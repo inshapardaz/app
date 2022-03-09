@@ -21,6 +21,7 @@ module.exports = (env) => {
       extensions: ['.js', '.jsx'],
       alias: {
         '@': path.resolve(__dirname, 'src'),
+        '@material-ui/core/TextField': path.resolve(__dirname, 'node_modules/@mui/material/TextField'),
       },
     },
     module: {
