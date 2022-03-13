@@ -4,7 +4,7 @@
   "description": "A library site",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mlomboglia/webpack-react-starter"
+    "url": "https://github.com/inshapardaz/app"
   },
   "author": "Muhammad Umer Farooq <momarf@gmail.com>",
   "main": "index.jsx",

@@ -13,8 +13,8 @@ module.exports = (env) => {
     entry: './src/index.jsx',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'bundle.js',
-      chunkFilename: '[id].js',
+      filename: '[name].js',
+      chunkFilename: '[id].[chunkhash].js',
       publicPath: '/',
     },
     resolve: {
@@ -23,6 +23,11 @@ module.exports = (env) => {
         '@': path.resolve(__dirname, 'src'),
         '@material-ui/core/TextField': path.resolve(__dirname, 'node_modules/@mui/material/TextField'),
       },
+    },
+    optimization: {
+      splitChunks : {
+        chunks: 'all'
+      }
     },
     module: {
       rules: [
