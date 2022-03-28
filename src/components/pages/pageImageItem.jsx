@@ -24,6 +24,7 @@ const PageImageItem = ({
   const history = useHistory();
   const pageClicked = () => history.push(`/books/${page.bookId}/pages/${page.sequenceNumber}/edit`);
 
+  const title = (page.writerAccountId && <FormattedMessage id="page.assignedTo.label" values={{ name: page.writerAccountName }} />);
   return (
     <ImageListItem key={page.sequenceNumber}>
       <img src={page.links.image != null ? page.links.image : helpers.defaultPageImage} alt={page.sequenceNumber} loading="lazy" />
@@ -54,7 +55,7 @@ const PageImageItem = ({
 )}
       />
       <ImageListItemBar
-        title={(page.accountId && <FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
+        title={title}
         sx={{ height: 36, backgroundColor: (theme) => theme.palette.text.secondary }}
         actionIcon={(
           <Toolbar variant="dense">
@@ -85,8 +86,8 @@ PageImageItem.propTypes = {
     id: PropTypes.number,
     bookId: PropTypes.number,
     sequenceNumber: PropTypes.number,
-    accountId: PropTypes.number,
-    accountName: PropTypes.string,
+    writerAccountId: PropTypes.number,
+    writerAccountName: PropTypes.string,
     status: PropTypes.string,
     chapterId: PropTypes.number,
     chapterTitle: PropTypes.string,

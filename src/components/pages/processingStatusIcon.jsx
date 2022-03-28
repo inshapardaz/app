@@ -54,7 +54,7 @@ const AssignList = ({ pages }) => (
         </ListItemIcon>
         <ListItemText
           primary={page.sequenceNumber}
-          secondary={(page.accountId && <FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />)}
+          secondary={(page.writerAccountId && <FormattedMessage id="page.assignedTo.label" values={{ name: page.writerAccountName }} />)}
         />
       </ListItem>
     ))}

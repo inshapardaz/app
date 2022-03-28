@@ -356,6 +356,8 @@
 	"pages.progress.none" : "Book contains no pages",
 	"page.assignedToMe.label": "Assigned to me",
 	"page.assignedTo.label": "Assigned to {name}",
+	"page.assignedTo.typing.label": "Assigned to {name} for typing",
+	"page.assignedTo.proofReading.label": "Assigned to {name} for proof reading",
 	"pages.assignToUser" : "Assign to user",
 	"pages.ocr" : "Identify Text",
 	"pages.ocr.storeLocal" : "Store api key in browser for future use",

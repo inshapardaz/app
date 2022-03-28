@@ -65,9 +65,12 @@ const PageListItem = ({
               {page.chapterTitle}
             </Typography>
             )}
-            {page.chapterId && page.accountId && <span style={{ padding: '0 10px' }}>•</span>}
-            {page.accountId
-            && <FormattedMessage id="page.assignedTo.label" values={{ name: page.accountName }} />}
+            {page.chapterId && page.writerAccountId && <span style={{ padding: '0 10px' }}>•</span>}
+            {page.writerAccountId
+            && <FormattedMessage id="page.assignedTo.typing.label" values={{ name: page.writerAccountName }} />}
+            {(page.chapterId || page.writerAccountId) && page.reviewerAccountId && <span style={{ padding: '0 10px' }}>•</span>}
+            {page.reviewerAccountId
+            && <FormattedMessage id="page.assignedTo.proofReading.label" values={{ name: page.reviewerAccountName }} />}
           </>
         )}
       />
@@ -85,8 +88,10 @@ PageListItem.propTypes = {
     id: PropTypes.number,
     bookId: PropTypes.number,
     sequenceNumber: PropTypes.number,
-    accountId: PropTypes.number,
-    accountName: PropTypes.string,
+    writerAccountId: PropTypes.number,
+    writerAccountName: PropTypes.string,
+    reviewerAccountId: PropTypes.number,
+    reviewerAccountName: PropTypes.string,
     status: PropTypes.string,
     chapterId: PropTypes.number,
     chapterTitle: PropTypes.string,
