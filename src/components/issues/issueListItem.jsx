@@ -58,7 +58,7 @@ const IssueMenu = ({ issue, onUpdated }) => {
           onClose={handleClose}
         >
           <Tooltip title={<FormattedMessage id="action.edit" />}>
-            <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.id}/edit`)}><EditIcon /></IconButton>
+            <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/edit`)}><EditIcon /></IconButton>
           </Tooltip>
           <IssueDeleteButton issue={issue} onDeleted={onUpdated} onClick={handleClose} />
         </Menu>
@@ -69,7 +69,7 @@ const IssueMenu = ({ issue, onUpdated }) => {
   return (
     <>
       <Tooltip title={<FormattedMessage id="action.edit" />}>
-        <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.id}/edit`)}><EditIcon /></IconButton>
+        <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/edit`)}><EditIcon /></IconButton>
       </Tooltip>
       <IssueDeleteButton issue={issue} onDeleted={onUpdated} />
     </>
@@ -81,6 +81,7 @@ IssueMenu.propTypes = {
     id: PropTypes.number,
     periodicalId: PropTypes.number,
     issueDate: PropTypes.string,
+    issueNumber: PropTypes.number,
   }).isRequired,
 
   onUpdated: PropTypes.func.isRequired,
@@ -102,7 +103,7 @@ const IssueListItem = ({ issue, onUpdated }) => {
       sx={{ cursor: 'default' }}
     >
       {matches && (
-      <ListItemIcon onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.id}/articles`)} sx={{ mr: theme.spacing(1) }}>
+      <ListItemIcon onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`)} sx={{ mr: theme.spacing(1) }}>
         <Avatar
           variant="square"
           src={(issue.links ? issue.links.image : null) || helpers.defaultPeriodicalImage}
@@ -116,7 +117,7 @@ const IssueListItem = ({ issue, onUpdated }) => {
         primary={(
           <Grid container justifyContent="space-between" sx={{ backgroundColor: 'grey' }}>
             <Grid item sm={6}>
-              <Link to={`/periodicals/${issue.periodicalId}/issues/${issue.id}/articles`}>{issue.issueNumber}</Link>
+              <Link to={`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`}>{issue.issueNumber}</Link>
             </Grid>
           </Grid>
 )}

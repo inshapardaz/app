@@ -427,6 +427,8 @@
 	"issues.action.confirmDelete" : "کیا آپ شمارے {title} کو حذف کرنا چاہیں گے؟ اس کے ساتھ ہی تمام مضامین بھی حذف ہو جائیں گے۔.",
 	"issue.editor.header.add" : "شمارے کا اضافہ",
 	"issue.editor.header.edit" : "{issueNumber} کی تدوین",
+	"issue.label.issueNumber" : "شمارہ نمبر {issueNumber}",
+	"issue.label.volumeNumber" : "جلد نمبر {volumeNumber}",
 	"status.Available" : "دستیاب",
 	"status.Typing": "ٹائپنگ",
 	"status.Typed": "ٹائپ مکمل",

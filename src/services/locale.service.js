@@ -1,10 +1,18 @@
 /* eslint-disable class-methods-use-this */
 import { createIntlCache, createIntl } from 'react-intl';
+import moment from 'moment';
 
 import enMessages from '@/i18n/en.json';
 import urMessages from '@/i18n/ur.json';
 
 let intl = {};
+
+function getISOLocale(locale) {
+  switch (locale.toLowerCase()) {
+    case 'ur': return 'ur-PK';
+    default: return 'en';
+  }
+}
 
 class LocaleService {
   initLocale() {
@@ -24,6 +32,7 @@ class LocaleService {
 
   setCurrentLanguage(locale) {
     window.localStorage.setItem('language', locale);
+    moment.locale(getISOLocale(locale));
     const isRtl = this.isRtl();
     const messages = this.getMessages();
     const cache = createIntlCache();

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
 
 // MUI
 import Card from '@mui/material/Card';
@@ -26,7 +27,7 @@ const IssueCard = ({ issue, onUpdated }) => {
     if (issue && issue.links && issue.links.update) {
       return (
         <Tooltip title={<FormattedMessage id="action.edit" />}>
-          <IconButton component={Link} to={`/periodicals/${issue.periodicalId}/issues/${issue.id}/edit`}>
+          <IconButton component={Link} to={`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/edit`}>
             <EditOutlinedIcon />
           </IconButton>
         </Tooltip>
@@ -35,7 +36,7 @@ const IssueCard = ({ issue, onUpdated }) => {
     return null;
   };
 
-  const onOpen = () => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.id}/articles`);
+  const onOpen = () => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`);
 
   return (
     <Card sx={{
@@ -61,12 +62,14 @@ const IssueCard = ({ issue, onUpdated }) => {
         <Grid container justifyContent="stretch">
           <Grid item>
             <Tooltip title={issue.issueNumber} aria-label={issue.issueNumber}>
-              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${issue.periodicalId}/issues/${issue.id}/articles`} sx={{ width: '100%' }}>
-                {issue.issueNumber}
+              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`} sx={{ width: '100%' }}>
+                { moment(issue.issueDate).format('MMMM YYYY') }
               </Typography>
             </Tooltip>
             <Typography variant="body2" color="textSecondary" component="p">
-              {issue.volumeNumber}
+              {issue.issueNumber && issue.issueNumber > 0 && <FormattedMessage id="issue.label.issueNumber" values={{ issueNumber: issue.issueNumber }} /> }
+              {issue.volumeNumber && issue.volumeNumber > 0 && <span style={{ padding: '0 10px' }}>•</span>}
+              {issue.volumeNumber && issue.volumeNumber > 0 && <FormattedMessage id="issue.label.volumeNumber" values={{ volumeNumber: issue.volumeNumber }} />}
             </Typography>
           </Grid>
         </Grid>

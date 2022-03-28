@@ -432,6 +432,8 @@
 	"issues.action.confirmDelete" : "Do you want to remove {title}? It will remove all its articles.",
 	"issue.editor.header.add" : "Create new issue",
 	"issue.editor.header.edit" : "Editing {issueNumber} issue",
+	"issue.label.issueNumber" : "Issue Number {issueNumber}",
+	"issue.label.volumeNumber" : "Volume Number {volumeNumber}",
 	"status.Available" : "Available",
 	"status.Typing": "In Typing",
 	"status.Typed": "Typed",
