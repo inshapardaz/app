@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
 import { stateToMarkdown } from 'draft-js-export-markdown';
@@ -28,10 +28,9 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import BuildIcon from '@mui/icons-material/Build';
 
 // Local Imports
+import actions from '@/actions';
 import FontMenu from '@/components/fontMenu';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
-import replaceList from './replaceList.json';
-import autoFixList from './autoFixList.json';
 
 const convertToMarkdown = (editorState) => stateToMarkdown(editorState.getCurrentContent());
 const convertToDraftJs = (markdownData) => {
@@ -39,11 +38,21 @@ const convertToDraftJs = (markdownData) => {
   return EditorState.createWithContent(contentState);
 };
 
+const getReplaceAllRegex = (dict) => {
+  let retVal = '';
+  for (const key in dict) {
+    retVal += `(${key})|`;
+  }
+
+  return new RegExp(`\\b${retVal.slice(0, -1)}\\b`, 'giu');
+};
+
 const Editor = ({
   identifier, content, label, onSave, onDirty,
   startToolbar, endToolbar, secondaryView, message,
   allowFullScreen, allowOcr,
 }) => {
+  const dispatch = useDispatch();
   const [font, setFont] = useState(localStorage.getItem('editor-font') || null);
   const [textScale, setTextScale] = useState(localStorage.getItem('editor.fontSize') || 1.0);
   const [loadedSavedData, setLoadedSavedData] = useState(false);
@@ -52,6 +61,8 @@ const Editor = ({
   const [saving, setSaving] = useState(false);
   const [editorState, setEditorState] = React.useState(MUIEditorState.createEmpty());
   const language = useSelector((state) => state.localeReducer.language);
+  const punctuationCorrections = useSelector((state) => state.toolsReducer.punctuationCorrections);
+  const autoFixCorrections = useSelector((state) => state.toolsReducer.autoFixCorrections);
 
   const config = {
     lang: language,
@@ -103,6 +114,12 @@ const Editor = ({
       setLoadedSavedData(false);
     }
   }, [identifier, content]);
+
+  useEffect(() => {
+    console.log(`Loading corrections for ${language}`);
+    dispatch(actions.getPunctuationCorrections(language));
+    dispatch(actions.getAutoFixCorrections(language));
+  }, []);
 
   const onChange = (newState) => {
     const currentContent = newState.getCurrentContent();
@@ -156,14 +173,11 @@ const Editor = ({
     let markDown = convertToMarkdown(editorState);
     markDown = markDown.replace(/  +/g, ' ');
 
-    for (const [key, value] of Object.entries(replaceList)) {
+    for (const [key, value] of Object.entries(punctuationCorrections)) {
       markDown = markDown.replaceAll(key, value);
     }
 
-    for (const [key, value] of Object.entries(autoFixList)) {
-      const regex = new RegExp(`\\b${key}\\b`, 'gi');
-      markDown = markDown.replace(regex, value);
-    }
+    markDown = markDown.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
 
     const draftJs = convertToDraftJs(markDown);
     setEditorState(draftJs);

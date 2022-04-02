@@ -5,6 +5,7 @@ import localeReducer from './locale.reducer';
 import notificationReducer from './notification.reducer';
 import uiReducer from './ui.reducer';
 import libraryReducer from './library.reducer';
+import toolsReducer from './tools.reducer';
 
 const createRootReducer = (history) => combineReducers({
   router: connectRouter(history),
@@ -13,6 +14,7 @@ const createRootReducer = (history) => combineReducers({
   notificationReducer,
   uiReducer,
   libraryReducer,
+  toolsReducer,
 });
 
 export default createRootReducer;
