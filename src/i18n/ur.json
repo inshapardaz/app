@@ -490,5 +490,21 @@
 	"reader.previous" : "پچھلا صفحہ",
 	"reader.next" : "اگلا صفحہ",
 	"reader.singlePage" : "ایک صفحہ",
-	"reader.twoPages" : "دو صفحات"
+	"reader.twoPages" : "دو صفحات",
+	"correction.profile.label" : "تصحیحات",
+	"correction.action.create" : "تحیح کا اضافہ کریں",
+	"correction.action.confirmDelete": "کیا آپ تصحیح `{incorrectText}` حذف کرنا چاہیں گے؟",
+	"corrections.profile.punctuation": "املا",
+	"corrections.profile.autoCorrect": "خودکار تصیح",
+	"corrections.messages.empty" : "کوئی تصحیح موجود نہیں",
+	"correction.messages.saved"  :"ٹصحیح میں تبدیلی محفوظ ہو گئی ہے۔",
+	"corrections.messages.deleted" : "تصحیح حذف کر دی گئی ہے",
+	"corrections.messages.error.delete" : "تصحیح کو حذف نہیں کیا جا سکا",
+	"corrections.messages.error.loading" : "تصحیحات حاصل نہیں کی جا سکیں",
+	"correction.incorrectText.error.required" : "غلط متن ضروری ہے",
+	"correction.correctText.error.required" : "صحیح متن ضروری ہے۔",
+	"correction.messages.error.saving" : "تصحیح میں تبدیلی محفوظ نہیں ہو سکی",
+	"correction.incorrectText.label" : "غلط متن",
+	"correction.correctText.label" : "درست متن",
+	"language.placeholder": "زبان منتخب کریں۔۔۔"
 }

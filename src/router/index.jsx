@@ -38,10 +38,13 @@ import PageEditorPage from '@/pages/books/pages/edit';
 import ChapterContentEditor from '@/pages/chapters/edit';
 import ChapterViewer from '@/pages/chapters/view';
 import SeriePage from '@/pages/series/serie';
-import PeriodicalsPage from '../pages/periodicals';
-import PeriodicalEditPage from '../pages/periodicals/edit';
-import IssuesPage from '../pages/periodicals/issues';
-import IssuesEditPage from '../pages/periodicals/issues/edit';
+import PeriodicalsPage from '@/pages/periodicals';
+import PeriodicalEditPage from '@/pages/periodicals/edit';
+import IssuesPage from '@/pages/periodicals/issues';
+import IssuesEditPage from '@/pages/periodicals/issues/edit';
+
+import CorrectionsListPage from '@/pages/tools/corrections';
+import CorrectionEditPage from '@/pages/tools/corrections/edit';
 
 import Error403 from '@/pages/error/403';
 import Error404 from '@/pages/error/404';
@@ -91,6 +94,9 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/create" component={IssuesEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/issues" component={IssuesPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals" component={PeriodicalsPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/add" component={CorrectionEditPage} exact />
+      <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/:incorrectText/edit" component={CorrectionEditPage} exact />
+      <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language?/:profile?" component={CorrectionsListPage} exact />
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       <Route path="/error/403"><Error403 /></Route>
       <Route path="/error/404"><Error404 /></Route>

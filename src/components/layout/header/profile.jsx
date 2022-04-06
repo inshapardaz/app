@@ -20,6 +20,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import FaceIcon from '@mui/icons-material/Face';
+import SpellcheckIcon from '@mui/icons-material/Spellcheck';
 
 // Local Import
 import actions from '@/actions';
@@ -117,14 +118,24 @@ const ProfileMenu = () => {
                     </Typography>
                   </MenuItem>
                   {user.isSuperAdmin && (
-                  <MenuItem component={Link} onClick={handleClose} to="/admin/libraries" data-ft="admin-link">
-                    <ListItemIcon>
-                      <SupervisorAccountIcon fontSize="small" />
-                    </ListItemIcon>
-                    <Typography variant="inherit" noWrap>
-                      <FormattedMessage id="header.administration" />
-                    </Typography>
-                  </MenuItem>
+                    <MenuItem component={Link} onClick={handleClose} to="/admin/libraries" data-ft="admin-link">
+                      <ListItemIcon>
+                        <SupervisorAccountIcon fontSize="small" />
+                      </ListItemIcon>
+                      <Typography variant="inherit" noWrap>
+                        <FormattedMessage id="header.administration" />
+                      </Typography>
+                    </MenuItem>
+                  )}
+                  {user.isSuperAdmin && (
+                    <MenuItem component={Link} onClick={handleClose} to="/tools/corrections" data-ft="correction-link">
+                      <ListItemIcon>
+                        <SpellcheckIcon fontSize="small" />
+                      </ListItemIcon>
+                      <Typography variant="inherit" noWrap>
+                        <FormattedMessage id="correction.profile.label" />
+                      </Typography>
+                    </MenuItem>
                   )}
                   <Divider />
                   <MenuItem onClick={() => dispatch(actions.logoutAction())} data-ft="logout-link">

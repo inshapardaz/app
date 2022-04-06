@@ -13,7 +13,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import SpellcheckIcon from '@mui/icons-material/Spellcheck';
 import LoginIcon from '@mui/icons-material/Login';
 
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -62,6 +62,14 @@ const ProfileMobileMenu = ({ onClick, onKeyDown }) => {
           <SupervisorAccountIcon />
         </ListItemIcon>
         <ListItemText primary={<FormattedMessage id="header.administration" />} />
+      </ListItem>
+      )}
+      {user.isSuperAdmin && (
+      <ListItem button key="admin" component={Link} to="/tools/corrections" data-ft="corrections-link" onClick={onClick} onKeyDown={onKeyDown}>
+        <ListItemIcon>
+          <SpellcheckIcon />
+        </ListItemIcon>
+        <ListItemText primary={<FormattedMessage id="correction.profile.label" />} />
       </ListItem>
       )}
       <Divider />

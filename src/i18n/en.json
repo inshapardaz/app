@@ -492,5 +492,21 @@
 	"reader.previous" : "Previous Page",
 	"reader.next" : "Next Page",
 	"reader.singlePage" : "Single Page",
-	"reader.twoPages" : "Two Pages"
+	"reader.twoPages" : "Two Pages",
+	"correction.profile.label" : "Corrections",
+	"correction.action.create" : "Add correction",
+	"correction.action.confirmDelete": "Delete correction `{incorrectText}`؟",
+	"corrections.profile.punctuation": "Punctuation",
+	"corrections.profile.autoCorrect": "Auto Correct",
+	"corrections.messages.empty" : "No correction found",
+	"correction.messages.saved"  :"Correction saved",
+	"corrections.messages.deleted" : "Correction deleted",
+	"corrections.messages.error.delete" : "Unable to delete correction",
+	"corrections.messages.error.loading" : "Error loading corrections",
+	"correction.incorrectText.error.required" : "Incorrect text is required.",
+	"correction.correctText.error.required" : "Correct text is required",
+	"correction.messages.error.saving" : "Correction cannot be saved",
+	"correction.incorrectText.label" : "Incorrect Text",
+	"correction.correctText.label" : "Correction",
+	"language.placeholder": "Select language..."
 }
