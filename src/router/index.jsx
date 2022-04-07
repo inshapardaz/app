@@ -95,7 +95,7 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/issues" component={IssuesPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals" component={PeriodicalsPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/add" component={CorrectionEditPage} exact />
-      <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/:incorrectText/edit" component={CorrectionEditPage} exact />
+      <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/:id/edit" component={CorrectionEditPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language?/:profile?" component={CorrectionsListPage} exact />
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       <Route path="/error/403"><Error403 /></Route>

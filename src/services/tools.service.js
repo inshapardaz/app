@@ -75,8 +75,8 @@ export default {
   getPunctuations: (language) => get(`${config.apiUrl}/tools/${language}/spellchecker/punctuation`),
   getAutoFixList: (language) => get(`${config.apiUrl}/tools/${language}/spellchecker/autocorrect`),
   getCorrections: (language, profile, query = null, pageNumber = 1, pageSize = 10) => get(`${config.apiUrl}/tools/${language}/corrections/${profile}?pageNumber=${pageNumber}&pageSize=${pageSize}${getQueryParameter(query)}`),
-  getCorrection: (language, profile, incorrectText) => get(`${config.apiUrl}/tools/${language}/corrections/${profile}/${incorrectText}`),
+  getCorrection: (language, profile, id) => get(`${config.apiUrl}/tools/${language}/corrections/${profile}/${id}`),
   addCorrection: (correction) => post(`${config.apiUrl}/tools/${correction.language}/corrections/${correction.profile}`, correction),
-  updateCorrection: (correction) => put(`${config.apiUrl}/tools/${correction.language}/corrections/${correction.profile}/${correction.incorrectText}`, correction),
-  deleteCorrection: (correction) => _delete(`${config.apiUrl}/tools/${correction.language}/corrections/${correction.profile}/${correction.incorrectText}`),
+  updateCorrection: (correction) => put(`${config.apiUrl}/tools/${correction.language}/corrections/${correction.profile}/${correction.id}`, correction),
+  deleteCorrection: (correction) => _delete(`${config.apiUrl}/tools/${correction.language}/corrections/${correction.profile}/${correction.id}`),
 };

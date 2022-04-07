@@ -17,7 +17,7 @@ import Busy from '@/components/busy';
 import CenteredContent from '@/components/layout/centeredContent';
 
 const CorrectionEditPage = () => {
-  const { language, profile, incorrectText } = useParams();
+  const { language, profile, id } = useParams();
   const history = useHistory();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -38,16 +38,16 @@ const CorrectionEditPage = () => {
   });
 
   useEffect(() => {
-    if (incorrectText) {
+    if (id) {
       setBusy(true);
-      toolsService.getCorrection(language, profile, incorrectText)
+      toolsService.getCorrection(language, profile, id)
         .then((res) => setCorrection(res))
         .then(() => setBusy(false))
         .catch(() => {
           setBusy(false);
         });
     }
-  }, [language, profile, incorrectText]);
+  }, [language, profile, id]);
 
   const onSubmit = (fields, { setSubmitting }) => {
     setBusy(true);

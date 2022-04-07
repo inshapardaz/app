@@ -26,7 +26,7 @@ const CorrectionListItem = ({ correction, onDeleted }) => {
       secondaryAction={(
         <>
           <Tooltip title={<FormattedMessage id="action.edit" />}>
-            <IconButton onClick={() => history.push(`/tools/corrections/${correction.language}/${correction.profile}/${correction.incorrectText}/edit`)}><EditIcon /></IconButton>
+            <IconButton onClick={() => history.push(`/tools/corrections/${correction.language}/${correction.profile}/${correction.id}/edit`)}><EditIcon /></IconButton>
           </Tooltip>
           <CorrectionDeleteButton correction={correction} onDeleted={onDeleted} />
         </>
@@ -45,6 +45,7 @@ const CorrectionListItem = ({ correction, onDeleted }) => {
 
 CorrectionListItem.propTypes = {
   correction: PropTypes.shape({
+    id: PropTypes.number,
     language: PropTypes.string,
     profile: PropTypes.string,
     incorrectText: PropTypes.string,
