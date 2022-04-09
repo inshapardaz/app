@@ -42,7 +42,7 @@ import PeriodicalsPage from '@/pages/periodicals';
 import PeriodicalEditPage from '@/pages/periodicals/edit';
 import IssuesPage from '@/pages/periodicals/issues';
 import IssuesEditPage from '@/pages/periodicals/issues/edit';
-
+import UserPages from '@/pages/account/userPages';
 import CorrectionsListPage from '@/pages/tools/corrections';
 import CorrectionEditPage from '@/pages/tools/corrections/edit';
 
@@ -61,7 +61,8 @@ const Routes = () => {
       <Route path="/account/reset-password"><ResetPasswordPage /></Route>
       <PrivateRoute layout={EmptyLayout} path="/account/change-password" component={ChangePasswordPage} />
       <PrivateRoute layout={EmptyLayout} path="/account/libraries" component={UserLibrariesPage} />
-      <PrivateRoute layout={FullWidthLayout} path="/profile" component={ProfilePage} />
+      <PrivateRoute layout={FullWidthLayout} path="/profile" component={ProfilePage} exact />
+      <PrivateRoute layout={FullWidthLayout} path="/profile/pages" component={UserPages} exact />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/:libraryId/edit" component={LibraryEditPage} adminOnly exact />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/create" component={LibraryEditPage} adminOnly exact />
       <PrivateRoute layout={FullWidthLayout} path="/admin/libraries/:libraryId/users/:userId/edit" component={LibraryUserPage} adminOnly exact />

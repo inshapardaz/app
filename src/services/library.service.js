@@ -243,6 +243,7 @@ export default {
   createPage: (url, page) => post(url, page),
   updatePage: (url, page) => put(url, page),
   deletePage: (page) => _delete(page.links.delete),
+  getMyPages: (url, status = 'Typing', page = 1, pageSize = 12) => get(`${url}?pageNumber=${page}&pageSize=${pageSize}${status ? `&status=${status}` : ''}`),
 
   // Periodicals
 

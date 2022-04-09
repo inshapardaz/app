@@ -506,5 +506,6 @@
 	"correction.messages.error.saving" : "تصحیح میں تبدیلی محفوظ نہیں ہو سکی",
 	"correction.incorrectText.label" : "غلط متن",
 	"correction.correctText.label" : "درست متن",
-	"language.placeholder": "زبان منتخب کریں۔۔۔"
+	"language.placeholder": "زبان منتخب کریں۔۔۔",
+	"my.pages.title" : "میرے صفحات"
 }
