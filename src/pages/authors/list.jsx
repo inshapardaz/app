@@ -6,6 +6,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import queryString from 'query-string';
 
 // MUI
+import { useTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -21,6 +22,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 // Local Imports
 import { libraryService } from '@/services';
+import AuthorTypes from '@/models/authorTypes';
 import Busy from '@/components/busy';
 import Empty from '@/components/empty';
 import Error from '@/components/error';
@@ -31,6 +33,7 @@ import SearchBox from '@/components/searchBox';
 
 const AuthorsPage = () => {
   const intl = useIntl();
+  const theme = useTheme();
   const location = useLocation();
   const history = useHistory();
   const library = useSelector((state) => state.libraryReducer.library);
@@ -38,6 +41,7 @@ const AuthorsPage = () => {
   const [error, setError] = useState(false);
   const [authors, setAuthors] = useState(null);
   const [showCards, setShowCards] = useState(localStorage.getItem('authorsCardView') === 'true');
+  const [showPoets, setShowPoets] = useState(localStorage.getItem('showPoets') === 'true');
   const [query, setQuery] = useState(null);
 
   const loadData = () => {
@@ -46,7 +50,7 @@ const AuthorsPage = () => {
       setError(false);
       const values = queryString.parse(location.search);
 
-      libraryService.getAuthors(library.links.authors, values.query, values.page)
+      libraryService.getAuthors(library.links.authors, values.query, showPoets ? AuthorTypes.Poet : AuthorTypes.Writer, values.page)
         .then((res) => {
           setAuthors(res);
           setQuery(values.query);
@@ -82,7 +86,7 @@ const AuthorsPage = () => {
     if (!busy && authors) {
       return (
         <Pagination
-          sx={{ my: (theme) => theme.spacing(2) }}
+          sx={{ my: theme.spacing(2) }}
           page={authors.currentPageIndex}
           count={authors.pageCount}
           renderItem={(item) => (
@@ -102,6 +106,13 @@ const AuthorsPage = () => {
   const toggleView = () => {
     localStorage.setItem('authorsCardView', !showCards);
     setShowCards(!showCards);
+  };
+
+  const toggleAuthorType = (e, newValue) => {
+    if (newValue === showPoets) return;
+    localStorage.setItem('showPoets', newValue);
+    setShowPoets(newValue);
+    loadData();
   };
 
   const renderList = () => (
@@ -124,7 +135,7 @@ const AuthorsPage = () => {
 
   return (
     <div data-ft="authors-page">
-      <Helmet title={intl.formatMessage({ id: 'header.authors' })} />
+      <Helmet title={intl.formatMessage({ id: showPoets ? 'header.poets' : 'header.writers' })} />
       <CenteredContent>
         <Toolbar>
           <Typography
@@ -133,7 +144,7 @@ const AuthorsPage = () => {
             component="div"
             sx={{ pr: 2 }}
           >
-            <FormattedMessage id="header.authors" />
+            <FormattedMessage id={showPoets ? 'header.poets' : 'header.writers'} />
           </Typography>
           {authors && authors.links.create && (
             <Button
@@ -149,6 +160,21 @@ const AuthorsPage = () => {
           )}
           <div style={{ flexGrow: 1 }} />
           <SearchBox value={query} onChange={updateQuery} />
+          <ToggleButtonGroup
+            value={showPoets}
+            exclusive
+            size="small"
+            onChange={toggleAuthorType}
+            aria-label="view"
+            sx={{ mr: theme.spacing(2) }}
+          >
+            <ToggleButton value={false} aria-label="show writers">
+              <FormattedMessage id="authorTypes.writer" />
+            </ToggleButton>
+            <ToggleButton value aria-label="show poets">
+              <FormattedMessage id="authorTypes.poet" />
+            </ToggleButton>
+          </ToggleButtonGroup>
           <ToggleButtonGroup
             value={showCards}
             exclusive

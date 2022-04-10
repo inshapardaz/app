@@ -14,6 +14,7 @@ import {
   Formik, Field, Form,
 } from 'formik';
 import { TextField } from 'formik-mui';
+import AuthorTypeDropDown from '@/components/authors/authorTypeDropDown';
 
 // Local Imports
 import ImageUpload from '@/components/imageUpload';
@@ -37,11 +38,14 @@ const AuhtorEditPage = () => {
   const initialValues = {
     name: '',
     description: '',
+    authorType: 'writer',
   };
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
       .required(intl.formatMessage({ id: 'author.editor.fields.name.error' })),
+    authorType: Yup.string()
+      .required(intl.formatMessage({ id: 'author.editor.fields.authorType.error' })),
   });
 
   useEffect(() => {
@@ -130,6 +134,14 @@ const AuhtorEditPage = () => {
                     fullWidth
                     label={<FormattedMessage id="author.editor.fields.name.title" />}
                     error={errors.name && touched.name}
+                  />
+                  <AuthorTypeDropDown
+                    name="authorType"
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    label={intl.formatMessage({ id: 'author.editor.fields.authorType.title' })}
+                    error={errors.authorType && touched.authorType}
                   />
                   <Field
                     component={TextField}

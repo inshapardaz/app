@@ -150,7 +150,7 @@ export default {
 
   updateAuthor: (url, author) => put(url, author),
 
-  getAuthors: (url, query = null, pageNumber = 1, pageSize = 12) => get(`${url}?pageNumber=${pageNumber}&pageSize=${pageSize}${getQueryParameter(query)}`),
+  getAuthors: (url, query = null, authorType = null, pageNumber = 1, pageSize = 12) => get(`${url}?pageNumber=${pageNumber}&pageSize=${pageSize}${getQueryParameter(query)}${authorType ? `&authorType=${authorType}` : ''}`),
 
   getAuthorById: (libraryId, authorId) => get(`${librariesUrl()}/${libraryId}/authors/${authorId}`),
 

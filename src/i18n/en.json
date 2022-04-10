@@ -128,6 +128,8 @@
 	"header.books": "Books",
 	"header.books.list": "All Books",
 	"header.authors": "Authors",
+	"header.poets": "Poets",
+	"header.writers": "Writers",
 	"header.publishing": "Publishing",
 	"header.profile" : "Profile",
 	"header.search" : "Search...",
@@ -243,6 +245,8 @@
     "author.editor.header.edit" : "Editing author {name}",
     "author.editor.fields.name.title" : "Name",
     "author.editor.fields.name.error" : "Name is required",
+	"author.editor.fields.authorType.title" : "Type",
+    "author.editor.fields.authorType.error" : "Type is required",
 	"author.editor.fields.name.description.title" : "Description",
     "author.messages.error.loading" : "Unable to load author",
     "authors.item.book.count" : "{count} Books",
@@ -509,5 +513,7 @@
 	"correction.incorrectText.label" : "Incorrect Text",
 	"correction.correctText.label" : "Correction",
 	"language.placeholder": "Select language...",
-	"my.pages.title" : "My Pages"
+	"my.pages.title" : "My Pages",
+	"authorTypes.writer" : "Writer",
+	"authorTypes.poet" : "Poet"
 }
