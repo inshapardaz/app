@@ -14,10 +14,6 @@ import Avatar from '@mui/material/Avatar';
 import { libraryService } from '@/services/';
 import PageStatusIcon from '@/components/pages/pageStatusIcon';
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 const PublicationSummary = () => {
   const library = useSelector((state) => state.libraryReducer.library);
   const [summary, setSummary] = React.useState(null);
@@ -40,23 +36,26 @@ const PublicationSummary = () => {
     }
   }, [library]);
 
+  if (busy || error) return null;
+
   const renderList = () => (
     <List>
       {summary.map((item) => (
         <ListItem disablePadding>
-          {/* <ListItemAvatar>
+          <ListItemAvatar>
             <Avatar>
               <PageStatusIcon status={item.status} />
             </Avatar>
-          </ListItemAvatar> */}
+          </ListItemAvatar>
           <ListItemText
-            primary={<FormattedMessage id={`status.${capitalizeFirstLetter(item.status)}`} />}
+            primary={<FormattedMessage id={`status.${item.status}`} />}
             secondary={<FormattedMessage id="pages.count" values={{ count: item.count }} />}
           />
         </ListItem>
       ))}
     </List>
   );
+
   return (
     <>
       <Typography variant="h5"><FormattedMessage id="publication.contributions" /></Typography>
