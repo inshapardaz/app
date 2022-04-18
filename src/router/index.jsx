@@ -42,6 +42,7 @@ import PeriodicalsPage from '@/pages/periodicals';
 import PeriodicalEditPage from '@/pages/periodicals/edit';
 import IssuesPage from '@/pages/periodicals/issues';
 import IssuesEditPage from '@/pages/periodicals/issues/edit';
+import IssuesArticlesPage from '@/pages/periodicals/issues/articles';
 import UserPages from '@/pages/account/userPages';
 import CorrectionsListPage from '@/pages/tools/corrections';
 import CorrectionEditPage from '@/pages/tools/corrections/edit';
@@ -94,6 +95,7 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/:issueId/edit" component={IssuesEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/create" component={IssuesEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/issues" component={IssuesPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/:issueId/articles" component={IssuesArticlesPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals" component={PeriodicalsPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/add" component={CorrectionEditPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/:id/edit" component={CorrectionEditPage} exact />

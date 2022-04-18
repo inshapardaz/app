@@ -44,13 +44,13 @@ const AuthorsPage = () => {
   const [showPoets, setShowPoets] = useState(localStorage.getItem('showPoets') === 'true');
   const [query, setQuery] = useState(null);
 
-  const loadData = () => {
+  const loadData = (_showPoets) => {
     if (library != null) {
       setBusy(true);
       setError(false);
       const values = queryString.parse(location.search);
 
-      libraryService.getAuthors(library.links.authors, values.query, showPoets ? AuthorTypes.Poet : AuthorTypes.Writer, values.page)
+      libraryService.getAuthors(library.links.authors, values.query, _showPoets ? AuthorTypes.Poet : AuthorTypes.Writer, values.page)
         .then((res) => {
           setAuthors(res);
           setQuery(values.query);
@@ -64,7 +64,7 @@ const AuthorsPage = () => {
   };
 
   useEffect(() => {
-    loadData();
+    loadData(showPoets);
   }, [library, location]);
 
   const buildLinkToPage = (page, q) => {
@@ -109,10 +109,11 @@ const AuthorsPage = () => {
   };
 
   const toggleAuthorType = (e, newValue) => {
-    if (newValue === showPoets) return;
-    localStorage.setItem('showPoets', newValue);
-    setShowPoets(newValue);
-    loadData();
+    if (newValue !== null) {
+      localStorage.setItem('showPoets', newValue);
+      setShowPoets(newValue);
+      loadData(newValue);
+    }
   };
 
   const renderList = () => (

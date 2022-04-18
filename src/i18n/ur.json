@@ -123,6 +123,8 @@
     "header.series": "سلسلہ جات",
 	"header.periodicals": "میعادی مطبوعات",
 	"header.issues": "{title} کے شمارے",
+	"header.issue": "{title} کا شمارہ {issue}",
+	"header.articles": "{title} کے شمارے {issue} کی تفصیل",
     "header.settings": "ترجیحات",
     "header.search": "تلاش۔۔۔",
     "header.books": "کتابیں",
@@ -513,5 +515,7 @@
 	"language.placeholder": "زبان منتخب کریں۔۔۔",
 	"my.pages.title" : "میرے صفحات",
 	"authorTypes.writer" : "مصنّف",
-	"authorTypes.poet" : "شاعر"
+	"authorTypes.poet" : "شاعر",
+	"issue.publishedOn" : "تاریخ اشاعت {date}",
+	"periodical.issue.count" : "{count} شمارے"
 }

@@ -84,13 +84,21 @@ const PeriodicalEditPage = () => {
         .then((res) => {
           uploadImage(res)
             .then(() => showSuccess(setSubmitting), () => showError(setSubmitting));
-        }, () => showError(setSubmitting));
+        })
+        .catch(() => {
+          showError(setSubmitting);
+        })
+        .finally(() => setBusy(false));
     } else {
       libraryService.createPeriodical(library.links.create_periodical, data)
         .then((res) => {
           uploadImage(res)
             .then(() => showSuccess(setSubmitting), () => showError(setSubmitting));
-        }, () => showError(setSubmitting));
+        })
+        .catch(() => {
+          showError(setSubmitting);
+        })
+        .finally(() => setBusy(false));
     }
   };
 

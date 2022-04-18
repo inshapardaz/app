@@ -36,6 +36,11 @@ export default {
     ev.target.src = this.defaultPeriodicalImage;
   },
 
+  defaultIssueImage: '/images/periodical_placeholder.png',
+  setDefaultIssueImage: (ev) => {
+    ev.target.src = this.defaultIssueImage;
+  },
+
   parseNullableBool: (val) => {
     if (val === 'true') {
       return true;

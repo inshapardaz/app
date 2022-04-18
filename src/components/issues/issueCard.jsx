@@ -52,9 +52,9 @@ const IssueCard = ({ issue, onUpdated }) => {
           alt={issue.issueNumber}
           width="282"
           height="350"
-          image={(issue.links ? issue.links.image : null) || helpers.defaultPeriodicalImage}
+          image={(issue.links ? issue.links.image : null) || helpers.defaultIssueImage}
           title={issue.issueNumber}
-          onError={helpers.setDefaultPeriodicalImage}
+          onError={helpers.setDefaultIssueImage}
           onClick={() => onOpen()}
         />
       </CardActionArea>

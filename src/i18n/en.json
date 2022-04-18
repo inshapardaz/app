@@ -124,6 +124,8 @@
 	"header.series": "Series",
 	"header.periodicals": "Periodicals",
 	"header.issues": "Issues for {title}",
+	"header.issue": "Issue {issue} of {title} ",
+	"header.articles": "Contents of Issue {issue} for {title}",
 	"header.settings": "Settings",
 	"header.books": "Books",
 	"header.books.list": "All Books",
@@ -515,5 +517,7 @@
 	"language.placeholder": "Select language...",
 	"my.pages.title" : "My Pages",
 	"authorTypes.writer" : "Writer",
-	"authorTypes.poet" : "Poet"
+	"authorTypes.poet" : "Poet",
+	"issue.publishedOn" : "Published On {date}",
+	"periodical.issue.count" : "{count} issues"
 }

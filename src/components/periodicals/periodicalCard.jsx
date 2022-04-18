@@ -66,6 +66,9 @@ const PeriodicalCard = ({ periodical, onUpdated }) => {
               </Typography>
             </Tooltip>
             <Typography variant="body2" color="textSecondary" component="p">
+              <FormattedMessage id="periodical.issue.count" values={{ count: periodical.issueCount }} />
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
               {helpers.truncateWithEllipses(periodical.description, 45)}
             </Typography>
           </Grid>
@@ -87,7 +90,8 @@ PeriodicalCard.propTypes = {
     id: PropTypes.number,
     title: PropTypes.string,
     description: PropTypes.string,
-    authors: PropTypes.arrayOf(PropTypes.shape({
+    issueCount: PropTypes.number,
+    periodical: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
     })),

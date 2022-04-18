@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { useHistory, Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import moment from 'moment';
 
 // MUI
 import { useTheme } from '@mui/material/styles';
@@ -106,8 +107,8 @@ const IssueListItem = ({ issue, onUpdated }) => {
       <ListItemIcon onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`)} sx={{ mr: theme.spacing(1) }}>
         <Avatar
           variant="square"
-          src={(issue.links ? issue.links.image : null) || helpers.defaultPeriodicalImage}
-          imgProps={{ onError: helpers.setDefaultPeriodicalImage }}
+          src={(issue.links ? issue.links.image : null) || helpers.defaultIssueImage}
+          imgProps={{ onError: helpers.setDefaultIssueImage }}
           sx={{ cursor: 'pointer', width: 120, height: 150 }}
         />
       </ListItemIcon>
@@ -117,7 +118,7 @@ const IssueListItem = ({ issue, onUpdated }) => {
         primary={(
           <Grid container justifyContent="space-between" sx={{ backgroundColor: 'grey' }}>
             <Grid item sm={6}>
-              <Link to={`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`}>{issue.issueNumber}</Link>
+              <Link to={`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`}>{ moment(issue.issueDate).format('MMMM YYYY') }</Link>
             </Grid>
           </Grid>
 )}
@@ -133,7 +134,11 @@ const IssueListItem = ({ issue, onUpdated }) => {
               color="textSecondary"
               component="span"
             >
-              {issue.volumeNumber}
+              <Typography variant="body2" color="textSecondary" component="p">
+                {issue.issueNumber && issue.issueNumber > 0 && <FormattedMessage id="issue.label.issueNumber" values={{ issueNumber: issue.issueNumber }} /> }
+                {issue.volumeNumber && issue.volumeNumber > 0 && <span style={{ padding: '0 10px' }}>•</span>}
+                {issue.volumeNumber && issue.volumeNumber > 0 && <FormattedMessage id="issue.label.volumeNumber" values={{ volumeNumber: issue.volumeNumber }} />}
+              </Typography>
             </Typography>
             )}
           </>

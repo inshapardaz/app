@@ -55,6 +55,7 @@ const IssueDeleteButton = ({ issue, onDeleted, button = false }) => {
 };
 
 IssueDeleteButton.defaultProps = {
+  issue: null,
   onDeleted: () => {},
   button: false,
 };
@@ -70,7 +71,7 @@ IssueDeleteButton.propTypes = {
     links: PropTypes.shape({
       delete: PropTypes.string,
     }),
-  }).isRequired,
+  }),
   button: PropTypes.bool,
   onDeleted: PropTypes.func,
 };

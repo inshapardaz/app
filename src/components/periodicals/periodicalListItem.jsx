@@ -117,24 +117,17 @@ const PeriodicalListItem = ({ periodical, onUpdated }) => {
               <Link to={`/periodicals/${periodical.id}/issues`}>{periodical.title}</Link>
             </Grid>
           </Grid>
-)}
-        secondaryTypographyProps={{ component: 'div' }}
+				)}
         secondary={(
           <>
+            <FormattedMessage id="periodical.issue.count" values={{ count: periodical.issueCount }} />
             {matches && (
-            <Typography
-              sx={{
-                pt: theme.spacing(1), mr: theme.spacing(1), mb: theme.spacing(2), display: 'block',
-              }}
-              variant="body2"
-              color="textSecondary"
-              component="span"
-            >
+            <Typography sx={{ pt: theme.spacing(1), mr: theme.spacing(8), display: 'block' }} variant="body2" color="textSecondary" component="span">
               {helpers.truncateWithEllipses(periodical.description, 500)}
             </Typography>
             )}
           </>
-)}
+			)}
       />
       <ListItemText />
       <ListItemSecondaryAction sx={{ top: 'auto', bottom: 0 }}>
