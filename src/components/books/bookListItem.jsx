@@ -109,8 +109,8 @@ const BookListItem = ({ book, onUpdated }) => {
       <ListItemIcon onClick={() => history.push(`/books/${book.id}`)} sx={{ mr: theme.spacing(1) }}>
         <Avatar
           variant="square"
-          src={(book.links ? book.links.image : null) || helpers.defaultAuthorImage}
-          imgProps={{ onError: helpers.setDefaultAuthorImage }}
+          src={(book.links ? book.links.image : null) || helpers.defaultBookImage}
+          imgProps={{ onError: helpers.defaultBookImage }}
           sx={{ cursor: 'pointer', width: 100, height: 150 }}
         />
       </ListItemIcon>
