@@ -46,6 +46,7 @@ import IssuesArticlesPage from '@/pages/periodicals/issues/articles';
 import UserPages from '@/pages/account/userPages';
 import CorrectionsListPage from '@/pages/tools/corrections';
 import CorrectionEditPage from '@/pages/tools/corrections/edit';
+import PublishingPage from '@/pages/publishing';
 
 import Error403 from '@/pages/error/403';
 import Error404 from '@/pages/error/404';
@@ -81,6 +82,7 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/authors/create" component={AuthorEditPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/authors/:authorId/edit" component={AuthorEditPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/authors/:authorId" component={AuthorPage} exact />
+      <PrivateRoute layout={FullWidthLayout} path="/publishing" component={PublishingPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/books" component={BooksPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/books/create" component={BookEditPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId" component={BookPage} exact />

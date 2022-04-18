@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 
 // MUI
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
 const Empty = ({
-  items, message, children,
+  items, message, children, actionText, onAction,
 }) => {
   if (items == null || items.length < 1) {
     return (
@@ -31,6 +32,11 @@ const Empty = ({
             >
               {message}
             </Typography>
+            { onAction && (
+            <Button disableElevation fullWidth onClick={() => onAction && onAction()}>
+              {actionText}
+            </Button>
+            )}
           </Paper>
         </Box>
       </Container>
@@ -43,12 +49,16 @@ const Empty = ({
 Empty.defaultProps = {
   children: null,
   items: null,
+  onAction: null,
+  actionText: null,
 };
 
 Empty.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   items: PropTypes.array,
   message: PropTypes.node.isRequired,
+  actionText: PropTypes.node,
+  onAction: PropTypes.func,
   children: PropTypes.node,
 };
 

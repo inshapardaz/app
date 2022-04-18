@@ -17,7 +17,7 @@ const PublishingButton = ({ onClick, onKeyDown, mobile = false }) => {
   if (library && library.links.create_book) {
     if (mobile) {
       return (
-        <ListItem button key="publishing" component={Link} to="/books?page=1&status=beingTyped" data-ft="publishing-link" onClick={onClick} onKeyDown={onKeyDown}>
+        <ListItem button key="publishing" component={Link} to="/publishing" data-ft="publishing-link" onClick={onClick} onKeyDown={onKeyDown}>
           <ListItemIcon>
             <CreateIcon />
           </ListItemIcon>
@@ -31,7 +31,7 @@ const PublishingButton = ({ onClick, onKeyDown, mobile = false }) => {
         component={Link}
         color="inherit"
         variant="outlined"
-        to="/books?page=1&status=beingTyped"
+        to="/publishing"
         startIcon={<CreateIcon />}
       >
         <FormattedMessage id="header.publishing" />

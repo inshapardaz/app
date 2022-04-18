@@ -517,5 +517,10 @@
 	"authorTypes.writer" : "مصنّف",
 	"authorTypes.poet" : "شاعر",
 	"issue.publishedOn" : "تاریخ اشاعت {date}",
-	"periodical.issue.count" : "{count} شمارے"
+	"periodical.issue.count" : "{count} شمارے",
+	"publishing.label.typing" : "کتابیں جو آپ ٹائپ کر رہے ہیں",
+	"publishing.label.proofReading" : "کتابیں کو آپ پروف ریڈ کر رہے ہیں",
+	"publishing.label.seeMore" : "مزید جن کتابوں پر کام جاری ہے۔۔۔",
+	"publication.contributions" : "آپ کا شامل کردہ مواد",
+	"pages.count" : "{count} صفحات"
 }

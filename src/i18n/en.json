@@ -519,5 +519,10 @@
 	"authorTypes.writer" : "Writer",
 	"authorTypes.poet" : "Poet",
 	"issue.publishedOn" : "Published On {date}",
-	"periodical.issue.count" : "{count} issues"
+	"periodical.issue.count" : "{count} issues",
+	"publishing.label.typing" : "Books you are typing",
+	"publishing.label.proofReading" : "Books you are proof reading",
+	"publishing.label.seeMore" : "Find what in progress...",
+	"publication.contributions" : "Your contributions",
+	"pages.count" : "{count} pages"
 }

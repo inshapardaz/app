@@ -326,7 +326,8 @@ export default {
 
   // Accounts
   getWriters: (libraryId, query) => get(`${librariesUrl()}/${libraryId}/writers${query ? `?query=${query}` : ''}`),
-
+  getUserPublications: (url, status) => get(`${url}?status=${status}`),
+  getUserPublicationsSummary: (url) => get(url),
   upload,
   postMultipleFile: (url, files) => {
     const formData = new FormData();
