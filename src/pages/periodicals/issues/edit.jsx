@@ -13,6 +13,7 @@ import { Button, Grid, FormControl } from '@mui/material';
 import { Formik, Field, Form } from 'formik';
 import { TextField } from 'formik-mui';
 import { DatePicker } from 'formik-mui-lab';
+import * as moment from 'moment';
 
 // Local Imports
 import { libraryService } from '@/services/';
@@ -100,6 +101,8 @@ const IssueEditPage = () => {
   const onSubmit = (fields, { setSubmitting }) => {
     setBusy(true);
     const data = { ...fields };
+    const momentDate = moment(data.issueDate);
+    data.issueDate = momentDate.format('YYYY-MM-01');
     if (issue) {
       libraryService.updateIssue(issue.links.update, data)
         .then((res) => uploadImage(res))
