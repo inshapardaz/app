@@ -300,7 +300,7 @@ export default {
 
   updateIssue: (url, issue) => put(url, issue),
 
-  getIssueById: (libraryId, periodicalId, issueId) => get(`${librariesUrl()}/${libraryId}/periodicals/${periodicalId}/issues/${issueId}`),
+  getIssue: (libraryId, periodicalId, volumeNumber, issueNumber) => get(`${librariesUrl()}/${libraryId}/periodicals/${periodicalId}/volumes/${volumeNumber}/issues/${issueNumber}`),
 
   deleteIssue: (issue) => _delete(issue.links.delete),
 

@@ -94,10 +94,10 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/books/:bookId/chapters/:chapterNumber/edit" component={ChapterContentEditor} exact />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/create" component={PeriodicalEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/edit" component={PeriodicalEditPage} exact libraryWithPeriodicals />
-      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/:issueId/edit" component={IssuesEditPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/volumes/:volumeNumber/issues/:issueNumber/edit" component={IssuesEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/create" component={IssuesEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/issues" component={IssuesPage} exact libraryWithPeriodicals />
-      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/:issueId/articles" component={IssuesArticlesPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/volumes/:volumeNumber/issues/:issueNumber/articles" component={IssuesArticlesPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals" component={PeriodicalsPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/add" component={CorrectionEditPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/:id/edit" component={CorrectionEditPage} exact />

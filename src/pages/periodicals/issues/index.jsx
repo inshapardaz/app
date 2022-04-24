@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
+import {
+  useLocation, useParams, Link, useHistory,
+} from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import queryString from 'query-string';
 
 // MUI
 import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 // Local Imports
 import { libraryService } from '@/services';
+import helpers from '@/helpers';
 import IssuesList from '@/components/issues/issuesList';
-import PageHeader from '@/components/pageHeader';
+import PeriodicalDeleteButton from '@/components/periodicals/periodicalDeleteButton';
 
 const IssuesPage = () => {
   const intl = useIntl();
+  const history = useHistory();
   const location = useLocation();
   const { id } = useParams();
   const library = useSelector((state) => state.libraryReducer.library);
   const theme = useTheme();
-  const isAboveSmall = useMediaQuery(theme.breakpoints.up('md'));
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState(false);
   const [periodical, setPeriodical] = useState(null);
@@ -65,20 +72,57 @@ const IssuesPage = () => {
     if (library) loadPeriodical();
   }, [library, location]);
 
+  const renderEditLink = () => {
+    if (periodical && periodical.links && periodical.links.update) {
+      return (
+        <Tooltip title={<FormattedMessage id="action.edit" />}>
+          <Button
+            component={Link}
+            to={`/periodicals/${periodical.id}/edit`}
+            startIcon={<EditOutlinedIcon />}
+          >
+            <FormattedMessage id="action.edit" />
+          </Button>
+        </Tooltip>
+      );
+    }
+    return null;
+  };
+
   return (
     <div data-ft="issues-page">
       <Helmet title={intl.formatMessage({ id: 'header.issues' }, { title: periodical ? periodical.title : '' })} />
-      <PageHeader title={periodical ? periodical.title : ''} />
-      <IssuesList
-        busy={busy}
-        error={error}
-        issues={issues}
-        onUpdated={loadIssues}
-        library={library}
-        page={page}
-        sortDirection={sortDirection}
-        periodicalId={id}
-      />
+      <Grid container sx={{ mt: theme.spacing(2) }}>
+        <Grid item md={2}>
+          <Stack
+            spacing={2}
+            mt={4}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <img
+              style={{ maxWidth: '288px' }}
+              alt={periodical && periodical.title}
+              src={(periodical && periodical.links ? periodical.links.image : null) || helpers.defaultIssueImage}
+            />
+            {periodical ? periodical.title : ''}
+            {renderEditLink()}
+            { periodical && <PeriodicalDeleteButton periodical={periodical} button onDeleted={() => history.push('/periodicals')} />}
+          </Stack>
+        </Grid>
+        <Grid item md={10}>
+          <IssuesList
+            busy={busy}
+            error={error}
+            issues={issues}
+            onUpdated={loadIssues}
+            library={library}
+            page={page}
+            sortDirection={sortDirection}
+            periodicalId={id}
+          />
+        </Grid>
+      </Grid>
     </div>
   );
 };

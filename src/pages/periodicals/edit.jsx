@@ -18,6 +18,7 @@ import { libraryService } from '@/services/';
 import ImageUpload from '@/components/imageUpload';
 import PageHeader from '@/components/pageHeader';
 import Busy from '@/components/busy';
+import Error from '@/components/error';
 import CenteredContent from '@/components/layout/centeredContent';
 
 const PeriodicalEditPage = () => {
@@ -108,96 +109,103 @@ const PeriodicalEditPage = () => {
     }
   };
 
-  const title = periodical ? intl.formatMessage({ id: 'book.editor.header.edit' }, { title: periodical.title }) : intl.formatMessage({ id: 'book.editor.header.add' });
+  const title = periodical ? intl.formatMessage({ id: 'periodical.editor.header.edit' }, { title: periodical.title }) : intl.formatMessage({ id: 'periodicals.action.create' });
 
   return (
     <div data-ft="edit-book-page">
       <Helmet title={title} />
       <PageHeader title={title} />
       <Busy busy={busy} />
-      <CenteredContent>
-        <Formik
-          initialValues={periodical || initialValues}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
-          enableReinitialize
-        >
-          {({
-            errors, touched,
-          }) => (
-            <Form>
-              <Grid container spacing={3}>
-                <Grid item md={6}>
-                  <Field
-                    component={TextField}
-                    autoFocus
-                    name="title"
-                    type="text"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    label={<FormattedMessage id="periodical.editor.fields.name.title" />}
-                    error={errors.name && touched.name}
-                  />
-                  <Field
-                    component={TextField}
-                    name="description"
-                    type="text"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    multiline
-                    rows={5}
-                    label={<FormattedMessage id="periodical.editor.fields.description.title" />}
-                    error={errors.description && touched.description}
-                  />
-                </Grid>
-
-                <Grid item md={6}>
-                  <FormControl variant="outlined" margin="normal" fullWidth>
-                    <ImageUpload
-                      imageUrl={periodical && periodical.links ? periodical.links.image : null}
-                      defaultImage="/images/book_placeholder.jpg"
-                      onImageSelected={handleImageUpload}
-                      height="400"
+      <Error
+        error={error}
+        message={intl.formatMessage({ id: 'periodical.messages.notfound' })}
+        actionText={intl.formatMessage({ id: 'action.back' })}
+        onAction={() => history.goBack()}
+      >
+        <CenteredContent>
+          <Formik
+            initialValues={periodical || initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+            enableReinitialize
+          >
+            {({
+              errors, touched,
+            }) => (
+              <Form>
+                <Grid container spacing={3}>
+                  <Grid item md={6}>
+                    <Field
+                      component={TextField}
+                      autoFocus
+                      name="title"
+                      type="text"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      label={<FormattedMessage id="periodical.editor.fields.name.title" />}
+                      error={errors.name && touched.name}
                     />
-                  </FormControl>
+                    <Field
+                      component={TextField}
+                      name="description"
+                      type="text"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      multiline
+                      rows={5}
+                      label={<FormattedMessage id="periodical.editor.fields.description.title" />}
+                      error={errors.description && touched.description}
+                    />
+                  </Grid>
+
+                  <Grid item md={6}>
+                    <FormControl variant="outlined" margin="normal" fullWidth>
+                      <ImageUpload
+                        imageUrl={periodical && periodical.links ? periodical.links.image : null}
+                        defaultImage="/images/book_placeholder.jpg"
+                        onImageSelected={handleImageUpload}
+                        height="400"
+                      />
+                    </FormControl>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                md={12}
-                direction="row"
-                justifyContent="space-evenly"
-                sx={{ mb: (theme) => theme.spacing(2) }}
-              >
-                <Grid item md={3}>
-                  <Button
-                    id="submitButton"
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                  >
-                    <FormattedMessage id="action.save" />
-                  </Button>
+                <Grid
+                  item
+                  container
+                  md={12}
+                  direction="row"
+                  justifyContent="space-evenly"
+                  sx={{ mb: (theme) => theme.spacing(2) }}
+                >
+                  <Grid item md={3}>
+                    <Button
+                      id="submitButton"
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                    >
+                      <FormattedMessage id="action.save" />
+                    </Button>
+                  </Grid>
+                  <Grid item md={3}>
+                    <Button
+                      id="cancelButton"
+                      variant="outlined"
+                      fullWidth
+                      onClick={() => history.goBack()}
+                    >
+                      <FormattedMessage id="action.cancel" />
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item md={3}>
-                  <Button
-                    id="cancelButton"
-                    variant="outlined"
-                    fullWidth
-                    onClick={() => history.goBack()}
-                  >
-                    <FormattedMessage id="action.cancel" />
-                  </Button>
-                </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
-      </CenteredContent>
+              </Form>
+            )}
+          </Formik>
+        </CenteredContent>
+      </Error>
     </div>
   );
 };

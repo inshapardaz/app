@@ -19,10 +19,11 @@ import { libraryService } from '@/services/';
 import ImageUpload from '@/components/imageUpload';
 import PageHeader from '@/components/pageHeader';
 import Busy from '@/components/busy';
+import Error from '@/components/error';
 import CenteredContent from '@/components/layout/centeredContent';
 
 const IssueEditPage = () => {
-  const { periodicalId, issueId } = useParams();
+  const { periodicalId, volumeNumber, issueNumber } = useParams();
   const history = useHistory();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -41,6 +42,8 @@ const IssueEditPage = () => {
   };
 
   const validationSchema = Yup.object().shape({
+    volumeNumber: Yup.string()
+      .required(intl.formatMessage({ id: 'issue.editor.fields.volumeNumber.error' })),
     issueNumber: Yup.string()
       .required(intl.formatMessage({ id: 'issue.editor.fields.issueNumber.error' })),
     issueDate: Yup.date()
@@ -58,9 +61,9 @@ const IssueEditPage = () => {
           setError(true);
         });
     }
-    if (periodicalId && issueId && library) {
+    if (periodicalId && issueNumber && library) {
       setBusy(true);
-      libraryService.getIssueById(library.id, periodicalId, issueId)
+      libraryService.getIssue(library.id, periodicalId, volumeNumber, issueNumber)
         .then((res) => setIssue(res))
         .then(() => setBusy(false))
         .catch(() => {
@@ -68,7 +71,7 @@ const IssueEditPage = () => {
           setError(true);
         });
     }
-  }, [periodicalId, issueId, library]);
+  }, [periodicalId, issueNumber, library]);
 
   const uploadImage = (res) => {
     if (newCover && res.links && res.links.image_upload) {
@@ -77,10 +80,14 @@ const IssueEditPage = () => {
     return Promise.resolve();
   };
 
-  const showError = (setSubmitting) => {
+  const showError = (e, setSubmitting) => {
     setSubmitting(false);
     setBusy(false);
-    enqueueSnackbar(intl.formatMessage({ id: 'issue.messages.error.saving' }), { variant: 'error' });
+    if (e.status && e.status === 409) {
+      enqueueSnackbar(intl.formatMessage({ id: 'issue.messages.error.conflict' }), { variant: 'error' });
+    } else {
+      enqueueSnackbar(intl.formatMessage({ id: 'issue.messages.error.saving' }), { variant: 'error' });
+    }
   };
 
   const showSuccess = (setSubmitting) => {
@@ -93,19 +100,18 @@ const IssueEditPage = () => {
   const onSubmit = (fields, { setSubmitting }) => {
     setBusy(true);
     const data = { ...fields };
-
     if (issue) {
       libraryService.updateIssue(issue.links.update, data)
-        .then((res) => {
-          uploadImage(res)
-            .then(() => showSuccess(setSubmitting), () => showError(setSubmitting));
-        }, () => showError(setSubmitting));
+        .then((res) => uploadImage(res))
+        .then(() => showSuccess(setSubmitting))
+        .catch((e) => showError(e, setSubmitting))
+        .finally(() => setBusy(false));
     } else {
       libraryService.createIssue(periodical.links.create_issue, data)
-        .then((res) => {
-          uploadImage(res)
-            .then(() => showSuccess(setSubmitting), () => showError(setSubmitting));
-        }, () => showError(setSubmitting));
+        .then((res) => uploadImage(res))
+        .then(() => showSuccess(setSubmitting))
+        .catch((e) => showError(e, setSubmitting))
+        .finally(() => setBusy(false));
     }
   };
 
@@ -122,98 +128,105 @@ const IssueEditPage = () => {
       <Helmet title={title} />
       <PageHeader title={title} />
       <Busy busy={busy} />
-      <CenteredContent>
-        <Formik
-          initialValues={issue || initialValues}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
-          enableReinitialize
-        >
-          {({
-            errors, touched,
-          }) => (
-            <Form>
-              <Grid container spacing={3}>
-                <Grid item md={6}>
-                  <Field
-                    component={TextField}
-                    autoFocus
-                    name="issueNumber"
-                    type="number"
-                    variant="outlined"
-                    margin="normal"
-                    inputProps={{ min: 1 }}
-                    fullWidth
-                    label={<FormattedMessage id="issue.editor.fields.issueNumber.title" />}
-                    error={errors.name && touched.name}
-                  />
-                  <Field
-                    component={TextField}
-                    name="volumeNumber"
-                    type="number"
-                    variant="outlined"
-                    margin="normal"
-                    inputProps={{ min: 1 }}
-                    fullWidth
-                    label={<FormattedMessage id="issue.editor.fields.volumeNumber.title" />}
-                    error={errors.description && touched.description}
-                  />
-                  <Field
-                    component={DatePicker}
-                    name="issueDate"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    label={<FormattedMessage id="issue.editor.fields.issueDate.title" />}
-                    error={errors.description && touched.description}
-                  />
-                </Grid>
-
-                <Grid item md={6}>
-                  <FormControl variant="outlined" margin="normal" fullWidth>
-                    <ImageUpload
-                      imageUrl={issue && issue.links ? issue.links.image : null}
-                      defaultImage="/images/book_placeholder.jpg"
-                      onImageSelected={handleImageUpload}
-                      height="400"
+      <Error
+        error={error}
+        message={intl.formatMessage({ id: 'issues.message.notfound' })}
+        actionText={intl.formatMessage({ id: 'action.back' })}
+        onAction={() => history.goBack()}
+      >
+        <CenteredContent>
+          <Formik
+            initialValues={issue || initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
+            enableReinitialize
+          >
+            {({
+              errors, touched,
+            }) => (
+              <Form>
+                <Grid container spacing={3}>
+                  <Grid item md={6}>
+                    <Field
+                      component={TextField}
+                      autoFocus
+                      name="issueNumber"
+                      type="number"
+                      variant="outlined"
+                      margin="normal"
+                      inputProps={{ min: 1 }}
+                      fullWidth
+                      label={<FormattedMessage id="issue.editor.fields.issueNumber.title" />}
+                      error={errors.name && touched.name}
                     />
-                  </FormControl>
+                    <Field
+                      component={TextField}
+                      name="volumeNumber"
+                      type="number"
+                      variant="outlined"
+                      margin="normal"
+                      inputProps={{ min: 1 }}
+                      fullWidth
+                      label={<FormattedMessage id="issue.editor.fields.volumeNumber.title" />}
+                      error={errors.description && touched.description}
+                    />
+                    <Field
+                      component={DatePicker}
+                      name="issueDate"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      label={<FormattedMessage id="issue.editor.fields.issueDate.title" />}
+                      error={errors.description && touched.description}
+                    />
+                  </Grid>
+
+                  <Grid item md={6}>
+                    <FormControl variant="outlined" margin="normal" fullWidth>
+                      <ImageUpload
+                        imageUrl={issue && issue.links ? issue.links.image : null}
+                        defaultImage="/images/book_placeholder.jpg"
+                        onImageSelected={handleImageUpload}
+                        height="400"
+                      />
+                    </FormControl>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Grid
-                item
-                container
-                md={12}
-                direction="row"
-                justifyContent="space-evenly"
-                sx={{ mb: (theme) => theme.spacing(2) }}
-              >
-                <Grid item md={3}>
-                  <Button
-                    id="submitButton"
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                  >
-                    <FormattedMessage id="action.save" />
-                  </Button>
+                <Grid
+                  item
+                  container
+                  md={12}
+                  direction="row"
+                  justifyContent="space-evenly"
+                  sx={{ mb: (theme) => theme.spacing(2) }}
+                >
+                  <Grid item md={3}>
+                    <Button
+                      id="submitButton"
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                    >
+                      <FormattedMessage id="action.save" />
+                    </Button>
+                  </Grid>
+                  <Grid item md={3}>
+                    <Button
+                      id="cancelButton"
+                      variant="outlined"
+                      fullWidth
+                      onClick={() => history.goBack()}
+                    >
+                      <FormattedMessage id="action.cancel" />
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item md={3}>
-                  <Button
-                    id="cancelButton"
-                    variant="outlined"
-                    fullWidth
-                    onClick={() => history.goBack()}
-                  >
-                    <FormattedMessage id="action.cancel" />
-                  </Button>
-                </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
-      </CenteredContent>
+              </Form>
+            )}
+          </Formik>
+        </CenteredContent>
+      </Error>
     </div>
   );
 };

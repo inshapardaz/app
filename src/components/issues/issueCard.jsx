@@ -27,7 +27,7 @@ const IssueCard = ({ issue, onUpdated }) => {
     if (issue && issue.links && issue.links.update) {
       return (
         <Tooltip title={<FormattedMessage id="action.edit" />}>
-          <IconButton component={Link} to={`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/edit`}>
+          <IconButton component={Link} to={`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/edit`}>
             <EditOutlinedIcon />
           </IconButton>
         </Tooltip>
@@ -36,7 +36,7 @@ const IssueCard = ({ issue, onUpdated }) => {
     return null;
   };
 
-  const onOpen = () => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`);
+  const onOpen = () => history.push(`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/articles`);
 
   return (
     <Card sx={{
@@ -62,7 +62,7 @@ const IssueCard = ({ issue, onUpdated }) => {
         <Grid container justifyContent="stretch">
           <Grid item>
             <Tooltip title={issue.issueNumber} aria-label={issue.issueNumber}>
-              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`} sx={{ width: '100%' }}>
+              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/articles`} sx={{ width: '100%' }}>
                 { moment(issue.issueDate).format('MMMM YYYY') }
               </Typography>
             </Tooltip>

@@ -51,7 +51,7 @@ const BookStatusList = ({ bookStatus }) => {
 
   return (
     <>
-      <Typography variant="h5">{title}</Typography>
+      <Typography variant="h6">{title}</Typography>
       <Busy busy={busy}>
         <Error
           error={error}

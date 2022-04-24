@@ -59,7 +59,7 @@ const IssueMenu = ({ issue, onUpdated }) => {
           onClose={handleClose}
         >
           <Tooltip title={<FormattedMessage id="action.edit" />}>
-            <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/edit`)}><EditIcon /></IconButton>
+            <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/edit`)}><EditIcon /></IconButton>
           </Tooltip>
           <IssueDeleteButton issue={issue} onDeleted={onUpdated} onClick={handleClose} />
         </Menu>
@@ -70,7 +70,7 @@ const IssueMenu = ({ issue, onUpdated }) => {
   return (
     <>
       <Tooltip title={<FormattedMessage id="action.edit" />}>
-        <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/edit`)}><EditIcon /></IconButton>
+        <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/edit`)}><EditIcon /></IconButton>
       </Tooltip>
       <IssueDeleteButton issue={issue} onDeleted={onUpdated} />
     </>
@@ -83,6 +83,7 @@ IssueMenu.propTypes = {
     periodicalId: PropTypes.number,
     issueDate: PropTypes.string,
     issueNumber: PropTypes.number,
+    volumeNumber: PropTypes.number,
   }).isRequired,
 
   onUpdated: PropTypes.func.isRequired,
@@ -104,7 +105,7 @@ const IssueListItem = ({ issue, onUpdated }) => {
       sx={{ cursor: 'default' }}
     >
       {matches && (
-      <ListItemIcon onClick={() => history.push(`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`)} sx={{ mr: theme.spacing(1) }}>
+      <ListItemIcon onClick={() => history.push(`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/articles`)} sx={{ mr: theme.spacing(1) }}>
         <Avatar
           variant="square"
           src={(issue.links ? issue.links.image : null) || helpers.defaultIssueImage}
@@ -118,7 +119,7 @@ const IssueListItem = ({ issue, onUpdated }) => {
         primary={(
           <Grid container justifyContent="space-between" sx={{ backgroundColor: 'grey' }}>
             <Grid item sm={6}>
-              <Link to={`/periodicals/${issue.periodicalId}/issues/${issue.issueNumber}/articles`}>{ moment(issue.issueDate).format('MMMM YYYY') }</Link>
+              <Link to={`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/articles`}>{ moment(issue.issueDate).format('MMMM YYYY') }</Link>
             </Grid>
           </Grid>
 )}
