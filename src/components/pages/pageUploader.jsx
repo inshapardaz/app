@@ -5,9 +5,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useSnackbar } from 'notistack';
 
 // MUI
-import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -139,24 +139,26 @@ const PageUpload = ({
       >
         <ImageList pages={files} onRemoved={onFileRemoved} />
         <ButtonGroup fullWidth>
-          <Button
+          <LoadingButton
             onClick={handleFileUpload}
             startIcon={<CloudUploadIcon />}
             fullWidth
             variant="outlined"
             disabled={files.length <= 0}
+            loading={busy}
           >
             <FormattedMessage id="page.action.upload.upload" />
-          </Button>
-          <Button
+          </LoadingButton>
+          <LoadingButton
             onClick={() => (files.length >= fileLimit ? {} : inputElement.click())}
             startIcon={<AddPhotoAlternateIcon />}
             fullWidth
             variant="outlined"
             disabled={files.length >= fileLimit}
+            loading={busy}
           >
             <FormattedMessage id="page.action.upload.addFiles" />
-          </Button>
+          </LoadingButton>
         </ButtonGroup>
       </EditorDialog>
       <input

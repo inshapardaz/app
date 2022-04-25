@@ -75,7 +75,7 @@ const IssueArticlesPage = () => {
     if (issue && issue.links && issue.links.update) {
       return (
         <Tooltip title={<FormattedMessage id="action.edit" />}>
-          <Button component={Link} to={`/periodicals/${periodicalId}/issues/${issueNumber}/edit`} startIcon={<EditOutlinedIcon />}>
+          <Button component={Link} to={`/periodicals/${periodicalId}/volumes/${volumeNumber}/issues/${issueNumber}/edit`} startIcon={<EditOutlinedIcon />}>
             <FormattedMessage id="action.edit" />
           </Button>
         </Tooltip>

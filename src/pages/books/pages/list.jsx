@@ -250,7 +250,7 @@ const BookPages = () => {
           onSelectAll={() => setChecked(pages.data.map((p) => p.sequenceNumber))}
           onSelectNone={() => setChecked([])}
         />
-        <AddPageMenu book={book} />
+        <AddPageMenu book={book} onFilesUploaded={loadData} />
         <DeleteButton pages={selectedPages} onUpdated={loadData} onDeleting={setBusy} />
         <AssignToMeButton pages={selectedPages} onAssigned={loadData} onAssigning={setBusy} />
         <AssignToUserButton pages={selectedPages} onAssigned={loadData} />

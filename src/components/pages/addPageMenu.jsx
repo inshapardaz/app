@@ -18,7 +18,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // Local Imports
 import PageUploader from '@/components/pages/pageUploader';
 
-const AddPageMenu = ({ book }) => {
+const AddPageMenu = ({ book, onFilesUploaded }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -88,6 +88,7 @@ const AddPageMenu = ({ book }) => {
         acceptFiles={acceptFiles}
         fileLimit={fileLimit}
         createLink={book.links.create_multiple}
+        onFilesUploaded={onFilesUploaded}
         onClose={() => setShowFilesUpload(false)}
       />
     </>
@@ -96,6 +97,7 @@ const AddPageMenu = ({ book }) => {
 
 AddPageMenu.defaultProps = {
   book: null,
+  onFilesUploaded: () => {},
 };
 
 AddPageMenu.propTypes = {
@@ -107,6 +109,7 @@ AddPageMenu.propTypes = {
       create_multiple: PropTypes.string,
     }),
   }),
+  onFilesUploaded: PropTypes.func,
 };
 
 export default AddPageMenu;
