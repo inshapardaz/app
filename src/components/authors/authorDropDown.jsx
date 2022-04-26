@@ -9,6 +9,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 // Local import
 import { libraryService } from '@/services';
+import AuthorTypes from '@/models/authorTypes';
 
 const AuthorDropDown = ({
   onAuthorSelected, error, value, label, variant,
@@ -22,7 +23,7 @@ const AuthorDropDown = ({
   useEffect(() => {
     if (library != null) {
       setLoading(true);
-      libraryService.getAuthors(library.links.authors, text, 1, 10)
+      libraryService.getAuthors(library.links.authors, text, AuthorTypes.Writer, 1, 10)
         .then((response) => setOptions(response.data))
         .catch((e) => console.error(e))
         .finally(() => setLoading(false));
