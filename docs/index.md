@@ -2,6 +2,10 @@
 
 Nawishta is a website aimed to help digitize and publish books with ease. It is primarily targetted to urdu language, however support for multiple languages in build into the platform and will be available in near futrure.
 
+## Legal Notice
+
+Nawishta is in no way responsible for the ownership and sensitivity of the contents shared throught the website. It is the responsibility of the Library admins and writers to ensure legality of any art or litrary work shared through this website. If any litrary or art work is offensive, it can be reported. Offensive material can be taken down without notice.
+
 ## Organization
 
 Before we begin, we would like to define various parts of the Nawishta system so it is easier to refer to them later on.
