@@ -56,3 +56,9 @@ You access level in library is defined by your role in the library. You can pose
 - Writer. As a writer you can participate in digitizing the books. You can create books but you are not allowed to delete books as well as you are not allowed to create define more generic features like categories. As one might expect, Writers inherits all permissions of a reader.
 - Library Adminitrator. As a library admin, you have full control over the library and all aspects of it. You can not only contribute to digitization of books, as a Write role would do, but you are also responsible for managing users, categories and roles of the library. This is the highest permission level that a user can have in a library.
 - System Administrator. This is a special role that is cross library and have Library administrator role on all Libraries in nawishta. This role can create, update and delete libraries as well.
+
+## Accessing website
+
+Nawishta is a private site and does not allow anonymous browsing. You need to get an account and login to website to use it. See [security page](./Security.md) for details. 
+
+If you already have an account [Home Page](./homepage.md) for details on various features of website.
