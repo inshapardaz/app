@@ -4,7 +4,7 @@ Nawishta is a website aimed to help digitize and publish books with ease. It is 
 
 ## Legal Notice
 
-Nawishta is in no way responsible for the ownership and sensitivity of the contents shared throught the website. It is the responsibility of the Library admins and writers to ensure legality of any art or litrary work shared through this website. If any litrary or art work is offensive, it can be reported. Illegal or offensive material can be taken down without notice.
+Nawishta is in no way responsible for the ownership and sensitivity of the contents shared throught the website. It is the responsibility of the Library admins and writers to ensure legality of any art or litrary work shared through this website. If any litrary or art work is offensive, it can be reported. Illegal or offensive material can be taken down without notice. If the permission has been granted by the copyright owners, it must be mentioned in the description of the book.
 
 ## Organization
 
