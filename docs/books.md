@@ -21,7 +21,7 @@ Details of various parts of a book card are shown below:
 3. **Authors**. If more than one authors for the book their images as shown next to each other. Clicking on the image will show [author page](./authors.md).
 4. **Title** of the book.  Clicking title will open the book details.
 5. **Description** is the short introduction to the book. Long descriptions are trimmed for better viwe experience.
-6. **Actions bar**. The contents of the actions bar depends on users access level. Generally an Writer will see Edit button to edit the book and delete button to remove the book. All users see a favorite buttton. This button shows red if the book is already marked favorite by user. This button can be clicked to add or remove depending on its status.   
+6. **Actions bar**. The contents of the actions bar depends on users access level. Generally an Writer will see Edit button to edit the book and delete button to remove the book. You can see the details on the [Book Editing page](#book-editing-page) and [Delete Book](#delete-book). All users see a favorite buttton. This button shows red if the book is already marked favorite by user. This button can be clicked to add or remove depending on its status.   
 
 ## List View
 
@@ -36,7 +36,7 @@ Details of various parts of a book list item are shown below:
 3. **Authors**. If more than one authors for the book their images as shown next to each other. Clicking on the image will show [author page](./authors.md).
 4. **Description** is the short introduction to the book. Long descriptions are trimmed for better viwe experience.
 5. **Catergories** for the book. Clicking on the categories label will show books in the category.
-6. **Actions bar**. The contents of the actions bar depends on users access level. Generally an Writer will see Edit button to edit the book and delete button to remove the book. All users see a favorite buttton. This button shows red if the book is already marked favorite by user. This button can be clicked to add or remove depending on its status.   
+6. **Actions bar**. The contents of the actions bar depends on users access level. Generally an Writer will see Edit button to edit the book and delete button to remove the book. You can see the details on the [Book Editing page](#book-editing-page) and [Delete Book](#delete-book). All users see a favorite buttton. This button shows red if the book is already marked favorite by user. This button can be clicked to add or remove depending on its status.   
 
 ## Pagination
 
@@ -97,3 +97,48 @@ New books can be added by using the Create book button. This button is only avai
 
 ![image](https://user-images.githubusercontent.com/8446759/166982509-0386f987-1f1a-4080-8d5f-324b69e876d0.png)
 
+On clicking user is navigated to the Book Editing page as shown below:
+
+![image](https://user-images.githubusercontent.com/8446759/166983396-71af955b-cc38-45c9-a522-255e6f050551.png)
+
+Details of this page can be read in the [Book Editing page](#book-editing-page) section.
+
+## Book Editing Page
+
+By clicking on the Edit link on Book Card or list item, user is navigated to the book editing page where user can edit the details or the book. 
+
+![image](https://user-images.githubusercontent.com/8446759/166984182-8aea23c6-7b0d-468b-bd45-9b166b05a7ca.png)
+
+There are various fields that are available for editing. Details of these fields are as follows:
+
+- **Name**. Required. This is the title of book
+- **Description**. This is a short desctiption of book
+- **Authors**. Required. Select the authors for the book. Book should have one or more authors. It is provided as a dropdown and user can search the authors by typing. 
+- **Categories**. User can select one or more categories for the book.
+- **Language**. Required. User need to select the language for the book. Language of the library is selected by default.
+- **Publish Year**. This is the year when book was published
+- **Copyrights**. Required. Copyrights status for the book. Currently this is just informational field but in future it will impact the access to book. See [Copyrights](#copyrights) for details.
+- **Series**. If book is part of series, User must select the series name from the dropdown list by search.
+- **Series Index**. If book is part of series at a specific order, user should select the number of book in order.
+- **Status**. Required. Select the status of book. Default value of Ready For Typing is selected that can be changed later on.  See [Book Status](#book-status) for details.
+- **Image**. User can select the book image by clicking on the image on the right. If an image is already selected it will be shown else a generic book image is shown. This image is only uploaded once user saves changes. Currently there is no functionality to remove the image.
+
+Once user is happy with the details of the book, clicking Save button will save the book and success message would appear. After that user is navigated back previous page. User cna hit cancel button any time to cancel editing or creating of book and return to previous page
+
+## Delete Book
+
+Books can be removed by clicking the delete button in the book cell or list item. User is presented with a confirmation dialog. If user select Yes, book will be removed. Any related resource like, image, chapter, pages, etc.. will be removed permanently and cannot be recovered. User can select to not delete the book by hitting No button.
+
+![image](https://user-images.githubusercontent.com/8446759/166987450-2e8883f0-90ed-46bd-9dff-8d3611924ac7.png)
+
+## Copyrights
+
+Copyrights status of book shows the permission level of the book for availablility to public. Nawishta is in no way responsible for the misuse of the website. It is the responsibility of the Library admins and writers to ensure legality of any art work shared through this website.
+
+- Open
+- Public Domain
+- Creative Commons
+- Rights Reserved
+- Rights Reserved (Permitted Copy)
+
+## Book Statuses
