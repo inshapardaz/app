@@ -1,10 +1,10 @@
-# Books Page
+# Viewing Books
 
 Book page allows you to navigate and find books. This page can be accessed using the books link on the toolbar. By default you are shown the list of published bookes order by title.
 
 ![image](https://user-images.githubusercontent.com/8446759/166978544-e30fb24f-0ca3-44a7-9783-063584e07db0.png)
 
-Books are shown as Card or List view. This can be toggled using the view button on the top of the list. The selection is persisted in the browser and next time you visit the page your previous page view selection would be used.
+Books are shown as Card or List view. This can be toggled using the view button on the top of the list. The selection is persisted in the browser and next time you visit the page your previous page view selection would be used. Clicking ont he book would navigate to [Book Detail page](#book-details).
 
 ![image](https://user-images.githubusercontent.com/8446759/166979537-0fc9d017-fe09-4c6c-82b8-e421d2865672.png)
 
@@ -142,3 +142,11 @@ Copyrights status of book shows the permission level of the book for availablili
 - Rights Reserved (Permitted Copy)
 
 ## Book Statuses
+
+Please see [Publishing](./publishing.md) for more details on book statuses
+
+# Book Details
+
+User can see the details of the book. It include basic information about the book including list of chapters. If a book is being digitized, Writers will be able to see summary of the book on the book page.
+
+![image](https://user-images.githubusercontent.com/8446759/167138213-8d217b60-2c29-4f69-862d-6fabe06f2c66.png)
