@@ -74,7 +74,7 @@
     "html-react-parser": "^1.4.0",
     "material-ui-color-picker": "^3.5.1",
     "material-ui-confirm": "^3.0.3",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "notistack": "^2.0.3",
     "prop-types": "^15.7.2",
     "query-string": "^7.0.1",
