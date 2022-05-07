@@ -1,62 +1,152 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 import ReactMarkdown from 'react-markdown';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 
 // MUI
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 // Local Import
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
+import { getSelectedTheme } from '@/components/reader/themeSelector';
+import { localeService } from '@/services/';
 
+const ReaderFontSizeStorageKey = 'reader.fontSize';
+const ReaderFontStorageKey = 'reader.font';
+
+const getTopPageImage = (isSingle, pageNumber, theme) => {
+  if (isSingle) {
+    if (pageNumber % 2 === 0) {
+      return theme.background.topLeft;
+    }
+
+    return theme.background.topRight;
+  }
+
+  return theme.background.top;
+};
+
+const getMiddlePageImage = (isSingle, pageNumber, theme) => {
+  if (isSingle) {
+    if (pageNumber % 2 === 0) {
+      return theme.background.middleLeft;
+    }
+
+    return theme.background.middleRight;
+  }
+
+  return theme.background.middle;
+};
+
+const getBottomPageImage = (isSingle, pageNumber, theme) => {
+  if (isSingle) {
+    if (pageNumber % 2 === 0) {
+      return theme.background.bottomLeft;
+    }
+
+    return theme.background.bottomRight;
+  }
+
+  return theme.background.bottom;
+};
 const Reader = ({
-  data, format = 'text', font, fontScale, height, isRtlBook,
-  canGoBack, onBack, canGoForward, onForward, theme, lineHeight, view,
+  data, format = 'text', book, chapter, fullScreen,
+  canGoBack, onBack, canGoForward, onForward, view, onChapterClicked,
 }) => {
-  const anchorRef = useRef(null);
-  const [pageLeft, setPageLeft] = useState(0);
+  const selectedTheme = getSelectedTheme();
+  const font = localStorage.getItem(ReaderFontStorageKey) || 'MehrNastaleeq';
+  const fontScale = parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0');
   const [touchStart, setTouchStart] = React.useState(0);
   const [touchEnd, setTouchEnd] = React.useState(0);
 
   const isNarrowScreen = useMediaQuery('(max-width:1300px)');
   const isMobile = useMediaQuery('(max-width:430px)');
   const [page, setPage] = useState(1);
+  const lineHeight = parseFloat(localStorage.getItem('reader.lineHeight') || '1.0');
 
   const isSinglePage = view === 'single' || isNarrowScreen;
-  const pageWidth = isMobile ? 340 : isSinglePage ? 601 : 1202;
+  // eslint-disable-next-line no-nested-ternary
+  const pageWidth = isMobile ? 340 : isSinglePage ? 575 : 1202;
+  const columnWidth = isSinglePage ? 500 : 526;
+  const columnGap = 64;
+  const [pageCount, setPageCount] = useState(isSinglePage ? 1 : 2);
+  const anchorRef = useCallback((node) => {
+    if (node !== null) {
+      setPageCount(Math.ceil(node.scrollWidth / columnWidth));
+    }
+  });
+
+  const isRtlBook = book !== null ? localeService.isRtl(book.language) : false;
+  const height = fullScreen ? 'calc(100vh - 230px)' : 'calc(100vh - 234px)';
   const style = {
     fontFamily: font,
     fontSize: `${fontScale}em`,
     textAlign: 'justify',
     columnCount: isSinglePage ? '1' : '2',
-    columnGap: '50px',
+    columnGap,
     columnFill: 'auto',
-    padding: '10px 0',
     position: 'relative',
-    width: `${pageWidth - 50}px`,
-    transition: 'left .25s',
+    backgroundColor: 'transparent',
     lineHeight,
     height,
-    left: pageLeft,
-    ...theme,
+    left: (page - 1) * columnWidth,
+    ...selectedTheme.style,
+  };
+
+  const stylePageTop = {
+    backgroundImage: getTopPageImage(isSinglePage, page, selectedTheme),
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    fontFamily: font,
+    fontSize: `${fontScale / 1.5}em`,
+    height: isSinglePage ? '67px' : '76px',
+    padding: '0 38px',
+    marginTop: '10px',
+  };
+
+  const stylePageMiddle = {
+    backgroundImage: getMiddlePageImage(isSinglePage, page, selectedTheme),
+    backgroundPosition: 'center',
+    backgroundSize: 'contain',
+    backgroundRepeat: 'repeat-y',
+    backgroundOrigin: 'padding-box',
+    width: `${pageWidth - 64}px`,
+    padding: isSinglePage ? '10px 55px' : '10px 82px',
+    overflow: 'hidden',
+  };
+
+  const stylePageBottom = {
+    backgroundImage: getBottomPageImage(isSinglePage, page, selectedTheme),
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
+    display: 'flex',
+    justifyContent: 'space-around',
+    fontFamily: font,
+    fontSize: `${fontScale / 1.5}em`,
+    height: '99px',
   };
 
   useEffect(() => {
     setPage(1);
-    setPageLeft(0);
   }, [data]);
 
   // ----- Previous Page Links ---------------
-  const isOnFistPage = () => pageLeft <= 0;
+  const isOnFistPage = () => page <= 1;
   const onPrevious = () => {
     if (!isOnFistPage()) {
-      setPageLeft(pageLeft - pageWidth);
-      setPage(page - 1);
+      const newPage = page - (isSinglePage ? 1 : 2);
+      setPage(newPage);
     } else if (canGoBack) {
       onBack();
     }
@@ -65,12 +155,12 @@ const Reader = ({
   const canGoPrevious = () => !isOnFistPage() || canGoBack;
 
   // ----- Next Page Links ---------------
-  const isOnLastPage = () => (anchorRef && anchorRef.current && pageLeft >= anchorRef.current.scrollWidth - pageWidth);
+  const isOnLastPage = () => page + 1 >= pageCount;
 
   const onNext = () => {
     if (!isOnLastPage()) {
-      setPageLeft(pageLeft + pageWidth);
-      setPage(page + 1);
+      const newPage = page + (isSinglePage ? 1 : 2);
+      setPage(newPage);
     } else if (canGoForward) {
       onForward();
     }
@@ -138,60 +228,85 @@ const Reader = ({
   if (!data) return null;
 
   return (
-    <div dir={isRtlBook ? 'rtl' : 'ltr'}>
-      <Grid container justifyContent="center" alignItems="center" wrap="nowrap" sx={{ ...theme }}>
-        <Grid item>
-          {renderPrevious()}
+    <Box sx={{
+      backgroundColor: (theme) => (selectedTheme ? selectedTheme.backgroundColor : theme.palette.background.paper),
+      position: (fullScreen ? 'absolute' : 'block'),
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      direction: isRtlBook ? 'rtl' : 'ltr',
+      zIndex: (theme) => (fullScreen ? theme.zIndex.appBar + 10 : 'inherit'),
+    }}
+    >
+      <div dir={isRtlBook ? 'rtl' : 'ltr'}>
+        <Grid container justifyContent="center" alignItems="center" wrap="nowrap" sx={{ ...selectedTheme }}>
+          <Grid item>
+            {renderPrevious()}
+          </Grid>
+          <Grid item>
+            <Container maxWidth={isSinglePage ? 'sm' : 'lg'} sx={{ overflow: 'hidden' }}>
+              <div style={stylePageTop}>
+                <Link to={`/books/${book.id}`}>{book && book.title}</Link>
+                <Button variant="text" sx={{ color: 'inherit', fontFamily: 'inherit', fontSize: 'inherit' }} onClick={onChapterClicked}>{chapter && chapter.title}</Button>
+              </div>
+              <div style={stylePageMiddle}>
+                <div style={style} ref={anchorRef} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+                  {renderContents()}
+                </div>
+              </div>
+              <div style={stylePageBottom}>
+                <span>{page}</span>
+                {!isSinglePage && <span>{page + 1}</span> }
+              </div>
+            </Container>
+          </Grid>
+          <Grid item>
+            {renderNext()}
+          </Grid>
         </Grid>
-        <Grid item>
-          <Container maxWidth={isSinglePage ? 'sm' : 'lg'} sx={{ overflow: 'hidden' }}>
-            <div style={style} ref={anchorRef} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
-              {renderContents()}
-            </div>
-
-          </Container>
-        </Grid>
-        <Grid item>
-          {renderNext()}
-        </Grid>
-      </Grid>
-    </div>
+      </div>
+    </Box>
   );
 };
 
 Reader.defaultProps = {
   data: '',
   format: 'text',
-  font: 'MehrNastaleeq',
-  fontScale: null,
-  lineHeight: 1.0,
   view: 'two',
-  isRtlBook: 'false',
-  theme: {},
+  book: null,
+  chapter: null,
+  fullScreen: false,
   canGoBack: false,
   onBack: () => {},
   canGoForward: false,
   onForward: () => {},
+  onChapterClicked: () => {},
 };
 
 Reader.propTypes = {
   data: PropTypes.string,
   format: PropTypes.string,
-  font: PropTypes.string,
-  fontScale: PropTypes.number,
-  theme: PropTypes.objectOf(PropTypes.shape({
-    name: PropTypes.string,
-    backgroundColor: PropTypes.string,
-    color: PropTypes.string,
-  })),
-  lineHeight: PropTypes.number,
+  book: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    language: PropTypes.string,
+    links: PropTypes.shape({
+      chapters: PropTypes.string,
+    }),
+  }),
+  chapter: PropTypes.shape({
+    id: PropTypes.number,
+    chapterNumber: PropTypes.number,
+    title: PropTypes.string,
+  }),
   view: PropTypes.string,
-  isRtlBook: PropTypes.bool,
-  height: PropTypes.string.isRequired,
   canGoBack: PropTypes.bool,
+  fullScreen: PropTypes.bool,
   onBack: PropTypes.func,
   canGoForward: PropTypes.bool,
   onForward: PropTypes.func,
+  onChapterClicked: PropTypes.func,
 };
 
 export default Reader;

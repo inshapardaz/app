@@ -1,27 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+
 // MUI
-import Collapse from '@mui/material/Collapse';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
 
 const themes = [{
   name: 'default',
-  backgroundColor: 'white',
-  color: 'black',
+  style: {
+    color: 'black',
+  },
+  background: {
+    top: 'url("/images/bookTop.png")',
+    middle: 'url("/images/bookMiddle.png")',
+    bottom: 'url("/images/bookBottom.png")',
+    topLeft: 'url("/images/bookSingleTopLeft.png")',
+    middleLeft: 'url("/images/bookSingleMiddleLeft.png")',
+    bottomLeft: 'url("/images/bookSingleBottomLeft.png")',
+    topRight: 'url("/images/bookSingleTopRight.png")',
+    middleRight: 'url("/images/bookSingleMiddleRight.png")',
+    bottomRight: 'url("/images/bookSingleBottomRight.png")',
+  },
 }, {
   name: 'sepia',
-  backgroundColor: '#F4ECD8',
-  color: '#5B4636',
+  style: {
+    color: '#5B4636',
+  },
+  background: {
+    top: 'url("/images/book1.png")',
+    middle: 'url("/images/book2.png")',
+    bottom: 'url("/images/book3.png")',
+    topLeft: 'url("/images/bookSingleTopLeft.png")',
+    middleLeft: 'url("/images/bookSingleMiddleLeft.png")',
+    bottomLeft: 'url("/images/bookSingleBottomLeft.png")',
+    topRight: 'url("/images/bookSingleTopRight.png")',
+    middleRight: 'url("/images/bookSingleMiddleRight.png")',
+    bottomRight: 'url("/images/bookSingleBottomRight.png")',
+  },
 }, {
   name: 'dark',
-  backgroundColor: '#1C1b22',
-  color: '#EEEEEE',
+  style: {
+    color: '#EEEEEE',
+  },
+  background: {
+    top: 'url("/images/book1.png")',
+    middle: 'url("/images/book2.png")',
+    bottom: 'url("/images/book3.png")',
+    topLeft: 'url("/images/bookSingleTopLeft.png")',
+    middleLeft: 'url("/images/bookSingleMiddleLeft.png")',
+    bottomLeft: 'url("/images/bookSingleBottomLeft.png")',
+    topRight: 'url("/images/bookSingleTopRight.png")',
+    middleRight: 'url("/images/bookSingleMiddleRight.png")',
+    bottomRight: 'url("/images/bookSingleBottomRight.png")',
+  },
 }];
 
 const getThemeFromName = (name) => themes.find((t) => t.name === name);
@@ -34,50 +70,43 @@ const getSelectedTheme = () => {
   return themes[0];
 };
 
-const ThemeSelector = ({ onThemeChanged }) => {
-  const [open, setOpen] = useState(false);
-  const [theme, setTheme] = useState(getSelectedTheme());
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
+const ThemeSelector = ({ open, onClose }) => {
+  const selectedTheme = getSelectedTheme();
 
   const onChange = (newTheme) => {
     localStorage.setItem('reader.theme', newTheme.name);
-    setTheme(newTheme.name);
-    onThemeChanged(newTheme);
+    onClose();
   };
 
   return (
-    <>
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <ColorLensIcon />
-        </ListItemIcon>
-        <ListItemText primary={<FormattedMessage id="theme" />} />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+    <Dialog onClose={onClose} open={open}>
+      <DialogTitle>
+        <ColorLensIcon />
+        <FormattedMessage id="theme" />
+      </DialogTitle>
+      <List sx={{ pt: 0, minWidth: 200 }}>
         {themes.map((t) => (
           <ListItemButton
             key={t.name}
-            selected={t.name === theme}
+            selected={t.name === selectedTheme}
             onClick={() => onChange(t)}
           >
             <ListItemText primary={<FormattedMessage id={`theme.${t.name}`} />} />
           </ListItemButton>
         ))}
-      </Collapse>
-    </>
+      </List>
+    </Dialog>
   );
 };
 
 ThemeSelector.defaultProps = {
-  onThemeChanged: () => {},
+  open: false,
+  onClose: () => {},
 };
 
 ThemeSelector.propTypes = {
-  onThemeChanged: PropTypes.func,
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
 };
 
 export { getSelectedTheme, getThemeFromName };

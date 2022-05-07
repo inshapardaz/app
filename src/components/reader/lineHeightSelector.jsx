@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
 
 // MUI
-import Collapse from '@mui/material/Collapse';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
 
 const lineWidths = [{
   name: 'narrow',
@@ -28,54 +27,43 @@ const lineWidths = [{
   value: 2.5,
 }];
 
-const LineHeightSelector = ({ onValueChanged }) => {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(parseFloat(localStorage.getItem('reader.lineHeight') || '1.0'));
-  const selectedLineHeight = lineWidths.find((t) => t.value === value);
-
-  useEffect(() => {
-    onValueChanged(selectedLineHeight.value);
-  }, [value]);
+const LineHeightSelector = ({ open, onClose }) => {
+  const selectedLineHeight = parseFloat(localStorage.getItem('reader.lineHeight') || '1.0');
 
   const onChange = (newLineHeight) => {
     localStorage.setItem('reader.lineHeight', newLineHeight.value);
-    setValue(newLineHeight.value);
-  };
-
-  const handleClick = () => {
-    setOpen(!open);
+    onClose();
   };
 
   return (
-    <>
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <FormatLineSpacingIcon />
-        </ListItemIcon>
-        <ListItemText primary={<FormattedMessage id="lineHeight" />} />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+    <Dialog onClose={onClose} open={open}>
+      <DialogTitle>
+        <FormatLineSpacingIcon />
+        <FormattedMessage id="lineHeight" />
+      </DialogTitle>
+      <List sx={{ pt: 0, minWidth: 200 }}>
         {lineWidths.map((w) => (
           <ListItemButton
             key={w.name}
-            selected={w.value === value}
+            selected={w.value === selectedLineHeight}
             onClick={() => onChange(w)}
           >
             <ListItemText primary={<FormattedMessage id={`lineHeight.${w.name}`} />} />
           </ListItemButton>
         ))}
-      </Collapse>
-    </>
+      </List>
+    </Dialog>
   );
 };
 
 LineHeightSelector.defaultProps = {
-  onValueChanged: () => {},
+  open: false,
+  onClose: () => {},
 };
 
 LineHeightSelector.propTypes = {
-  onValueChanged: PropTypes.func,
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
 };
 
 export default LineHeightSelector;

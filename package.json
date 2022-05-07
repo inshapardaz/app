@@ -61,6 +61,7 @@
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.4.3",
     "@mui/styles": "^5.4.2",
+    "@rehooks/local-storage": "^2.4.4",
     "babel-plugin-react-css-modules": "^5.2.6",
     "chart.js": "^3.6.0",
     "connected-react-router": "^6.9.1",

@@ -1,82 +1,53 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
-import { Link, useHistory } from 'react-router-dom';
+import { useIntl } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 
 // MUI
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Toolbar from '@mui/material/Toolbar';
-import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import Backdrop from '@mui/material/Backdrop';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import SettingsIcon from '@mui/icons-material/Settings';
+import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
+import ClearIcon from '@mui/icons-material/Clear';
+import FontDownloadIcon from '@mui/icons-material/FontDownload';
 
 // Local Imports
 import Reader from '@/components/reader/reader';
-import FontList from '@/components/fontList';
-import ButtonWithTooltip from '@/components/buttonWithTooltip';
-import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
+import FontSelector from '@/components/reader/fontSelector';
 import ChaptersSelector from '@/components/reader/chaptersSelector';
-import ThemeSelector, { getSelectedTheme } from '@/components/reader/themeSelector';
+import ThemeSelector from '@/components/reader/themeSelector';
 import LineHeightSelector from '@/components/reader/lineHeightSelector';
-import { localeService } from '@/services/';
 
 const ReaderFontSizeStorageKey = 'reader.fontSize';
-const ReaderFontStorageKey = 'reader.font';
 const ReaderViewTypeStorageKey = 'reader.viewType';
 const MinimumFontScale = 0;
 const MaximumFontScale = 5;
-
-const BookTitle = ({ book }) => {
-  if (!book) return null;
-  return (
-    <Link
-      underline="hover"
-      color="inherit"
-      style={{ display: 'flex', alignItems: 'center', marginRight: (theme) => theme.spacing(1) }}
-      to={`/books/${book.id}`}
-    >
-      <MenuBookIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-      {book && book.title}
-    </Link>
-  );
-};
-
-BookTitle.defaultProps = {
-  book: null,
-};
-
-BookTitle.propTypes = {
-  book: PropTypes.shape({
-    id: PropTypes.number,
-    title: PropTypes.string,
-  }),
-};
-
-// ----------------------------------------------------------
 
 const ReaderView = ({
   book, selectedChapter, data, format = 'text',
 }) => {
   const history = useHistory();
-  const [font, setFont] = useState(localStorage.getItem(ReaderFontStorageKey) || 'MehrNastaleeq');
+  const intl = useIntl();
   const [fontScale, setFontScale] = useState(parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0'));
   const [view, setView] = useState(localStorage.getItem(ReaderViewTypeStorageKey) || 'single');
   const [fullScreen, setFullScreen] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState(getSelectedTheme());
-  const [selectedLineHeight, setSelectedLineHeight] = useState(parseFloat(localStorage.getItem('reader.lineHeight') || '1.0'));
   const [showDrawer, setShowDrawer] = useState(false);
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
+  const [showFontSelector, setShowFontSelector] = useState(false);
+  const [showLineHeightSelector, setShowLineHeightSelector] = useState(false);
+  const [openSpeedDial, setOpenSpeedDial] = React.useState(false);
+  const handleOpen = () => setOpenSpeedDial(true);
+  const handleClose = () => setOpenSpeedDial(false);
   const isNarrowScreen = useMediaQuery('(max-width:1300px)');
 
   const onZoomInText = () => {
@@ -106,93 +77,96 @@ const ReaderView = ({
 
   const renderColumnLayout = () => {
     if (isNarrowScreen) return null;
-    return (
-      <>
-        <ListItemButton onClick={() => onViewTypeChanged('single')} selected={view === 'single'}>
-          <ListItemIcon>
-            <ArticleOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary={<FormattedMessage id="reader.singlePage" />} />
-        </ListItemButton>
+    if (view === 'single') {
+      return (
+        <SpeedDialAction
+          key="multi-page-view"
+          icon={<ImportContactsIcon />}
+          tooltipTitle={intl.formatMessage({ id: 'reader.twoPages' })}
+          onClick={() => onViewTypeChanged('two')}
+        />
+      );
+    }
 
-        <ListItemButton onClick={() => onViewTypeChanged('two')} selected={view === 'two'}>
-          <ListItemIcon>
-            <ImportContactsIcon />
-          </ListItemIcon>
-          <ListItemText primary={<FormattedMessage id="reader.twoPages" />} />
-        </ListItemButton>
-        <Divider />
-      </>
+    return (
+      <SpeedDialAction
+        key="single-page-view"
+        icon={<ArticleOutlinedIcon />}
+        tooltipTitle={intl.formatMessage({ id: 'reader.singlePage' })}
+        onClick={() => onViewTypeChanged('single')}
+      />
     );
   };
   return (
-    <Box sx={{
-      backgroundColor: (theme) => (selectedTheme ? selectedTheme.backgroundColor : theme.palette.background.paper),
-      position: (fullScreen ? 'absolute' : 'block'),
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      direction: book && localeService.isRtl(book.language) ? 'rtl' : 'ltr',
-      zIndex: (theme) => (fullScreen ? theme.zIndex.appBar + 10 : 'inherit'),
-    }}
-    >
-      <Toolbar variant="dense">
-        <BookTitle book={book} />
-        <BreadcrumbSeparator />
-        <ChaptersSelector book={book} selectedChapter={selectedChapter} />
-        <Divider orientation="vertical" sx={{ flex: 1 }} />
-        <ButtonWithTooltip tooltip="settings" onClick={() => setShowDrawer(true)}><SettingsIcon /></ButtonWithTooltip>
-      </Toolbar>
+    <>
+      <ChaptersSelector book={book} selectedChapter={selectedChapter} open={showDrawer} onCloseDrawer={() => setShowDrawer(false)} />
+      <LineHeightSelector open={showLineHeightSelector} onClose={() => setShowLineHeightSelector(false)} />
+      <ThemeSelector open={showThemeSelector} onClose={() => setShowThemeSelector(false)} />
+      <FontSelector open={showFontSelector} onClose={() => setShowFontSelector(false)} />
+      <Backdrop open={openSpeedDial} />
+      <SpeedDial
+        ariaLabel="settings"
+        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+        icon={<SpeedDialIcon icon={<SettingsIcon />} openIcon={<ClearIcon />} />}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        open={openSpeedDial}
+      >
+        <SpeedDialAction
+          key="full-screen"
+          icon={fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon />}
+          tooltipTitle={intl.formatMessage({ id: fullScreen ? 'chapter.toolbar.exitFullScreen' : 'chapter.toolbar.fullScreen' })}
+          onClick={onFullScreenToggle}
+        />
+        <SpeedDialAction
+          key="zoom-out"
+          icon={<ZoomOutIcon />}
+          tooltipTitle={intl.formatMessage({ id: 'action.zoom.out' })}
+          onClick={onZoomOutText}
+        />
+        <SpeedDialAction
+          key="zoom-in"
+          icon={<ZoomInIcon />}
+          tooltipTitle={intl.formatMessage({ id: 'action.zoom.in' })}
+          onClick={onZoomInText}
+        />
+        {renderColumnLayout()}
 
-      <Drawer anchor="right" open={showDrawer} onClose={() => setShowDrawer(false)}>
-        <List>
-          <ThemeSelector onThemeChanged={setSelectedTheme} />
-          <LineHeightSelector onValueChanged={setSelectedLineHeight} />
-          <FontList value={font} onFontSelected={setFont} storageKey={ReaderFontStorageKey} />
-          <Divider />
+        <SpeedDialAction
+          key="line-height"
+          icon={<FormatLineSpacingIcon />}
+          tooltipTitle={intl.formatMessage({ id: 'lineHeight' })}
+          onClick={() => setShowLineHeightSelector(true)}
+        />
 
-          <ListItemButton onClick={onZoomInText} disabled={fontScale >= MaximumFontScale}>
-            <ListItemIcon>
-              <ZoomInIcon />
-            </ListItemIcon>
-            <ListItemText primary={<FormattedMessage id="action.zoom.in" />} />
-          </ListItemButton>
+        <SpeedDialAction
+          key="themes"
+          icon={<ColorLensIcon />}
+          tooltipTitle={intl.formatMessage({ id: 'theme' })}
+          onClick={() => setShowThemeSelector(true) && handleClose()}
+        />
 
-          <ListItemButton onClick={onZoomOutText} disabled={fontScale <= MinimumFontScale}>
-            <ListItemIcon>
-              <ZoomOutIcon />
-            </ListItemIcon>
-            <ListItemText primary={<FormattedMessage id="action.zoom.out" />} />
-          </ListItemButton>
-
-          <Divider />
-
-          {renderColumnLayout()}
-          <ListItemButton onClick={onFullScreenToggle} selected={fullScreen}>
-            <ListItemIcon>
-              {fullScreen ? <FullscreenExitIcon /> : <FullscreenIcon /> }
-            </ListItemIcon>
-            <ListItemText primary={<FormattedMessage id={fullScreen ? 'chapter.toolbar.exitFullScreen' : 'chapter.toolbar.fullScreen'} />} />
-          </ListItemButton>
-        </List>
-      </Drawer>
+        <SpeedDialAction
+          key="font"
+          icon={<FontDownloadIcon />}
+          tooltipTitle={intl.formatMessage({ id: 'chapter.toolbar.font' })}
+          onClick={() => setShowFontSelector(true) && handleClose()}
+        />
+      </SpeedDial>
       <Reader
         data={data}
         format={format}
-        font={font}
-        isRtlBook={book && localeService.isRtl(book.language)}
-        fontScale={fontScale}
-        theme={selectedTheme}
+        book={book}
+        chapter={selectedChapter}
         view={view}
-        lineHeight={selectedLineHeight}
-        height={fullScreen ? 'calc(100vh - 65px)' : 'calc(100vh - 113px)'}
+        fullScreen={fullScreen}
         canGoBack={Boolean(selectedChapter && selectedChapter.links.previous)}
         onBack={() => history.push(`/books/${book.id}/chapters/${selectedChapter.chapterNumber - 1}`)}
         canGoForward={Boolean(selectedChapter && selectedChapter.links.next)}
         onForward={() => history.push(`/books/${book.id}/chapters/${selectedChapter.chapterNumber + 1}`)}
+        onChapterClicked={() => setShowDrawer(true)}
       />
-    </Box>
+    </>
   );
 };
 

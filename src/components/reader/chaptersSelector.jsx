@@ -3,27 +3,23 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 // MUI
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import LayersIcon from '@mui/icons-material/Layers';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
 // Local Imports
 import { libraryService } from '@/services/';
 
-const ChaptersSelector = ({ book, selectedChapter }) => {
+const ChaptersSelector = ({
+  open, book, selectedChapter, onCloseDrawer,
+}) => {
   const [chapters, setChapters] = useState(null);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const loadData = () => {
     setBusy(true);
@@ -47,50 +43,45 @@ const ChaptersSelector = ({ book, selectedChapter }) => {
   if (!book || !selectedChapter || !chapters) return null;
 
   return (
-    <>
-      <Button
-        id="chapter-button"
-        aria-controls={open ? 'chapter-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        size="small"
-        onClick={handleClick}
-        endIcon={<KeyboardArrowDownIcon />}
-      >
-        {selectedChapter.title}
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{ 'aria-labelledby': 'basic-button' }}
-      >
+    <Drawer anchor="left" open={open} onClose={onCloseDrawer}>
+      <List sx={{ width: 250 }}>
+        <ListItem>
+          <ListItemText primary={book.title} />
+        </ListItem>
+        <Divider />
         {!busy && !error && chapters.data.map((c) => (
-          <MenuItem
+          <ListItem
             key={c.id}
             component={Link}
             to={`/books/${book.id}/chapters/${c.chapterNumber}`}
             value={c.key}
             selected={selectedChapter.id === c.id}
-            onClick={handleClose}
+            onClick={onCloseDrawer}
           >
-            {c.title}
-          </MenuItem>
+            <ListItemIcon>
+              <LayersIcon />
+            </ListItemIcon>
+            <ListItemText primary={c.title} />
+          </ListItem>
         ))}
-      </Menu>
-    </>
+      </List>
+    </Drawer>
   );
 };
 
 ChaptersSelector.defaultProps = {
+  open: false,
+  onCloseDrawer: () => {},
   book: null,
   selectedChapter: null,
 };
 
 ChaptersSelector.propTypes = {
+  open: PropTypes.bool,
+  onCloseDrawer: PropTypes.func,
   book: PropTypes.shape({
     id: PropTypes.number,
+    title: PropTypes.string,
     links: PropTypes.shape({
       chapters: PropTypes.string,
     }),

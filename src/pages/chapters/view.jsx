@@ -76,8 +76,9 @@ const ChapterViewer = () => {
         actionText={<FormattedMessage id="action.retry" />}
         onAction={loadData}
       >
-        <Busy busy={busy} />
-        <ReaderView book={book} selectedChapter={chapter} format="markdown" data={content ? content.text : ''} />
+        <Busy busy={busy}>
+          <ReaderView book={book} selectedChapter={chapter} format="markdown" data={content ? content.text : ''} />
+        </Busy>
       </Error>
     </div>
   );
