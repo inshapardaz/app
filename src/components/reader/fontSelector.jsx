@@ -24,7 +24,7 @@ const FontSelector = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog onClose={onClose} open={open}>
+    <Dialog onClose={onClose} open={open} disableRestoreFocus>
       <DialogTitle>
         <FontDownloadIcon />
         <FormattedMessage id="chapter.toolbar.font" />

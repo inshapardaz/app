@@ -37,7 +37,7 @@ const LineHeightSelector = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog onClose={onClose} open={open}>
+    <Dialog onClose={onClose} open={open} disableRestoreFocus>
       <DialogTitle>
         <FormatLineSpacingIcon />
         <FormattedMessage id="lineHeight" />

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
 
 // MUI
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -23,45 +24,51 @@ import { localeService } from '@/services/';
 const ReaderFontSizeStorageKey = 'reader.fontSize';
 const ReaderFontStorageKey = 'reader.font';
 
-const getTopPageImage = (isSingle, pageNumber, theme) => {
+const getTopPageImage = (isSingle, theme) => {
   if (isSingle) {
-    if (pageNumber % 2 === 0) {
-      return theme.background.topLeft;
-    }
-
-    return theme.background.topRight;
+    return theme.background.topSingle;
   }
 
   return theme.background.top;
 };
 
-const getMiddlePageImage = (isSingle, pageNumber, theme) => {
+const getMiddlePageImage = (isSingle, theme) => {
   if (isSingle) {
-    if (pageNumber % 2 === 0) {
-      return theme.background.middleLeft;
-    }
-
-    return theme.background.middleRight;
+    return theme.background.middleSingle;
   }
 
   return theme.background.middle;
 };
 
-const getBottomPageImage = (isSingle, pageNumber, theme) => {
+const getBottomPageImage = (isSingle, theme) => {
   if (isSingle) {
-    if (pageNumber % 2 === 0) {
-      return theme.background.bottomLeft;
-    }
-
-    return theme.background.bottomRight;
+    return theme.background.bottomSingle;
   }
 
   return theme.background.bottom;
 };
+
+const calculateViewHeight = (fullScreen, singlePage) => {
+  if (fullScreen) {
+    if (singlePage) {
+      return 'calc(100vh - 162px)';
+    }
+
+    return 'calc(100vh - 178px)';
+  }
+
+  if (singlePage) {
+    return 'calc(100vh - 224px)';
+  }
+
+  return 'calc(100vh - 234px)';
+};
+
 const Reader = ({
   data, format = 'text', book, chapter, fullScreen,
   canGoBack, onBack, canGoForward, onForward, view, onChapterClicked,
 }) => {
+  const theme = useTheme();
   const selectedTheme = getSelectedTheme();
   const [font] = useLocalStorage(ReaderFontStorageKey, 'MehrNastaleeq');
   const [fontScale] = useLocalStorage(ReaderFontSizeStorageKey, 1.0);
@@ -87,7 +94,8 @@ const Reader = ({
   });
 
   const isRtlBook = book !== null ? localeService.isRtl(book.language) : false;
-  const height = fullScreen ? 'calc(100vh - 230px)' : 'calc(100vh - 234px)';
+  const height = calculateViewHeight(fullScreen, isSinglePage);
+
   const style = {
     fontFamily: font,
     fontSize: `${fontScale}em`,
@@ -101,24 +109,28 @@ const Reader = ({
     height,
     left: (page - 1) * columnWidth,
     ...selectedTheme.style,
+    img: {
+      maxWidth: columnWidth - columnGap,
+    },
   };
 
   const stylePageTop = {
-    backgroundImage: getTopPageImage(isSinglePage, page, selectedTheme),
+    backgroundImage: getTopPageImage(isSinglePage, selectedTheme),
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
+    backgroundPositionY: 'bottom',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'end',
     justifyContent: 'space-around',
     fontFamily: font,
     fontSize: `${fontScale / 1.5}em`,
     height: isSinglePage ? '72px' : '76px',
     padding: '0 38px',
-    marginTop: '10px',
+    marginTop: '6px',
   };
 
   const stylePageMiddle = {
-    backgroundImage: getMiddlePageImage(isSinglePage, page, selectedTheme),
+    backgroundImage: getMiddlePageImage(isSinglePage, selectedTheme),
     backgroundPosition: 'center',
     backgroundSize: 'contain',
     backgroundRepeat: 'repeat-y',
@@ -129,14 +141,14 @@ const Reader = ({
   };
 
   const stylePageBottom = {
-    backgroundImage: getBottomPageImage(isSinglePage, page, selectedTheme),
+    backgroundImage: getBottomPageImage(isSinglePage, selectedTheme),
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
     display: 'flex',
     justifyContent: 'space-around',
     fontFamily: font,
     fontSize: `${fontScale / 1.5}em`,
-    height: '99px',
+    height: isSinglePage ? '60px' : '99px',
   };
 
   useEffect(() => {
@@ -231,14 +243,14 @@ const Reader = ({
 
   return (
     <Box sx={{
-      backgroundColor: (theme) => (selectedTheme ? selectedTheme.backgroundColor : theme.palette.background.paper),
+      backgroundColor: theme.palette.background.paper,
       position: (fullScreen ? 'absolute' : 'block'),
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
       direction: isRtlBook ? 'rtl' : 'ltr',
-      zIndex: (theme) => (fullScreen ? theme.zIndex.appBar + 10 : 'inherit'),
+      zIndex: fullScreen ? theme.zIndex.appBar + 5 : 'inherit',
     }}
     >
       <div dir={isRtlBook ? 'rtl' : 'ltr'}>

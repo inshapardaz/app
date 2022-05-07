@@ -20,12 +20,9 @@ const themes = [{
     top: 'url("/images/bookTop.png")',
     middle: 'url("/images/bookMiddle.png")',
     bottom: 'url("/images/bookBottom.png")',
-    topLeft: 'url("/images/bookSingleTopLeft.png")',
-    middleLeft: 'url("/images/bookSingleMiddleLeft.png")',
-    bottomLeft: 'url("/images/bookSingleBottomLeft.png")',
-    topRight: 'url("/images/bookSingleTopRight.png")',
-    middleRight: 'url("/images/bookSingleMiddleRight.png")',
-    bottomRight: 'url("/images/bookSingleBottomRight.png")',
+    topSingle: 'url("/images/singlePageTop.png")',
+    middleSingle: 'url("/images/singlePageMiddle.png")',
+    bottomSingle: 'url("/images/singlePageBottom.png")',
   },
 }, {
   name: 'sepia',
@@ -36,12 +33,9 @@ const themes = [{
     top: 'url("/images/book1.png")',
     middle: 'url("/images/book2.png")',
     bottom: 'url("/images/book3.png")',
-    topLeft: 'url("/images/bookSingleTopLeft.png")',
-    middleLeft: 'url("/images/bookSingleMiddleLeft.png")',
-    bottomLeft: 'url("/images/bookSingleBottomLeft.png")',
-    topRight: 'url("/images/bookSingleTopRight.png")',
-    middleRight: 'url("/images/bookSingleMiddleRight.png")',
-    bottomRight: 'url("/images/bookSingleBottomRight.png")',
+    topSingle: 'url("/images/singlePageTop.png")',
+    middleSingle: 'url("/images/singlePageMiddle.png")',
+    bottomSingle: 'url("/images/singlePageBottom.png")',
   },
 }, {
   name: 'dark',
@@ -52,12 +46,9 @@ const themes = [{
     top: 'url("/images/book1.png")',
     middle: 'url("/images/book2.png")',
     bottom: 'url("/images/book3.png")',
-    topLeft: 'url("/images/bookSingleTopLeft.png")',
-    middleLeft: 'url("/images/bookSingleMiddleLeft.png")',
-    bottomLeft: 'url("/images/bookSingleBottomLeft.png")',
-    topRight: 'url("/images/bookSingleTopRight.png")',
-    middleRight: 'url("/images/bookSingleMiddleRight.png")',
-    bottomRight: 'url("/images/bookSingleBottomRight.png")',
+    topSingle: 'url("/images/singlePageTop.png")',
+    middleSingle: 'url("/images/singlePageMiddle.png")',
+    bottomSingle: 'url("/images/singlePageBottom.png")',
   },
 }];
 
@@ -80,7 +71,7 @@ const ThemeSelector = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog onClose={onClose} open={open}>
+    <Dialog onClose={onClose} open={open} disableRestoreFocus>
       <DialogTitle>
         <ColorLensIcon />
         <FormattedMessage id="theme" />

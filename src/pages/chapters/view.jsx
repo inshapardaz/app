@@ -7,7 +7,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 // Local Imports
 import { libraryService } from '@/services/';
-import Busy from '@/components/busy';
 import Error from '@/components/error';
 import ReaderView from '@/components/reader';
 
@@ -76,9 +75,7 @@ const ChapterViewer = () => {
         actionText={<FormattedMessage id="action.retry" />}
         onAction={loadData}
       >
-        <Busy busy={busy}>
-          <ReaderView book={book} selectedChapter={chapter} format="markdown" data={content ? content.text : ''} />
-        </Busy>
+        <ReaderView book={book} busy={busy} selectedChapter={chapter} format="markdown" data={content ? content.text : ''} />
       </Error>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
+import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 
 // MUI
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -34,35 +35,30 @@ const MinimumFontScale = 0;
 const MaximumFontScale = 5;
 
 const ReaderView = ({
-  book, selectedChapter, data, format = 'text',
+  book, selectedChapter, data, format = 'text', busy,
 }) => {
   const history = useHistory();
   const intl = useIntl();
-  const [fontScale, setFontScale] = useState(parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0'));
-  const [view, setView] = useState(localStorage.getItem(ReaderViewTypeStorageKey) || 'single');
+  const [fontScale] = useLocalStorage(ReaderFontSizeStorageKey, 1.0);
+  const [view] = useLocalStorage(ReaderViewTypeStorageKey, 'single');
   const [fullScreen, setFullScreen] = useState(false);
   const [showDrawer, setShowDrawer] = useState(false);
   const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showFontSelector, setShowFontSelector] = useState(false);
   const [showLineHeightSelector, setShowLineHeightSelector] = useState(false);
-  const [openSpeedDial, setOpenSpeedDial] = React.useState(false);
-  const handleOpen = () => setOpenSpeedDial(true);
-  const handleClose = () => setOpenSpeedDial(false);
   const isNarrowScreen = useMediaQuery('(max-width:1300px)');
 
   const onZoomInText = () => {
     if (fontScale < MaximumFontScale) {
       const newScale = (parseFloat(fontScale) + 0.1).toFixed(2);
-      setFontScale(newScale);
-      localStorage.setItem(ReaderFontSizeStorageKey, newScale);
+      writeStorage(ReaderFontSizeStorageKey, newScale);
     }
   };
 
   const onZoomOutText = () => {
     if (fontScale > MinimumFontScale) {
       const newScale = (parseFloat(fontScale) - 0.1).toFixed(2);
-      setFontScale(newScale);
-      localStorage.setItem(ReaderFontSizeStorageKey, newScale);
+      writeStorage(ReaderFontSizeStorageKey, newScale);
     }
   };
 
@@ -71,8 +67,7 @@ const ReaderView = ({
   };
 
   const onViewTypeChanged = (newViewType) => {
-    localStorage.setItem(ReaderViewTypeStorageKey, newViewType);
-    setView(newViewType);
+    writeStorage(ReaderViewTypeStorageKey, newViewType);
   };
 
   const renderColumnLayout = () => {
@@ -97,20 +92,20 @@ const ReaderView = ({
       />
     );
   };
+
   return (
     <>
       <ChaptersSelector book={book} selectedChapter={selectedChapter} open={showDrawer} onCloseDrawer={() => setShowDrawer(false)} />
       <LineHeightSelector open={showLineHeightSelector} onClose={() => setShowLineHeightSelector(false)} />
       <ThemeSelector open={showThemeSelector} onClose={() => setShowThemeSelector(false)} />
       <FontSelector open={showFontSelector} onClose={() => setShowFontSelector(false)} />
-      <Backdrop open={openSpeedDial} />
+      <Backdrop open={busy} />
       <SpeedDial
         ariaLabel="settings"
-        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+        sx={{
+          position: 'absolute', bottom: 16, right: 16, zIndex: (theme) => theme.zIndex.appBar + 10,
+        }}
         icon={<SpeedDialIcon icon={<SettingsIcon />} openIcon={<ClearIcon />} />}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        open={openSpeedDial}
       >
         <SpeedDialAction
           key="full-screen"
@@ -143,14 +138,14 @@ const ReaderView = ({
           key="themes"
           icon={<ColorLensIcon />}
           tooltipTitle={intl.formatMessage({ id: 'theme' })}
-          onClick={() => setShowThemeSelector(true) && handleClose()}
+          onClick={() => setShowThemeSelector(true)}
         />
 
         <SpeedDialAction
           key="font"
           icon={<FontDownloadIcon />}
           tooltipTitle={intl.formatMessage({ id: 'chapter.toolbar.font' })}
-          onClick={() => setShowFontSelector(true) && handleClose()}
+          onClick={() => setShowFontSelector(true)}
         />
       </SpeedDial>
       <Reader
@@ -175,6 +170,7 @@ ReaderView.defaultProps = {
   selectedChapter: null,
   data: '',
   format: 'text',
+  busy: false,
 };
 
 ReaderView.propTypes = {
@@ -197,6 +193,7 @@ ReaderView.propTypes = {
   }),
   data: PropTypes.string,
   format: PropTypes.string,
+  busy: PropTypes.bool,
 };
 
 export default ReaderView;
