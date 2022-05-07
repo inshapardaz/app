@@ -110,7 +110,7 @@ const Reader = ({
     justifyContent: 'space-around',
     fontFamily: font,
     fontSize: `${fontScale / 1.5}em`,
-    height: isSinglePage ? '67px' : '56px',
+    height: isSinglePage ? '67px' : '75px',
     padding: '0 38px',
     marginTop: '10px',
   };
