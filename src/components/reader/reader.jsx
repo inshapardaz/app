@@ -74,7 +74,7 @@ const Reader = ({
 
   const isSinglePage = view === 'single' || isNarrowScreen;
   // eslint-disable-next-line no-nested-ternary
-  const pageWidth = isMobile ? 340 : isSinglePage ? 575 : 1202;
+  const pageWidth = isMobile ? 340 : isSinglePage ? 610 : 1216;
   const columnWidth = isSinglePage ? 500 : 526;
   const columnGap = 64;
   const [pageCount, setPageCount] = useState(isSinglePage ? 1 : 2);
@@ -110,7 +110,7 @@ const Reader = ({
     justifyContent: 'space-around',
     fontFamily: font,
     fontSize: `${fontScale / 1.5}em`,
-    height: isSinglePage ? '67px' : '75px',
+    height: isSinglePage ? '72px' : '76px',
     padding: '0 38px',
     marginTop: '10px',
   };
@@ -121,7 +121,7 @@ const Reader = ({
     backgroundSize: 'contain',
     backgroundRepeat: 'repeat-y',
     backgroundOrigin: 'padding-box',
-    width: `${pageWidth - 64}px`,
+    width: `${pageWidth - columnGap}px`,
     padding: isSinglePage ? '10px 55px' : '10px 82px',
     overflow: 'hidden',
   };
