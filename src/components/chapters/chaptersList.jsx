@@ -47,7 +47,7 @@ const ChapterEditor = ({ createLink, onUpdated, newChapterIndex }) => {
   };
 
   const keyPress = (e) => {
-    if (e.keyCode === 13) {
+    if (e !== null && e.keyCode === 13) {
       onSave();
     }
   };
@@ -74,7 +74,7 @@ const ChapterEditor = ({ createLink, onUpdated, newChapterIndex }) => {
           variant="standard"
           placeholder={intl.formatMessage({ id: 'chapter.messages.addName' })}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => e !== null && setValue(e.target.value)}
           onKeyDown={keyPress}
           endAdornment={value && value.trim() !== '' ? (
             <InputAdornment position="end">
@@ -152,7 +152,7 @@ const ChapterListItem = ({
   };
 
   const keyPress = (e) => {
-    if (e.keyCode === 13) {
+    if (e !== null && e.keyCode === 13) {
       onSave();
     }
   };
@@ -167,7 +167,7 @@ const ChapterListItem = ({
           variant="standard"
           placeholder={intl.formatMessage({ id: 'chapter.messages.addName' })}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => e !== null && setValue(e.target.value)}
           onKeyDown={keyPress}
           sx={{ marginRight: '80px' }}
         />
@@ -353,7 +353,7 @@ const ChaptersList = ({ book }) => {
                   <ChapterListItem
                     key={c.id}
                     chapter={c}
-                    onUpdated={loadData}
+                    onUpdated={() => loadData()}
                     canEdit={!editing}
                     onStartEditing={() => setEditing(true)}
                     onEndEditing={() => setEditing(false)}
