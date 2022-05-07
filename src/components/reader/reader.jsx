@@ -4,6 +4,7 @@ import parse from 'html-react-parser';
 import ReactMarkdown from 'react-markdown';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
+import { useLocalStorage } from '@rehooks/local-storage';
 
 // MUI
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -62,15 +63,16 @@ const Reader = ({
   canGoBack, onBack, canGoForward, onForward, view, onChapterClicked,
 }) => {
   const selectedTheme = getSelectedTheme();
-  const font = localStorage.getItem(ReaderFontStorageKey) || 'MehrNastaleeq';
-  const fontScale = parseFloat(localStorage.getItem(ReaderFontSizeStorageKey) || '1.0');
+  const [font] = useLocalStorage(ReaderFontStorageKey, 'MehrNastaleeq');
+  const [fontScale] = useLocalStorage(ReaderFontSizeStorageKey, 1.0);
+  const [lineHeight] = useLocalStorage('reader.lineHeight', 1.0);
+
   const [touchStart, setTouchStart] = React.useState(0);
   const [touchEnd, setTouchEnd] = React.useState(0);
 
   const isNarrowScreen = useMediaQuery('(max-width:1300px)');
   const isMobile = useMediaQuery('(max-width:430px)');
   const [page, setPage] = useState(1);
-  const lineHeight = parseFloat(localStorage.getItem('reader.lineHeight') || '1.0');
 
   const isSinglePage = view === 'single' || isNarrowScreen;
   // eslint-disable-next-line no-nested-ternary

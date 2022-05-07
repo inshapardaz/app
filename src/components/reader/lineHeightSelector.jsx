@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
+import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 
 // MUI
 import List from '@mui/material/List';
@@ -28,10 +29,10 @@ const lineWidths = [{
 }];
 
 const LineHeightSelector = ({ open, onClose }) => {
-  const selectedLineHeight = parseFloat(localStorage.getItem('reader.lineHeight') || '1.0');
+  const selectedLineHeight = useLocalStorage('reader.lineHeight', 1.0);
 
   const onChange = (newLineHeight) => {
-    localStorage.setItem('reader.lineHeight', newLineHeight.value);
+    writeStorage('reader.lineHeight', newLineHeight.value);
     onClose();
   };
 

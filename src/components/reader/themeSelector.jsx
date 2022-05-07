@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
+import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 
 // MUI
 import List from '@mui/material/List';
@@ -62,8 +63,7 @@ const themes = [{
 
 const getThemeFromName = (name) => themes.find((t) => t.name === name);
 
-const getSelectedTheme = () => {
-  const theme = localStorage.getItem('reader.theme');
+const getSelectedTheme = (theme) => {
   if (theme) {
     return getThemeFromName(theme);
   }
@@ -71,10 +71,11 @@ const getSelectedTheme = () => {
 };
 
 const ThemeSelector = ({ open, onClose }) => {
-  const selectedTheme = getSelectedTheme();
+  const [theme] = useLocalStorage('reader.theme');
+  const selectedTheme = getSelectedTheme(theme);
 
   const onChange = (newTheme) => {
-    localStorage.setItem('reader.theme', newTheme.name);
+    writeStorage('reader.theme', newTheme.name);
     onClose();
   };
 

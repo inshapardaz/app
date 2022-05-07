@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import FontDownloadIcon from '@mui/icons-material/FontDownload';
+import { writeStorage, useLocalStorage } from '@rehooks/local-storage';
 
 // MUI
 import List from '@mui/material/List';
@@ -15,10 +16,10 @@ import { localeService } from '@/services/';
 
 const FontSelector = ({ open, onClose }) => {
   const fonts = localeService.getSupportedFonts();
-  const selectedFont = localStorage.getItem('reader.font') || 'MehrNastaleeq';
+  const [selectedFont] = useLocalStorage('reader.font', 'MehrNastaleeq');
 
   const onChange = (newFont) => {
-    localStorage.setItem('reader.font', newFont.key);
+    writeStorage('reader.font', newFont.key);
     onClose();
   };
 
