@@ -41,7 +41,7 @@ const PublicationSummary = () => {
   const renderList = () => (
     <List>
       {summary.map((item) => (
-        <ListItem disablePadding>
+        <ListItem disablePadding key={item.status}>
           <ListItemAvatar>
             <Avatar>
               <PageStatusIcon status={item.status} />

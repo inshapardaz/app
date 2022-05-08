@@ -31,6 +31,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import actions from '@/actions';
 import FontMenu from '@/components/fontMenu';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
+import CorrectionMenu from '@/components/editor/correctionMenu';
 
 const convertToMarkdown = (editorState) => stateToMarkdown(editorState.getCurrentContent());
 const convertToDraftJs = (markdownData) => {
@@ -116,7 +117,6 @@ const Editor = ({
   }, [identifier, content]);
 
   useEffect(() => {
-    console.log(`Loading corrections for ${language}`);
     dispatch(actions.getPunctuationCorrections(language));
     dispatch(actions.getAutoFixCorrections(language));
   }, []);
@@ -169,18 +169,21 @@ const Editor = ({
     setShowControls(!showControls);
   };
 
-  const onCorrect = () => {
+  const onCorrect = (profile) => {
     let markDown = convertToMarkdown(editorState);
-    markDown = markDown.replace(/  +/g, ' ');
+    if (profile === 0) {
+      markDown = markDown.replace(/  +/g, ' ');
 
-    for (const [key, value] of Object.entries(punctuationCorrections)) {
-      markDown = markDown.replaceAll(key, value);
+      for (const [key, value] of Object.entries(punctuationCorrections)) {
+        markDown = markDown.replaceAll(key, value);
+      }
+      const draftJs = convertToDraftJs(markDown);
+      setEditorState(draftJs);
+    } else if (profile === 1) {
+	    markDown = markDown.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
+      const draftJs = convertToDraftJs(markDown);
+      setEditorState(draftJs);
     }
-
-    markDown = markDown.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
-
-    const draftJs = convertToDraftJs(markDown);
-    setEditorState(draftJs);
   };
 
   return (
@@ -230,9 +233,7 @@ const Editor = ({
             <FindInPageIcon />
           </ButtonWithTooltip>
           )}
-          <ButtonWithTooltip tooltip="auto correct" onClick={onCorrect}>
-            <AutoAwesomeIcon />
-          </ButtonWithTooltip>
+          <CorrectionMenu onCorrectionClick={onCorrect} />
           <ButtonWithTooltip tooltip={<FormattedMessage id="action.zoom.in" />} onClick={onZoomInText} disabled={parseFloat(textScale) >= 3}>
             <ZoomInIcon />
           </ButtonWithTooltip>

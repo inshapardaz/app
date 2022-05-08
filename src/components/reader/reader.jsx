@@ -84,7 +84,6 @@ const Reader = ({
   const isNarrowScreen = useMediaQuery('(max-width:1300px)');
   const isMobile = useMediaQuery('(max-width:430px)');
   const [page, setPage] = useState(1);
-  const [left, setLeft] = useState(0);
 
   const isSinglePage = view === 'single' || isNarrowScreen;
   // eslint-disable-next-line no-nested-ternary
@@ -114,7 +113,8 @@ const Reader = ({
     lineHeight,
     maxHeight: isSinglePage ? '800px' : '100vh',
     height,
-    left: (page - 1) * columnWidth,
+    left: isRtlBook ? (page - 1) * columnWidth : 'auto',
+    right: isRtlBook ? 'auto' : (page - 1) * columnWidth,
     ...selectedTheme.style,
     img: {
       maxWidth: columnWidth - columnGap,
@@ -191,13 +191,21 @@ const Reader = ({
 
   useEffect(() => {
     if (leftPressed) {
-      onNext();
+      if (isRtlBook) {
+        onNext();
+      } else {
+        onPrevious();
+      }
     }
   }, [leftPressed]);
 
   useEffect(() => {
     if (rightPressed) {
-      onPrevious();
+      if (isRtlBook) {
+        onPrevious();
+      } else {
+        onNext();
+      }
     }
   }, [rightPressed]);
 
