@@ -20,6 +20,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
 import { getSelectedTheme } from '@/components/reader/themeSelector';
 import { localeService } from '@/services/';
+import useKeyPress from '@/helpers/useKeyPress';
 
 const ReaderFontSizeStorageKey = 'reader.fontSize';
 const ReaderFontStorageKey = 'reader.font';
@@ -69,6 +70,9 @@ const Reader = ({
   canGoBack, onBack, canGoForward, onForward, view, onChapterClicked,
 }) => {
   const theme = useTheme();
+  const leftPressed = useKeyPress('ArrowLeft');
+  const rightPressed = useKeyPress('ArrowRight');
+
   const selectedTheme = getSelectedTheme();
   const [font] = useLocalStorage(ReaderFontStorageKey, 'MehrNastaleeq');
   const [fontScale] = useLocalStorage(ReaderFontSizeStorageKey, 1.0);
@@ -80,13 +84,15 @@ const Reader = ({
   const isNarrowScreen = useMediaQuery('(max-width:1300px)');
   const isMobile = useMediaQuery('(max-width:430px)');
   const [page, setPage] = useState(1);
+  const [left, setLeft] = useState(0);
 
   const isSinglePage = view === 'single' || isNarrowScreen;
   // eslint-disable-next-line no-nested-ternary
-  const pageWidth = isMobile ? 340 : isSinglePage ? 610 : 1216;
+  const pageWidth = isMobile ? 430 : isSinglePage ? 610 : 1216;
   const columnWidth = isSinglePage ? 500 : 526;
   const columnGap = 64;
   const [pageCount, setPageCount] = useState(isSinglePage ? 1 : 2);
+
   const anchorRef = useCallback((node) => {
     if (node !== null) {
       setPageCount(Math.ceil(node.scrollWidth / columnWidth));
@@ -106,6 +112,7 @@ const Reader = ({
     position: 'relative',
     backgroundColor: 'transparent',
     lineHeight,
+    maxHeight: isSinglePage ? '800px' : '100vh',
     height,
     left: (page - 1) * columnWidth,
     ...selectedTheme.style,
@@ -121,7 +128,7 @@ const Reader = ({
     backgroundPositionY: 'bottom',
     display: 'flex',
     alignItems: 'end',
-    justifyContent: 'space-around',
+    justifyContent: isSinglePage ? 'space-between' : 'space-around',
     fontFamily: font,
     fontSize: `${fontScale / 1.5}em`,
     height: isSinglePage ? '72px' : '76px',
@@ -181,6 +188,18 @@ const Reader = ({
   };
 
   const canGoNext = () => !isOnLastPage() || canGoForward;
+
+  useEffect(() => {
+    if (leftPressed) {
+      onNext();
+    }
+  }, [leftPressed]);
+
+  useEffect(() => {
+    if (rightPressed) {
+      onPrevious();
+    }
+  }, [rightPressed]);
 
   const renderContents = () => {
     if (format === 'html') {
@@ -269,10 +288,7 @@ const Reader = ({
                   {renderContents()}
                 </div>
               </div>
-              <div style={stylePageBottom}>
-                <span>{page}</span>
-                {!isSinglePage && <span>{page + 1}</span> }
-              </div>
+              <div style={stylePageBottom} />
             </Container>
           </Grid>
           <Grid item>
