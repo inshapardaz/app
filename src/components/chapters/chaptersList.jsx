@@ -237,7 +237,7 @@ const ChapterListItem = ({
   };
 
   return (
-    <Draggable isDragDisabled={!canEdit} draggableId={`draggable-${chapter.id}`} index={chapter.chapterNumber}>
+    <Draggable isDragDisabled={!canEdit} draggableId={`draggable-${chapter.id}`} index={chapter.chapterNumber - 1}>
       {(provided) => (
         <ListItem
           key={chapter.id}
@@ -324,7 +324,7 @@ const ChaptersList = ({ book }) => {
       chapters.data.splice(toIndex, 0, element);
 
       chapters.data = chapters.data.map((item, index) => {
-        item.chapterNumber = index;
+        item.chapterNumber = index + 1;
         return item;
       });
 
