@@ -122,9 +122,11 @@ const Editor = ({
       setLoadedSavedData(true);
     } else {
       try {
-        if (!content) return;
-        let newState = {};
-        if (isJsonString(content)) {
+        let newState = null;
+
+        if (!content) {
+          newState = EditorState.createEmpty();
+        } else if (isJsonString(content)) {
           newState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
         } else {
           newState = convertToDraftJs(content);

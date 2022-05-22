@@ -34,10 +34,10 @@ const ChapterContentEditor = () => {
         setDirty(false);
       })
       .catch((e) => {
-        console.error(e);
         if (e.status === 404) {
           setContent(null);
         } else {
+          console.error(e);
           enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.loading' }), { variant: 'error' });
         }
       })
@@ -123,7 +123,7 @@ const ChapterContentEditor = () => {
 
     return (
       <Editor
-        content={content ? content.text : ''}
+        content={content ? content.text : null}
         label={<ChapterBreadcrumb book={book} chapter={chapter} />}
         message={!busy && content === null && (
         <Alert severity="warning">
