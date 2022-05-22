@@ -81,8 +81,8 @@ const ChapterContentEditor = () => {
       //  Adding new content
       return libraryService.addChapterContents(chapter.links.add_content,
         library.language, newContent)
-        .then(() => {
-          setContent(newContent);
+        .then((res) => {
+          setContent(res);
           enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.saved' }), { variant: 'success' });
         })
         .catch(() => enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.error.saving' }), { variant: 'error' }))
@@ -109,7 +109,7 @@ const ChapterContentEditor = () => {
       return localeService.getDirection(content.language);
     }
 
-    return localeService.getDirection(library.language);
+    return library ? localeService.getDirection(library.language) : 'ltr';
   };
 
   const onChanged = (d) => {
@@ -131,7 +131,6 @@ const ChapterContentEditor = () => {
         </Alert>
         )}
         identifier={`${book.id}-${chapter.id}-${library.language}`}
-        allowOcr={false}
         onSave={saveContents}
         onDirty={onChanged}
         direction={getDirection()}

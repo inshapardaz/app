@@ -24,6 +24,7 @@ import Error from '@/components/error';
 import Busy from '@/components/busy';
 import ImageViewer from '@/components/pages/imageViewer';
 import CompleteButton from '@/components/pages/completeButton';
+import OcrButton from '@/components/pages/ocrButton';
 
 const PageEditorPage = () => {
   const { bookId, pageNumber } = useParams();
@@ -146,6 +147,7 @@ const PageEditorPage = () => {
           </Button>
         </Tooltip>
       </ButtonGroup>
+      <OcrButton pages={page ? [page] : []} onUpdated={loadData} />
       <ButtonGroup variant="outlined" sx={{ mr: (theme) => theme.spacing(1) }}>
         <Tooltip title={<FormattedMessage id="action.toggle.image" />}>
           <Button onClick={toggleImage} variant="outlined">
@@ -156,6 +158,14 @@ const PageEditorPage = () => {
 
     </>
   );
+
+  const getDirection = () => {
+    if (book) {
+      return localeService.getDirection(book.language);
+    }
+
+    return library ? localeService.getDirection(library.language) : 'ltr';
+  };
 
   const title = !pageNumber ? intl.formatMessage({ id: 'page.editor.header.add' })
     : intl.formatMessage({ id: 'page.editor.header.edit' }, { sequenceNumber: page ? page.sequenceNumber : '' });
@@ -179,6 +189,7 @@ const PageEditorPage = () => {
           identifier={`${bookId}-${page ? page.sequenceNumber : -1}`}
           onSave={onSave}
           label={<PageBreadcrumb book={book} chapter={null} page={page} showPage />}
+          direction={getDirection()}
           endToolbar={pageToolbar()}
           secondaryView={hideImage ? null : (
             <ImageViewer

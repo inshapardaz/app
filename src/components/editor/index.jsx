@@ -18,7 +18,6 @@ import Divider from '@mui/material/Divider';
 import Alert from '@mui/material/Alert';
 
 import SaveIcon from '@mui/icons-material/Save';
-import FindInPageIcon from '@mui/icons-material/FindInPage';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
@@ -57,7 +56,7 @@ function isJsonString(str) {
 const Editor = ({
   identifier, content, label, onSave, onDirty,
   startToolbar, endToolbar, secondaryView, message,
-  allowFullScreen, allowOcr, direction,
+  allowFullScreen, direction,
 }) => {
   const dispatch = useDispatch();
   const [font, setFont] = useState(localStorage.getItem('editor-font') || null);
@@ -217,20 +216,6 @@ const Editor = ({
     });
 
     setEditorState(EditorState.createWithContent(convertFromRaw(rawState)));
-    /* let markDown = convertToMarkdown(editorState);
-    if (profile === 0) {
-      markDown = markDown.replace(/  +/g, ' ');
-
-      for (const [key, value] of Object.entries(punctuationCorrections)) {
-        markDown = markDown.replaceAll(key, value);
-      }
-      const draftJs = convertToDraftJs(markDown);
-      setEditorState(draftJs);
-    } else if (profile === 1) {
-	    markDown = markDown.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
-      const draftJs = convertToDraftJs(markDown);
-      setEditorState(draftJs);
-    } */
   };
 
   return (
@@ -275,11 +260,6 @@ const Editor = ({
             <SaveIcon />
           </ButtonWithTooltip>
           <FontMenu value={font} onFontSelected={setFont} storageKey="editor-font" />
-          {allowOcr && (
-          <ButtonWithTooltip tooltip="ocr">
-            <FindInPageIcon />
-          </ButtonWithTooltip>
-          )}
           <CorrectionMenu onCorrectionClick={onCorrect} />
           <ButtonWithTooltip tooltip={<FormattedMessage id="action.zoom.in" />} onClick={onZoomInText} disabled={parseFloat(textScale) >= 3}>
             <ZoomInIcon />
@@ -353,7 +333,6 @@ Editor.defaultProps = {
   secondaryView: null,
   onSave: () => {},
   onDirty: () => {},
-  allowOcr: true,
   direction: 'ltr',
 };
 
@@ -368,7 +347,6 @@ Editor.propTypes = {
   secondaryView: PropTypes.node,
   onSave: PropTypes.func,
   onDirty: PropTypes.func,
-  allowOcr: PropTypes.bool,
   direction: PropTypes.string,
 };
 
