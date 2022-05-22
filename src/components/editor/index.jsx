@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 
-import { stateToMarkdown } from 'draft-js-export-markdown';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 
 import MUIEditor, { MUIEditorState, toolbarControlTypes, fileToBase64 } from 'urdu-editor';
@@ -20,7 +19,6 @@ import Alert from '@mui/material/Alert';
 
 import SaveIcon from '@mui/icons-material/Save';
 import FindInPageIcon from '@mui/icons-material/FindInPage';
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
@@ -33,7 +31,6 @@ import FontMenu from '@/components/fontMenu';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
 import CorrectionMenu from '@/components/editor/correctionMenu';
 
-const convertToMarkdown = (editorState) => stateToMarkdown(editorState.getCurrentContent());
 const convertToDraftJs = (markdownData) => {
   const contentState = stateFromMarkdown(markdownData, { parserOptions: { atomicImages: true } });
   return EditorState.createWithContent(contentState);
@@ -48,10 +45,19 @@ const getReplaceAllRegex = (dict) => {
   return new RegExp(`\\b${retVal.slice(0, -1)}\\b`, 'giu');
 };
 
+function isJsonString(str) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 const Editor = ({
   identifier, content, label, onSave, onDirty,
   startToolbar, endToolbar, secondaryView, message,
-  allowFullScreen, allowOcr,
+  allowFullScreen, allowOcr, direction,
 }) => {
   const dispatch = useDispatch();
   const [font, setFont] = useState(localStorage.getItem('editor-font') || null);
@@ -73,6 +79,9 @@ const Editor = ({
         overflowX: 'auto',
       },
     },
+    draftEditor: {
+      textDirectionality: direction.toUpperCase(),
+	  },
     toolbar: {
       className: '',
       style: {},
@@ -86,11 +95,14 @@ const Editor = ({
         toolbarControlTypes.underline,
         toolbarControlTypes.strikethrough,
         toolbarControlTypes.divider,
+        toolbarControlTypes.textAlign,
+        toolbarControlTypes.divider,
         toolbarControlTypes.linkAdd,
         toolbarControlTypes.linkRemove,
         toolbarControlTypes.image,
         toolbarControlTypes.divider,
         toolbarControlTypes.blockType,
+        toolbarControlTypes.divider,
         toolbarControlTypes.unorderedList,
         toolbarControlTypes.orderedList,
       ],
@@ -110,9 +122,19 @@ const Editor = ({
       setEditorState(EditorState.createWithContent(rawContentFromStore));
       setLoadedSavedData(true);
     } else {
-      const newState = convertToDraftJs(content);
-      setEditorState(newState);
-      setLoadedSavedData(false);
+      try {
+        if (!content) return;
+        let newState = {};
+        if (isJsonString(content)) {
+          newState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
+        } else {
+          newState = convertToDraftJs(content);
+        }
+        setEditorState(newState);
+        setLoadedSavedData(false);
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, [identifier, content]);
 
@@ -135,9 +157,8 @@ const Editor = ({
   };
 
   const save = () => {
-    const markDown = convertToMarkdown(editorState);
     setSaving(true);
-    onSave(markDown)
+    onSave(JSON.stringify(convertToRaw(editorState.getCurrentContent())))
       .then(() => localStorage.removeItem(`contents-${identifier}`))
       .then(() => setLoadedSavedData(false))
       .then(() => onDirty(false))
@@ -170,7 +191,33 @@ const Editor = ({
   };
 
   const onCorrect = (profile) => {
-    let markDown = convertToMarkdown(editorState);
+    const contentState = editorState.getCurrentContent();
+    const rawState = convertToRaw(contentState);
+    rawState.blocks = rawState.blocks.map((b) => {
+      if (!b.text) {
+        return b;
+      }
+
+      let { text } = b;
+      if (profile === 0) {
+        text = text.replace(/  +/g, ' ');
+
+        for (const [key, value] of Object.entries(punctuationCorrections)) {
+          text = text.replaceAll(key, value);
+        }
+
+        b.text = text;
+        return b;
+      }
+      if (profile === 1) {
+        text = text.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
+        b.text = text;
+        return b;
+      }
+    });
+
+    setEditorState(EditorState.createWithContent(convertFromRaw(rawState)));
+    /* let markDown = convertToMarkdown(editorState);
     if (profile === 0) {
       markDown = markDown.replace(/  +/g, ' ');
 
@@ -183,7 +230,7 @@ const Editor = ({
 	    markDown = markDown.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
       const draftJs = convertToDraftJs(markDown);
       setEditorState(draftJs);
-    }
+    } */
   };
 
   return (
@@ -307,6 +354,7 @@ Editor.defaultProps = {
   onSave: () => {},
   onDirty: () => {},
   allowOcr: true,
+  direction: 'ltr',
 };
 
 Editor.propTypes = {
@@ -321,6 +369,7 @@ Editor.propTypes = {
   onSave: PropTypes.func,
   onDirty: PropTypes.func,
   allowOcr: PropTypes.bool,
+  direction: PropTypes.string,
 };
 
 export default Editor;

@@ -60,6 +60,11 @@ class LocaleService {
     return ['ur'].includes(locale.toLowerCase());
   }
 
+  getDirection(language) {
+    const locale = language != null ? language : this.getCurrentLanguage();
+    return ['ur'].includes(locale.toLowerCase()) ? 'rtl' : 'ltr';
+  }
+
   getMessages(language) {
     const locale = language != null ? language : this.getCurrentLanguage();
     switch (locale.toLowerCase()) {

@@ -8,7 +8,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import Alert from '@mui/material/Alert';
 
 // Local Imports
-import { libraryService } from '@/services/';
+import { libraryService, localeService } from '@/services';
 import Busy from '@/components/busy';
 import Error from '@/components/error';
 import Editor from '@/components/editor';
@@ -104,6 +104,14 @@ const ChapterContentEditor = () => {
       });
   };
 
+  const getDirection = () => {
+    if (content) {
+      return localeService.getDirection(content.language);
+    }
+
+    return localeService.getDirection(library.language);
+  };
+
   const onChanged = (d) => {
     setDirty(d);
   };
@@ -126,6 +134,7 @@ const ChapterContentEditor = () => {
         allowOcr={false}
         onSave={saveContents}
         onDirty={onChanged}
+        direction={getDirection()}
       />
     );
   };
