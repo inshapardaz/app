@@ -5,6 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { useLocalStorage } from '@rehooks/local-storage';
+import { convertFromRaw } from 'draft-js';
+import { toHTML } from 'urdu-editor';
 
 // MUI
 import { useTheme } from '@mui/material/styles';
@@ -215,6 +217,10 @@ const Reader = ({
     }
     if (format === 'markdown') {
       return (<ReactMarkdown>{data}</ReactMarkdown>);
+    }
+    if (format === 'draft') {
+      const state = convertFromRaw(JSON.parse(data));
+      return parse(toHTML(state));
     }
 
     return data;
