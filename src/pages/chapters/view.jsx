@@ -10,15 +10,6 @@ import { libraryService } from '@/services/';
 import Error from '@/components/error';
 import ReaderView from '@/components/reader';
 
-function isJsonString(str) {
-  try {
-    JSON.parse(str);
-  } catch (e) {
-    return false;
-  }
-  return true;
-}
-
 const ChapterViewer = () => {
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
@@ -75,14 +66,6 @@ const ChapterViewer = () => {
     }
   }, [bookId, chapterNumber, library]);
 
-  const getFormat = () => {
-    if (content) {
-      return isJsonString(content.text) ? 'draft' : 'markdown';
-    }
-
-    return 'html';
-  };
-
   return (
     <div data-ft="view-chapter-page">
       <Helmet title={chapter ? chapter.title : ''} />
@@ -92,7 +75,7 @@ const ChapterViewer = () => {
         actionText={<FormattedMessage id="action.retry" />}
         onAction={loadData}
       >
-        <ReaderView book={book} busy={busy} selectedChapter={chapter} format={getFormat()} data={content ? content.text : ''} />
+        <ReaderView book={book} busy={busy} selectedChapter={chapter} format="markdown" data={content ? content.text : ''} />
       </Error>
     </div>
   );

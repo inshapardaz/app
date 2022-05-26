@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
-
+import { stateToMarkdown } from 'draft-js-export-markdown';
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 
 import MUIEditor, { MUIEditorState, toolbarControlTypes, fileToBase64 } from 'urdu-editor';
@@ -43,6 +43,8 @@ const getReplaceAllRegex = (dict) => {
 
   return new RegExp(`\\b${retVal.slice(0, -1)}\\b`, 'giu');
 };
+
+const convertToMarkdown = (editorState) => stateToMarkdown(editorState.getCurrentContent());
 
 function isJsonString(str) {
   try {
@@ -93,8 +95,6 @@ const Editor = ({
         toolbarControlTypes.italic,
         toolbarControlTypes.underline,
         toolbarControlTypes.strikethrough,
-        toolbarControlTypes.divider,
-        toolbarControlTypes.textAlign,
         toolbarControlTypes.divider,
         toolbarControlTypes.linkAdd,
         toolbarControlTypes.linkRemove,
@@ -159,7 +159,8 @@ const Editor = ({
 
   const save = () => {
     setSaving(true);
-    onSave(JSON.stringify(convertToRaw(editorState.getCurrentContent())))
+    const markDown = convertToMarkdown(editorState);
+    onSave(markDown)
       .then(() => localStorage.removeItem(`contents-${identifier}`))
       .then(() => setLoadedSavedData(false))
       .then(() => onDirty(false))
@@ -192,32 +193,19 @@ const Editor = ({
   };
 
   const onCorrect = (profile) => {
-    const contentState = editorState.getCurrentContent();
-    const rawState = convertToRaw(contentState);
-    rawState.blocks = rawState.blocks.map((b) => {
-      if (!b.text) {
-        return b;
+    let markDown = convertToMarkdown(editorState);
+    if (profile === 0) {
+      markDown = markDown.replace(/  +/g, ' ');
+      for (const [key, value] of Object.entries(punctuationCorrections)) {
+        markDown = markDown.replaceAll(key, value);
       }
-
-      let { text } = b;
-      if (profile === 0) {
-        text = text.replace(/  +/g, ' ');
-
-        for (const [key, value] of Object.entries(punctuationCorrections)) {
-          text = text.replaceAll(key, value);
-        }
-
-        b.text = text;
-        return b;
-      }
-      if (profile === 1) {
-        text = text.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
-        b.text = text;
-        return b;
-      }
-    });
-
-    setEditorState(EditorState.createWithContent(convertFromRaw(rawState)));
+      const draftJs = convertToDraftJs(markDown);
+      setEditorState(draftJs);
+    } else if (profile === 1) {
+	    markDown = markDown.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
+      const draftJs = convertToDraftJs(markDown);
+      setEditorState(draftJs);
+    }
   };
 
   return (
