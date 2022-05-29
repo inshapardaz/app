@@ -337,6 +337,7 @@ export default {
     return fetchWrapper.postFile(url, formData, { Accept: 'application/json' })
       .then((data) => parseObject(data));
   },
+  postFile,
   post,
   delete: _delete,
 };

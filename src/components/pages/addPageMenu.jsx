@@ -36,14 +36,14 @@ const AddPageMenu = ({ book, onFilesUploaded }) => {
 
   const handleImageUpload = () => {
     setAcceptFiles('image/jpeg,image/png,image/bmp');
-    setFileLimit(50);
+    setFileLimit(200);
     setShowFilesUpload(true);
     handleClose();
   };
 
   const handlePdfUpload = () => {
     setAcceptFiles('application/pdf,application/zip,application/x-zip-compressed');
-    setFileLimit(1);
+    setFileLimit(20);
     setShowFilesUpload(true);
     handleClose();
   };

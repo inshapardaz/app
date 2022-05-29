@@ -30,7 +30,7 @@ const DeleteButton = ({
       .then(() => {
         const promises = [];
         onDeleting(true);
-        pages.map((page) => {
+        pages.slice(0).reverse().map((page) => {
           if (page && page.links && page.links.delete) {
             return promises.push(libraryService.delete(page.links.delete));
           }
