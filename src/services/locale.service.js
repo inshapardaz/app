@@ -86,6 +86,10 @@ class LocaleService {
         displayName: intl.formatMessage({ id: 'font.FajerNooriNastalique' }),
       },
       {
+        key: 'EmadNastaleeq',
+        displayName: intl.formatMessage({ id: 'font.EmadNastaleeq' }),
+      },
+      {
         key: 'NafeesWebNaskh',
         displayName: intl.formatMessage({ id: 'font.NafeesWebNaskh' }),
       },
