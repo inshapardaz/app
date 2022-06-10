@@ -136,13 +136,29 @@ const BookPages = () => {
   const loadPages = (b) => {
     setError(false);
     const values = queryString.parse(location.search);
-    const assignmentFilterValue = values.assignmentFilter ? values.assignmentFilter : 'assignedToMe';
     const filter = values.filter ? values.filter : getFilterFromBookStatus(b);
-    libraryService.getBookPages(b.links.pages, filter, assignmentFilterValue, values.page, values.pageSize)
+    let assignmentFilterValue;
+    let reviewerAssignmentFilterValue;
+
+    if (filter === PageStatus.AvailableForTyping
+        || filter === PageStatus.Typing
+        || filter === PageStatus.Completed
+				|| filter === PageStatus.All) {
+			 assignmentFilterValue = values.assignmentFilter ? values.assignmentFilter : 'assignedToMe';
+    }
+
+    if (filter === PageStatus.Typed
+			|| filter === PageStatus.InReview
+			|| filter === PageStatus.Completed
+			|| filter === PageStatus.All) {
+      reviewerAssignmentFilterValue = values.assignmentFilter ? values.assignmentFilter : 'assignedToMe';
+    }
+
+    libraryService.getBookPages(b.links.pages, filter, assignmentFilterValue, reviewerAssignmentFilterValue, values.page, values.pageSize)
       .then((res) => {
         setPages(res);
         setStatusFilter(filter);
-        setAssignmentFilter(assignmentFilterValue);
+        setAssignmentFilter(reviewerAssignmentFilterValue || assignmentFilterValue);
         setPage(values.page);
         setPageSize(values.pageSize || 12);
       })
@@ -200,7 +216,7 @@ const BookPages = () => {
     history.push(
       helpers.buildLinkToBooksPagesPage(
         location,
-        page,
+        1,
         pageSize,
         newStatus,
         newAssignmentFilter,
@@ -217,7 +233,7 @@ const BookPages = () => {
     history.push(
       helpers.buildLinkToBooksPagesPage(
         location,
-        page,
+        1,
         newPageSize,
         statusFilter,
         assignmentFilter,

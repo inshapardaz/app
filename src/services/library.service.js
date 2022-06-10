@@ -235,9 +235,10 @@ export default {
   // Pages
   getBookPages: (url,
     status = 'Typing',
-    assignmentFilter = 'assignedToMe',
+    assignmentFilter = null,
+    reviewerAssignmentFilter = null,
     page = 1,
-    pageSize = 12) => get(`${url}?pageNumber=${page}&pageSize=${pageSize}${status ? `&status=${status}` : ''}${assignmentFilter ? `&assignmentFilter=${assignmentFilter}` : ''}`),
+    pageSize = 12) => get(`${url}?pageNumber=${page}&pageSize=${pageSize}${status ? `&status=${status}` : ''}${assignmentFilter ? `&assignmentFilter=${assignmentFilter}` : ''}${reviewerAssignmentFilter ? `&reviewerAssignmentFilter=${reviewerAssignmentFilter}` : ''}`),
 
   getPageById: (libraryId, bookId, pageNumber) => get(`${librariesUrl()}/${libraryId}/books/${bookId}/pages/${pageNumber}`),
   createPage: (url, page) => post(url, page),
