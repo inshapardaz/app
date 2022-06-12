@@ -10,15 +10,38 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
+import KeyboardOutlinedIcon from '@mui/icons-material/KeyboardOutlined';
+import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
 
 // Local imports
 import PageDeleteButton from '@/components/pages/deletePageButton';
 import PageStatusIcon from '@/components/pages/pageStatusIcon';
+
+const IconWithTooltip = ({ tooltip, text, icon }) => (
+  <Tooltip title={tooltip}>
+    <Chip
+      label={text}
+      avatar={icon}
+      size="small"
+    />
+  </Tooltip>
+);
+
+IconWithTooltip.defaultProps = {
+  text: null,
+};
+
+IconWithTooltip.propTypes = {
+  tooltip: PropTypes.node.isRequired,
+  text: PropTypes.node,
+  icon: PropTypes.node.isRequired,
+};
 
 const PageListItem = ({
   page, onUpdated, onCheckChanged, checked,
@@ -34,6 +57,22 @@ const PageListItem = ({
       disablePadding
       secondaryAction={(
         <>
+          {page.writerAccountId
+            && (
+            <IconWithTooltip
+              tooltip={<FormattedMessage id="page.assignedTo.typing.label" values={{ name: page.writerAccountName }} />}
+              icon={<KeyboardOutlinedIcon />}
+              text={page.writerAccountName}
+            />
+            )}
+          {page.reviewerAccountId
+            && (
+            <IconWithTooltip
+              tooltip={<FormattedMessage id="page.assignedTo.proofReading.label" values={{ name: page.reviewerAccountName }} />}
+              icon={<RateReviewOutlinedIcon />}
+              text={page.reviewerAccountName}
+            />
+            )}
           <Tooltip title={<FormattedMessage id="action.edit" />}>
             <IconButton onClick={pageClicked}><EditIcon /></IconButton>
           </Tooltip>
@@ -56,21 +95,18 @@ const PageListItem = ({
       <ListItemText
         onClick={pageClicked}
         sx={{ cursor: 'pointer' }}
-        primary={<FormattedMessage id="page.editor.header" values={{ sequenceNumber: page.sequenceNumber }} />}
-        secondary={(
+        primary={(
           <>
+            <FormattedMessage id="page.editor.header" values={{ sequenceNumber: page.sequenceNumber }} />
             {page.chapterId
             && (
-            <Typography component="span">
-              {page.chapterTitle}
-            </Typography>
+            <>
+              <span style={{ padding: '0 10px', color: theme.palette.text.secondary }}>•</span>
+              <Typography component="span" sx={{ color: theme.palette.text.secondary }}>
+                {page.chapterTitle}
+              </Typography>
+            </>
             )}
-            {page.chapterId && page.writerAccountId && <span style={{ padding: '0 10px' }}>•</span>}
-            {page.writerAccountId
-            && <FormattedMessage id="page.assignedTo.typing.label" values={{ name: page.writerAccountName }} />}
-            {(page.chapterId || page.writerAccountId) && page.reviewerAccountId && <span style={{ padding: '0 10px' }}>•</span>}
-            {page.reviewerAccountId
-            && <FormattedMessage id="page.assignedTo.proofReading.label" values={{ name: page.reviewerAccountName }} />}
           </>
         )}
       />
