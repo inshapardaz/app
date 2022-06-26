@@ -27,7 +27,12 @@ const PageImageItem = ({
   const title = (page.writerAccountId && <FormattedMessage id="page.assignedTo.label" values={{ name: page.writerAccountName }} />);
   return (
     <ImageListItem key={page.sequenceNumber}>
-      <img src={page.links.image != null ? page.links.image : helpers.defaultPageImage} alt={page.sequenceNumber} loading="lazy" />
+      <img
+        src={page.links && page.links.image != null ? page.links.image : helpers.defaultPageImage}
+        alt=""
+        onError={helpers.setDefaultPageImage}
+        loading="lazy"
+      />
       <ImageListItemBar
         position="top"
         title={(

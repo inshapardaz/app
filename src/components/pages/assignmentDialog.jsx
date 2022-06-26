@@ -88,7 +88,7 @@ const AssignmentDialog = ({
       title={<FormattedMessage id="pages.assignToUser" />}
       onCancelled={handleClose}
     >
-      <WritersDropDown onWriterSelected={(value) => setSelectedAccount(value)} fullWidth />
+      <WritersDropDown onWriterSelected={(value) => setSelectedAccount(value)} fullWidth showNone />
       <AssignList pages={pagesStatus} fullWidth />
       <Button
         aria-controls="get-text"

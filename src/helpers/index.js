@@ -8,37 +8,41 @@ const parseReadFilter = (readFilter) => {
       return '';
   }
 };
+const defaultAuthorImage = '/images/author_placeholder.jpg';
+const defaultSeriesImage = '/images/series_placeholder.jpg';
+const defaultBookImage = '/images/book_placeholder.jpg';
+const defaultPageImage = '/images/page_placeholder.jpg';
+const defaultPeriodicalImage = '/images/periodical_placeholder.png';
+const defaultIssueImage = '/images/periodical_placeholder.png';
 
 export default {
   truncateWithEllipses: (text, max) => {
     if (!text) return text;
     return text.substr(0, max - 1) + (text.length > max ? '...' : '');
   },
-  defaultAuthorImage: '/images/author_placeholder.jpg',
+  defaultAuthorImage,
   setDefaultAuthorImage: (ev) => {
-    ev.target.src = this.defaultAuthorImage;
+    ev.target.src = defaultAuthorImage;
   },
-  defaultSeriesImage: '/images/series_placeholder.jpg',
+  defaultSeriesImage,
   setDefaultSeriesImage: (ev) => {
-    ev.target.src = this.defaultSeriesImage;
+    ev.target.src = defaultSeriesImage;
   },
-  defaultBookImage: '/images/book_placeholder.jpg',
+  defaultBookImage,
   setDefaultBookImage: (ev) => {
-    ev.target.src = this.defaultBookImage;
+    ev.target.src = defaultBookImage;
   },
-  defaultPageImage: '/images/page_placeholder.jpg',
+  defaultPageImage,
   setDefaultPageImage: (ev) => {
-    ev.target.src = this.defaultPageImage;
+    ev.target.src = defaultPageImage;
   },
-
-  defaultPeriodicalImage: '/images/periodical_placeholder.png',
+  defaultPeriodicalImage,
   setDefaultPeriodicalImage: (ev) => {
-    ev.target.src = this.defaultPeriodicalImage;
+    ev.target.src = defaultPeriodicalImage;
   },
-
-  defaultIssueImage: '/images/periodical_placeholder.png',
+  defaultIssueImage,
   setDefaultIssueImage: (ev) => {
-    ev.target.src = this.defaultIssueImage;
+    ev.target.src = defaultIssueImage;
   },
 
   parseNullableBool: (val) => {

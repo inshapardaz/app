@@ -51,34 +51,38 @@ const PageListItem = ({
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const pageClicked = () => history.push(`/books/${page.bookId}/pages/${page.sequenceNumber}/edit`);
 
+  const assignments = (
+    <>
+      {page.writerAccountId && (
+      <IconWithTooltip
+        tooltip={<FormattedMessage id="page.assignedTo.typing.label" values={{ name: page.writerAccountName }} />}
+        icon={<KeyboardOutlinedIcon />}
+        text={page.writerAccountName}
+      />
+      )}
+      {page.reviewerAccountId && (
+      <IconWithTooltip
+        tooltip={<FormattedMessage id="page.assignedTo.proofReading.label" values={{ name: page.reviewerAccountName }} />}
+        icon={<RateReviewOutlinedIcon />}
+        text={page.reviewerAccountName}
+      />
+      )}
+    </>
+  );
+  const actions = (
+    <>
+      { matches ? assignments : null }
+      <Tooltip title={<FormattedMessage id="action.edit" />}>
+        <IconButton onClick={pageClicked}><EditIcon /></IconButton>
+      </Tooltip>
+      <PageDeleteButton page={page} onDeleted={onUpdated} />
+    </>
+  );
   return (
     <ListItem
       divider
       disablePadding
-      secondaryAction={(
-        <>
-          {page.writerAccountId
-            && (
-            <IconWithTooltip
-              tooltip={<FormattedMessage id="page.assignedTo.typing.label" values={{ name: page.writerAccountName }} />}
-              icon={<KeyboardOutlinedIcon />}
-              text={page.writerAccountName}
-            />
-            )}
-          {page.reviewerAccountId
-            && (
-            <IconWithTooltip
-              tooltip={<FormattedMessage id="page.assignedTo.proofReading.label" values={{ name: page.reviewerAccountName }} />}
-              icon={<RateReviewOutlinedIcon />}
-              text={page.reviewerAccountName}
-            />
-            )}
-          <Tooltip title={<FormattedMessage id="action.edit" />}>
-            <IconButton onClick={pageClicked}><EditIcon /></IconButton>
-          </Tooltip>
-          <PageDeleteButton page={page} onDeleted={onUpdated} />
-        </>
-)}
+      secondaryAction={actions}
     >
       <Checkbox
         edge="start"
@@ -109,6 +113,7 @@ const PageListItem = ({
             )}
           </>
         )}
+        secondary={matches ? null : assignments}
       />
     </ListItem>
   );
