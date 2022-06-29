@@ -247,10 +247,9 @@ const ChapterListItem = ({
           secondaryAction={renderActions()}
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
         >
           {canEdit && (
-          <ListItemIcon>
+          <ListItemIcon {...provided.dragHandleProps}>
             <DragHandleIcon />
           </ListItemIcon>
           )}

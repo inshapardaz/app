@@ -339,17 +339,18 @@ const BookPages = () => {
           pages={pages}
           selectedPages={checked}
           onCheckChanged={handleCheckToggle}
-          onUpdated={loadPages}
+          onUpdated={() => loadPages(book)}
         />
       );
     }
 
     return (
       <PageList
+        book={book}
         pages={pages}
         selectedPages={checked}
         onCheckChanged={handleCheckToggle}
-        onUpdated={loadPages}
+        onUpdated={() => loadPages(book)}
       />
     );
   };

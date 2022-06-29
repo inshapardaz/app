@@ -245,6 +245,7 @@ export default {
   updatePage: (url, page) => put(url, page),
   deletePage: (page) => _delete(page.links.delete),
   getMyPages: (url, status = 'Typing', page = 1, pageSize = 12) => get(`${url}?pageNumber=${page}&pageSize=${pageSize}${status ? `&status=${status}` : ''}`),
+  setPagesSequence: (page, newSequenceNumber) => post(page.links.page_sequence, { sequenceNumber: newSequenceNumber }),
 
   // Periodicals
 

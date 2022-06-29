@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
+import { Draggable } from 'react-beautiful-dnd';
+
 // MUI
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -18,6 +20,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Typography from '@mui/material/Typography';
 import KeyboardOutlinedIcon from '@mui/icons-material/KeyboardOutlined';
 import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 // Local imports
 import PageDeleteButton from '@/components/pages/deletePageButton';
@@ -50,7 +53,7 @@ const PageListItem = ({
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const pageClicked = () => history.push(`/books/${page.bookId}/pages/${page.sequenceNumber}/edit`);
-
+  const canReorder = page.links && page.links.page_sequence !== null;
   const assignments = (
     <>
       {page.writerAccountId && (
@@ -79,30 +82,39 @@ const PageListItem = ({
     </>
   );
   return (
-    <ListItem
-      divider
-      disablePadding
-      secondaryAction={actions}
-    >
-      <Checkbox
-        edge="start"
-        checked={checked}
-        onClick={() => onCheckChanged(page.sequenceNumber, !checked)}
-        tabIndex={-1}
-        disableRipple
-      />
-      {matches && (
-        <ListItemIcon onClick={pageClicked} sx={{ mr: theme.spacing(1) }}>
-          <PageStatusIcon status={page.status} />
-        </ListItemIcon>
-      )}
-      <ListItemText
-        onClick={pageClicked}
-        sx={{ cursor: 'pointer' }}
-        primary={(
-          <>
-            <FormattedMessage id="page.editor.header" values={{ sequenceNumber: page.sequenceNumber }} />
-            {page.chapterId
+    <Draggable isDragDisabled={!canReorder} draggableId={`draggable-${page.bookId}-${page.sequenceNumber}`} index={page.sequenceNumber - 1}>
+      {(provided) => (
+        <ListItem
+          divider
+          disablePadding
+          secondaryAction={actions}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          {canReorder && (
+          <ListItemIcon {...provided.dragHandleProps}>
+            <DragHandleIcon />
+          </ListItemIcon>
+          )}
+          <Checkbox
+            edge="start"
+            checked={checked}
+            onClick={() => onCheckChanged(page.sequenceNumber, !checked)}
+            tabIndex={-1}
+            disableRipple
+          />
+          {matches && (
+          <ListItemIcon onClick={pageClicked} sx={{ mr: theme.spacing(1) }}>
+            <PageStatusIcon status={page.status} />
+          </ListItemIcon>
+          )}
+          <ListItemText
+            onClick={pageClicked}
+            sx={{ cursor: 'pointer' }}
+            primary={(
+              <>
+                <FormattedMessage id="page.editor.header" values={{ sequenceNumber: page.sequenceNumber }} />
+                {page.chapterId
             && (
             <>
               <span style={{ padding: '0 10px', color: theme.palette.text.secondary }}>•</span>
@@ -111,11 +123,13 @@ const PageListItem = ({
               </Typography>
             </>
             )}
-          </>
+              </>
         )}
-        secondary={matches ? null : assignments}
-      />
-    </ListItem>
+            secondary={matches ? null : assignments}
+          />
+        </ListItem>
+      )}
+    </Draggable>
   );
 };
 
@@ -139,6 +153,7 @@ PageListItem.propTypes = {
     links: PropTypes.shape({
       image: PropTypes.string,
       update: PropTypes.string,
+      page_sequence: PropTypes.string,
     }),
   }).isRequired,
   checked: PropTypes.bool,
