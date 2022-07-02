@@ -12,7 +12,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
-import Chip from '@mui/material/Chip';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -25,26 +24,7 @@ import DragHandleIcon from '@mui/icons-material/DragHandle';
 // Local imports
 import PageDeleteButton from '@/components/pages/deletePageButton';
 import PageStatusIcon from '@/components/pages/pageStatusIcon';
-
-const IconWithTooltip = ({ tooltip, text, icon }) => (
-  <Tooltip title={tooltip}>
-    <Chip
-      label={text}
-      avatar={icon}
-      size="small"
-    />
-  </Tooltip>
-);
-
-IconWithTooltip.defaultProps = {
-  text: null,
-};
-
-IconWithTooltip.propTypes = {
-  tooltip: PropTypes.node.isRequired,
-  text: PropTypes.node,
-  icon: PropTypes.node.isRequired,
-};
+import IconWithTooltip from '@/components/iconWithTooltip';
 
 const PageListItem = ({
   page, onUpdated, onCheckChanged, checked,

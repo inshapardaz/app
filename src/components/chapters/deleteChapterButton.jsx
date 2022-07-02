@@ -5,9 +5,10 @@ import { useConfirm } from 'material-ui-confirm';
 import { useSnackbar } from 'notistack';
 
 // MUI
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 
 // Local Imports
 import { libraryService } from '@/services';
@@ -35,13 +36,14 @@ const DeleteChapterButton = ({ chapter, onDeleted, disabled }) => {
 
   if (chapter && chapter.links && chapter.links.delete) {
     return (
-      <Tooltip title={<FormattedMessage id="action.delete" />}>
-        <span>
-          <IconButton onClick={onDelete} disabled={disabled}>
-            <DeleteOutlineOutlinedIcon />
-          </IconButton>
-        </span>
-      </Tooltip>
+      <MenuItem onClick={onDelete} disabled={disabled}>
+        <ListItemIcon>
+          <DeleteOutlineOutlinedIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>
+          <FormattedMessage id="action.delete" />
+        </ListItemText>
+      </MenuItem>
     );
   }
 

@@ -15,7 +15,7 @@ import LayersOutlinedIcon from '@mui/icons-material/LayersOutlined';
 import { libraryService } from '@/services';
 import ButtonWithTooltip from '@/components/buttonWithTooltip';
 
-const ChapterAssignButton = ({
+const PageAssignButton = ({
   book, pages, onStatusChanges, onBusy,
 }) => {
   const intl = useIntl();
@@ -94,14 +94,14 @@ const ChapterAssignButton = ({
   );
 };
 
-ChapterAssignButton.defaultProps = {
+PageAssignButton.defaultProps = {
   book: null,
   pages: null,
   onStatusChanges: () => {},
   onBusy: () => {},
 };
 
-ChapterAssignButton.propTypes = {
+PageAssignButton.propTypes = {
   book: PropTypes.shape({
     links: PropTypes.shape({
       chapters: PropTypes.string,
@@ -117,4 +117,4 @@ ChapterAssignButton.propTypes = {
   onStatusChanges: PropTypes.func,
 };
 
-export default ChapterAssignButton;
+export default PageAssignButton;

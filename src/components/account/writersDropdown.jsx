@@ -11,7 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { libraryService } from '@/services';
 
 const WritersDropDown = ({
-  onWriterSelected, error, value, label, showNone = false,
+  onWriterSelected, error, value, label, showNone = false, noneTitle = '',
 }, props) => {
   const intl = useIntl();
   const [options, setOptions] = React.useState([]);
@@ -26,7 +26,7 @@ const WritersDropDown = ({
       libraryService.getWriters(library.id, text === value && value.name ? null : text)
         .then((response) => {
           if (showNone) {
-            setOptions([{ id: null, name: intl.formatMessage({ id: 'page.assign.unassigned' }) }, ...response]);
+            setOptions([{ id: null, name: noneTitle }, ...response]);
           } else {
             setOptions(response);
           }
@@ -57,6 +57,7 @@ WritersDropDown.defaultProps = {
   value: null,
   error: false,
   showNone: false,
+  noneTitle: '',
   onWriterSelected: () => {},
 };
 
@@ -67,6 +68,7 @@ WritersDropDown.propTypes = {
     name: PropTypes.string,
   }),
   showNone: PropTypes.bool,
+  noneTitle: PropTypes.string,
   error: PropTypes.bool,
   onWriterSelected: PropTypes.func,
 };

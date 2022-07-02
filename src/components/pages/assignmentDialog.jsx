@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 // MUI
 import Button from '@mui/material/Button';
@@ -16,6 +16,7 @@ import AssignList, { ProcessingStatus } from '@/components/pages/processingStatu
 const AssignmentDialog = ({
   onClose, open, pages, onAssigned,
 }) => {
+  const intl = useIntl();
   const [busy, setBusy] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [pagesStatus, setPagesStatus] = useState([]);
@@ -88,7 +89,7 @@ const AssignmentDialog = ({
       title={<FormattedMessage id="pages.assignToUser" />}
       onCancelled={handleClose}
     >
-      <WritersDropDown onWriterSelected={(value) => setSelectedAccount(value)} fullWidth showNone />
+      <WritersDropDown onWriterSelected={(value) => setSelectedAccount(value)} fullWidth showNone noneTitle={intl.formatMessage({ id: 'page.assign.unassigned' })} />
       <AssignList pages={pagesStatus} fullWidth />
       <Button
         aria-controls="get-text"

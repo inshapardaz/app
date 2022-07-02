@@ -39,7 +39,7 @@ import PageList from '@/components/pages/pageList';
 import PageGrid from '@/components/pages/pageGrid';
 import PageFilterButton from '@/components/pages/pageFilterButton';
 import PageSortButton from '@/components/pages/pageSortButton';
-import ChaptersAssignButton from '@/components/pages/chapterAssignButton';
+import PageAssignButton from '@/components/pages/pageAssignButton';
 import PageSizeSelector from '@/components/pageSizeSelector';
 import OcrButton from '@/components/pages/ocrButton';
 
@@ -143,14 +143,14 @@ const BookPages = () => {
     if (filter === PageStatus.AvailableForTyping
         || filter === PageStatus.Typing
         || filter === PageStatus.Completed
-				|| filter === PageStatus.All) {
-			 assignmentFilterValue = values.assignmentFilter ? values.assignmentFilter : 'assignedToMe';
+        || filter === PageStatus.All) {
+      assignmentFilterValue = values.assignmentFilter ? values.assignmentFilter : 'assignedToMe';
     }
 
     if (filter === PageStatus.Typed
-			|| filter === PageStatus.InReview
-			|| filter === PageStatus.Completed
-			|| filter === PageStatus.All) {
+      || filter === PageStatus.InReview
+      || filter === PageStatus.Completed
+      || filter === PageStatus.All) {
       reviewerAssignmentFilterValue = values.assignmentFilter ? values.assignmentFilter : 'assignedToMe';
     }
 
@@ -270,7 +270,11 @@ const BookPages = () => {
         <DeleteButton pages={selectedPages} onUpdated={loadData} onDeleting={setBusy} />
         <AssignToMeButton pages={selectedPages} onAssigned={loadData} onAssigning={setBusy} />
         <AssignToUserButton pages={selectedPages} onAssigned={loadData} />
-        <ChaptersAssignButton book={book} pages={selectedPages} onStatusChanges={loadData} />
+        <PageAssignButton
+          book={book}
+          pages={selectedPages}
+          onStatusChanges={loadData}
+        />
         <StatusButton pages={selectedPages} onStatusChanges={loadData} onBusy={setBusy} />
         <OcrButton pages={selectedPages} onUpdated={loadData} />
       </ButtonGroup>

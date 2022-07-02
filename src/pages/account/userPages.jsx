@@ -30,23 +30,15 @@ import helpers from '@/helpers';
 
 import Busy from '@/components/busy';
 import Error from '@/components/error';
-import AddPageMenu from '@/components/pages/addPageMenu';
-import StatusButton from '@/components/pages/statusButton';
-import DeleteButton from '@/components/pages/deleteButton';
-import AssignToMeButton from '@/components/pages/assignToMeButton';
-import AssignToUserButton from '@/components/pages/assignToUserButton';
 import PageList from '@/components/pages/pageList';
 import PageGrid from '@/components/pages/pageGrid';
 import PageFilterButton from '@/components/pages/pageFilterButton';
 import PageSortButton from '@/components/pages/pageSortButton';
-import ChaptersAssignButton from '@/components/pages/chapterAssignButton';
 import PageSizeSelector from '@/components/pageSizeSelector';
-import OcrButton from '@/components/pages/ocrButton';
 
 // Local Import
 import BookStatus from '@/models/bookStatus';
 import PageStatus from '@/models/pageStatus';
-import PageBreadcrumb from '@/components/pages/pageBreadcrumb';
 
 const getSelectedPages = (pages, checked) => {
   if (pages && pages.data && checked.length > 0) {
@@ -98,19 +90,6 @@ SelectionButton.propTypes = {
   selectedPages: PropTypes.arrayOf(PropTypes.number),
   onSelectAll: PropTypes.func,
   onSelectNone: PropTypes.func,
-};
-
-// ---------------------------------------------------------------------
-
-const getFilterFromBookStatus = (book) => {
-  switch (book.status) {
-    case BookStatus.AvailableForTyping: return PageStatus.AvailableForTyping;
-    case BookStatus.BeingTyped: return PageStatus.Typing;
-    case BookStatus.ReadyForProofRead: return PageStatus.Typed;
-    case BookStatus.ProofRead: return PageStatus.InReview;
-    case BookStatus.Published: return PageStatus.Completed;
-    default: return PageStatus.All;
-  }
 };
 
 // ---------------------------------------------------------------------
