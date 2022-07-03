@@ -10,8 +10,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 
 // Local Imports
 import ChapterStatusDialog from '@/components/chapters/chapterStatusDialog';
+import ButtonWithTooltip from '@/components/buttonWithTooltip';
 
-const ChapterStatusButton = ({ chapter, onUpdated, onClose }) => {
+const ChapterStatusButton = ({
+  chapter, onUpdating, onUpdated, onClose, button,
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleUpdate = () => {
@@ -28,6 +31,21 @@ const ChapterStatusButton = ({ chapter, onUpdated, onClose }) => {
     onClose();
   };
 
+  if (button) {
+    return (
+      <ButtonWithTooltip
+        disabled={chapter === null}
+        onClick={handleClick}
+        variant="outlined"
+        size="large"
+        tooltip={<FormattedMessage id="pages.setStatus" />}
+        endIcon={<InfoOutlinedIcon fontSize="small" />}
+      >
+        <ChapterStatusDialog chapter={chapter} onUpdating={onUpdating} onUpdated={handleUpdate} onClose={handleClose} open={open} />
+      </ButtonWithTooltip>
+    );
+  }
+
   return (
     <MenuItem
       disabled={chapter === null}
@@ -39,13 +57,15 @@ const ChapterStatusButton = ({ chapter, onUpdated, onClose }) => {
       <ListItemText>
         <FormattedMessage id="pages.setStatus" />
       </ListItemText>
-      <ChapterStatusDialog chapter={chapter} onUpdated={handleUpdate} onClose={handleClose} open={open} />
+      <ChapterStatusDialog chapter={chapter} onUpdating={onUpdating} onUpdated={handleUpdate} onClose={handleClose} open={open} />
     </MenuItem>
   );
 };
 
 ChapterStatusButton.defaultProps = {
   chapter: null,
+  button: false,
+  onUpdating: () => {},
   onUpdated: () => {},
   onClose: () => {},
 };
@@ -57,6 +77,8 @@ ChapterStatusButton.propTypes = {
       assign: PropTypes.string,
     }),
   }),
+  button: PropTypes.func,
+  onUpdating: PropTypes.func,
   onUpdated: PropTypes.func,
   onClose: PropTypes.func,
 };

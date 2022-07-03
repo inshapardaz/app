@@ -48,7 +48,7 @@ for (const [key, value] of Object.entries(PageStatus)) {
 // ---------------------------------------------------------------
 
 const ChapterStatusDialog = ({
-  chapter, onUpdated, onClose, open,
+  chapter, onUpdating, onUpdated, onClose, open,
 }) => {
   const intl = useIntl();
   const [busy, setBusy] = useState(false);
@@ -56,7 +56,7 @@ const ChapterStatusDialog = ({
 
   const handleChange = (newStatus) => {
     setBusy(true);
-
+    onUpdating();
     const c = { ...chapter };
     c.status = newStatus;
     c.contents = null;
@@ -101,6 +101,7 @@ const ChapterStatusDialog = ({
 ChapterStatusDialog.defaultProps = {
   open: false,
   chapter: null,
+  onUpdating: () => {},
   onUpdated: () => {},
   onClose: () => {},
 };
@@ -116,6 +117,7 @@ ChapterStatusDialog.propTypes = {
       assign: PropTypes.string,
     }),
   }),
+  onUpdating: PropTypes.func,
   onUpdated: PropTypes.func,
   onClose: PropTypes.func,
 };

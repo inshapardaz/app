@@ -10,9 +10,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 
 // Local Imports
 import ChapterAssignDialog from './chapterAssignDialog';
+import ButtonWithTooltip from '@/components/buttonWithTooltip';
 
 const ChapterAssignButton = ({
-  chapter, onAssigned, onAssigning, onClose,
+  chapter, onAssigned, onAssigning, onClose, button,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -30,6 +31,20 @@ const ChapterAssignButton = ({
     onClose();
   };
 
+  if (button) {
+    return (
+      <ButtonWithTooltip
+        disabled={chapter === null}
+        onClick={handleClick}
+        variant="outlined"
+        size="large"
+        tooltip={<FormattedMessage id="chapter.action.assignToUser" />}
+        startIcon={<PersonAddIcon fontSize="small" />}
+      >
+        <ChapterAssignDialog chapter={chapter} onUpdated={handleUpdate} onUpdating={onAssigning} onClose={handleClose} open={open} />
+      </ButtonWithTooltip>
+    );
+  }
   return (
     <MenuItem
       disabled={chapter === null}
@@ -41,13 +56,14 @@ const ChapterAssignButton = ({
       <ListItemText>
         <FormattedMessage id="chapter.action.assignToUser" />
       </ListItemText>
-      <ChapterAssignDialog chapter={chapter} onUpdated={handleUpdate} onClose={handleClose} open={open} />
+      <ChapterAssignDialog chapter={chapter} onUpdated={handleUpdate} onUpdating={onAssigning} onClose={handleClose} open={open} />
     </MenuItem>
   );
 };
 
 ChapterAssignButton.defaultProps = {
   chapter: null,
+  button: false,
   onAssigned: () => {},
   onAssigning: () => {},
   onClose: () => {},
@@ -60,6 +76,7 @@ ChapterAssignButton.propTypes = {
       assign: PropTypes.string,
     }),
   }),
+  button: PropTypes.bool,
   onAssigned: PropTypes.func,
   onAssigning: PropTypes.func,
   onClose: PropTypes.func,

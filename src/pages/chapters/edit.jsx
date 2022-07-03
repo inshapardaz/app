@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
 import { Helmet } from 'react-helmet';
 import { FormattedMessage, useIntl } from 'react-intl';
 
+// MUI
 import Alert from '@mui/material/Alert';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Tooltip from '@mui/material/Tooltip';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 // Local Imports
 import { libraryService, localeService } from '@/services';
@@ -13,6 +19,8 @@ import Busy from '@/components/busy';
 import Error from '@/components/error';
 import Editor from '@/components/editor';
 import ChapterBreadcrumb from '@/components/chapters/chapterBreadcrumb';
+import ChapterStatusButton from '@/components/chapters/chapterStatusButton';
+import ChapterAssignButton from '@/components/chapters/chapterAssignButton';
 
 const ChapterContentEditor = () => {
   const intl = useIntl();
@@ -116,6 +124,34 @@ const ChapterContentEditor = () => {
     setDirty(d);
   };
 
+  const hasPreviousLink = () => chapter && chapter.links && chapter.links.previous;
+  const hasNextLink = () => chapter && chapter.links && chapter.links.next;
+
+  const renderEndToolBar = () => (
+    <ButtonGroup>
+      <ChapterStatusButton chapter={chapter} button />
+      <ChapterAssignButton chapter={chapter} button onAssigning={() => setBusy(true)} onAssigned={() => setBusy(false)} />
+      <Tooltip title={<FormattedMessage id="page.edit.previous" />}>
+        <Button
+          disabled={!hasPreviousLink()}
+          component={Link}
+          to={chapter ? `/books/${chapter.bookId}/chapters/${chapter.chapterNumber - 1}/edit` : ''}
+        >
+          { localeService.isRtl() ? <ChevronRightIcon /> : <ChevronLeftIcon /> }
+        </Button>
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id="page.edit.previous" />}>
+        <Button
+          disabled={!hasNextLink()}
+          component={Link}
+          to={chapter ? `/books/${chapter.bookId}/chapters/${chapter.chapterNumber + 1}/edit` : ''}
+        >
+          { localeService.isRtl() ? <ChevronLeftIcon /> : <ChevronRightIcon /> }
+        </Button>
+      </Tooltip>
+    </ButtonGroup>
+  );
+
   const renderChapterEditor = () => {
     if (!chapter) {
       return null;
@@ -130,6 +166,7 @@ const ChapterContentEditor = () => {
           <FormattedMessage id="chapter.messages.addingContent" />
         </Alert>
         )}
+        endToolbar={renderEndToolBar()}
         identifier={`${book.id}-${chapter.id}-${library.language}`}
         onSave={saveContents}
         onDirty={onChanged}

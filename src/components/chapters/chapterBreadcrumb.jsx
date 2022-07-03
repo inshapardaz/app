@@ -14,6 +14,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // Local Imports
 import { libraryService } from '@/services/';
 import BreadcrumbSeparator from '@/components/breadcrumbSeparator';
+import PageStatusIcon from '@/components/pages/pageStatusIcon';
 
 const ChapterBreadcrumb = ({ book, chapter }) => {
   const [chapters, setChapters] = useState(null);
@@ -54,7 +55,7 @@ const ChapterBreadcrumb = ({ book, chapter }) => {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClick}
-          startIcon={<LayersIcon />}
+          startIcon={<PageStatusIcon status={chapter.status} />}
           endIcon={<KeyboardArrowDownIcon />}
         >
           {chapter.title}
@@ -93,6 +94,7 @@ ChapterBreadcrumb.propTypes = {
   book: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
+    status: PropTypes.string,
     links: PropTypes.shape({
       chapters: PropTypes.string,
     }),

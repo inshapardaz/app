@@ -16,7 +16,7 @@ import { libraryService } from '@/services';
 import WritersDropDown from '@/components/account/writersDropdown';
 
 const ChapterAssignDialog = ({
-  chapter, onUpdated, onClose, open,
+  chapter, onUpdating, onUpdated, onClose, open,
 }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -26,6 +26,7 @@ const ChapterAssignDialog = ({
   const onAssign = useCallback(() => {
     if (chapter !== null && chapter !== undefined && chapter.links.assign) {
       setBusy(true);
+      onUpdating();
       libraryService.post(chapter.links.assign, selectedAccount && selectedAccount.id ? { AccountId: selectedAccount.id } : {})
         .then(() => enqueueSnackbar(intl.formatMessage({ id: 'chapter.messages.assigned' }), { variant: 'success' }))
         .then(() => setBusy(false))
@@ -66,7 +67,9 @@ const ChapterAssignDialog = ({
 
 ChapterAssignDialog.defaultProps = {
   chapter: null,
+  open: false,
   onUpdated: () => {},
+  onUpdating: () => {},
   onClose: () => {},
 };
 
@@ -78,7 +81,9 @@ ChapterAssignDialog.propTypes = {
       assign: PropTypes.string,
     }),
   }),
+  open: PropTypes.bool,
   onUpdated: PropTypes.func,
+  onUpdating: PropTypes.func,
   onClose: PropTypes.func,
 };
 
