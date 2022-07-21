@@ -86,7 +86,7 @@ class LocaleService {
         displayName: intl.formatMessage({ id: 'font.FajerNooriNastalique' }),
       },
       {
-        key: 'GulzarNastalique',
+        key: 'gulzar-nastalique',
         displayName: intl.formatMessage({ id: 'font.GulzarNastalique' }),
       },
       {
@@ -127,7 +127,7 @@ class LocaleService {
         displayName: intl.formatMessage({ id: 'font.JameelNooriNastaleeq' }),
       },
       {
-        key: 'JameelKhushkhati',
+        key: 'jameel-khushkhati',
         displayName: intl.formatMessage({ id: 'font.JameelKhushkhati' }),
       },
       {
