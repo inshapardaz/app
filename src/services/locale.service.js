@@ -86,6 +86,10 @@ class LocaleService {
         displayName: intl.formatMessage({ id: 'font.FajerNooriNastalique' }),
       },
       {
+        key: 'GulzarNastalique',
+        displayName: intl.formatMessage({ id: 'font.GulzarNastalique' }),
+      },
+      {
         key: 'EmadNastaleeq',
         displayName: intl.formatMessage({ id: 'font.EmadNastaleeq' }),
       },
@@ -121,6 +125,10 @@ class LocaleService {
       {
         key: 'Jameel Noori Nastaleeq',
         displayName: intl.formatMessage({ id: 'font.JameelNooriNastaleeq' }),
+      },
+      {
+        key: 'JameelKhushkhati',
+        displayName: intl.formatMessage({ id: 'font.JameelKhushkhati' }),
       },
       {
         key: 'JameelNooriNastaleeqKasheeda',

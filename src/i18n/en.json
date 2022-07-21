@@ -482,6 +482,8 @@
 	"font.JameelNooriNastaleeq" : "Jameel Noori Nastaleeq",
 	"font.JameelNooriNastaleeqKasheeda" : "Jameel Noori Nastaleeq Kasheeds",
 	"font.EmadNastaleeq" : "Emad Nastaleeq",
+	"font.GulzarNastalique": "Gulzar Nastalique",
+	"font.JameelKhushkhati": "Jameel Khushkhati",
 	"fontSize.none" : "Select Font Size",
 	"fontSize.small" : "Small",
 	"fontSize.normal" : "Normal",
