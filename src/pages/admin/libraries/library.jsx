@@ -6,10 +6,10 @@ import queryString from 'query-string';
 import { FormattedMessage } from 'react-intl';
 
 // MUI
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 // 3rd Party imports
 import { Helmet } from 'react-helmet';
@@ -70,6 +70,10 @@ const LibraryPage = () => {
     setBusy(true);
     libraryService.getLibrary(libraryId)
       .then((lib) => {
+        if (!lib || !lib.links || !lib.links.update) {
+          history.push('/error/403');
+        }
+
         setLibrary(lib);
         return lib;
       })
@@ -108,18 +112,29 @@ const LibraryPage = () => {
             <Typography color="text.primary"><FormattedMessage id="admin.users.title" /></Typography>
           </Breadcrumbs>
           <Toolbar>
+            {library && library.links.update && (
+            <Button
+              data-ft="edit-library-button"
+              variant="outlined"
+              color="primary"
+              component={Link}
+              to={`/admin/libraries/${library ? library.id : 0}/edit`}
+              startIcon={<EditOutlinedIcon />}
+            >
+              <FormattedMessage id="library.editor.header.edit" values={{ name: library.name }} />
+            </Button>
+            )}
             {library && library.links.add_user && (
-            <Tooltip title={<FormattedMessage id="invite.action" />}>
-              <IconButton
+              <Button
                 data-ft="add-library-user-button"
-                variant="contained"
+                variant="outlined"
                 color="primary"
                 component={Link}
                 to={`/admin/libraries/${library ? library.id : 0}/users/add`}
+                startIcon={<AddCircleOutlineIcon />}
               >
-                <AddCircleOutlineIcon />
-              </IconButton>
-            </Tooltip>
+                <FormattedMessage id="invite.action" />
+              </Button>
             )}
             <SearchBox value={query} onChange={updateQuery} />
           </Toolbar>

@@ -30,6 +30,7 @@ const ProfileMenu = () => {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const user = useSelector((state) => state.accountReducer.user);
+  const library = useSelector((state) => state.libraryReducer.library);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -117,15 +118,25 @@ const ProfileMenu = () => {
                       <FormattedMessage id="changePassword.title" />
                     </Typography>
                   </MenuItem>
+                  {!user.isSuperAdmin && library && library.links && library.links.update && (
+                  <MenuItem component={Link} onClick={handleClose} to={`/admin/libraries/${library.id}`} data-ft="library-admin-link">
+                    <ListItemIcon>
+                      <SupervisorAccountIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography variant="inherit" noWrap>
+                      <FormattedMessage id="header.administration" />
+                    </Typography>
+                  </MenuItem>
+                  )}
                   {user.isSuperAdmin && (
-                    <MenuItem component={Link} onClick={handleClose} to="/admin/libraries" data-ft="admin-link">
-                      <ListItemIcon>
-                        <SupervisorAccountIcon fontSize="small" />
-                      </ListItemIcon>
-                      <Typography variant="inherit" noWrap>
-                        <FormattedMessage id="header.administration" />
-                      </Typography>
-                    </MenuItem>
+                  <MenuItem component={Link} onClick={handleClose} to="/admin/libraries" data-ft="admin-link">
+                    <ListItemIcon>
+                      <SupervisorAccountIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography variant="inherit" noWrap>
+                      <FormattedMessage id="header.administration" />
+                    </Typography>
+                  </MenuItem>
                   )}
                   {user.isSuperAdmin && (
                     <MenuItem component={Link} onClick={handleClose} to="/tools/corrections" data-ft="correction-link">

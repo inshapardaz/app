@@ -66,15 +66,24 @@ const BookEditPage = () => {
   });
 
   useEffect(() => {
-    if (bookId && library) {
-      setBusy(true);
-      libraryService.getBookById(library.id, bookId)
-        .then((res) => setBook(res))
-        .then(() => setBusy(false))
-        .catch(() => {
-          setBusy(false);
-          setError(true);
-        });
+    if (library) {
+      if (bookId) {
+        setBusy(true);
+        libraryService.getBookById(library.id, bookId)
+          .then((res) => {
+            if (!res.links.update) {
+              history.push('/error/403');
+            }
+            setBook(res);
+          })
+          .then(() => setBusy(false))
+          .catch(() => {
+            setBusy(false);
+            setError(true);
+          });
+      } else if (!library.links.create_book) {
+        history.push('/error/403');
+      }
     }
   }, [bookId, library]);
 

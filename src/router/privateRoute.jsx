@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 
@@ -35,6 +36,17 @@ const PrivateRoute = ({
       />
     </Startup>
   );
+};
+
+PrivateRoute.defaultProps = {
+  adminOnly: false,
+  libraryWithPeriodicals: false,
+};
+PrivateRoute.propTypes = {
+  layout: PropTypes.elementType.isRequired,
+  component: PropTypes.elementType.isRequired,
+  adminOnly: PropTypes.bool,
+  libraryWithPeriodicals: PropTypes.bool,
 };
 
 export default PrivateRoute;

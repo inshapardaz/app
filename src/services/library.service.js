@@ -251,15 +251,19 @@ export default {
 
   getPeriodicals: (url,
     query = null,
-    categoryId = null,
+    category = null,
+    frequency = null,
     sortBy = null,
     sortDirection = null,
     pageNumber = 1,
     pageSize = 12) => {
     let queryVal = getQueryParameter(query);
 
-    if (categoryId) {
-      queryVal += `&categoryId=${categoryId}`;
+    if (category) {
+      queryVal += `&category=${category}`;
+    }
+    if (frequency) {
+      queryVal += `&frequency=${frequency}`;
     }
     if (sortBy) {
       queryVal += `&sortBy=${sortBy}`;

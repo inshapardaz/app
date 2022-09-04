@@ -426,6 +426,8 @@
 	"periodical.editor.fields.name.title" : "نام",
 	"periodical.editor.fields.title.error": "نام ضروری ہے",
 	"periodical.editor.fields.description.title" : "تفصیل",
+	"periodical.editor.fields.frequency.title" : "تعدد",
+	"periodical.editor.fields.categories.title" : "زمرہ جات",
 	"periodical.messages.error.saving" : "تبدیلیاں محفوظ نہیں کی جا سکیں",
 	"periodical.messages.saved" : "تبدیلیاں محفوط کر دی گئی",
 	"periodicals.messages.deleted" : "میعادی مطبوعات حذف ہو گئی",
@@ -539,5 +541,13 @@
 	"publishing.label.proofReading" : "کتابیں کو آپ پروف ریڈ کر رہے ہیں",
 	"publishing.label.seeMore" : "مزید جن کتابوں پر کام جاری ہے۔۔۔",
 	"publication.contributions" : "آپ کا شامل کردہ مواد",
-	"pages.count" : "{count} صفحات"
+	"pages.count" : "{count} صفحات",
+	"frequency.All": "تمام",
+	"frequency.Unknown": "نا معلوم",
+	"frequency.Annually" : "سالانہ",
+	"frequency.Quarterly" : "سہ ماہی",
+	"frequency.Monthly" : "ماہانہ",
+	"frequency.Fortnightly": "دو ہفتہ وار",
+	"frequency.Weekly": "ہفتہ وار",
+	"frequency.Daily": "روزانہ"
 }

@@ -21,6 +21,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PeriodicalListItem from '@/components/periodicals/periodicalListItem';
 import PeriodicalCard from '@/components/periodicals/periodicalCard';
 import PeriodicalSortButton from '@/components/periodicals/periodicalSortButton';
+import PeriodicalFilterButton from '@/components/periodicals/periodicalFilterButton';
 import helpers from '@/helpers';
 import Busy from '@/components/busy';
 import Empty from '@/components/empty';
@@ -29,13 +30,27 @@ import SearchBox from '@/components/searchBox';
 
 const PeriodicalsList = ({
   category, periodicals, page,
-  query, sortBy,
+  query, sortBy, frequency,
   sortDirection,
   showFilters, error, busy, onUpdated,
 }) => {
   const location = useLocation();
   const history = useHistory();
   const [showCards, setShowCards] = useState(localStorage.getItem('periodicalsCardView') === 'true');
+
+  const onFilterUpdated = (newFrequencyFilter) => {
+    history.push(
+      helpers.buildLinkToPeriodicalsPage(
+        location,
+        page,
+        query,
+        category,
+        newFrequencyFilter,
+        sortBy,
+        sortDirection,
+      ),
+    );
+  };
 
   const updateQuery = (newQuery) => {
     history.push(
@@ -44,6 +59,7 @@ const PeriodicalsList = ({
         page,
         newQuery,
         category,
+        frequency,
         sortBy,
         sortDirection,
       ),
@@ -65,6 +81,7 @@ const PeriodicalsList = ({
                 item.page,
                 query,
                 category,
+                frequency,
                 sortBy,
                 sortDirection,
               )}
@@ -85,6 +102,7 @@ const PeriodicalsList = ({
         page,
         query,
         category,
+        frequency,
         newSortBy,
         newSortDirection,
       ),
@@ -119,16 +137,13 @@ const PeriodicalsList = ({
       return (
         <>
           <SearchBox value={query} onChange={updateQuery} />
-          {/* <BookFilterButton
-            favorite={favoriteFilter}
-            read={readFilter}
-            statusFilter={statusFilter}
-            showStatusFilter={periodicals != null && periodicals.links.create != null}
+          <PeriodicalFilterButton
+            frequencyFilter={frequency}
             onChange={onFilterUpdated}
-          /> */}
+          />
           <PeriodicalSortButton
-            sortBy={sortBy}
-            sortDirection={sortDirection}
+            sortBy={sortBy || 'title'}
+            sortDirection={sortDirection || 'ascending'}
             onChange={onSortUpdated}
           />
         </>
@@ -195,10 +210,8 @@ PeriodicalsList.defaultProps = {
   page: 1,
   query: null,
   sortBy: null,
-  sortDirection: 'ascending',
-  favoriteFilter: false,
-  readFilter: false,
-  statusFilter: 'published',
+  sortDirection: null,
+  frequency: 'All',
   error: false,
   busy: false,
   onUpdated: () => {},
@@ -223,9 +236,7 @@ PeriodicalsList.propTypes = {
   query: PropTypes.string,
   sortBy: PropTypes.string,
   sortDirection: PropTypes.string,
-  favoriteFilter: PropTypes.bool,
-  readFilter: PropTypes.bool,
-  statusFilter: PropTypes.string,
+  frequency: PropTypes.string,
   error: PropTypes.bool,
   busy: PropTypes.bool,
   onUpdated: PropTypes.func,

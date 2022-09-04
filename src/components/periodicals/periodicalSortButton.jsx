@@ -12,8 +12,9 @@ import SortIcon from '@mui/icons-material/Sort';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import DateRangeIcon from '@mui/icons-material/DateRange';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
+
+const isFilterSelected = (filterValue, actualValue) => (filterValue ? filterValue.toUpperCase() === actualValue.toUpperCase() : false);
 
 const PeriodicalSortButton = ({ sortBy, sortDirection, onChange }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -41,7 +42,7 @@ const PeriodicalSortButton = ({ sortBy, sortDirection, onChange }) => {
     <>
       <Tooltip title={<FormattedMessage id="books.label.sort" />}>
         <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
-          <SortIcon sx={{ color: sortBy !== 'title' || sortDirection !== 'ascending' ? 'primary.main' : 'text.secondary' }} />
+          <SortIcon sx={{ color: sortBy !== 'title' || isFilterSelected(sortDirection, 'descending') ? 'primary.main' : 'text.secondary' }} />
         </IconButton>
       </Tooltip>
       <Menu
@@ -50,22 +51,16 @@ const PeriodicalSortButton = ({ sortBy, sortDirection, onChange }) => {
         onClose={handleClose}
         onClick={handleClose}
       >
-        <MenuItem selected={sortBy === 'title'} onClick={() => onClickSort('title')}>
+        <MenuItem selected={isFilterSelected(sortBy, 'title')} onClick={() => onClickSort('title')}>
           <ListItemIcon><SortByAlphaIcon /></ListItemIcon>
           <FormattedMessage id="periodical.editor.fields.name.title" />
         </MenuItem>
-        {/* <MenuItem selected={sortBy === 'dateCreated'} onClick={() => onClickSort('dateCreated')}>
-          <ListItemIcon>
-            <DateRangeIcon />
-          </ListItemIcon>
-          <FormattedMessage id="book.editor.fields.dateAdded.title" />
-        </MenuItem> */}
         <Divider />
-        <MenuItem selected={sortDirection === 'ascending'} onClick={() => onClickSortDirection('ascending')}>
+        <MenuItem selected={isFilterSelected(sortDirection, 'ascending')} onClick={() => onClickSortDirection('ascending')}>
           <ListItemIcon><ArrowUpwardIcon /></ListItemIcon>
           <FormattedMessage id="action.zoom.ascending" />
         </MenuItem>
-        <MenuItem selected={sortDirection === 'descending'} onClick={() => onClickSortDirection('descending')}>
+        <MenuItem selected={isFilterSelected(sortDirection, 'descending')} onClick={() => onClickSortDirection('descending')}>
           <ListItemIcon><ArrowDownwardIcon /></ListItemIcon>
           <FormattedMessage id="action.zoom.descending" />
         </MenuItem>

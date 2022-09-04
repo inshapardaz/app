@@ -25,7 +25,7 @@ import BookDeleteButton from '@/components/books/deleteBookButton';
 import AuthorsGroup from '@/components/authors/authorsGroup';
 import FavoriteButton from '@/components/books/favoriteButton';
 import BookSeriesLabel from '@/components/books/bookSeriesLabel';
-import BookCategoriesLabel from '@/components/books/bookCategoriesLabel';
+import CategoriesLabel from '@/components/categories/categoriesLabel';
 import helpers from '@/helpers';
 
 // ----------------------------------------------------------
@@ -61,9 +61,11 @@ const BookMenu = ({ book, onUpdated }) => {
           open={open}
           onClose={handleClose}
         >
+          {book && book.links && book.links.update && (
           <Tooltip title={<FormattedMessage id="action.edit" />}>
             <IconButton onClick={() => history.push(`/books/${book.id}/edit`)}><EditIcon /></IconButton>
           </Tooltip>
+          )}
           <BookDeleteButton book={book} onDeleted={onUpdated} onClick={handleClose} />
           <FavoriteButton book={book} onUpdated={onUpdated} />
         </Menu>
@@ -73,9 +75,11 @@ const BookMenu = ({ book, onUpdated }) => {
 
   return (
     <>
+      {book && book.links && book.links.update && (
       <Tooltip title={<FormattedMessage id="action.edit" />}>
         <IconButton onClick={() => history.push(`/books/${book.id}/edit`)}><EditIcon /></IconButton>
       </Tooltip>
+      )}
       <BookDeleteButton book={book} onDeleted={onUpdated} />
       <FavoriteButton book={book} onUpdated={onUpdated} />
     </>
@@ -85,6 +89,10 @@ const BookMenu = ({ book, onUpdated }) => {
 BookMenu.propTypes = {
   book: PropTypes.shape({
     id: PropTypes.number,
+    links: PropTypes.shape({
+      image: PropTypes.string,
+      update: PropTypes.string,
+    }),
   }).isRequired,
 
   onUpdated: PropTypes.func.isRequired,
@@ -143,7 +151,7 @@ const BookListItem = ({ book, onUpdated }) => {
             </Typography>
             )}
             <BookSeriesLabel book={book} />
-            <BookCategoriesLabel book={book} alignPills="left" />
+            <CategoriesLabel categories={book.categories} alignPills="left" type="books" />
           </>
 )}
       />

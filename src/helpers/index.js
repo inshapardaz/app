@@ -152,14 +152,16 @@ export default {
     location,
     page,
     query,
-    categoryId,
+    category,
+    frequencyFilter,
     sortBy,
     sortDirection,
   ) => {
     let querystring = '';
     querystring += page ? `page=${page}&` : '';
     querystring += query ? `query=${query}&` : '';
-    querystring += categoryId ? `category=${categoryId}&` : '';
+    querystring += category ? `category=${category}&` : '';
+    querystring += frequencyFilter && frequencyFilter !== 'All' ? `frequency=${frequencyFilter}&` : '';
     querystring += sortBy && sortBy !== 'title' ? `sortBy=${sortBy}&` : '';
     querystring += sortDirection && sortDirection !== 'ascending' ? `sortDirection=${sortDirection}&` : '';
 

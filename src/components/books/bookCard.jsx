@@ -19,7 +19,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import FavoriteButton from '@/components/books/favoriteButton';
 import BookProgress from '@/components/books/bookProgress';
 import BookSeriesLabel from '@/components/books/bookSeriesLabel';
-import BookCategoriesLabel from '@/components/books/bookCategoriesLabel';
+import CategoriesLabel from '@/components/categories/categoriesLabel';
 import DeleteBookButton from '@/components/books/deleteBookButton';
 import AuthorsGroup from '@/components/authors/authorsGroup';
 import helpers from '@/helpers';
@@ -94,7 +94,7 @@ const BookCard = ({ book, onUpdated, showProgress = false }) => {
           <Grid item container justifyContent="space-between">
             <AuthorsGroup authors={book.authors} showText={false} />
             <Grid item sm={4}>
-              <BookCategoriesLabel book={book} alignPills="right" />
+              <CategoriesLabel categories={book.categories} alignPills="right" type="books" />
             </Grid>
           </Grid>
           <Grid item>
@@ -131,6 +131,10 @@ BookCard.propTypes = {
     title: PropTypes.string,
     description: PropTypes.string,
     authors: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    })),
+    categories: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
     })),

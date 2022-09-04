@@ -17,6 +17,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 // Local imports
 import PeriodicalDeleteButton from '@/components/periodicals/periodicalDeleteButton';
+import CategoriesLabel from '@/components/categories/categoriesLabel';
 import helpers from '@/helpers';
 
 const PeriodicalCard = ({ periodical, onUpdated }) => {
@@ -59,16 +60,26 @@ const PeriodicalCard = ({ periodical, onUpdated }) => {
       </CardActionArea>
       <CardContent>
         <Grid container justifyContent="stretch">
+          <Grid item container justifyContent="space-between">
+            <Grid item sm={4}>
+              <Typography variant="body2" color="textSecondary" component="span">
+                <FormattedMessage id={`frequency.${periodical.frequency}`} />
+              </Typography>
+            </Grid>
+            <Grid item sm={4}>
+              <CategoriesLabel categories={periodical.categories} alignPills="right" type="periodicals" />
+            </Grid>
+          </Grid>
           <Grid item>
             <Tooltip title={periodical.title} aria-label={periodical.title}>
               <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${periodical.id}/issues`} sx={{ width: '100%' }}>
                 {periodical.title}
               </Typography>
             </Tooltip>
-            <Typography variant="body2" color="textSecondary" component="p">
+            <Typography variant="body2" color="textSecondary" component="span">
               <FormattedMessage id="periodical.issue.count" values={{ count: periodical.issueCount }} />
             </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
+            <Typography variant="body2" color="textSecondary" component="span">
               {helpers.truncateWithEllipses(periodical.description, 45)}
             </Typography>
           </Grid>
@@ -91,7 +102,8 @@ PeriodicalCard.propTypes = {
     title: PropTypes.string,
     description: PropTypes.string,
     issueCount: PropTypes.number,
-    periodical: PropTypes.arrayOf(PropTypes.shape({
+    frequency: PropTypes.string,
+    categories: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,
     })),

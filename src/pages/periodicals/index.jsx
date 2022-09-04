@@ -26,6 +26,7 @@ const PeriodicalsPage = () => {
   const [error, setError] = useState(false);
   const [periodicals, setPeriodicals] = useState(null);
   const [category, setCategory] = useState(null);
+  const [frequency, setFrequency] = useState(null);
   const [query, setQuery] = useState(null);
   const [sortBy, setSortBy] = useState(null);
   const [sortDirection, setSortDirection] = useState(null);
@@ -34,6 +35,7 @@ const PeriodicalsPage = () => {
   const loadData = () => {
     const values = queryString.parse(location.search);
     const categoryValue = values.category ? parseInt(values.category, 10) : null;
+    const frequencyValue = values.frequency || null;
     const sortByValue = values.sortBy || null;
     const sortDirectionValue = values.sortDirection || null;
     const queryValue = values.query;
@@ -42,12 +44,14 @@ const PeriodicalsPage = () => {
     libraryService.getPeriodicals(library.links.periodicals,
       queryValue,
       categoryValue,
+      frequencyValue,
       sortByValue,
       sortDirectionValue,
       pageValue)
       .then((res) => setPeriodicals(res))
       .then(() => {
         setCategory(categoryValue);
+        setFrequency(frequencyValue);
         setSortBy(sortByValue);
         setSortDirection(sortDirectionValue);
         setQuery(queryValue);
@@ -76,6 +80,7 @@ const PeriodicalsPage = () => {
               busy={busy}
               error={error}
               periodicals={periodicals}
+              frequency={frequency}
               onUpdated={loadData}
               library={library}
               category={category}

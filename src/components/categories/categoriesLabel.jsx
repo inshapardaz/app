@@ -9,7 +9,7 @@ import Chip from '@mui/material/Chip';
 
 // ----------------------------------------------------------
 
-const CategoryPill = ({ category }) => {
+const CategoryPill = ({ category, type }) => {
   const history = useHistory();
   return (
     <Chip
@@ -17,7 +17,7 @@ const CategoryPill = ({ category }) => {
       variant="outlined"
       label={category.name}
       sx={{ cursor: 'pointer' }}
-      onClick={() => history.push(`/books?category=${category.id}`)}
+      onClick={() => history.push(`/${type}?category=${category.id}`)}
     />
   );
 };
@@ -27,29 +27,33 @@ CategoryPill.propTypes = {
     id: PropTypes.number,
     name: PropTypes.string,
   }).isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 // --------------------------------------------------------
 
-const BookCategoriesLabel = ({ book, alignPills }) => {
-  if (book.categories && book.categories.length > 0) {
+const CategoriesLabel = ({ categories, type, alignPills }) => {
+  if (categories && categories.length > 0) {
     return (
       <Box sx={{ display: 'block', mt: (theme) => theme.spacing(1), textAlign: alignPills }}>
-        {book.categories.map((c) => <CategoryPill key={c.id} category={c} />)}
+        {categories.map((c) => <CategoryPill key={c.id} category={c} type={type} />)}
       </Box>
     );
   }
   return null;
 };
 
-BookCategoriesLabel.propTypes = {
-  book: PropTypes.shape({
-    categories: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-    })),
-  }).isRequired,
-  alignPills: PropTypes.string.isRequired,
+CategoriesLabel.defaultProps = {
+  categories: null,
 };
 
-export default BookCategoriesLabel;
+CategoriesLabel.propTypes = {
+  categories: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+  })),
+  alignPills: PropTypes.string.isRequired,
+  type: PropTypes.oneOf(['books', 'periodicals']).isRequired,
+};
+
+export default CategoriesLabel;

@@ -22,7 +22,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import { libraryService } from '@/services/';
 import CenteredContent from '@/components/layout/centeredContent';
 import AuthorsGroup from '@/components/authors/authorsGroup';
-import BookCategoriesLabel from '@/components/books/bookCategoriesLabel';
+import CategoriesLabel from '@/components/categories/categoriesLabel';
 import BookSeriesLabel from '@/components/books/bookSeriesLabel';
 import DeleteBookButton from '@/components/books/deleteBookButton';
 import FavoriteButton from '@/components/books/favoriteButton';
@@ -114,12 +114,14 @@ const BookPage = () => {
               {renderEditLink()}
               <DeleteBookButton button book={book} onDeleted={() => history.back()} />
               <BookPublishButton book={book} />
+              { book.links.update && (
               <Button component={Link} to={`/books/${book.id}/pages`} startIcon={<FileCopyIcon />}>
                 <FormattedMessage id="pages.label" />
                 <Typography variant="caption">
                   { `(${book.pageCount})`}
                 </Typography>
               </Button>
+              )}
               <BookPublishingStatus book={book} />
             </Stack>
           </Grid>
@@ -136,7 +138,7 @@ const BookPage = () => {
               <Box sx={{ alignSelf: 'flex-start' }}>
                 <AuthorsGroup authors={book.authors} />
               </Box>
-              <BookCategoriesLabel book={book} alignPills="left" />
+              <CategoriesLabel categories={book.categories} alignPills="left" type="books" />
               <BookSeriesLabel book={book} />
               <Typography>{book.description}</Typography>
               <Divider sx={{ my: (theme) => theme.spacing(8) }} />

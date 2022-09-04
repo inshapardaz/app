@@ -429,6 +429,8 @@
 	"periodical.editor.fields.name.title" : "Name",
 	"periodical.editor.fields.title.error": "Name is required",
 	"periodical.editor.fields.description.title" : "Description",
+	"periodical.editor.fields.frequency.title" : "Frequency",
+	"periodical.editor.fields.categories.title" : "Categories",
 	"periodical.messages.error.saving" : "Error saving periodical",
 	"periodical.messages.notfound" : "Periodical is not found.",
 	"periodical.messages.saved" : "Changes in periodical saved.",
@@ -541,5 +543,13 @@
 	"publishing.label.proofReading" : "Books you are proof reading",
 	"publishing.label.seeMore" : "Find what in progress...",
 	"publication.contributions" : "Your contributions",
-	"pages.count" : "{count} pages"
+	"pages.count" : "{count} pages",
+	"frequency.All": "All",
+	"frequency.Unknown": "Unknown",
+	"frequency.Annually" : "Annually",
+	"frequency.Quarterly" : "Quarterly",
+	"frequency.Monthly" : "Monthly",
+	"frequency.Fortnightly": "Fortnightly",
+	"frequency.Weekly": "Weekly",
+	"frequency.Daily": "Daily"
 }

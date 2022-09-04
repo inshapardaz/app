@@ -58,9 +58,11 @@ const IssueMenu = ({ issue, onUpdated }) => {
           open={open}
           onClose={handleClose}
         >
+          {issue && issue.links && issue.links.update && (
           <Tooltip title={<FormattedMessage id="action.edit" />}>
             <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/edit`)}><EditIcon /></IconButton>
           </Tooltip>
+          )}
           <IssueDeleteButton issue={issue} onDeleted={onUpdated} onClick={handleClose} />
         </Menu>
       </>
@@ -69,9 +71,11 @@ const IssueMenu = ({ issue, onUpdated }) => {
 
   return (
     <>
+      {issue && issue.links && issue.links.update && (
       <Tooltip title={<FormattedMessage id="action.edit" />}>
         <IconButton onClick={() => history.push(`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/edit`)}><EditIcon /></IconButton>
       </Tooltip>
+      )}
       <IssueDeleteButton issue={issue} onDeleted={onUpdated} />
     </>
   );
@@ -84,6 +88,10 @@ IssueMenu.propTypes = {
     issueDate: PropTypes.string,
     issueNumber: PropTypes.number,
     volumeNumber: PropTypes.number,
+    links: PropTypes.shape({
+      image: PropTypes.string,
+      update: PropTypes.string,
+    }),
   }).isRequired,
 
   onUpdated: PropTypes.func.isRequired,

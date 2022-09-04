@@ -101,7 +101,7 @@ const IssuesPage = () => {
             alignItems="center"
           >
             <img
-              style={{ maxWidth: '288px' }}
+              style={{ maxWidth: '235px' }}
               alt={periodical && periodical.title}
               src={(periodical && periodical.links ? periodical.links.image : null) || helpers.defaultIssueImage}
             />

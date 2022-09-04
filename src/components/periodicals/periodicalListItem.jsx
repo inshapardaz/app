@@ -23,6 +23,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 // Local import
 import PeriodicalDeleteButton from '@/components/periodicals/periodicalDeleteButton';
 import helpers from '@/helpers';
+import CategoriesLabel from '@/components/categories/categoriesLabel';
 
 // ----------------------------------------------------------
 
@@ -117,7 +118,8 @@ const PeriodicalListItem = ({ periodical, onUpdated }) => {
               <Link to={`/periodicals/${periodical.id}/issues`}>{periodical.title}</Link>
             </Grid>
           </Grid>
-				)}
+)}
+        secondaryTypographyProps={{ component: 'div' }}
         secondary={(
           <>
             <FormattedMessage id="periodical.issue.count" values={{ count: periodical.issueCount }} />
@@ -126,8 +128,12 @@ const PeriodicalListItem = ({ periodical, onUpdated }) => {
               {helpers.truncateWithEllipses(periodical.description, 500)}
             </Typography>
             )}
+            <Typography variant="body2" color="textSecondary" component="span">
+              <FormattedMessage id={`frequency.${periodical.frequency}`} />
+            </Typography>
+            <CategoriesLabel categories={periodical.categories} alignPills="left" type="periodicals" />
           </>
-			)}
+)}
       />
       <ListItemText />
       <ListItemSecondaryAction sx={{ top: 'auto', bottom: 0 }}>
@@ -142,7 +148,8 @@ PeriodicalListItem.propTypes = {
     id: PropTypes.number,
     title: PropTypes.string,
     description: PropTypes.string,
-    issuesCount: PropTypes.number,
+    issueCount: PropTypes.number,
+    frequency: PropTypes.string,
     categories: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number,
       name: PropTypes.string,

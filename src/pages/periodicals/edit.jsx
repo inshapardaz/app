@@ -20,6 +20,8 @@ import PageHeader from '@/components/pageHeader';
 import Busy from '@/components/busy';
 import Error from '@/components/error';
 import CenteredContent from '@/components/layout/centeredContent';
+import CategoriesDropDown from '@/components/categories/categoriesDropDown';
+import FrequencyDropDown from '@/components/periodicals/frequencyDropDown';
 
 const PeriodicalEditPage = () => {
   const { id } = useParams();
@@ -36,6 +38,8 @@ const PeriodicalEditPage = () => {
   const initialValues = {
     title: '',
     description: '',
+    frequency: 'Monthly',
+    categories: [],
   };
 
   const validationSchema = Yup.object().shape({
@@ -79,6 +83,12 @@ const PeriodicalEditPage = () => {
   const onSubmit = (fields, { setSubmitting }) => {
     setBusy(true);
     const data = { ...fields };
+
+    if (data.categories && data.categories.length > 0) {
+      data.categories = data.categories.map((c) => ({ id: c.id }));
+    } else {
+      data.categories = null;
+    }
 
     if (periodical) {
       libraryService.updatePeriodical(periodical.links.update, data)
@@ -130,7 +140,7 @@ const PeriodicalEditPage = () => {
             enableReinitialize
           >
             {({
-              errors, touched,
+              errors, values, touched, setFieldValue,
             }) => (
               <Form>
                 <Grid container spacing={3}>
@@ -158,6 +168,28 @@ const PeriodicalEditPage = () => {
                       label={<FormattedMessage id="periodical.editor.fields.description.title" />}
                       error={errors.description && touched.description}
                     />
+                    <FrequencyDropDown
+                      name="frequency"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      error={errors.frequency && touched.frequency}
+                      label={intl.formatMessage({ id: 'periodical.editor.fields.frequency.title' })}
+                    />
+                    <FormControl variant="outlined" margin="normal" fullWidth error={errors.categories && touched.categories}>
+                      <CategoriesDropDown
+                        name="categories"
+                        error={errors.categories && touched.categories}
+                        label={intl.formatMessage({ id: 'periodical.editor.fields.categories.title' })}
+                        value={values.categories}
+                        onCategoriesSelected={(cat) => {
+                          setFieldValue(
+                            'categories',
+                            cat !== null ? cat : initialValues.categories,
+                          );
+                        }}
+                      />
+                    </FormControl>
                   </Grid>
 
                   <Grid item md={6}>
