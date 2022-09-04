@@ -16,6 +16,7 @@ import Button from '@mui/material/Button';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 // Local Imports
+import Typography from '@mui/material/Typography';
 import { libraryService } from '@/services';
 import helpers from '@/helpers';
 import IssuesList from '@/components/issues/issuesList';
@@ -40,6 +41,8 @@ const IssuesPage = () => {
     const sortDirectionValue = values.sortDirection || null;
     const pageValue = values.page ? parseInt(values.page, 10) : 1;
 
+    setBusy(true);
+
     libraryService.getIssuesByPeriodicalsId(library.id, id,
       sortDirectionValue,
       pageValue)
@@ -48,24 +51,23 @@ const IssuesPage = () => {
         setSortDirection(sortDirectionValue);
         setPage(pageValue);
       })
-      .then(() => setBusy(false))
       .catch(() => {
-        setBusy(false);
         setError(true);
-      });
+      })
+      .finally(() => setBusy(false));
   };
 
   const loadPeriodical = () => {
+    setBusy(true);
     libraryService.getPeriodicalById(library.id, id)
       .then((res) => setPeriodical(res))
       .then(() => {
         loadIssues();
       })
-      .then(() => setBusy(false))
       .catch(() => {
-        setBusy(false);
         setError(true);
-      });
+      })
+      .finally(() => setBusy(false));
   };
 
   useEffect(() => {
@@ -93,7 +95,7 @@ const IssuesPage = () => {
     <div data-ft="issues-page">
       <Helmet title={intl.formatMessage({ id: 'header.issues' }, { title: periodical ? periodical.title : '' })} />
       <Grid container sx={{ mt: theme.spacing(2) }}>
-        <Grid item md={2}>
+        <Grid item md={2} sm={3}>
           <Stack
             spacing={2}
             mt={4}
@@ -105,7 +107,7 @@ const IssuesPage = () => {
               alt={periodical && periodical.title}
               src={(periodical && periodical.links ? periodical.links.image : null) || helpers.defaultIssueImage}
             />
-            {periodical ? periodical.title : ''}
+            <Typography variant="h4">{periodical ? periodical.title : ''}</Typography>
             {renderEditLink()}
             { periodical && <PeriodicalDeleteButton periodical={periodical} button onDeleted={() => history.push('/periodicals')} />}
           </Stack>

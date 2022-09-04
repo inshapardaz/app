@@ -118,7 +118,7 @@ const BookListItem = ({ book, onUpdated }) => {
         <Avatar
           variant="square"
           src={(book.links ? book.links.image : null) || helpers.defaultBookImage}
-          imgProps={{ onError: helpers.defaultBookImage }}
+          imgProps={{ onError: helpers.setDefaultBookImage }}
           sx={{ cursor: 'pointer', width: 100, height: 150 }}
         />
       </ListItemIcon>

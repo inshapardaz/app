@@ -61,11 +61,12 @@ const IssuesList = ({
     return null;
   };
 
-  const onSortUpdated = (newSortDirection) => {
+  const onSortUpdated = (newSortBy, newSortDirection) => {
     history.push(
       helpers.buildLinkToIssuesPage(
         location,
         page,
+        newSortBy,
         newSortDirection,
       ),
     );
@@ -87,7 +88,7 @@ const IssuesList = ({
   const renderCards = () => (
     <Grid container spacing={3}>
       {issues && issues.data.map((b) => (
-        <Grid item key={b.id} xs={12} sm={6} md={4} alignItems="stretch">
+        <Grid item key={b.id} xs={12} sm={6} md={6} lg={3} alignItems="stretch">
           <IssueCard issue={b} key={b.id} onUpdated={onUpdated} />
         </Grid>
       ))}
@@ -99,7 +100,7 @@ const IssuesList = ({
       return (
         <>
           <IssueSortButton
-            sortDirection={sortDirection}
+            sortDirection={sortDirection || 'ascending'}
             onChange={onSortUpdated}
           />
         </>

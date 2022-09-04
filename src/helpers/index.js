@@ -178,10 +178,12 @@ export default {
   buildLinkToIssuesPage: (
     location,
     page,
+    sortBy,
     sortDirection,
   ) => {
     let querystring = '';
     querystring += page ? `page=${page}&` : '';
+    querystring += sortBy && sortBy !== 'dateCreated' ? `sortBy=${sortBy}&` : '';
     querystring += sortDirection && sortDirection !== 'ascending' ? `sortDirection=${sortDirection}&` : '';
 
     if (querystring !== '') {
