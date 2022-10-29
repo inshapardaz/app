@@ -1,88 +1,82 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  useLocation, useParams, Link, useHistory,
+  useLocation, useParams, useHistory, Link,
 } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { useIntl, FormattedMessage } from 'react-intl';
-import queryString from 'query-string';
+import moment from 'moment';
 
 // MUI
 import { useTheme } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 // Local Imports
-import Typography from '@mui/material/Typography';
 import { libraryService } from '@/services';
 import helpers from '@/helpers';
-import IssuesList from '@/components/issues/issuesList';
-import PeriodicalDeleteButton from '@/components/periodicals/periodicalDeleteButton';
+import IssueDeleteButton from '@/components/issues/issueDeleteButton';
+import ArticleList from '@/components/articles/articlesList';
+import Busy from '@/components/busy';
+import Error from '@/components/error';
 
-const IssuesPage = () => {
+const IssuePage = () => {
   const intl = useIntl();
   const history = useHistory();
   const location = useLocation();
-  const { id } = useParams();
+  const { periodicalId, volumeNumber, issueNumber } = useParams();
   const library = useSelector((state) => state.libraryReducer.library);
   const theme = useTheme();
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState(false);
   const [periodical, setPeriodical] = useState(null);
-  const [issues, setIssues] = useState(null);
-  const [sortDirection, setSortDirection] = useState(null);
-  const [page, setPage] = useState(null);
+  const [issue, setIssue] = useState(null);
 
-  const loadIssues = () => {
-    const values = queryString.parse(location.search);
-    const sortDirectionValue = values.sortDirection || null;
-    const pageValue = values.page ? parseInt(values.page, 10) : 1;
-
-    setBusy(true);
-
-    libraryService.getIssuesByPeriodicalsId(library.id, id,
-      sortDirectionValue,
-      pageValue)
-      .then((res) => setIssues(res))
-      .then(() => {
-        setSortDirection(sortDirectionValue);
-        setPage(pageValue);
-      })
-      .catch(() => {
+  const loadPeriodical = () => {
+    libraryService.getPeriodicalById(library.id, periodicalId)
+      .then((res) => setPeriodical(res))
+      .then(() => setBusy(false))
+      .catch((e) => {
+        if (e.status && e.status === 404) {
+          history.push('/error/404');
+        }
+        setBusy(false);
         setError(true);
       })
       .finally(() => setBusy(false));
   };
 
-  const loadPeriodical = () => {
-    setBusy(true);
-    libraryService.getPeriodicalById(library.id, id)
-      .then((res) => setPeriodical(res))
-      .then(() => {
-        loadIssues();
-      })
-      .catch(() => {
+  const loadIssue = () => {
+    libraryService.getIssue(library.id, periodicalId, volumeNumber, issueNumber)
+      .then((res) => setIssue(res))
+      .then(() => setBusy(false))
+      .catch((e) => {
+        if (e.status && e.status === 404) {
+          history.push('/error/404');
+        }
+        setBusy(false);
         setError(true);
       })
       .finally(() => setBusy(false));
   };
 
   useEffect(() => {
-    if (library) loadPeriodical();
+    if (library) {
+      loadPeriodical();
+      loadIssue();
+    }
   }, [library, location]);
 
   const renderEditLink = () => {
-    if (periodical && periodical.links && periodical.links.update) {
+    if (issue && issue.links && issue.links.update) {
       return (
         <Tooltip title={<FormattedMessage id="action.edit" />}>
-          <Button
-            component={Link}
-            to={`/periodicals/${periodical.id}/edit`}
-            startIcon={<EditOutlinedIcon />}
-          >
+          <Button component={Link} to={`/periodicals/${periodicalId}/volumes/${volumeNumber}/issues/${issueNumber}/edit`} startIcon={<EditOutlinedIcon />}>
             <FormattedMessage id="action.edit" />
           </Button>
         </Tooltip>
@@ -91,42 +85,80 @@ const IssuesPage = () => {
     return null;
   };
 
+  const renderPagesLink = () => {
+    if (issue && ((issue.links && issue.links.add_pages) || issue.pageCount > 0)) {
+      return (
+        <Tooltip title={<FormattedMessage id="pages.label" />}>
+          <Button component={Link} to={`/periodicals/${periodicalId}/volumes/${volumeNumber}/issues/${issueNumber}/pages`} startIcon={<FileCopyIcon />}>
+            <FormattedMessage id="pages.label" />
+          </Button>
+        </Tooltip>
+      );
+    }
+    return null;
+  };
+
+  const renderInformation = () => {
+    if (issue === null) return null;
+    const title = periodical ? moment(issue.issueDate).format('MMMM YYYY') : '';
+    return (
+      <Stack
+        direction="column"
+        spacing={2}
+        alignItems="center"
+      >
+        <Typography variant="h4">{ title }</Typography>
+
+        <Typography variant="body2" color="textSecondary" component="p">
+          {issue.issueNumber && issue.issueNumber > 0 && <FormattedMessage id="issue.label.issueNumber" values={{ issueNumber: issue.issueNumber }} /> }
+          {issue.volumeNumber && issue.volumeNumber > 0 && <span style={{ padding: '0 10px' }}>•</span>}
+          {issue.volumeNumber && issue.volumeNumber > 0 && <FormattedMessage id="issue.label.volumeNumber" values={{ volumeNumber: issue.volumeNumber }} />}
+        </Typography>
+      </Stack>
+    );
+  };
+
+  const header = periodical && issue ? intl.formatMessage({ id: 'header.articles' }, { title: periodical.title, issue: issue.issueNumber })
+    : '';
+
   return (
-    <div data-ft="issues-page">
-      <Helmet title={intl.formatMessage({ id: 'header.issues' }, { title: periodical ? periodical.title : '' })} />
-      <Grid container sx={{ mt: theme.spacing(2) }}>
-        <Grid item md={2} sm={3}>
-          <Stack
-            spacing={2}
-            mt={4}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <img
-              style={{ maxWidth: '235px' }}
-              alt={periodical && periodical.title}
-              src={(periodical && periodical.links ? periodical.links.image : null) || helpers.defaultIssueImage}
-            />
-            <Typography variant="h4">{periodical ? periodical.title : ''}</Typography>
-            {renderEditLink()}
-            { periodical && <PeriodicalDeleteButton periodical={periodical} button onDeleted={() => history.push('/periodicals')} />}
-          </Stack>
+    <div data-ft="articles-page">
+      <Helmet title={header} />
+      <Busy busy={busy} />
+      <Error
+        error={error}
+        message={intl.formatMessage({ id: 'articles.message.empty' })}
+        actionText={intl.formatMessage({ id: 'action.back' })}
+        onAction={() => history.goBack()}
+      >
+        <Grid container sx={{ mt: theme.spacing(2) }}>
+          <Grid item md={2}>
+            <Stack
+              spacing={2}
+              mt={4}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <img
+                style={{ maxWidth: '288px' }}
+                alt={issue && issue.title}
+                src={(issue && issue.links ? issue.links.image : null) || helpers.defaultIssueImage}
+              />
+              {renderInformation()}
+              {renderEditLink()}
+              <IssueDeleteButton button issue={issue} onDeleted={() => history.back()} />
+              {renderPagesLink()}
+            </Stack>
+          </Grid>
+          <Grid item md={10}>
+            <Stack spacing={2} sx={{ mt: theme.spacing(4) }}>
+              <ArticleList issue={issue} />
+            </Stack>
+          </Grid>
         </Grid>
-        <Grid item md={10}>
-          <IssuesList
-            busy={busy}
-            error={error}
-            issues={issues}
-            onUpdated={loadIssues}
-            library={library}
-            page={page}
-            sortDirection={sortDirection}
-            periodicalId={id}
-          />
-        </Grid>
-      </Grid>
+      </Error>
     </div>
   );
 };
 
-export default IssuesPage;
+export default IssuePage;

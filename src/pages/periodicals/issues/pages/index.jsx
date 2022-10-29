@@ -30,23 +30,23 @@ import helpers from '@/helpers';
 
 import Busy from '@/components/busy';
 import Error from '@/components/error';
-import AddPageMenu from '@/components/pages/addPageMenu';
+import AddIssuePageMenu from '@/components/issues/addIssuePageMenu';
 import StatusButton from '@/components/pages/statusButton';
 import DeleteButton from '@/components/pages/deleteButton';
 import AssignToMeButton from '@/components/pages/assignToMeButton';
 import AssignToUserButton from '@/components/pages/assignToUserButton';
 import PageList from '@/components/pages/pageList';
 import PageGrid from '@/components/pages/pageGrid';
-import PageFilterButton from '@/components/pages/pageFilterButton';
-import PageSortButton from '@/components/pages/pageSortButton';
-import PageAssignButton from '@/components/pages/pageAssignButton';
+import IssuePageFilterButton from '@/components/issues/issuePageFilterButton';
+import IssuePageSortButton from '@/components/issues/issuePageSortButton';
+import IssuePageAssignButton from '@/components/issues/issuePageAssignButton';
 import PageSizeSelector from '@/components/pageSizeSelector';
 import OcrButton from '@/components/pages/ocrButton';
 
 // Local Import
 import BookStatus from '@/models/bookStatus';
 import PageStatus from '@/models/pageStatus';
-import PageBreadcrumb from '@/components/pages/pageBreadcrumb';
+import IssuePageBreadcrumb from '@/components/issues/issuePageBreadcrumb';
 
 const getSelectedPages = (pages, checked) => {
   if (pages && pages.data && checked.length > 0) {
@@ -102,7 +102,7 @@ SelectionButton.propTypes = {
 
 // ---------------------------------------------------------------------
 
-const getFilterFromBookStatus = (book) => {
+const getFilterFromIssueStatus = (book) => {
   switch (book.status) {
     case BookStatus.AvailableForTyping: return PageStatus.AvailableForTyping;
     case BookStatus.BeingTyped: return PageStatus.Typing;
@@ -115,17 +115,17 @@ const getFilterFromBookStatus = (book) => {
 
 // ---------------------------------------------------------------------
 
-const BookPages = () => {
+const IssuePages = () => {
   const history = useHistory();
   const location = useLocation();
   const intl = useIntl();
-  const { bookId } = useParams();
-  const [book, setBook] = useState(null);
+  const { periodicalId, volumeNumber, issueNumber } = useParams();
+  const [issue, setIssue] = useState(null);
   const [pages, setPages] = useState(null);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState(false);
   const [checked, setChecked] = React.useState([]);
-  const [showImages, setShowImages] = useState(localStorage.getItem('pagesImageView') === 'true');
+  const [showImages, setShowImages] = useState(localStorage.getItem('issuePagesImageView') === 'true');
   const library = useSelector((state) => state.libraryReducer.library);
   const [statusFilter, setStatusFilter] = useState(PageStatus.Typing);
   const [sortDirection, setSortDirection] = useState('ascending');
@@ -133,10 +133,11 @@ const BookPages = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
   const selectedPages = getSelectedPages(pages, checked);
-  const loadPages = (b) => {
+
+  const loadPages = (i) => {
     setError(false);
     const values = queryString.parse(location.search);
-    const filter = values.filter ? values.filter : getFilterFromBookStatus(b);
+    const filter = values.filter ? values.filter : getFilterFromIssueStatus(i);
     let assignmentFilterValue;
     let reviewerAssignmentFilterValue;
 
@@ -154,7 +155,7 @@ const BookPages = () => {
       reviewerAssignmentFilterValue = values.assignmentFilter ? values.assignmentFilter : 'assignedToMe';
     }
 
-    libraryService.getBookPages(b.links.pages, filter, assignmentFilterValue, reviewerAssignmentFilterValue, values.page, values.pageSize)
+    libraryService.getIssuePages(i.links.pages, filter, assignmentFilterValue, reviewerAssignmentFilterValue, values.page, values.pageSize)
       .then((res) => {
         setPages(res);
         setStatusFilter(filter);
@@ -174,9 +175,9 @@ const BookPages = () => {
     setError(false);
     setChecked([]);
 
-    libraryService.getBookById(library.id, bookId)
+    libraryService.getIssue(library.id, periodicalId, volumeNumber, issueNumber)
       .then((res) => {
-        setBook(res);
+        setIssue(res);
         loadPages(res);
       })
       .catch((e) => {
@@ -187,13 +188,13 @@ const BookPages = () => {
   };
 
   useEffect(() => {
-    if (bookId && library) {
+    if (library && periodicalId && volumeNumber && issueNumber) {
       loadData();
     }
-  }, [bookId, library, location]);
+  }, [library, periodicalId, volumeNumber, issueNumber, location]);
 
   const toggleView = () => {
-    localStorage.setItem('pagesImageView', !showImages);
+    localStorage.setItem('issuePagesImageView', !showImages);
     setShowImages(!showImages);
   };
 
@@ -214,7 +215,7 @@ const BookPages = () => {
     setStatusFilter(newStatus);
     setAssignmentFilter(newAssignmentFilter);
     history.push(
-      helpers.buildLinkToBooksPagesPage(
+      helpers.buildLinkToIssuePagesPage(
         location,
         1,
         pageSize,
@@ -231,7 +232,7 @@ const BookPages = () => {
   const onPageSizeChanged = (newPageSize) => {
     setPageSize(newPageSize);
     history.push(
-      helpers.buildLinkToBooksPagesPage(
+      helpers.buildLinkToIssuePagesPage(
         location,
         1,
         newPageSize,
@@ -243,13 +244,13 @@ const BookPages = () => {
 
   const renderFilters = () => (
     <>
-      <PageFilterButton
-        book={book}
+      <IssuePageFilterButton
+        issue={issue}
         statusFilter={statusFilter}
         assignmentFilter={assignmentFilter}
         onChange={onStatusFilterUpdated}
       />
-      <PageSortButton
+      <IssuePageSortButton
         sortDirection={sortDirection}
         onChange={onSortDirectionUpdated}
       />
@@ -259,19 +260,19 @@ const BookPages = () => {
   const renderToolbar = () => (
     <Toolbar>
       <ButtonGroup>
-        <PageBreadcrumb book={book} showPage={false} />
+        <IssuePageBreadcrumb issue={issue} showPage={false} />
         <SelectionButton
           selectedPages={checked}
           totalCount={pages && pages.data.length}
           onSelectAll={() => setChecked(pages.data.map((p) => p.sequenceNumber))}
           onSelectNone={() => setChecked([])}
         />
-        <AddPageMenu book={book} onFilesUploaded={loadData} />
+        <AddIssuePageMenu issue={issue} onFilesUploaded={loadData} />
         <DeleteButton pages={selectedPages} onUpdated={loadData} onDeleting={setBusy} />
         <AssignToMeButton pages={selectedPages} onAssigned={loadData} onAssigning={setBusy} />
         <AssignToUserButton pages={selectedPages} onAssigned={loadData} />
-        <PageAssignButton
-          book={book}
+        <IssuePageAssignButton
+          issue={issue}
           pages={selectedPages}
           onStatusChanges={loadData}
         />
@@ -311,7 +312,7 @@ const BookPages = () => {
             renderItem={(item) => (
               <PaginationItem
                 component={Link}
-                to={helpers.buildLinkToBooksPagesPage(
+                to={helpers.buildLinkToIssuePagesPage(
                   location,
                   item.page,
                   pageSize,
@@ -343,24 +344,24 @@ const BookPages = () => {
           pages={pages}
           selectedPages={checked}
           onCheckChanged={handleCheckToggle}
-          onUpdated={() => loadPages(book)}
+          onUpdated={() => loadPages(issue)}
         />
       );
     }
 
     return (
       <PageList
-        id={book.id}
+        id={issue.id}
         pages={pages}
         selectedPages={checked}
         onCheckChanged={handleCheckToggle}
-        onUpdated={() => loadPages(book)}
+        onUpdated={() => loadPages(issue)}
       />
     );
   };
 
   return (
-    <div data-ft="book-pages">
+    <div data-ft="issue-pages">
       <Helmet title={intl.formatMessage({ id: 'pages.label' })} />
       <Error
         error={error}
@@ -377,4 +378,4 @@ const BookPages = () => {
   );
 };
 
-export default BookPages;
+export default IssuePages;

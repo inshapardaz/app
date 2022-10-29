@@ -101,7 +101,7 @@ const PeriodicalListItem = ({ periodical, onUpdated }) => {
       sx={{ cursor: 'default' }}
     >
       {matches && (
-      <ListItemIcon onClick={() => history.push(`/periodicals/${periodical.id}/issues`)} sx={{ mr: theme.spacing(1) }}>
+      <ListItemIcon onClick={() => history.push(`/periodicals/${periodical.id}`)} sx={{ mr: theme.spacing(1) }}>
         <Avatar
           variant="square"
           src={(periodical.links ? periodical.links.image : null) || helpers.defaultPeriodicalImage}
@@ -115,7 +115,7 @@ const PeriodicalListItem = ({ periodical, onUpdated }) => {
         primary={(
           <Grid container justifyContent="space-between" sx={{ backgroundColor: 'grey' }}>
             <Grid item sm={6}>
-              <Link to={`/periodicals/${periodical.id}/issues`}>{periodical.title}</Link>
+              <Link to={`/periodicals/${periodical.id}`}>{periodical.title}</Link>
             </Grid>
           </Grid>
 )}

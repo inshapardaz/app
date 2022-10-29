@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
 import { Draggable } from 'react-beautiful-dnd';
@@ -27,12 +26,10 @@ import PageStatusIcon from '@/components/pages/pageStatusIcon';
 import IconWithTooltip from '@/components/iconWithTooltip';
 
 const PageListItem = ({
-  page, onUpdated, onCheckChanged, checked,
+  page, onUpdated, onCheckChanged, checked, pageClicked,
 }) => {
-  const history = useHistory();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
-  const pageClicked = () => history.push(`/books/${page.bookId}/pages/${page.sequenceNumber}/edit`);
   const canReorder = page.links && page.links.page_sequence !== null;
   const assignments = (
     <>
@@ -117,6 +114,7 @@ PageListItem.defaultProps = {
   checked: false,
   onUpdated: () => {},
   onCheckChanged: () => {},
+  pageClicked: () => {},
 };
 PageListItem.propTypes = {
   page: PropTypes.shape({
@@ -139,6 +137,7 @@ PageListItem.propTypes = {
   checked: PropTypes.bool,
   onCheckChanged: PropTypes.func,
   onUpdated: PropTypes.func,
+  pageClicked: PropTypes.func,
 };
 
 export default PageListItem;

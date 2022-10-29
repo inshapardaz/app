@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useParams, useHistory, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 // MUI
 import { red } from '@mui/material/colors';
@@ -16,7 +16,11 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import LayersIcon from '@mui/icons-material/Layers';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 // Local Imports
 import { libraryService } from '@/services/';
@@ -27,8 +31,12 @@ import BookSeriesLabel from '@/components/books/bookSeriesLabel';
 import DeleteBookButton from '@/components/books/deleteBookButton';
 import FavoriteButton from '@/components/books/favoriteButton';
 import ChaptersList from '@/components/chapters/chaptersList';
+import BookFiles from '@/components/books/bookFiles';
 import BookPublishingStatus from '@/components/books/bookPublishingStatus';
 import BookPublishButton from '@/components/books/bookPublishButton';
+import EditingStatusIcon from '@/components/editingStatusIcon';
+import CopyrightIcon from '@/components/copyrightIcon';
+import TabPanel from '@/components/tabPanel';
 import Busy from '@/components/busy';
 import Error from '@/components/error';
 import helpers from '@/helpers';
@@ -57,10 +65,13 @@ BookFavoriteIcon.propTypes = {
 
 const BookPage = () => {
   const history = useHistory();
+  const intl = useIntl();
+
   const { bookId } = useParams();
   const [book, setBook] = useState(null);
   const [busy, setBusy] = useState(true);
   const [error, setError] = useState(false);
+  const [tabValue, setTabValue] = React.useState(0);
   const library = useSelector((state) => state.libraryReducer.library);
 
   const loadData = () => {
@@ -92,6 +103,10 @@ const BookPage = () => {
       );
     }
     return null;
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
   };
 
   const renderBook = () => (
@@ -132,7 +147,10 @@ const BookPage = () => {
                 spacing={2}
                 alignItems="center"
               >
-                <Typography variant="h4">{book.title}</Typography>
+                <Typography variant="h4">
+                  <EditingStatusIcon status={book.status} />
+                  {book.title}
+                </Typography>
                 <FavoriteButton book={book} onUpdated={loadData} />
               </Stack>
               <Box sx={{ alignSelf: 'flex-start' }}>
@@ -141,8 +159,23 @@ const BookPage = () => {
               <CategoriesLabel categories={book.categories} alignPills="left" type="books" />
               <BookSeriesLabel book={book} />
               <Typography>{book.description}</Typography>
+              <Typography sx={{ color: (theme) => (book.yearPublished ? theme.palette.text.primary : theme.palette.text.disabled) }}>
+                <CopyrightIcon status={book.copyrights} />
+                { book.yearPublished
+                  ? <FormattedMessage id="book.editor.fields.yearPublished.display" values={{ year: book.yearPublished }} />
+                  : <FormattedMessage id="book.editor.fields.yearPublished.empty" />}
+              </Typography>
               <Divider sx={{ my: (theme) => theme.spacing(8) }} />
-              <ChaptersList book={book} />
+              <Tabs value={tabValue} onChange={handleTabChange} aria-label="book tabs">
+                <Tab icon={<LayersIcon />} iconPosition="start" label={intl.formatMessage({ id: 'book.tabs.chapters' })} id="book-chapters" />
+                <Tab icon={<SimCardDownloadIcon />} iconPosition="start" label={intl.formatMessage({ id: 'book.tabs.files' })} id="book-files" />
+              </Tabs>
+              <TabPanel id="book-chapters" value={tabValue} index={0}>
+                <ChaptersList book={book} />
+              </TabPanel>
+              <TabPanel id="book-files" value={tabValue} index={1}>
+                <BookFiles book={book} />
+              </TabPanel>
             </Stack>
           </Grid>
         </Grid>

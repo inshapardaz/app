@@ -196,4 +196,25 @@ export default {
 
     return location.pathname;
   },
+  buildLinkToIssuePagesPage: (location,
+    page,
+    pageSize,
+    statusFilter,
+    assignmentFilter) => {
+    let querystring = '';
+    querystring += page ? `page=${page}&` : '';
+    querystring += pageSize && pageSize !== 12 ? `pageSize=${pageSize}&` : '';
+    querystring += statusFilter ? `filter=${statusFilter}&` : '';
+    querystring += assignmentFilter ? `assignmentFilter=${assignmentFilter}&` : '';
+
+    if (querystring !== '') {
+      if (querystring.substr(querystring.length - 1) === '&') {
+        querystring = querystring.slice(0, -1);
+      }
+
+      return `${location.pathname}?${querystring}`;
+    }
+
+    return location.pathname;
+  },
 };

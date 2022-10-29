@@ -113,7 +113,7 @@ const IssueListItem = ({ issue, onUpdated }) => {
       sx={{ cursor: 'default' }}
     >
       {matches && (
-      <ListItemIcon onClick={() => history.push(`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/articles`)} sx={{ mr: theme.spacing(1) }}>
+      <ListItemIcon onClick={() => history.push(`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}`)} sx={{ mr: theme.spacing(1) }}>
         <Avatar
           variant="square"
           src={(issue.links ? issue.links.image : null) || helpers.defaultIssueImage}
@@ -127,7 +127,7 @@ const IssueListItem = ({ issue, onUpdated }) => {
         primary={(
           <Grid container justifyContent="space-between" sx={{ backgroundColor: 'grey' }}>
             <Grid item sm={6}>
-              <Link to={`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/articles`}>{ moment(issue.issueDate).format('MMMM YYYY') }</Link>
+              <Link to={`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}`}>{ moment(issue.issueDate).format('MMMM YYYY') }</Link>
             </Grid>
           </Grid>
 )}

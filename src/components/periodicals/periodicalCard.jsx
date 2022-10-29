@@ -36,7 +36,7 @@ const PeriodicalCard = ({ periodical, onUpdated }) => {
     return null;
   };
 
-  const onOpen = () => history.push(`/periodicals/${periodical.id}/issues`);
+  const onOpen = () => history.push(`/periodicals/${periodical.id}`);
 
   return (
     <Card sx={{
@@ -72,7 +72,7 @@ const PeriodicalCard = ({ periodical, onUpdated }) => {
           </Grid>
           <Grid item>
             <Tooltip title={periodical.title} aria-label={periodical.title}>
-              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${periodical.id}/issues`} sx={{ width: '100%' }}>
+              <Typography gutterBottom variant="h5" component={Link} noWrap to={`/periodicals/${periodical.id}`} sx={{ width: '100%', display: 'block' }}>
                 {periodical.title}
               </Typography>
             </Tooltip>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -13,8 +14,9 @@ import PageListItem from '@/components/pages/pageListItem';
 import { libraryService } from '@/services/';
 
 const PageList = ({
-  book, pages, onCheckChanged, onUpdated, selectedPages,
+  id, pages, onCheckChanged, onUpdated, selectedPages, type,
 }) => {
+  const history = useHistory();
   const intl = useIntl();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -34,10 +36,18 @@ const PageList = ({
     }
   };
 
+  const pageClicked = (p) => {
+    if (type === 'book') {
+      history.push(`/books/${p.bookId}/pages/${p.sequenceNumber}/edit`);
+    } else if (type === 'issue') {
+      history.push(`/periodicals/${p.bookId}/pages/${p.sequenceNumber}/edit`);
+    }
+  };
+
   return (
     <Empty items={pages.data} message={<FormattedMessage id="pages.messages.empty" />}>
       <DragDropContext onDragEnd={onDragDrop}>
-        <Droppable droppableId={`Droppable_${book.id}`}>
+        <Droppable droppableId={`Droppable_${id}`}>
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               <List component="nav" aria-label="authors" sx={{ mx: (theme) => theme.spacing(2) }}>
@@ -48,6 +58,7 @@ const PageList = ({
                     checked={selectedPages.indexOf(p.sequenceNumber) >= 0}
                     onUpdated={onUpdated}
                     onCheckChanged={onCheckChanged}
+                    pageClicked={() => pageClicked(p)}
                   />
                 ))}
                 {provided.placeholder}
@@ -61,16 +72,14 @@ const PageList = ({
 };
 
 PageList.defaultProps = {
-  book: null,
+  id: null,
   pages: null,
   selectedPages: [],
   onUpdated: () => {},
   onCheckChanged: () => {},
 };
 PageList.propTypes = {
-  book: PropTypes.shape({
-    id: PropTypes.number,
-  }),
+  id: PropTypes.number,
   pages: PropTypes.shape({
     data: PropTypes.arrayOf(PropTypes.shape({
       sequenceNumber: PropTypes.number,
@@ -79,6 +88,7 @@ PageList.propTypes = {
   selectedPages: PropTypes.arrayOf(PropTypes.number),
   onUpdated: PropTypes.func,
   onCheckChanged: PropTypes.func,
+  type: PropTypes.oneOf(['book', 'issue']).isRequired,
 };
 
 export default PageList;

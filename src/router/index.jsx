@@ -40,9 +40,10 @@ import ChapterViewer from '@/pages/chapters/view';
 import SeriePage from '@/pages/series/serie';
 import PeriodicalsPage from '@/pages/periodicals';
 import PeriodicalEditPage from '@/pages/periodicals/edit';
-import IssuesPage from '@/pages/periodicals/issues';
+import PeriodicalPage from '@/pages/periodicals/periodical';
 import IssuesEditPage from '@/pages/periodicals/issues/edit';
-import IssuesArticlesPage from '@/pages/periodicals/issues/articles';
+import IssuePage from '@/pages/periodicals/issues';
+import IssuePagesPage from '@/pages/periodicals/issues/pages';
 import UserPages from '@/pages/account/userPages';
 import CorrectionsListPage from '@/pages/tools/corrections';
 import CorrectionEditPage from '@/pages/tools/corrections/edit';
@@ -96,8 +97,9 @@ const Routes = () => {
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/edit" component={PeriodicalEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/volumes/:volumeNumber/issues/:issueNumber/edit" component={IssuesEditPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/issues/create" component={IssuesEditPage} exact libraryWithPeriodicals />
-      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id/issues" component={IssuesPage} exact libraryWithPeriodicals />
-      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/volumes/:volumeNumber/issues/:issueNumber/articles" component={IssuesArticlesPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:id" component={PeriodicalPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/volumes/:volumeNumber/issues/:issueNumber/pages" component={IssuePagesPage} exact libraryWithPeriodicals />
+      <PrivateRoute layout={FullWidthLayout} path="/periodicals/:periodicalId/volumes/:volumeNumber/issues/:issueNumber" component={IssuePage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/periodicals" component={PeriodicalsPage} exact libraryWithPeriodicals />
       <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/add" component={CorrectionEditPage} exact />
       <PrivateRoute layout={FullWidthLayout} path="/tools/corrections/:language/:profile/:id/edit" component={CorrectionEditPage} exact />

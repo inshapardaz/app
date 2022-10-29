@@ -7,6 +7,11 @@ import { TextField } from 'formik-mui';
 
 // MUI
 import MenuItem from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+
+// Local Import
+import CopyrightIcon from '@/components/copyrightIcon';
 
 const CopyrightDropDown = (props) => {
   const intl = useIntl();
@@ -25,8 +30,15 @@ const CopyrightDropDown = (props) => {
   }];
 
   return (
-    <Field component={TextField} select {...props}>
-      {locals.map((l) => <MenuItem key={l.id} value={l.id}>{l.name}</MenuItem>)}
+    <Field component={TextField} select {...props} SelectProps={{ renderValue: (v) => locals.find((x) => x.id === v).name }}>
+      {locals.map((l) => (
+        <MenuItem key={l.id} value={l.id}>
+          <ListItemIcon>
+            <CopyrightIcon status={l.id} />
+          </ListItemIcon>
+          <ListItemText>{l.name}</ListItemText>
+        </MenuItem>
+      ))}
     </Field>
   );
 };

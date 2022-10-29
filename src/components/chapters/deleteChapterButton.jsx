@@ -9,11 +9,14 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import ButtonWithTooltip from '@/components/buttonWithTooltip';
 
 // Local Imports
 import { libraryService } from '@/services';
 
-const DeleteChapterButton = ({ chapter, onDeleted, disabled }) => {
+const DeleteChapterButton = ({
+  chapter, onDeleted, disabled, menuItem = true,
+}) => {
   const intl = useIntl();
   const confirm = useConfirm();
   const { enqueueSnackbar } = useSnackbar();
@@ -35,15 +38,23 @@ const DeleteChapterButton = ({ chapter, onDeleted, disabled }) => {
   }, [chapter, confirm]);
 
   if (chapter && chapter.links && chapter.links.delete) {
+    if (menuItem) {
+      return (
+        <MenuItem onClick={onDelete} disabled={disabled}>
+          <ListItemIcon>
+            <DeleteOutlineOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>
+            <FormattedMessage id="action.delete" />
+          </ListItemText>
+        </MenuItem>
+      );
+    }
+
     return (
-      <MenuItem onClick={onDelete} disabled={disabled}>
-        <ListItemIcon>
-          <DeleteOutlineOutlinedIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>
-          <FormattedMessage id="action.delete" />
-        </ListItemText>
-      </MenuItem>
+      <ButtonWithTooltip tooltip={<FormattedMessage id="action.delete" />} onClick={onDelete} disabled={disabled} iconButton>
+        <DeleteOutlineOutlinedIcon />
+      </ButtonWithTooltip>
     );
   }
 
@@ -52,6 +63,7 @@ const DeleteChapterButton = ({ chapter, onDeleted, disabled }) => {
 
 DeleteChapterButton.defaultProps = {
   disabled: false,
+  menuItem: true,
   onDeleted: () => {},
 };
 DeleteChapterButton.propTypes = {
@@ -64,6 +76,7 @@ DeleteChapterButton.propTypes = {
   }).isRequired,
   disabled: PropTypes.bool,
   onDeleted: PropTypes.func,
+  menuItem: PropTypes.bool,
 };
 
 export default DeleteChapterButton;
