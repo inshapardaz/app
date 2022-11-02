@@ -90,7 +90,7 @@ const IssuePage = () => {
       return (
         <Tooltip title={<FormattedMessage id="pages.label" />}>
           <Button component={Link} to={`/periodicals/${periodicalId}/volumes/${volumeNumber}/issues/${issueNumber}/pages`} startIcon={<FileCopyIcon />}>
-            <FormattedMessage id="pages.label" />
+            <FormattedMessage id="pages.label.count" values={{ count: issue.pageCount }} />
           </Button>
         </Tooltip>
       );
@@ -100,13 +100,14 @@ const IssuePage = () => {
 
   const renderInformation = () => {
     if (issue === null) return null;
-    const title = periodical ? moment(issue.issueDate).format('MMMM YYYY') : '';
+    const title = issue ? moment(issue.issueDate).format('MMMM YYYY') : '';
     return (
       <Stack
         direction="column"
         spacing={2}
         alignItems="center"
       >
+        <Typography variant="h4" component={Link} to={`/periodicals/${issue.periodicalId}`}>{ issue.periodicalName }</Typography>
         <Typography variant="h4">{ title }</Typography>
 
         <Typography variant="body2" color="textSecondary" component="p">

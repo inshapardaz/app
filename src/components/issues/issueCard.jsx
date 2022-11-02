@@ -18,6 +18,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 // Local imports
 import IssueDeleteButton from '@/components/issues/issueDeleteButton';
+import ConditionalLabel from '@/components/conditionalLabel';
 import helpers from '@/helpers';
 
 const IssueCard = ({ issue, onUpdated }) => {
@@ -67,9 +68,22 @@ const IssueCard = ({ issue, onUpdated }) => {
               </Typography>
             </Tooltip>
             <Typography variant="body2" color="textSecondary" component="p">
-              {issue.issueNumber && issue.issueNumber > 0 && <FormattedMessage id="issue.label.issueNumber" values={{ issueNumber: issue.issueNumber }} /> }
-              {issue.volumeNumber && issue.volumeNumber > 0 && <span style={{ padding: '0 10px' }}>•</span>}
-              {issue.volumeNumber && issue.volumeNumber > 0 && <FormattedMessage id="issue.label.volumeNumber" values={{ volumeNumber: issue.volumeNumber }} />}
+              <ConditionalLabel condition={issue.issueNumber && issue.issueNumber > 0}>
+                <FormattedMessage id="issue.label.issueNumber" values={{ issueNumber: issue.issueNumber }} />
+              </ConditionalLabel>
+              <ConditionalLabel condition={issue.issueNumber && issue.issueNumber > 0}><span style={{ padding: '0 10px' }}>•</span></ConditionalLabel>
+              <ConditionalLabel condition={issue.volumeNumber && issue.volumeNumber > 0}>
+                <FormattedMessage id="issue.label.volumeNumber" values={{ volumeNumber: issue.volumeNumber }} />
+              </ConditionalLabel>
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              <ConditionalLabel condition={issue.articleCount && issue.articleCount > 0}>
+                <FormattedMessage id="issue.label.articleCount" values={{ count: issue.articleCount }} />
+              </ConditionalLabel>
+              <ConditionalLabel condition={issue.pageCount && issue.pageCount > 0}><span style={{ padding: '0 10px' }}>•</span></ConditionalLabel>
+              <ConditionalLabel condition={issue.pageCount && issue.pageCount > 0}>
+                <FormattedMessage id="issue.label.pageCount" values={{ count: issue.pageCount }} />
+              </ConditionalLabel>
             </Typography>
           </Grid>
         </Grid>
@@ -91,7 +105,9 @@ IssueCard.propTypes = {
     issueNumber: PropTypes.number,
     volumeNumber: PropTypes.number,
     articleCount: PropTypes.number,
+    pageCount: PropTypes.number,
     periodicalId: PropTypes.number,
+    periodicalName: PropTypes.string,
     issueDate: PropTypes.string,
     links: PropTypes.shape({
       image: PropTypes.string,

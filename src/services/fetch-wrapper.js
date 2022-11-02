@@ -109,7 +109,7 @@ const postFile = (url, body, headers = {}) => {
 };
 
 // prefixed with underscored because delete is a reserved word in javascript
-const _delete = (url, headers = { }) => {
+const _delete = (url, headers = {}) => {
   const requestOptions = {
     method: 'DELETE',
     headers: authHeader(url),

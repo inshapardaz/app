@@ -12,7 +12,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
-import LayersIcon from '@mui/icons-material/Layers';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -22,6 +21,7 @@ import DragHandleIcon from '@mui/icons-material/DragHandle';
 // Local import
 import { libraryService } from '@/services/';
 import DeleteChapterButton from '@/components/chapters/deleteChapterButton';
+import PageStatusIcon from '@/components/pages/pageStatusIcon';
 
 const ArticleListItem = ({
   issue, article, onUpdated, onStartEditing, onEndEditing, canEdit,
@@ -112,7 +112,7 @@ const ArticleListItem = ({
             <span>
               <IconButton
                 component={Link}
-                to={`/periodicals/${issue.periodicalId}/issue/${issue.issueNumber}/articles/${article.sequenceNumber}/edit`}
+                to={`/periodicals/${issue.periodicalId}/volumes/${issue.volumeNumber}/issues/${issue.issueNumber}/articles/${article.sequenceNumber}/edit`}
                 disabled={!canEdit}
               >
                 <DescriptionOutlinedIcon />
@@ -163,7 +163,7 @@ const ArticleListItem = ({
           </ListItemIcon>
           )}
           <ListItemIcon>
-            <LayersIcon />
+            <PageStatusIcon status={article && article.status} />
           </ListItemIcon>
           <ListItemText
             primary={renderPrimary()}
@@ -190,6 +190,7 @@ ArticleListItem.propTypes = {
     id: PropTypes.number,
     title: PropTypes.string,
     sequenceNumber: PropTypes.number,
+    status: PropTypes.string,
     links: PropTypes.shape({
       update: PropTypes.string,
     }),

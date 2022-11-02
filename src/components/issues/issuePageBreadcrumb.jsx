@@ -24,7 +24,7 @@ const IssuePageBreadcrumb = ({
     return null;
   }
 
-  const renderChapter = () => {
+  const renderIssue = () => {
     if (issue == null || article == null) return;
       <Link
         underline="hover"
@@ -67,7 +67,7 @@ const IssuePageBreadcrumb = ({
           <MenuBookIcon sx={{ mr: 0.5 }} fontSize="inherit" />
           <FormattedMessage id="issue.label" />
         </Link>
-        {renderChapter()}
+        {renderIssue()}
         { showPage && (
         <Link
           underline="hover"

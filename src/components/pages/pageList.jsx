@@ -40,7 +40,7 @@ const PageList = ({
     if (type === 'book') {
       history.push(`/books/${p.bookId}/pages/${p.sequenceNumber}/edit`);
     } else if (type === 'issue') {
-      history.push(`/periodicals/${p.bookId}/pages/${p.sequenceNumber}/edit`);
+      history.push(`/periodicals/${p.periodicalId}/volumes/${p.volumeNumber}/issues/${p.issueNumber}/pages/${p.sequenceNumber}/edit`);
     }
   };
 
@@ -59,6 +59,7 @@ const PageList = ({
                     onUpdated={onUpdated}
                     onCheckChanged={onCheckChanged}
                     pageClicked={() => pageClicked(p)}
+                    type={type}
                   />
                 ))}
                 {provided.placeholder}

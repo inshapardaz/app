@@ -25,7 +25,7 @@ const ArticleList = ({ issue }) => {
     setBusy(true);
     setError(false);
 
-    libraryService.getIssueArticles(issue.links.articles)
+    return libraryService.getIssueArticles(issue.links.articles)
       .then((res) => setArticles(res))
       .catch(() => setError(true))
       .finally(() => setBusy(false));
@@ -51,12 +51,8 @@ const ArticleList = ({ issue }) => {
       });
 
       setBusy(true);
-      libraryService.setArticleSequence(articles)
-        .then((res) => setArticles(res))
-        .then(() => setBusy(false))
-        .catch(() => {
-          setError(true);
-        })
+      return libraryService.setArticleSequence(articles)
+        .then(() => loadData())
         .finally(() => setBusy(false));
     }
   };

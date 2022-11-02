@@ -355,6 +355,7 @@ const BookPages = () => {
         selectedPages={checked}
         onCheckChanged={handleCheckToggle}
         onUpdated={() => loadPages(book)}
+        type="book"
       />
     );
   };

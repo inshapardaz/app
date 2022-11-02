@@ -356,6 +356,7 @@ const IssuePages = () => {
         selectedPages={checked}
         onCheckChanged={handleCheckToggle}
         onUpdated={() => loadPages(issue)}
+        type="issue"
       />
     );
   };

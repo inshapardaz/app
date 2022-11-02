@@ -26,7 +26,7 @@ import PageStatusIcon from '@/components/pages/pageStatusIcon';
 import IconWithTooltip from '@/components/iconWithTooltip';
 
 const PageListItem = ({
-  page, onUpdated, onCheckChanged, checked, pageClicked,
+  page, onUpdated, onCheckChanged, checked, pageClicked, type,
 }) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -58,8 +58,10 @@ const PageListItem = ({
       <PageDeleteButton page={page} onDeleted={onUpdated} />
     </>
   );
+
+  const isBook = type === 'book';
   return (
-    <Draggable isDragDisabled={!canReorder} draggableId={`draggable-${page.bookId}-${page.sequenceNumber}`} index={page.sequenceNumber - 1}>
+    <Draggable isDragDisabled={!canReorder} draggableId={`draggable-${isBook ? page.bookId : page.issueId}-${page.sequenceNumber}`} index={page.sequenceNumber - 1}>
       {(provided) => (
         <ListItem
           divider
@@ -96,7 +98,7 @@ const PageListItem = ({
             <>
               <span style={{ padding: '0 10px', color: theme.palette.text.secondary }}>•</span>
               <Typography component="span" sx={{ color: theme.palette.text.secondary }}>
-                {page.chapterTitle}
+                { isBook ? page.chapterTitle : page.articleTitle }
               </Typography>
             </>
             )}
@@ -120,6 +122,7 @@ PageListItem.propTypes = {
   page: PropTypes.shape({
     id: PropTypes.number,
     bookId: PropTypes.number,
+    issueId: PropTypes.number,
     sequenceNumber: PropTypes.number,
     writerAccountId: PropTypes.number,
     writerAccountName: PropTypes.string,
@@ -128,6 +131,8 @@ PageListItem.propTypes = {
     status: PropTypes.string,
     chapterId: PropTypes.number,
     chapterTitle: PropTypes.string,
+    articleId: PropTypes.number,
+    articleTitle: PropTypes.string,
     links: PropTypes.shape({
       image: PropTypes.string,
       update: PropTypes.string,
@@ -138,6 +143,7 @@ PageListItem.propTypes = {
   onCheckChanged: PropTypes.func,
   onUpdated: PropTypes.func,
   pageClicked: PropTypes.func,
+  type: PropTypes.oneOf(['book', 'issue']).isRequired,
 };
 
 export default PageListItem;
