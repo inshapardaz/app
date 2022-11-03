@@ -68,18 +68,22 @@ const PageBreadcrumb = ({
           {book.title}
         </Link>
         {renderChapter()}
-        { showPage && (<Link
-            underline="hover"
-            color="inherit"
-            style={{ display: 'flex', alignItems: 'center' }}
-            to={`/books/${book.id}/pages`}
-          >
-            <FileCopyIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-            <FormattedMessage id="pages.label" />
-          </Link>) }
-        { showPage && (<Typography color="text.primary" sx={{ display: 'flex', alignItems: 'center' }}>
-            {page ? renderPageNumber() : renderPageCreate()}
-          </Typography>)}
+        { showPage && (
+        <Link
+          underline="hover"
+          color="inherit"
+          style={{ display: 'flex', alignItems: 'center' }}
+          to={`/books/${book.id}/pages`}
+        >
+          <FileCopyIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+          <FormattedMessage id="pages.label" />
+        </Link>
+        ) }
+        { showPage && (
+        <Typography color="text.primary" sx={{ display: 'flex', alignItems: 'center' }}>
+          {page ? renderPageNumber() : renderPageCreate()}
+        </Typography>
+        )}
       </Breadcrumbs>
     </>
   );

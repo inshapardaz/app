@@ -328,7 +328,7 @@ export default {
     reviewerAssignmentFilter = null,
     page = 1,
     pageSize = 12) => get(`${url}?pageNumber=${page}&pageSize=${pageSize}${status ? `&status=${status}` : ''}${assignmentFilter ? `&assignmentFilter=${assignmentFilter}` : ''}${reviewerAssignmentFilter ? `&reviewerAssignmentFilter=${reviewerAssignmentFilter}` : ''}`),
-  getIssuePageById: (libraryId, periodicalId, volumeNumber, issueNumber, sequenceNumber) => get(`${librariesUrl()}/${libraryId}/periodicals/${periodicalId}/volumes/${volumeNumber}/issues/${issueNumber}/articles/${sequenceNumber}`),
+  getIssuePageById: (libraryId, periodicalId, volumeNumber, issueNumber, sequenceNumber) => get(`${librariesUrl()}/${libraryId}/periodicals/${periodicalId}/volumes/${volumeNumber}/issues/${issueNumber}/pages/${sequenceNumber}`),
   getIssueArticles: (url) => get(url),
   createArticle: (url, article) => post(url, article),
   updateArticle: (url, article) => put(url, article),

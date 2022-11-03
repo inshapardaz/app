@@ -19,7 +19,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 // Local Imports
 import { libraryService, localeService } from '@/services';
 import Editor from '@/components/editor';
-import PageBreadcrumb from '@/components/pages/pageBreadcrumb';
+import IssuePageBreadcrumb from '@/components/issues/issuePageBreadcrumb';
 import Error from '@/components/error';
 import Busy from '@/components/busy';
 import ImageViewer from '@/components/pages/imageViewer';
@@ -27,7 +27,9 @@ import CompleteButton from '@/components/pages/completeButton';
 import OcrButton from '@/components/pages/ocrButton';
 
 const IssuePageEditorPage = () => {
-  const { periodicalId, volumeNumber, issueNumber, sequenceNumber } = useParams();
+  const {
+    periodicalId, volumeNumber, issueNumber, sequenceNumber,
+  } = useParams();
   const history = useHistory();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -54,7 +56,7 @@ const IssuePageEditorPage = () => {
   const loadData = () => {
     setBusy(true);
     if (sequenceNumber) {
-      libraryService.getPageById(library.id, periodicalId, volumeNumber, issueNumber, sequenceNumber)
+      libraryService.getIssuePageById(library.id, periodicalId, volumeNumber, issueNumber, sequenceNumber)
         .then((res) => {
           setPage(res);
           loadIssue();
@@ -170,7 +172,6 @@ const IssuePageEditorPage = () => {
   const title = !sequenceNumber ? intl.formatMessage({ id: 'page.editor.header.add' })
     : intl.formatMessage({ id: 'page.editor.header.edit' }, { sequenceNumber: page ? page.sequenceNumber : '' });
 
-    //label={<PageBreadcrumb book={book} chapter={null} page={page} showPage />}
   return (
     <Box
       data-ft="edit-page-page"
@@ -187,9 +188,9 @@ const IssuePageEditorPage = () => {
       <Error error={error} message={<FormattedMessage id="page.messages.error.loading" />}>
         <Editor
           content={page ? page.text : ''}
-          identifier={`${issue.id}-${page ? page.sequenceNumber : -1}`}
+          identifier={`$${periodicalId}-${volumeNumber}-${issueNumber}-${sequenceNumber}`}
           onSave={onSave}
-          label="TODO"
+          label={<IssuePageBreadcrumb issue={issue} showPage={false} />}
           direction={getDirection()}
           endToolbar={pageToolbar()}
           secondaryView={hideImage ? null : (
