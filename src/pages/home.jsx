@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 // MUI
 import { alpha } from '@mui/material/styles';
@@ -18,10 +18,24 @@ const useStaticImage = localStorage.getItem('useStaticImage') === 'true' || fals
 
 const HomePage = () => {
   const intl = useIntl();
+  const history = useHistory();
+  const [query, setQuery] = useState('');
+
   const library = useSelector((state) => state.libraryReducer.library);
 
   if (library == null) return null;
 
+  const onSubmit = () => {
+    if (query && query !== '') {
+      history.push(`/books?query=${query}`);
+    }
+  };
+
+  const onKeyPress = (e) => {
+    if (e.keyCode === 13) {
+      onSubmit();
+    }
+  };
   return (
     <>
       <Helmet title={library.name} />
@@ -59,14 +73,17 @@ const HomePage = () => {
               <FormattedMessage id="home.getStarted" />
             </Button>
 
-            <Paper component="form" align="center" sx={{ marginTop: '50px', marginBottom: '16px', display: 'flex' }}>
+            <Paper align="center" sx={{ marginTop: '50px', marginBottom: '16px', display: 'flex' }}>
               <InputBase
                 sx={{ marginLeft: (theme) => theme.spacing(1), flex: 1 }}
                 placeholder={intl.formatMessage({ id: 'header.search.placeholder' })}
                 inputProps={{ 'aria-label': 'search' }}
+                onChange={(e) => setQuery(e.target.value)}
+                value={query}
+                onKeyDown={onKeyPress}
               />
               <Divider sx={{ height: '28px', margin: '4px' }} orientation="vertical" />
-              <IconButton type="submit" sx={{ padding: '10px' }} aria-label="search">
+              <IconButton onClick={onSubmit} sx={{ padding: '10px' }} aria-label="search">
                 <SearchIcon />
               </IconButton>
             </Paper>
