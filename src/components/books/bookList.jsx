@@ -166,6 +166,7 @@ const BookList = ({
             sortBy={sortBy}
             sortDirection={sortDirection}
             onChange={onSortUpdated}
+            showSeriesSort={series !== null}
           />
         </>
       );

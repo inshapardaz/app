@@ -15,7 +15,9 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 
-const BookSortButton = ({ sortBy = 'title', sortDirection = 'ascending', onChange }) => {
+const BookSortButton = ({
+  sortBy = 'title', sortDirection = 'ascending', showSeriesSort = false, onChange,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -60,6 +62,14 @@ const BookSortButton = ({ sortBy = 'title', sortDirection = 'ascending', onChang
           </ListItemIcon>
           <FormattedMessage id="book.editor.fields.dateAdded.title" />
         </MenuItem>
+        {showSeriesSort && (
+        <MenuItem selected={sortBy === 'seriesIndex'} onClick={() => onClickSort('seriesIndex')}>
+          <ListItemIcon>
+            <DateRangeIcon />
+          </ListItemIcon>
+          <FormattedMessage id="book.editor.fields.seriesIndex.title" />
+        </MenuItem>
+        )}
         <Divider />
         <MenuItem selected={sortDirection === 'ascending'} onClick={() => onClickSortDirection('ascending')}>
           <ListItemIcon><ArrowUpwardIcon /></ListItemIcon>
@@ -77,12 +87,14 @@ const BookSortButton = ({ sortBy = 'title', sortDirection = 'ascending', onChang
 BookSortButton.defaultProps = {
   sortBy: 'title',
   sortDirection: 'ascending',
+  showSeriesSort: false,
   onChange: () => {},
 };
 
 BookSortButton.propTypes = {
   sortBy: PropTypes.string,
   sortDirection: PropTypes.string,
+  showSeriesSort: PropTypes.bool,
   onChange: PropTypes.func,
 };
 

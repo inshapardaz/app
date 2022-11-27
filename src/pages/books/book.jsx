@@ -18,13 +18,13 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import LayersIcon from '@mui/icons-material/Layers';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
+import CreateIcon from '@mui/icons-material/Create';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 // Local Imports
 import { libraryService } from '@/services/';
-import CenteredContent from '@/components/layout/centeredContent';
 import AuthorsGroup from '@/components/authors/authorsGroup';
 import CategoriesLabel from '@/components/categories/categoriesLabel';
 import BookSeriesLabel from '@/components/books/bookSeriesLabel';
@@ -112,9 +112,9 @@ const BookPage = () => {
   const renderBook = () => (
     <>
       <Helmet title={book.title} />
-      <CenteredContent>
+      <div>
         <Grid container sx={{ mt: (theme) => theme.spacing(2) }}>
-          <Grid item md={4}>
+          <Grid item md={3}>
             <Stack
               spacing={2}
               mt={4}
@@ -126,22 +126,6 @@ const BookPage = () => {
                 alt={book.title}
                 src={(book.links ? book.links.image : null) || helpers.defaultBookImage}
               />
-              {renderEditLink()}
-              <DeleteBookButton button book={book} onDeleted={() => history.back()} />
-              <BookPublishButton book={book} />
-              { book.links.update && (
-              <Button component={Link} to={`/books/${book.id}/pages`} startIcon={<FileCopyIcon />}>
-                <FormattedMessage id="pages.label" />
-                <Typography variant="caption">
-                  { `(${book.pageCount})`}
-                </Typography>
-              </Button>
-              )}
-              <BookPublishingStatus book={book} />
-            </Stack>
-          </Grid>
-          <Grid item md={8}>
-            <Stack spacing={2} sx={{ mt: (theme) => theme.spacing(4) }}>
               <Stack
                 direction="row"
                 spacing={2}
@@ -166,9 +150,25 @@ const BookPage = () => {
                   : <FormattedMessage id="book.editor.fields.yearPublished.empty" />}
               </Typography>
               <Divider sx={{ my: (theme) => theme.spacing(8) }} />
+              {renderEditLink()}
+              <DeleteBookButton button book={book} onDeleted={() => history.back()} />
+              <BookPublishButton book={book} />
+              { book.links.update && (
+              <Button component={Link} to={`/books/${book.id}/pages`} startIcon={<FileCopyIcon />}>
+                <FormattedMessage id="pages.label" />
+                <Typography variant="caption">
+                  { `(${book.pageCount})`}
+                </Typography>
+              </Button>
+              )}
+            </Stack>
+          </Grid>
+          <Grid item md={8}>
+            <Stack spacing={2} sx={{ mt: (theme) => theme.spacing(4) }}>
               <Tabs value={tabValue} onChange={handleTabChange} aria-label="book tabs">
                 <Tab icon={<LayersIcon />} iconPosition="start" label={intl.formatMessage({ id: 'book.tabs.chapters' })} id="book-chapters" />
                 <Tab icon={<SimCardDownloadIcon />} iconPosition="start" label={intl.formatMessage({ id: 'book.tabs.files' })} id="book-files" />
+                { book.status !== 'Published' && (<Tab icon={<CreateIcon />} iconPosition="start" label={intl.formatMessage({ id: 'header.publishing' })} id="book-publishing" />)}
               </Tabs>
               <TabPanel id="book-chapters" value={tabValue} index={0}>
                 <ChaptersList book={book} />
@@ -176,10 +176,13 @@ const BookPage = () => {
               <TabPanel id="book-files" value={tabValue} index={1}>
                 <BookFiles book={book} />
               </TabPanel>
+              <TabPanel id="book-publishing" value={tabValue} index={2}>
+                <BookPublishingStatus book={book} />
+              </TabPanel>
             </Stack>
           </Grid>
         </Grid>
-      </CenteredContent>
+      </div>
     </>
   );
 

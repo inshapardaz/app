@@ -42,7 +42,7 @@ const BooksPage = () => {
     const seriesValue = values.series ? parseInt(values.series, 10) : null;
     const authorValue = values.author ? parseInt(values.author, 10) : null;
     const categoryValue = values.category ? parseInt(values.category, 10) : null;
-    const sortByValue = values.sortBy || null;
+    const sortByValue = values.sortBy || values.series ? 'seriesIndex' : null;
     const sortDirectionValue = values.sortDirection || null;
     const queryValue = values.query;
     const favoriteFilterValue = values.favorite === 'true';
