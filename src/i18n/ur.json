@@ -330,6 +330,8 @@
 	"book.status.Completed" : "مکمل",
 	"book.tabs.chapters" : "ابواب",
 	"book.tabs.files" : "فائلز",
+	"book.tabs.files.messages.empty" : "کوئی فائل موجود نہیں",
+    "book.tabs.files.label.add" : "فائل اپلوڈ کریں",
 	"chapter.action.create" : "نئے باب کا اضافہ کریں",
 	"chapter.action.assignToUser": "صارف کو تفویض کریں",
     "chapter.messages.saved" : "باب محفوظ کر دیا گیا ہے",

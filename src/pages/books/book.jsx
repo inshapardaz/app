@@ -10,6 +10,7 @@ import { red } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Grid';
@@ -113,7 +114,7 @@ const BookPage = () => {
     <>
       <Helmet title={book.title} />
       <div>
-        <Grid container sx={{ mt: (theme) => theme.spacing(2) }}>
+        <Grid container justifyContent="center" sx={{ mt: (theme) => theme.spacing(2) }}>
           <Grid item md={3}>
             <Stack
               spacing={2}
@@ -129,7 +130,6 @@ const BookPage = () => {
               <Stack
                 direction="row"
                 spacing={2}
-                alignItems="center"
               >
                 <Typography variant="h4">
                   <EditingStatusIcon status={book.status} />
@@ -137,7 +137,7 @@ const BookPage = () => {
                 </Typography>
                 <FavoriteButton book={book} onUpdated={loadData} />
               </Stack>
-              <Box sx={{ alignSelf: 'flex-start' }}>
+              <Box>
                 <AuthorsGroup authors={book.authors} />
               </Box>
               <CategoriesLabel categories={book.categories} alignPills="left" type="books" />
@@ -150,17 +150,19 @@ const BookPage = () => {
                   : <FormattedMessage id="book.editor.fields.yearPublished.empty" />}
               </Typography>
               <Divider sx={{ my: (theme) => theme.spacing(8) }} />
-              {renderEditLink()}
-              <DeleteBookButton button book={book} onDeleted={() => history.back()} />
-              <BookPublishButton book={book} />
-              { book.links.update && (
-              <Button component={Link} to={`/books/${book.id}/pages`} startIcon={<FileCopyIcon />}>
-                <FormattedMessage id="pages.label" />
-                <Typography variant="caption">
-                  { `(${book.pageCount})`}
-                </Typography>
-              </Button>
-              )}
+              <ButtonGroup orientation="vertical">
+                {renderEditLink()}
+                <DeleteBookButton button book={book} onDeleted={() => history.back()} />
+                <BookPublishButton book={book} />
+                { book.links.update && (
+                <Button component={Link} to={`/books/${book.id}/pages`} startIcon={<FileCopyIcon />}>
+                  <FormattedMessage id="pages.label" />
+                  <Typography variant="caption">
+                    { `(${book.pageCount})`}
+                  </Typography>
+                </Button>
+                )}
+              </ButtonGroup>
             </Stack>
           </Grid>
           <Grid item md={8}>

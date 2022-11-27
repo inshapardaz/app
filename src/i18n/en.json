@@ -330,6 +330,8 @@
 	"book.status.ProofRead" : "Proof Read",
 	"book.tabs.chapters" : "Chapters",
 	"book.tabs.files" : "Files",
+	"book.tabs.files.messages.empty" : "No file available.",
+	"book.tabs.files.label.add" : "Add file",
     "chapter.action.create" : "Create new chapter",
     "chapters.action.create" : "Create new chapter",
 	"chapter.action.assignToUser" : "Assign to user",

@@ -1,10 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useIntl } from 'react-intl';
 
 // MUI
-import Typography from '@mui/material/Typography';
 
-const BookFiles = (book) => (<Typography variant="h1" color="initial">No books available</Typography>);
+// Local Imports
+import EmptyPlaceholder from '../emptyPlaceHolder';
+
+const BookFiles = (book) => {
+  const intl = useIntl();
+  return (
+    <EmptyPlaceholder
+      title={intl.formatMessage({ id: 'book.tabs.files.messages.empty' })}
+      actionText={intl.formatMessage({ id: 'book.tabs.files.label.add' })}
+      onAction={() => console.log('upload file')}
+    />
+  );
+};
 
 BookFiles.defaultProps = {
   book: null,

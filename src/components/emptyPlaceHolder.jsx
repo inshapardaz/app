@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // MUI
-import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 const EmptyPlaceholder = ({ title, actionText, onAction }) => (
-  <Box sx={{ height: 300 }}>
-    <Typography variant="h4">
+  <Grid container sx={{ height: 300, alignSelf: 'center' }}>
+    <Typography variant="h5">
       { title }
       { onAction && (
       <Button disableElevation fullWidth onClick={() => onAction && onAction()}>
@@ -16,7 +16,7 @@ const EmptyPlaceholder = ({ title, actionText, onAction }) => (
       </Button>
       )}
     </Typography>
-  </Box>
+  </Grid>
 );
 
 EmptyPlaceholder.defaultProps = {

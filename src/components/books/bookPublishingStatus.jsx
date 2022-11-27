@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 
 import { Doughnut } from 'react-chartjs-2';
+import Typography from '@mui/material/Typography'
 
 const BookPublishingStatus = ({ book }) => {
   const intl = useIntl();
-  if (!book || book.status === 'Published' || !book.links.update || !book.pageStatus) {
+  if (!book || book.status === 'Published' || !book.links.update) {
     return null;
+  }
+  if (!book.pageStatus) {
+    return (<Typography variant="h5">{intl.formatMessage({ id: 'pages.progress.none' })}</Typography>);
   }
 
   const data = {
