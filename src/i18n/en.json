@@ -543,6 +543,7 @@
 	"correction.messages.error.saving" : "Correction cannot be saved",
 	"correction.incorrectText.label" : "Incorrect Text",
 	"correction.correctText.label" : "Correction",
+	"correction.completeWord.label" : "Complete Word",
 	"language.placeholder": "Select language...",
 	"my.pages.title" : "My Pages",
 	"authorTypes.writer" : "Writer",

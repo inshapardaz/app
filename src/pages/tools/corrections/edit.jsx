@@ -8,7 +8,7 @@ import { Helmet } from 'react-helmet';
 // Formik
 import { Formik, Field, Form } from 'formik';
 import { Button, Grid } from '@mui/material';
-import { TextField } from 'formik-mui';
+import { TextField, CheckboxWithLabel } from 'formik-mui';
 
 // Local Imports
 import { toolsService } from '@/services';
@@ -28,6 +28,7 @@ const CorrectionEditPage = () => {
   const initialValues = {
     incorrectText: '',
     correctText: '',
+    completeWord: false,
   };
 
   const validationSchema = Yup.object().shape({
@@ -98,7 +99,6 @@ const CorrectionEditPage = () => {
                 component={TextField}
                 autoFocus={correction === null}
                 name="incorrectText"
-                type="incorrectText"
                 variant="outlined"
                 margin="normal"
                 disabled={correction !== null}
@@ -110,12 +110,19 @@ const CorrectionEditPage = () => {
                 component={TextField}
                 autoFocus={correction !== null}
                 name="correctText"
-                type="correctText"
                 variant="outlined"
                 margin="normal"
                 fullWidth
                 label={<FormattedMessage id="correction.correctText.label" />}
                 error={errors.correctText && touched.correctText}
+              />
+              <Field
+                component={CheckboxWithLabel}
+                type="checkbox"
+                id="completeWord"
+                name="completeWord"
+                margin="normal"
+                Label={{ label: intl.formatMessage({ id: 'correction.completeWord.label' }) }}
               />
               <Grid container spacing={2} sx={{ my: (theme) => theme.spacing(2) }}>
                 <Grid item md={6} xs={12}>
@@ -136,8 +143,7 @@ const CorrectionEditPage = () => {
                     variant="outlined"
                     onClick={() => history.goBack()}
                   >
-                    Cancel
-
+                    <FormattedMessage id="action.cancel" />
                   </Button>
                 </Grid>
               </Grid>

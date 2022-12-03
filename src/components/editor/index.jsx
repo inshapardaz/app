@@ -35,13 +35,13 @@ const convertToDraftJs = (markdownData) => {
   return EditorState.createWithContent(contentState);
 };
 
-const getReplaceAllRegex = (dict) => {
+const getReplaceAllRegex = (corrections) => {
   let retVal = '';
-  for (const key in dict) {
-    retVal += `(${key})|`;
-  }
+  corrections.forEach((c) => {
+    retVal += `(${c.completeWord ? `\\b${c.incorrectText}\\b` : c.incorrectText})|`;
+  });
 
-  return new RegExp(`\\b${retVal.slice(0, -1)}\\b`, 'giu');
+  return new RegExp(retVal.slice(0, -1), 'giu');
 };
 
 const convertToMarkdown = (editorState) => stateToMarkdown(editorState.getCurrentContent());
@@ -82,7 +82,7 @@ const Editor = ({
     },
     draftEditor: {
       textDirectionality: direction.toUpperCase(),
-	  },
+    },
     toolbar: {
       className: '',
       style: {},
@@ -196,13 +196,13 @@ const Editor = ({
     let markDown = convertToMarkdown(editorState);
     if (profile === 0) {
       markDown = markDown.replace(/  +/g, ' ');
-      for (const [key, value] of Object.entries(punctuationCorrections)) {
-        markDown = markDown.replaceAll(key, value);
-      }
+      punctuationCorrections.forEach((c) => {
+        markDown = markDown.replace(c.completeWord ? 'c.incorrectText\\b/g' : c.incorrectText, c.correctText);
+      });
       const draftJs = convertToDraftJs(markDown);
       setEditorState(draftJs);
     } else if (profile === 1) {
-	    markDown = markDown.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections[matched]);
+      markDown = markDown.replace(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections.find((o) => o.incorrectText === matched)?.correctText);
       const draftJs = convertToDraftJs(markDown);
       setEditorState(draftJs);
     }

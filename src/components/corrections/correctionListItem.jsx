@@ -11,6 +11,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import EditIcon from '@mui/icons-material/Edit';
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
+import AbcIcon from '@mui/icons-material/Abc';
 
 // Local Imports
 import CorrectionDeleteButton from '@/components/corrections/correctionDeleteButton';
@@ -33,7 +34,7 @@ const CorrectionListItem = ({ correction, onDeleted }) => {
 )}
     >
       <ListItemIcon>
-        <SpellcheckIcon />
+        { correction.completeWord ? <AbcIcon /> : <SpellcheckIcon /> }
       </ListItemIcon>
       <ListItemText
         primary={correction.incorrectText}
@@ -50,6 +51,7 @@ CorrectionListItem.propTypes = {
     profile: PropTypes.string,
     incorrectText: PropTypes.string,
     correctText: PropTypes.string,
+    completeWord: PropTypes.bool,
   }).isRequired,
   onDeleted: PropTypes.func.isRequired,
 };
