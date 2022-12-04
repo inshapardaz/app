@@ -197,7 +197,7 @@ const Editor = ({
     if (profile === 0) {
       markDown = markDown.replace(/  +/g, ' ');
       punctuationCorrections.forEach((c) => {
-        markDown = markDown.replace(c.completeWord ? 'c.incorrectText\\b/g' : c.incorrectText, c.correctText);
+        markDown = markDown.replaceAll(c.completeWord ? 'c.incorrectText\\b' : c.incorrectText, c.correctText);
       });
       const draftJs = convertToDraftJs(markDown);
       setEditorState(draftJs);
