@@ -38,10 +38,12 @@ const convertToDraftJs = (markdownData) => {
 const getReplaceAllRegex = (corrections) => {
   let retVal = '';
   corrections.forEach((c) => {
-    retVal += `(${c.completeWord ? `\\b${c.incorrectText.trim()}\\b` : c.incorrectText.trim()})|`;
+    // retVal += `(${c.completeWord ? `\\b${c.incorrectText.trim()}\\b` : c.incorrectText.trim()})|`;
+    retVal += `(${c.incorrectText.trim()})|`;
   });
 
-  return new RegExp(retVal.slice(0, -1), 'giu');
+  // return new RegExp(retVal.slice(0, -1), 'gimu');
+  return new RegExp(`\\b${retVal.slice(0, -1)}\\b`, 'giu');
 };
 
 const convertToMarkdown = (editorState) => stateToMarkdown(editorState.getCurrentContent());
@@ -202,7 +204,8 @@ const Editor = ({
       const draftJs = convertToDraftJs(markDown);
       setEditorState(draftJs);
     } else if (profile === 1) {
-      markDown = markDown.replaceAll(getReplaceAllRegex(autoFixCorrections), (matched) => autoFixCorrections.find((o) => o.incorrectText === matched)?.correctText.trim());
+      const correctionRegex = getReplaceAllRegex(autoFixCorrections);
+      markDown = markDown.replaceAll(correctionRegex, (matched) => autoFixCorrections.find((o) => o.incorrectText === matched)?.correctText.trim());
       const draftJs = convertToDraftJs(markDown);
       setEditorState(draftJs);
     }
