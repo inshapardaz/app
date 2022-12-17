@@ -194,21 +194,35 @@ const Editor = ({
     setShowControls(!showControls);
   };
 
-  const onCorrect = (profile) => {
-    let markDown = convertToMarkdown(editorState);
+  const correctText = (text, profile) => {
     if (profile === 0) {
-      markDown = markDown.replace(/  +/g, ' ');
+      text = text.replace(/  +/g, ' ');
       punctuationCorrections.forEach((c) => {
-        markDown = markDown.replaceAll(c.completeWord ? 'c.incorrectText\\b' : c.incorrectText, c.correctText);
+        text = text.replaceAll(c.completeWord ? 'c.incorrectText\\b' : c.incorrectText, c.correctText);
       });
-      const draftJs = convertToDraftJs(markDown);
-      setEditorState(draftJs);
     } else if (profile === 1) {
       const correctionRegex = getReplaceAllRegex(autoFixCorrections);
-      markDown = markDown.replaceAll(correctionRegex, (matched) => autoFixCorrections.find((o) => o.incorrectText === matched)?.correctText.trim());
-      const draftJs = convertToDraftJs(markDown);
-      setEditorState(draftJs);
+      text = text.replaceAll(correctionRegex, (matched) => autoFixCorrections.find((o) => o.incorrectText === matched)?.correctText.trim());
     }
+
+    return text;
+  };
+
+  const onCorrect = (profile) => {
+    const contentState = editorState.getCurrentContent();
+    const rawState = convertToRaw(contentState);
+    rawState.blocks = rawState.blocks.map((b) => {
+      if (!b.text) {
+        return b;
+      }
+
+      const { text } = b;
+      const result = correctText(text, profile);
+      b.text = result;
+      return b;
+    });
+
+    setEditorState(EditorState.createWithContent(convertFromRaw(rawState)));
   };
 
   return (
