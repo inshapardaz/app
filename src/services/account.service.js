@@ -18,7 +18,7 @@ const getUser = () => {
 const getAccessToken = () => {
   const user = getUser();
   if (user) {
-    return user.jwtToken;
+    return user.accessToken;
   }
 
   return null;
@@ -26,10 +26,10 @@ const getAccessToken = () => {
 
 const startRefreshTokenTimer = (refreshTokenHandler) => {
   // parse json object from base64 encoded jwt token
-  const jwtToken = JSON.parse(atob(getAccessToken().split('.')[1]));
+  const accessToken = JSON.parse(atob(getAccessToken().split('.')[1]));
 
   // set a timeout to refresh the token a minute before it expires
-  const expires = new Date(jwtToken.exp * 1000);
+  const expires = new Date(accessToken.exp * 1000);
   const timeout = expires.getTime() - Date.now() - (60 * 1000);
   refreshTokenTimeout = setInterval(refreshTokenHandler, timeout);
 };

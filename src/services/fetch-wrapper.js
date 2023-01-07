@@ -12,7 +12,7 @@ const getUser = () => {
 const getAccessToken = () => {
   const user = getUser();
   if (user) {
-    return user.jwtToken;
+    return user.accessToken;
   }
 
   return null;
