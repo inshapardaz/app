@@ -176,6 +176,7 @@
 	"library.language.error.required" : "زبان ضروری ہے",
 	"library.primaryColor.label" : "بنیادی رنگ",
 	"library.secondaryColor.label" : "ثانوی رنگ",
+	"library.public.label" : "عوامی",
 	"library.supportsPeriodical.label" : "رسائل",
 	"library.editor.header.add" : "نئے کتب خانہ کا اضافہ",
 	"library.editor.header.edit" : "کتب خانہ {name} میں تدوین",

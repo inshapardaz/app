@@ -52,6 +52,7 @@ const LibraryEditPage = () => {
     supportsPeriodicals: false,
     primaryColor: '#373837',
     secondaryColor: '#848484',
+    public: false
   };
 
   const validationSchema = Yup.object().shape({
@@ -196,6 +197,15 @@ const LibraryEditPage = () => {
                   error={errors.secondaryColor && touched.secondaryColor}
                 />
               </FormControl>
+              <Field
+                component={CheckboxWithLabel}
+                type="checkbox"
+                id="pubic"
+                name="public"
+                margin="normal"
+                Label={{ label: intl.formatMessage({ id: 'library.public.label' }) }}
+                error={errors.public && touched.public}
+              />
               <Field
                 component={CheckboxWithLabel}
                 type="checkbox"
