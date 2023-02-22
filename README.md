@@ -20,4 +20,4 @@
 
 ### Packaging for production
 
-`npm run build`
+`npm run build --prod`
