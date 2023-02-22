@@ -1,0 +1,30 @@
+name: Build And Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.14.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.0
+      - run: npm ci
+      - run: npm run build --prod
+      
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.DEPLOY_FTP_SERVER }}
+          username: ${{ secrets.DEPLOY_FTP_USERNAME }}
+          password: ${{ secrets.DEPLOY_FTP_PASSWORD }}
+          server-dir: /editor/
+          local-dir: ./dist/
