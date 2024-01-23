@@ -114,7 +114,7 @@ const OcrDialog = ({ onClose, open, pages }) => {
       if (page !== null && page !== undefined && page.ocrStatus !== 'complete') {
         if (page.links.ocr) {
           setPageStatus(page, 'processing');
-          return promises.push(libraryService.post(page.links.ocr, key)
+          return promises.push(libraryService.post(page.links.ocr, { key: key })
             .then(() => setPageStatus(page, 'complete'))
             .catch(() => setPageStatus(page, 'error')));
         }
